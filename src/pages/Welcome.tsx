@@ -1,6 +1,7 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Typography, Card } from 'antd';
+import { Card, Typography } from 'antd';
+
 const { Paragraph, Text } = Typography;
 
 export default (): React.ReactNode => (
