@@ -1,55 +1,106 @@
 import React from 'react';
-import { Button, Card, Dropdown, Icon, Menu } from 'antd';
+import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { ClickParam } from 'antd/lib/menu';
 import { connect } from 'dva';
 import { CoilModelState, ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import ComplexWire from '@/components/ComplexWire';
 
-const setupText = {
-  1: 'Single Coil (1)',
-  2: 'Double Coil (2)',
-  3: 'Triple Coil (3)',
-};
+const { Option } = Select;
+const { Title } = Typography;
+
 
 export interface CoilCalculatorProps extends ConnectProps {
   coil: CoilModelState,
   dispatch: Dispatch;
 }
 
+let lastEdit: 'wraps' | 'resistance' | undefined;
+
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil } = props;
 
-  const handleMenuClick = (e: ClickParam): void =>
-    dispatch && dispatch({
+
+  const onSetupChange = ({ key, label }: any): void =>
+    key && dispatch && dispatch({
       type: 'coil/setSetup',
-      payload: Number(e.key),
+      payload: Number(key),
     });
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">
-        Single Coil (1)
-      </Menu.Item>
-      <Menu.Item key="2">
-        Dual Coil (2)
-      </Menu.Item>
-      <Menu.Item key="3">
-        Triple Coil (3)
-      </Menu.Item>
-    </Menu>
-  );
+  const onInnerDiameterChange = (value: number | undefined): void =>
+    value && dispatch && dispatch({
+      type: 'coil/setInnerDiameter',
+      payload: value,
+    });
 
-  function setupNumberToText(setup: number): string {
-    return setupText[setup]
-  }
+  const onLegsLengthChange = (value: number | undefined): void =>
+    value && dispatch && dispatch({
+      type: 'coil/setLegsLength',
+      payload: value,
+    });
+
+  const onResistanceChange = (value: number | undefined): void => {
+    lastEdit = 'resistance';
+    return value && dispatch && dispatch({
+      type: 'coil/setResistance',
+      payload: value,
+    })
+  };
+
+  const onWrapsChange = (value: number | undefined): void => {
+    lastEdit = 'wraps';
+    return value && dispatch && dispatch({
+      type: 'coil/setWraps',
+      payload: value,
+    })
+  };
+
+  const calculate = (): void => {
+    if (lastEdit === 'wraps') {
+      dispatch({
+        type: 'coil/getResistance',
+        payload: coil.currentCoil,
+      })
+    } else { // default
+      dispatch({
+        type: 'coil/getWraps',
+        payload: coil.currentCoil,
+      })
+    }
+  };
 
   return (<PageHeaderWrapper>
       <Card>
-        <Dropdown overlay={menu}>
-          <Button>
-            {setupNumberToText(coil.currentCoil.setup)} <Icon type="down"/>
-          </Button>
-        </Dropdown>
+        <Title level={4}>Setup</Title>
+
+        <Select labelInValue defaultValue={{ key: `${coil.currentCoil.setup}` }} onChange={onSetupChange}>
+          <Option value="1">Single Coil (1)</Option>
+          <Option value="2">Dual Coil (2)</Option>
+          <Option value="3">Triple Coil (3)</Option>
+          <Option value="4">Quad Coil (4)</Option>
+        </Select>
+
+        <Title level={4}>Type</Title>
+        <ComplexWire wiresTree={coil.currentCoil}/>
+
+        <Title level={4}>Inner diameter of coil</Title>
+        <InputNumber min={0.0} defaultValue={coil.currentCoil.innerDiameter}
+                     onChange={onInnerDiameterChange}/>
+
+        <Title level={4}>Legs length per coil</Title>
+        <InputNumber min={0.0} defaultValue={coil.currentCoil.legsLength}
+                     onChange={onLegsLengthChange}/>
+
+        <Title level={4}>Resistance</Title>
+        <InputNumber min={0.0} defaultValue={coil.currentCoil.resistance}
+                     onChange={onResistanceChange}/>
+
+        <Title level={4}>Wraps per coil</Title>
+        <InputNumber min={0.0} defaultValue={coil.currentCoil.wraps}
+                     onChange={onWrapsChange}/>
+        <br/>
+        <br/>
+        <Button type="primary" onClick={calculate}>Calculate</Button>
+
       </Card>
     </PageHeaderWrapper>
   )
