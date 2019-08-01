@@ -1,3 +1,5 @@
+import { KANTHAL_A1_AMP, Material } from '@/types/material';
+
 export enum WireType {
   CUSTOM = -1,
   NORMAL,
@@ -31,14 +33,6 @@ export enum WireStyle {
 export enum WireKind {
   ROUND,
   RIBBON
-}
-
-export interface Material {
-  id: string;
-  name: string;
-  resistivity: number;
-  diameter: number;
-  tcr: number;
 }
 
 export interface WiresTree {
@@ -85,7 +79,18 @@ export class Wire implements WiresTree {
 
   outers: Wire[];
 
-  constructor(type: WireType, material: Material, style: WireStyle, format: WireFormat, kind: WireKind, mm: number, width: number, height: number, pitch: number, space: number, innerDiameter: number, totalLength: number, wrapLength: number, widthDiameter: number, heightDiameter: number, resistance: number, cores: Wire[], outers: Wire[]) {
+  constructor({
+                type = WireType.NORMAL, material = KANTHAL_A1_AMP, style = WireStyle.CORE,
+                format = WireFormat.NORMAL, kind = WireKind.ROUND, mm = 0.0, width = 0.0,
+                height = 0.0, pitch = 0.0, space = 0.0, innerDiameter = 0.0, totalLength = 0.0,
+                wrapLength = 0.0, widthDiameter = 0.0, heightDiameter = 0.0, resistance = 0.0,
+                cores = [], outers = [],
+              }: {
+    type?: WireType, material?: Material, style?: WireStyle, format?: WireFormat,
+    kind?: WireKind, mm?: number, width?: number, height?: number, pitch?: number, space?: number,
+    innerDiameter?: number, totalLength?: number, wrapLength?: number, widthDiameter?: number,
+    heightDiameter?: number, resistance?: number, cores?: Wire[], outers?: Wire[]
+  } = {}) {
     this.type = type;
     this.material = material;
     this.style = style;

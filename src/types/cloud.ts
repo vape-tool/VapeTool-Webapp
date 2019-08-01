@@ -1,11 +1,11 @@
 import uuid from '@/utils/uuid';
 
-export interface Cloud {
+export interface Author {
   uid: string;
   displayName: string;
 }
 
-export const LOCAL_AUTHOR: Cloud = {
+export const LOCAL_AUTHOR: Author = {
   uid: uuid(),
   displayName: 'local',
 };
@@ -18,7 +18,7 @@ export enum OnlineStatus {
 
 export interface Storeable {
   uid: string;
-  author: Cloud;
+  author: Author;
   creationTime: number// millis
   lastTimeModified: number // millis
   status: OnlineStatus;

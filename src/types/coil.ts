@@ -1,6 +1,6 @@
 import { Wire, WiresTree, WireType } from '@/types/wire';
 import uuid from '@/utils/uuid';
-import { Cloud, LOCAL_AUTHOR, OnlineStatus, Storeable } from '@/types/cloud';
+import { Author, LOCAL_AUTHOR, OnlineStatus, Storeable } from '@/types/cloud';
 
 export class Coil implements Storeable, WiresTree {
   uid: string;
@@ -9,7 +9,7 @@ export class Coil implements Storeable, WiresTree {
 
   description: string;
 
-  author: Cloud;
+  author: Author;
 
   creationTime: number;
 
@@ -39,13 +39,20 @@ export class Coil implements Storeable, WiresTree {
 
   outers: Wire[];
 
-  constructor(uid: string = uuid(), name: string = '', description: string = '', author: Cloud = LOCAL_AUTHOR,
-              creationTime: number = Date.now(), lastTimeModified: number = Date.now(),
-              status: OnlineStatus = OnlineStatus.ONLINE_PUBLIC, type: WireType = WireType.NORMAL,
-              setup: number = 1, wraps: number = 0.0, resistance: number = 0.0,
-              legsLength: number = 15.0, innerDiameter: number = 0.0, pitch: number = 0.0,
-              heightDiameter: number = 0.0, widthDiameter: number = 0.0,
-              cores: Wire[] = [], outers: Wire[] = []) {
+  constructor({
+                uid = uuid(), name = '', description = '', author = LOCAL_AUTHOR,
+                creationTime = Date.now(), lastTimeModified = Date.now(),
+                status = OnlineStatus.ONLINE_PUBLIC, type = WireType.NORMAL,
+                setup = 1, wraps = 5.0, resistance = 0.554,
+                legsLength = 15.0, innerDiameter = 3.0, pitch = 0.0,
+                heightDiameter = 0.0, widthDiameter = 0.0,
+                cores = [], outers = [],
+              }: {
+    uid?: string, name?: string, description?: string, author?: Author, creationTime?: number,
+    lastTimeModified?: number, status?: OnlineStatus, type?: WireType, setup?: number,
+    wraps?: number, resistance?: number, legsLength?: number, innerDiameter?: number,
+    pitch?: number, heightDiameter?: number, widthDiameter?: number, cores?: Wire[], outers?: Wire[]
+  } = {}) {
     this.setup = setup;
     this.name = name;
     this.description = description;

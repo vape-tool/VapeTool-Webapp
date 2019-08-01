@@ -1,8 +1,8 @@
 import { Reducer } from 'redux';
-import { Coil } from '@/types/coil';
 import { Effect } from 'dva';
+import { Coil } from '@/types/coil';
 import { getResistance, getSweetSpot, getWraps } from '@/services/coil';
-
+import * as WireGenerator from '@/utils/wireGenerator'
 
 export interface CoilModelState {
   currentCoil: Coil;
@@ -28,7 +28,7 @@ export interface CoilModelType {
 const CoilModel: CoilModelType = {
   namespace: 'coil',
   state: {
-    currentCoil: new Coil(),
+    currentCoil: WireGenerator.normalCoil(),
   },
   effects: {
     * getResistance(_, { call, put, cancel }) {
@@ -67,7 +67,7 @@ const CoilModel: CoilModelType = {
   reducers: {
     setSetup(
       state = {
-        currentCoil: new Coil(),
+        currentCoil: WireGenerator.normalCoil(),
       },
       { payload }) {
       return {
@@ -80,7 +80,7 @@ const CoilModel: CoilModelType = {
     },
     setInnerDiameter(
       state = {
-        currentCoil: new Coil(),
+        currentCoil: WireGenerator.normalCoil(),
       },
       { payload }) {
       return {
@@ -93,7 +93,7 @@ const CoilModel: CoilModelType = {
     },
     setResistance(
       state = {
-        currentCoil: new Coil(),
+        currentCoil: WireGenerator.normalCoil(),
       },
       { payload }) {
       return {
@@ -106,7 +106,7 @@ const CoilModel: CoilModelType = {
     },
     setWraps(
       state = {
-        currentCoil: new Coil(),
+        currentCoil: WireGenerator.normalCoil(),
       },
       { payload }) {
       return {
@@ -119,7 +119,7 @@ const CoilModel: CoilModelType = {
     },
     setLegsLength(
       state = {
-        currentCoil: new Coil(),
+        currentCoil: WireGenerator.normalCoil(),
       },
       { payload }) {
       return {
