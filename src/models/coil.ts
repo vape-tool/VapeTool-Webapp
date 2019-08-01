@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect } from 'dva';
-import { Coil } from '@/types/coil';
+import { Coil } from '@vapetool/types';
 import { getResistance, getSweetSpot, getWraps } from '@/services/coil';
 import * as WireGenerator from '@/utils/wireGenerator'
 

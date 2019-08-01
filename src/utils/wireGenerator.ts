@@ -1,11 +1,8 @@
-import { Coil } from '@/types/coil';
-import { Wire, WireFormat, WireKind, WireStyle, WireType } from '@/types/wire';
-import { KANTHAL_A1_AMP, Material } from '@/types/material';
-
+import { Coil, Material, Materials, Wire, WireFormat, WireKind, WireStyle, WireType } from '@vapetool/types'
 
 const defaultCoreMm = 0.511;
 const defaultOuterMm = 0.202;
-const defaultMaterial: Material = KANTHAL_A1_AMP;
+const defaultMaterial: Material = Materials.KANTHAL_A1_AMP;
 const defaultWidth = 0.5;
 const defaultHeight = 0.1;
 

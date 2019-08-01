@@ -1,5 +1,5 @@
+import { Coil } from '@vapetool/types';
 import request from '@/utils/request';
-import { Coil } from '@/types/coil';
 
 export async function getResistance(coil: Coil): Promise<any> {
   return request.post('/api/getResistance', { data: coil });

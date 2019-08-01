@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Typography } from 'antd';
-import { WiresTree, WireType } from '@/types/wire';
+import { WiresTree, WireType } from '@vapetool/types';
 
 export interface WireComponentProps {
   wiresTree: WiresTree;
