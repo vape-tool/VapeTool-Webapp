@@ -1,14 +1,14 @@
 import { Coil } from '@vapetool/types';
 import request from '@/utils/request';
 
-export async function getResistance(coil: Coil): Promise<any> {
-  return request.post('/api/getResistance', { data: coil });
+export async function calculateForWraps(coil: Coil): Promise<any> {
+  return request.post('/api/calculateForWraps', { data: { coil } });
 }
 
-export async function getWraps(coil: Coil): Promise<any> {
-  return request.post('/api/getWraps', { data: coil });
+export async function calculateForResistance(coil: Coil): Promise<any> {
+  return request.post('/api/calculateForResistance', { data: { coil } });
 }
 
 export async function getSweetSpot(coil: Coil): Promise<any> {
-  return request.post('/api/getSweetSpot', { data: coil });
+  return request.post('/api/getSweetSpot', { data: { coil } });
 }

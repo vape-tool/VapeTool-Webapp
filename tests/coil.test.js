@@ -1,4 +1,4 @@
-import { Coil } from '@/models/coil';
+import Coil from '../src/models/coil';
 
 describe('Coil', () => {
   it('coil empty constructor should fill everything', () => {

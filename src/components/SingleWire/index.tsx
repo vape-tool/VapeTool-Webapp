@@ -1,17 +1,110 @@
 import * as React from 'react';
-import { Card, Typography } from 'antd';
-import { Wire, WireType } from '@vapetool/types';
+import { Button, Card, Col, Icon, Row, Select, Typography } from 'antd';
+import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
+import { getResistancePerMeter } from '@/utils/math';
+import { Path } from '@/models/coil';
+import WireDiameter from '@/components/WireDiameter';
+import { Dispatch } from '@/models/connect';
+import RoundIcon from '@/assets/RoundIcon';
+import DiameterIcon from '@/assets/DiameterIcon';
+import CoreIcon from '@/assets/CoreIcon';
+import OuterIcon from '@/assets/OuterIcon';
+
+const { Option } = Select;
 
 export interface WireComponentProps {
   wire: Wire;
+  path: Path[];
+  dispatch: Dispatch;
 }
 
+const materials: Material[] = [
+  Materials.KANTHAL_A1_AMP,
+  Materials.KANTHAL_A_AE_AF,
+  Materials.KANTHAL_D,
+  Materials.NICHROME_N20,
+  Materials.NICHROME_N40,
+  Materials.NICHROME_N60,
+  Materials.NICHROME_N70,
+  Materials.NICHROME_N80,
+  Materials.NICHROME_N90,
+  Materials.NICKEL_NI200,
+  Materials.NICKEL_DH,
+  Materials.TITANIUM_TI,
+  Materials.TITANIUM_TI_R504,
+  Materials.SS_304_V2A,
+  Materials.SS_316_V4A,
+  Materials.SS_316L,
+  Materials.SS_317L,
+  Materials.SS_321,
+  Materials.SS_430,
+  Materials.NIFE,
+  Materials.NIFE30_STEALTHVAPE,
+  Materials.NIFE30_RESISTHERM,
+  Materials.NIFE48_52_ALLOY52,
+  Materials.NIFE70_ALLOY120,
+  Materials.TUNGSTEN,
+  Materials.INVAR_NILO_PERNIFER_36,
+  Materials.SILVER,
+  Materials.ALUCHROME,
+].sort((a, b) => Number(a.id) - Number(b.id));
+
 const SingleWire: React.FC<WireComponentProps> = props => {
-  const { wire } = props;
+  const { wire, path, dispatch } = props;
+
+  const handleMaterialChange = ({ key, label }: any): void => {
+  };
+  const onDeleteClick = () => {
+    dispatch({
+      type: 'coil/deleteWire',
+      paths: path,
+    })
+  };
+  const onChangeKindClick = () => {
+    wire.kind = wire.kind === WireKind.ROUND ? WireKind.RIBBON : WireKind.ROUND;
+
+    dispatch({
+      type: 'coil/setWire',
+      payload: { paths: path, wire },
+    })
+  };
 
   return (
-    <Card>
-      <Typography>{WireType[wire.type]}</Typography>
+    <Card type="inner"
+          title={<Row>
+            {wire.style === WireStyle.CORE ? <CoreIcon/> : <OuterIcon/>}
+            {WireStyle[wire.style]}
+          </Row>}
+          extra={<Row type="flex" gutter={8}><Col>
+            {wire.kind === WireKind.ROUND ?
+              <RoundIcon onClick={onChangeKindClick}/>
+              :
+              <Icon onClick={onChangeKindClick} type="minus"/>
+            }
+          </Col>
+            <Col>
+              <Icon onClick={onDeleteClick} type="close"/>
+            </Col>
+          </Row>}
+          style={{ width: '100%', maxWidth: 400 }}>
+      <Select
+        size="default"
+        labelInValue
+        defaultValue={{ key: wire.material.id }}
+        style={{ width: '100%', maxWidth: 220 }}
+        onChange={handleMaterialChange}
+      >
+        {materials.map(material => <Option key={material.name} value={material.id}>
+          {material.name}
+        </Option>)}
+      </Select>
+      <Button>{Math.round(getResistancePerMeter(wire) * 1000) / 1000} [Ω/m]</Button>
+
+      <Typography.Title level={4}><DiameterIcon style={{ color: 'primary' }}/>Diameter of wire</Typography.Title>
+      <WireDiameter path={path} dispatch={dispatch} wire={wire}/>
+      <br/>
+      <Typography.Text>Wire length: {Math.round(wire.totalLength) / 10}cm</Typography.Text>
+
     </Card>
   )
 };

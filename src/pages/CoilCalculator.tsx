@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, InputNumber, Select, Typography } from 'antd';
+import { Button, Card, InputNumber, Row, Select, Typography } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import { CoilModelState, ConnectProps, ConnectState, Dispatch } from '@/models/connect';
@@ -57,12 +57,12 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const calculate = (): void => {
     if (lastEdit === 'wraps') {
       dispatch({
-        type: 'coil/getResistance',
+        type: 'coil/calculateForResistance',
         payload: coil.currentCoil,
       })
     } else { // default
       dispatch({
-        type: 'coil/getWraps',
+        type: 'coil/calculateForWraps',
         payload: coil.currentCoil,
       })
     }
@@ -72,7 +72,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       <Card>
         <Title level={4}>Setup</Title>
 
-        <Select labelInValue defaultValue={{ key: `${coil.currentCoil.setup}` }} onChange={onSetupChange}>
+        <Select labelInValue defaultValue={{ key: `${coil.currentCoil.setup}` }}
+                onChange={onSetupChange}>
           <Option value="1">Single Coil (1)</Option>
           <Option value="2">Dual Coil (2)</Option>
           <Option value="3">Triple Coil (3)</Option>
@@ -80,23 +81,35 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         </Select>
 
         <Title level={4}>Type</Title>
-        <ComplexWire wiresTree={coil.currentCoil}/>
+        <ComplexWire dispatch={dispatch} complexWire={coil.currentCoil} path={[]}/>
 
         <Title level={4}>Inner diameter of coil</Title>
-        <InputNumber min={0.0} defaultValue={coil.currentCoil.innerDiameter}
+        <InputNumber min={0.0} step={0.1}
+                     defaultValue={coil.currentCoil.innerDiameter}
+                     value={coil.currentCoil.innerDiameter}
                      onChange={onInnerDiameterChange}/>
 
         <Title level={4}>Legs length per coil</Title>
-        <InputNumber min={0.0} defaultValue={coil.currentCoil.legsLength}
+        <InputNumber min={0.0} step={1}
+                     defaultValue={coil.currentCoil.legsLength}
+                     value={coil.currentCoil.legsLength}
                      onChange={onLegsLengthChange}/>
 
-        <Title level={4}>Resistance</Title>
-        <InputNumber min={0.0} defaultValue={coil.currentCoil.resistance}
-                     onChange={onResistanceChange}/>
-
-        <Title level={4}>Wraps per coil</Title>
-        <InputNumber min={0.0} defaultValue={coil.currentCoil.wraps}
-                     onChange={onWrapsChange}/>
+        <Row type="flex">
+          <div style={{ marginRight: 32 }}>
+            <Title level={4}>Resistance</Title>
+            <InputNumber min={0.0} step={0.05}
+                         defaultValue={coil.currentCoil.resistance}
+                         value={coil.currentCoil.resistance}
+                         onChange={onResistanceChange}/>
+          </div>
+          <div>
+            <Title level={4}>Wraps per coil</Title>
+            <InputNumber min={0} step={1} defaultValue={coil.currentCoil.wraps}
+                         value={coil.currentCoil.wraps}
+                         onChange={onWrapsChange}/>
+          </div>
+        </Row>
         <br/>
         <br/>
         <Button type="primary" onClick={calculate}>Calculate</Button>
