@@ -29,7 +29,9 @@ export interface GlobalModelType {
     saveNotices: Reducer<GlobalModelState>;
     saveClearedNotices: Reducer<GlobalModelState>;
   };
-  subscriptions: { setup: Subscription };
+  subscriptions: {
+    setup: Subscription
+  };
 }
 
 const GlobalModel: GlobalModelType = {
@@ -41,7 +43,7 @@ const GlobalModel: GlobalModelType = {
   },
 
   effects: {
-    *fetchNotices(_, { call, put, select }) {
+    * fetchNotices(_, { call, put, select }) {
       const data = yield call(queryNotices);
       yield put({
         type: 'saveNotices',
@@ -58,7 +60,7 @@ const GlobalModel: GlobalModelType = {
         },
       });
     },
-    *clearNotices({ payload }, { put, select }) {
+    * clearNotices({ payload }, { put, select }) {
       yield put({
         type: 'saveClearedNotices',
         payload,
@@ -75,7 +77,7 @@ const GlobalModel: GlobalModelType = {
         },
       });
     },
-    *changeNoticeReadState({ payload }, { put, select }) {
+    * changeNoticeReadState({ payload }, { put, select }) {
       const notices: NoticeItem[] = yield select(state =>
         state.global.notices.map(item => {
           const notice = { ...item };

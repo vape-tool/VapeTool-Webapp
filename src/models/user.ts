@@ -1,9 +1,13 @@
-import { Effect } from 'dva';
+import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
-import { queryCurrent, query as queryUsers } from '@/services/user';
+import { User } from '@vapetool/types';
+import { User as FirebaseUser } from 'firebase/app'
+import { getCurrentFirebaseUser, getUser, logoutFirebase, query as queryUsers, queryCurrent } from '@/services/user';
+import { auth } from '@/utils/firebase';
 
 export interface CurrentUser {
+  uid?: string;
   avatar?: string;
   name?: string;
   title?: string;
@@ -18,18 +22,26 @@ export interface CurrentUser {
 
 export interface UserModelState {
   currentUser?: CurrentUser;
+  user?: User;
+  firebaseUser?: FirebaseUser;
 }
 
 export interface UserModelType {
   namespace: 'user';
   state: UserModelState;
   effects: {
+    logout: Effect;
     fetch: Effect;
+    fetchCurrentUser: Effect;
     fetchCurrent: Effect;
   };
   reducers: {
+    setUser: Reducer<UserModelState>;
     saveCurrentUser: Reducer<UserModelState>;
     changeNotifyCount: Reducer<UserModelState>;
+  };
+  subscriptions: {
+    firebaseUser: Subscription
   };
 }
 
@@ -38,17 +50,37 @@ const UserModel: UserModelType = {
 
   state: {
     currentUser: {},
+    user: undefined,
+    firebaseUser: undefined,
   },
 
   effects: {
-    *fetch(_, { call, put }) {
+
+    * logout(_, { call }) {
+      yield call(logoutFirebase);
+    },
+    * fetch(_, { call, put }) {
       const response = yield call(queryUsers);
       yield put({
         type: 'save',
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
+    * fetchCurrentUser(_, { call, put }) {
+      const response = yield call(getCurrentFirebaseUser);
+      if (response) {
+        const firebaseUser = response as FirebaseUser;
+        const responseUser = yield call(getUser, firebaseUser.uid);
+        if (responseUser) {
+          const user = responseUser as User;
+          yield put({
+            type: 'setUser',
+            payload: { user, firebaseUser },
+          });
+        }
+      }
+    },
+    * fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',
@@ -58,6 +90,15 @@ const UserModel: UserModelType = {
   },
 
   reducers: {
+    setUser(state, { payload: { user, firebaseUser } }) {
+      console.log(`setUser user: ${user} firebaseUser: ${firebaseUser}`);
+
+      return {
+        ...state,
+        user,
+        firebaseUser,
+      }
+    },
     saveCurrentUser(state, action) {
       return {
         ...state,
@@ -78,6 +119,30 @@ const UserModel: UserModelType = {
           unreadCount: action.payload.unreadCount,
         },
       };
+    },
+  },
+
+  subscriptions: {
+    firebaseUser({ dispatch }) {
+      // Subscribe history(url) change, trigger `load` action if pathname is `/`
+      return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
+        console.log(`onAuthStateChanged ${firebaseUser}`);
+        if (firebaseUser) {
+          getUser(firebaseUser.uid).then(user => dispatch({
+            type: 'setUser',
+            payload: { user, firebaseUser },
+          })).catch(_ => dispatch({
+              type: 'setUser',
+              payload: { user: undefined, firebaseUser },
+            }),
+          )
+        } else {
+          dispatch({
+            type: 'setUser',
+            payload: { user: undefined, firebaseUser: undefined },
+          })
+        }
+      });
     },
   },
 };
