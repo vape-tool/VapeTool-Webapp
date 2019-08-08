@@ -12,7 +12,7 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const { dispatch, user: { user, firebaseUser } } = props;
+  const { dispatch, user: { currentUser, firebaseUser } } = props;
   const uiConfig: firebaseui.auth.Config = {
     signInFlow: 'popup',
     signInOptions: [
@@ -22,14 +22,13 @@ const Cloud: React.FC<AuthComponentProps> = props => {
     ],
     callbacks: {
       signInSuccessWithAuthResult: (): boolean => {
-
         notification.info({ message: 'User logged in' });
         return false
       },
     },
   };
 
-  if (!user) {
+  if (!currentUser) {
     return (
       <div>
         <h1>My App</h1>
@@ -41,7 +40,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
   return (
     <div>
       <h1>My App</h1>
-      <p>Welcome {user.display_name}! You are now signed-in!</p>
+      <p>Welcome {currentUser.name}! You are now signed-in!</p>
       <p>Your uid is {firebaseUser && firebaseUser.uid}</p>
       <a onClick={() => dispatch({ type: 'user/logout' })}>Sign-out</a>
     </div>

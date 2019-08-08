@@ -4,11 +4,7 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 
-import ProLayout, {
-  MenuDataItem,
-  BasicLayoutProps as ProLayoutProps,
-  Settings,
-} from '@ant-design/pro-layout';
+import ProLayout, { BasicLayoutProps as ProLayoutProps, MenuDataItem, Settings, } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -17,7 +13,6 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, Dispatch } from '@/models/connect';
-import { isAntDesignPro } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 
 export interface BasicLayoutProps extends ProLayoutProps {
@@ -27,6 +22,7 @@ export interface BasicLayoutProps extends ProLayoutProps {
   settings: Settings;
   dispatch: Dispatch;
 }
+
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
@@ -45,21 +41,16 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
 
-const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => {
-
-  return (
-
-      <div
-        style={{
-          padding: '0px 24px 24px',
-          textAlign: 'center',
-        }}
-      >
-        <span>Vape Tool ©2019 Created with ❤️ for Vapers</span>
-      </div>
-
-  );
-};
+const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => (
+  <div
+    style={{
+      padding: '0px 24px 24px',
+      textAlign: 'center',
+    }}
+  >
+    <span>Vape Tool ©2019 Created with <span aria-label="love" role="img">❤️</span> for Vapers</span>
+  </div>
+);
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const { dispatch, children, settings } = props;

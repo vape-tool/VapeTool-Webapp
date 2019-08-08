@@ -1,15 +1,20 @@
 import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
-import { User } from '@vapetool/types';
+import { Ban, User, UserPermission } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app'
-import { getCurrentFirebaseUser, getUser, logoutFirebase, query as queryUsers, queryCurrent } from '@/services/user';
+import { getCurrentFirebaseUser, getUser, getUserAvatarUrl, logoutFirebase, } from '@/services/user';
 import { auth } from '@/utils/firebase';
 
-export interface CurrentUser {
-  uid?: string;
-  avatar?: string;
-  name?: string;
+export interface CurrentUser extends User {
+  uid: string;
+  avatar: string;
+  name: string;
+  email: string;
+  pro: boolean;
+  setup: boolean;
+  permission: UserPermission;
+  ban?: Ban;
   title?: string;
   group?: string;
   signature?: string;
@@ -22,7 +27,6 @@ export interface CurrentUser {
 
 export interface UserModelState {
   currentUser?: CurrentUser;
-  user?: User;
   firebaseUser?: FirebaseUser;
 }
 
@@ -31,14 +35,11 @@ export interface UserModelType {
   state: UserModelState;
   effects: {
     logout: Effect;
-    fetch: Effect;
     fetchCurrentUser: Effect;
-    fetchCurrent: Effect;
   };
   reducers: {
     setUser: Reducer<UserModelState>;
     saveCurrentUser: Reducer<UserModelState>;
-    changeNotifyCount: Reducer<UserModelState>;
   };
   subscriptions: {
     firebaseUser: Subscription
@@ -49,53 +50,49 @@ const UserModel: UserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: {},
-    user: undefined,
+    currentUser: undefined,
     firebaseUser: undefined,
   },
 
   effects: {
-
-    * logout(_, { call }) {
-      yield call(logoutFirebase);
-    },
-    * fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-    },
-    * fetchCurrentUser(_, { call, put }) {
-      const response = yield call(getCurrentFirebaseUser);
-      if (response) {
-        const firebaseUser = response as FirebaseUser;
-        const responseUser = yield call(getUser, firebaseUser.uid);
-        if (responseUser) {
-          const user = responseUser as User;
-          yield put({
-            type: 'setUser',
-            payload: { user, firebaseUser },
-          });
-        }
+    * fetchCurrentUser({ firebaseUser }, { call, put }) {
+      if (!firebaseUser) {
+        // if its called on demand then we need to fetch firebaseUser
+        // eslint-disable-next-line no-param-reassign
+        firebaseUser = yield call(getCurrentFirebaseUser);
+      }
+      if (firebaseUser) {
+        const callUser = call(getUser, firebaseUser.uid);
+        const callAvatarUrl = call(getUserAvatarUrl, firebaseUser.uid);
+        const user = yield callUser as User;
+        const avatarUrl = yield callAvatarUrl;
+        const currentUser = {
+          uid: firebaseUser.uid,
+          name: user.display_name || firebaseUser.displayName,
+          avatar: avatarUrl || firebaseUser.photoURL,
+        };
+        yield put({
+          type: 'setUser',
+          payload: { firebaseUser, currentUser },
+        });
       }
     },
-    * fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    * logout(_, { put, call }) {
+      yield call(logoutFirebase);
       yield put({
-        type: 'saveCurrentUser',
-        payload: response,
-      });
+        type: 'setUser',
+        payload: { firebaseUser: undefined, currentUser: undefined },
+      })
     },
   },
 
   reducers: {
-    setUser(state, { payload: { user, firebaseUser } }) {
-      console.log(`setUser user: ${user} firebaseUser: ${firebaseUser}`);
-
+    setUser(state, { payload: { firebaseUser, currentUser } }) {
+      console.log(`setUser firebaseUser: ${firebaseUser}`);
+      console.log(`setUser firebaseUser: ${firebaseUser}`);
       return {
         ...state,
-        user,
+        currentUser,
         firebaseUser,
       }
     },
@@ -103,21 +100,6 @@ const UserModel: UserModelType = {
       return {
         ...state,
         currentUser: action.payload || {},
-      };
-    },
-    changeNotifyCount(
-      state = {
-        currentUser: {},
-      },
-      action,
-    ) {
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          notifyCount: action.payload.totalCount,
-          unreadCount: action.payload.unreadCount,
-        },
       };
     },
   },
@@ -128,18 +110,14 @@ const UserModel: UserModelType = {
       return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
         console.log(`onAuthStateChanged ${firebaseUser}`);
         if (firebaseUser) {
-          getUser(firebaseUser.uid).then(user => dispatch({
-            type: 'setUser',
-            payload: { user, firebaseUser },
-          })).catch(_ => dispatch({
-              type: 'setUser',
-              payload: { user: undefined, firebaseUser },
-            }),
-          )
+          dispatch({
+            type: 'fetchCurrentUser',
+            firebaseUser,
+          })
         } else {
           dispatch({
             type: 'setUser',
-            payload: { user: undefined, firebaseUser: undefined },
+            payload: { firebaseUser },
           })
         }
       });
