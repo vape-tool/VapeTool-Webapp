@@ -10,6 +10,7 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
+
 export interface GlobalHeaderRightProps extends ConnectProps {
   theme?: SiderTheme;
   layout: 'sidemenu' | 'topmenu';
@@ -59,11 +60,11 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
           rel="noopener noreferrer"
           className={styles.action}
         >
-          <Icon type="question-circle-o" />
+          <Icon type="question-circle-o"/>
         </a>
       </Tooltip>
-      <Avatar />
-      <SelectLang className={styles.action} />
+      <Avatar menu/>
+      <SelectLang className={styles.action}/>
     </div>
   );
 };

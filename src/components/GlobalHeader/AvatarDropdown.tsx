@@ -48,10 +48,6 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
-        <Menu.Item key="settings">
-          <Icon type="setting" />
-          <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
-        </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />

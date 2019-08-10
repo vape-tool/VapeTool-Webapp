@@ -3,8 +3,11 @@ import { Reducer } from 'redux';
 
 import { Ban, User, UserPermission } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app'
-import { getCurrentFirebaseUser, getUser, getUserAvatarUrl, logoutFirebase, } from '@/services/user';
+import { getCurrentFirebaseUser, getUser, getUserAvatarUrl, logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
+import { getUserPhotos } from '@/services/photo';
+import { Photo } from '@/types/photo';
+import { ConnectState } from '@/models/connect';
 
 export interface CurrentUser extends User {
   uid: string;
@@ -15,31 +18,33 @@ export interface CurrentUser extends User {
   setup: boolean;
   permission: UserPermission;
   ban?: Ban;
-  title?: string;
-  group?: string;
-  signature?: string;
-  tags?: {
+  title: string;
+  group: string;
+  signature: string;
+  tags: {
     key: string;
     label: string;
   }[];
-  unreadCount?: number;
+  unreadCount: number;
 }
 
 export interface UserModelState {
-  currentUser?: CurrentUser;
-  firebaseUser?: FirebaseUser;
+  currentUser: Partial<CurrentUser>;
+  firebaseUser: Partial<FirebaseUser>;
+  userPhotos: Photo[];
 }
 
 export interface UserModelType {
-  namespace: 'user';
+  namespace: string;
   state: UserModelState;
   effects: {
     logout: Effect;
     fetchCurrentUser: Effect;
+    fetchCurrentUserPhotos: Effect;
   };
   reducers: {
     setUser: Reducer<UserModelState>;
-    saveCurrentUser: Reducer<UserModelState>;
+    setUserPhotos: Reducer<UserModelState>;
   };
   subscriptions: {
     firebaseUser: Subscription
@@ -50,8 +55,9 @@ const UserModel: UserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: undefined,
-    firebaseUser: undefined,
+    currentUser: {},
+    firebaseUser: {},
+    userPhotos: [],
   },
 
   effects: {
@@ -84,23 +90,31 @@ const UserModel: UserModelType = {
         payload: { firebaseUser: undefined, currentUser: undefined },
       })
     },
+    * fetchCurrentUserPhotos(_, { put, call, select }) {
+      console.log('fetchCurrentUserPhotos');
+      const uid = yield select((state: ConnectState) => state.user.currentUser.uid);
+      console.log(`fetchCurrentUserPhotos uid: ${uid}`);
+      const photos = yield call(getUserPhotos, uid);
+      yield put({
+        type: 'setUserPhotos',
+        payload: Array.isArray(photos) ? photos : [],
+      })
+    },
   },
 
   reducers: {
-    setUser(state, { payload: { firebaseUser, currentUser } }) {
-      console.log(`setUser firebaseUser: ${firebaseUser}`);
-      console.log(`setUser firebaseUser: ${firebaseUser}`);
+    setUser(state, { payload: { firebaseUser, currentUser } }): UserModelState {
       return {
-        ...state,
-        currentUser,
-        firebaseUser,
+        ...(state as UserModelState),
+        currentUser: currentUser || {},
+        firebaseUser: firebaseUser || {},
       }
     },
-    saveCurrentUser(state, action) {
+    setUserPhotos(state, action): UserModelState {
       return {
-        ...state,
-        currentUser: action.payload || {},
-      };
+        ...(state as UserModelState),
+        userPhotos: action.payload,
+      }
     },
   },
 
@@ -108,7 +122,8 @@ const UserModel: UserModelType = {
     firebaseUser({ dispatch }) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
       return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
-        console.log(`onAuthStateChanged ${firebaseUser}`);
+        console.log('onAuthStateChanged');
+        console.dir(firebaseUser);
         if (firebaseUser) {
           dispatch({
             type: 'fetchCurrentUser',

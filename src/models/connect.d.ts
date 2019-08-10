@@ -6,6 +6,7 @@ import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
 import { CoilModelState } from './coil';
+import { PhotoModelState } from './photo';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -18,6 +19,7 @@ export interface Loading {
     setting?: boolean;
     user?: boolean;
     coil?: boolean;
+    photo?: boolean;
   };
 }
 
@@ -27,6 +29,7 @@ export interface ConnectState {
   settings: SettingModelState;
   user: UserModelState;
   coil: CoilModelState;
+  photo: PhotoModelState;
 }
 
 export type Effect = (

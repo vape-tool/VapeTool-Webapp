@@ -1,52 +1,48 @@
 import React from 'react';
-import firebase from 'firebase/app';
 import 'firebase/auth';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { notification } from 'antd';
+import { Card, List } from 'antd';
 import { connect } from 'dva';
-import { ConnectProps, ConnectState, Dispatch, UserModelState } from '@/models/connect';
+import moment from 'moment';
+import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { Photo } from '@/types/photo';
+import styles from '@/pages/account/center/components/UserPhotos/index.less';
+import { PhotoModelState } from '@/models/photo';
 
 interface AuthComponentProps extends ConnectProps {
-  user: UserModelState;
+  photo: PhotoModelState;
   dispatch: Dispatch;
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const { dispatch, user: { currentUser, firebaseUser } } = props;
-  const uiConfig: firebaseui.auth.Config = {
-    signInFlow: 'popup',
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    ],
-    callbacks: {
-      signInSuccessWithAuthResult: (): boolean => {
-        notification.info({ message: 'User logged in' });
-        return false
-      },
-    },
-  };
+  const { photo: { photos } } = props;
 
-  if (!currentUser) {
-    return (
-      <div>
-        <h1>My App</h1>
-        <p>Please sign-in:</p>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
-      </div>
-    );
-  }
+
   return (
     <div>
-      <h1>My App</h1>
-      <p>Welcome {currentUser.name}! You are now signed-in!</p>
-      <p>Your uid is {firebaseUser && firebaseUser.uid}</p>
-      <a onClick={() => dispatch({ type: 'user/logout' })}>Sign-out</a>
+      <List<Photo>
+        className={styles.coverCardList}
+        rowKey="uid"
+        grid={{ gutter: 24, xxl: 4, xl: 4, lg: 3, md: 3, sm: 3, xs: 1 }}
+        dataSource={photos || []}
+        renderItem={item => (
+          <List.Item>
+            <Card
+              className={styles.card}
+              hoverable
+              cover={<img alt={item.description} src={item.url}/>}
+            >
+              <Card.Meta title={<a>{item.description}</a>}/>
+              <div className={styles.cardItemContent}>
+                <span>{moment(item.lastTimeModified).fromNow()}</span>
+              </div>
+            </Card>
+          </List.Item>
+        )}
+      />
     </div>
   );
 };
 
-export default connect(({ user }: ConnectState) => ({
-  user,
+export default connect(({ photo }: ConnectState) => ({
+  photo,
 }))(Cloud);

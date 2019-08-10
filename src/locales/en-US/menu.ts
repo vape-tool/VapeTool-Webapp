@@ -7,6 +7,7 @@ export default {
   'menu.converters': 'Converters',
   'menu.battery-life': 'Battery Life',
   'menu.knowledge-zone': 'Knowledge Zone',
+  'menu.center': 'My Account',
   'menu.more-blocks': 'More Blocks',
   'menu.home': 'Home',
   'menu.login': 'Login',
