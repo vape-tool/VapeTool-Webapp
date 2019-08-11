@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 
 import { Ban, User, UserPermission } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app'
-import { getCurrentFirebaseUser, getUser, getUserAvatarUrl, logoutFirebase } from '@/services/user';
+import { getUser, getUserAvatarUrl, logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
 import { getUserPhotos } from '@/services/photo';
 import { Photo } from '@/types/photo';
@@ -18,20 +18,20 @@ export interface CurrentUser extends User {
   setup: boolean;
   permission: UserPermission;
   ban?: Ban;
-  title: string;
-  group: string;
-  signature: string;
-  tags: {
+  title?: string;
+  group?: string;
+  signature?: string;
+  tags?: {
     key: string;
     label: string;
   }[];
-  unreadCount: number;
+  unreadCount?: number;
 }
 
 export interface UserModelState {
-  currentUser: Partial<CurrentUser>;
-  firebaseUser: Partial<FirebaseUser>;
-  userPhotos: Photo[];
+  currentUser?: CurrentUser;
+  firebaseUser?: FirebaseUser;
+  userPhotos?: Photo[];
 }
 
 export interface UserModelType {
@@ -55,18 +55,13 @@ const UserModel: UserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: {},
-    firebaseUser: {},
-    userPhotos: [],
+    currentUser: undefined,
+    firebaseUser: undefined,
+    userPhotos: undefined,
   },
 
   effects: {
     * fetchCurrentUser({ firebaseUser }, { call, put }) {
-      if (!firebaseUser) {
-        // if its called on demand then we need to fetch firebaseUser
-        // eslint-disable-next-line no-param-reassign
-        firebaseUser = yield call(getCurrentFirebaseUser);
-      }
       if (firebaseUser) {
         const callUser = call(getUser, firebaseUser.uid);
         const callAvatarUrl = call(getUserAvatarUrl, firebaseUser.uid);
@@ -83,17 +78,16 @@ const UserModel: UserModelType = {
         });
       }
     },
-    * logout(_, { put, call }) {
+    * logout(_, { call }) {
       yield call(logoutFirebase);
-      yield put({
-        type: 'setUser',
-        payload: { firebaseUser: undefined, currentUser: undefined },
-      })
     },
     * fetchCurrentUserPhotos(_, { put, call, select }) {
-      console.log('fetchCurrentUserPhotos');
-      const uid = yield select((state: ConnectState) => state.user.currentUser.uid);
+      const uid = yield select((state: ConnectState) => (state.user.currentUser !== undefined ?
+        state.user.currentUser.uid : undefined));
       console.log(`fetchCurrentUserPhotos uid: ${uid}`);
+      if (!uid) {
+        return
+      }
       const photos = yield call(getUserPhotos, uid);
       yield put({
         type: 'setUserPhotos',
@@ -106,8 +100,8 @@ const UserModel: UserModelType = {
     setUser(state, { payload: { firebaseUser, currentUser } }): UserModelState {
       return {
         ...(state as UserModelState),
-        currentUser: currentUser || {},
-        firebaseUser: firebaseUser || {},
+        currentUser,
+        firebaseUser,
       }
     },
     setUserPhotos(state, action): UserModelState {
@@ -132,7 +126,7 @@ const UserModel: UserModelType = {
         } else {
           dispatch({
             type: 'setUser',
-            payload: { firebaseUser },
+            payload: { firebaseUser: undefined, currentUser: undefined },
           })
         }
       });

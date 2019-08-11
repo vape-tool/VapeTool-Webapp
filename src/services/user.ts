@@ -1,19 +1,6 @@
-import { User as FirebaseUser } from 'firebase';
 import { User } from '@vapetool/types';
 import request from '@/utils/request';
 import { auth, database, storage } from '@/utils/firebase';
-
-export function getCurrentFirebaseUser(): Promise<FirebaseUser> {
-  return new Promise((resolve, reject) => {
-    auth.onAuthStateChanged((user: FirebaseUser | null) => {
-      if (user) {
-        resolve(user);
-      } else {
-        reject(new Error('User not logged in'));
-      }
-    });
-  })
-}
 
 export function getUser(uid: string): Promise<User> {
   return new Promise((resolve, reject) => {

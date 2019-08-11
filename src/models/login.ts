@@ -34,8 +34,10 @@ const Model: ModelType = {
   },
 
   effects: {
-    *logout(_, { put }) {
-      yield put()
+    * logout(_, { put }) {
+      yield put({
+        type: 'user/logout',
+      });
 
       const { redirect } = getPageQuery();
       // redirect

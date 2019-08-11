@@ -170,7 +170,9 @@ class Center extends PureComponent<CenterProps,
     const { firebaseUser, currentUser, currentUserLoading } = this.props;
     const dataLoading = currentUserLoading || !(currentUser && Object.keys(currentUser).length);
 
+    console.log(firebaseUser);
     if (!firebaseUser) {
+      console.log('firebaseUser is null so redirect');
       return <Redirect to="/user/login"/>;
     }
     return (
