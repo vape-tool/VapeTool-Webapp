@@ -7,6 +7,7 @@ import { DefaultSettings as SettingModelState } from '../../config/defaultSettin
 import { UserModelState } from './user';
 import { CoilModelState } from './coil';
 import { PhotoModelState } from './photo';
+import { LiquidModelState } from './liquid';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -19,6 +20,7 @@ export interface Loading {
     setting?: boolean;
     user?: boolean;
     coil?: boolean;
+    liquid?: boolean;
     photo?: boolean;
   };
 }
@@ -29,6 +31,7 @@ export interface ConnectState {
   settings: SettingModelState;
   user: UserModelState;
   coil: CoilModelState;
+  liquid: LiquidModelState;
   photo: PhotoModelState;
 }
 
