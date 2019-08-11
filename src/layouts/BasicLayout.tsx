@@ -48,7 +48,13 @@ const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => (
       textAlign: 'center',
     }}
   >
-    <span>Vape Tool ©2019 Created with <span aria-label="love" role="img">❤️</span> for Vapers</span>
+    <span>
+      Vape Tool ©2019 Created with{' '}
+      <span aria-label="love" role="img">
+        ❤️
+      </span>{' '}
+      for Vapers
+    </span>
   </div>
 );
 

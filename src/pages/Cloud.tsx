@@ -1,12 +1,11 @@
 import React from 'react';
-import 'firebase/auth';
-import { Card, List } from 'antd';
+import { List } from 'antd';
 import { connect } from 'dva';
-import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { Photo } from '@/types/photo';
 import styles from '@/pages/account/center/components/UserPhotos/index.less';
 import { PhotoModelState } from '@/models/photo';
+import PhotoView from '@/components/PhotoView';
 
 interface AuthComponentProps extends ConnectProps {
   photo: PhotoModelState;
@@ -14,30 +13,19 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const { photo: { photos } } = props;
-
+  const {
+    photo: { photos },
+    dispatch,
+  } = props;
 
   return (
     <div>
       <List<Photo>
         className={styles.coverCardList}
         rowKey="uid"
-        grid={{ gutter: 24, xxl: 4, xl: 4, lg: 3, md: 3, sm: 3, xs: 1 }}
+        grid={{ gutter: 24, xxl: 4, xl: 3, lg: 2, md: 2, sm: 2, xs: 1 }}
         dataSource={photos || []}
-        renderItem={item => (
-          <List.Item>
-            <Card
-              className={styles.card}
-              hoverable
-              cover={<img alt={item.description} src={item.url}/>}
-            >
-              <Card.Meta title={<a>{item.description}</a>}/>
-              <div className={styles.cardItemContent}>
-                <span>{moment(item.lastTimeModified).fromNow()}</span>
-              </div>
-            </Card>
-          </List.Item>
-        )}
+        renderItem={photo => <PhotoView photo={photo} dispatch={dispatch}/>}
       />
     </div>
   );

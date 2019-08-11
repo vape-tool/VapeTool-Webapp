@@ -1,30 +1,22 @@
 import { User } from '@vapetool/types';
 import request from '@/utils/request';
-import { auth, database, storage } from '@/utils/firebase';
+import { auth, database } from '@/utils/firebase';
 
 export function getUser(uid: string): Promise<User> {
   return new Promise((resolve, reject) => {
-    database.ref(`users/${uid}`).once('value').then(snapshot => {
-      const user = snapshot.val();
-      if (user) {
-        resolve(user);
-      } else {
-        reject(new Error('User not found'));
-      }
-    }).catch(e => reject(e));
-  })
-}
-
-export function getUserAvatarUrl(uid: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    storage.ref(`users/images/${uid}.jpg`).getDownloadURL().then(url => {
-      if (url) {
-        resolve(url);
-      } else {
-        reject(new Error('User image not found'));
-      }
-    }).catch(e => reject(e));
-  })
+    database
+      .ref(`users/${uid}`)
+      .once('value')
+      .then(snapshot => {
+        const user = snapshot.val();
+        if (user) {
+          resolve(user);
+        } else {
+          reject(new Error('User not found'));
+        }
+      })
+      .catch(e => reject(e));
+  });
 }
 
 export async function query(): Promise<any> {

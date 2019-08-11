@@ -5,7 +5,8 @@ import { Dispatch } from 'redux';
 import { GridContent } from '@ant-design/pro-layout';
 import { RouteChildrenProps } from 'react-router';
 import { connect } from 'dva';
-import { User as FirebaseUser } from 'firebase/app'
+import { User as FirebaseUser } from 'firebase/app';
+import { Redirect } from 'umi';
 import UserPhotos from './components/UserPhotos';
 import Articles from './components/Articles';
 import Applications from './components/Applications';
@@ -13,40 +14,23 @@ import { TagType } from './data.d';
 import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
-import { Redirect } from 'umi';
 
 const operationTabList = [
   {
     key: 'photos',
-    tab: (
-      <span>
-        Photos
-      </span>
-    ),
+    tab: <span>Photos</span>,
   },
   {
     key: 'posts',
-    tab: (
-      <span>
-        Posts
-      </span>
-    ),
+    tab: <span>Posts</span>,
   },
   {
     key: 'coils',
-    tab: (
-      <span>
-        Coils
-      </span>
-    ),
+    tab: <span>Coils</span>,
   },
   {
     key: 'liquids',
-    tab: (
-      <span>
-        Liquids
-      </span>
-    ),
+    tab: <span>Liquids</span>,
   },
 ];
 
@@ -64,19 +48,13 @@ interface CenterState {
   inputValue: string;
 }
 
-@connect(
-  ({
-     loading,
-     user,
-   }: ConnectState) => ({
-    currentUser: user.currentUser,
-    firebaseUser: user.firebaseUser,
-    currentUserLoading: loading.effects['user/fetchCurrentUser'],
-    photosLoading: loading.effects['user/fetchCurrentUserPhotos'],
-  }),
-)
-class Center extends PureComponent<CenterProps,
-  CenterState> {
+@connect(({ loading, user }: ConnectState) => ({
+  currentUser: user.currentUser,
+  firebaseUser: user.firebaseUser,
+  currentUserLoading: loading.effects['user/fetchCurrentUser'],
+  photosLoading: loading.effects['user/fetchCurrentUserPhotos'],
+}))
+class Center extends PureComponent<CenterProps, CenterState> {
   // static getDerivedStateFromProps(
   //   props: accountCenterProps,
   //   state: accountCenterState,
@@ -200,9 +178,10 @@ class Center extends PureComponent<CenterProps,
                   <Divider dashed/>
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
-                    {currentUser.tags && currentUser.tags.concat(newTags).map(item => (
-                      <Tag key={item.key}>{item.label}</Tag>
-                    ))}
+                    {currentUser.tags &&
+                    currentUser.tags
+                      .concat(newTags)
+                      .map(item => <Tag key={item.key}>{item.label}</Tag>)}
                     {inputVisible && (
                       <Input
                         ref={ref => this.saveInputRef(ref)}

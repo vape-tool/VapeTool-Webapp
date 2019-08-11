@@ -2,12 +2,13 @@ import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
 import { Ban, User, UserPermission } from '@vapetool/types';
-import { User as FirebaseUser } from 'firebase/app'
-import { getUser, getUserAvatarUrl, logoutFirebase } from '@/services/user';
+import { User as FirebaseUser } from 'firebase/app';
+import { getUser, logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
 import { getUserPhotos } from '@/services/photo';
 import { Photo } from '@/types/photo';
 import { ConnectState } from '@/models/connect';
+import { getAvatarUrl } from '@/services/storage';
 
 export interface CurrentUser extends User {
   uid: string;
@@ -47,7 +48,7 @@ export interface UserModelType {
     setUserPhotos: Reducer<UserModelState>;
   };
   subscriptions: {
-    firebaseUser: Subscription
+    firebaseUser: Subscription;
   };
 }
 
@@ -64,7 +65,7 @@ const UserModel: UserModelType = {
     * fetchCurrentUser({ firebaseUser }, { call, put }) {
       if (firebaseUser) {
         const callUser = call(getUser, firebaseUser.uid);
-        const callAvatarUrl = call(getUserAvatarUrl, firebaseUser.uid);
+        const callAvatarUrl = call(getAvatarUrl, firebaseUser.uid);
         const user = yield callUser as User;
         const avatarUrl = yield callAvatarUrl;
         const currentUser = {
@@ -82,17 +83,18 @@ const UserModel: UserModelType = {
       yield call(logoutFirebase);
     },
     * fetchCurrentUserPhotos(_, { put, call, select }) {
-      const uid = yield select((state: ConnectState) => (state.user.currentUser !== undefined ?
-        state.user.currentUser.uid : undefined));
+      const uid = yield select((state: ConnectState) =>
+        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
+      );
       console.log(`fetchCurrentUserPhotos uid: ${uid}`);
       if (!uid) {
-        return
+        return;
       }
       const photos = yield call(getUserPhotos, uid);
       yield put({
         type: 'setUserPhotos',
         payload: Array.isArray(photos) ? photos : [],
-      })
+      });
     },
   },
 
@@ -102,13 +104,13 @@ const UserModel: UserModelType = {
         ...(state as UserModelState),
         currentUser,
         firebaseUser,
-      }
+      };
     },
     setUserPhotos(state, action): UserModelState {
       return {
         ...(state as UserModelState),
         userPhotos: action.payload,
-      }
+      };
     },
   },
 
@@ -122,12 +124,12 @@ const UserModel: UserModelType = {
           dispatch({
             type: 'fetchCurrentUser',
             firebaseUser,
-          })
+          });
         } else {
           dispatch({
             type: 'setUser',
             payload: { firebaseUser: undefined, currentUser: undefined },
-          })
+          });
         }
       });
     },
