@@ -13,25 +13,25 @@ export interface CoilModelState {
 }
 
 export interface CoilModelType {
-  namespace: 'coil';
+  namespace: string;
   state: CoilModelState;
   reducers: {
-    setSetup: Reducer<CoilModelState>
-    setInnerDiameter: Reducer<CoilModelState>
-    setCoil: Reducer<CoilModelState>
-    setLegsLength: Reducer<CoilModelState>
-    setResistance: Reducer<CoilModelState>
-    setWraps: Reducer<CoilModelState>
-    setType: Reducer<CoilModelState>
-    setWire: Reducer<CoilModelState>
-    deleteWire: Reducer<CoilModelState>
-    addWire: Reducer<CoilModelState>
-  },
+    setSetup: Reducer<CoilModelState>;
+    setInnerDiameter: Reducer<CoilModelState>;
+    setCoil: Reducer<CoilModelState>;
+    setLegsLength: Reducer<CoilModelState>;
+    setResistance: Reducer<CoilModelState>;
+    setWraps: Reducer<CoilModelState>;
+    setType: Reducer<CoilModelState>;
+    setWire: Reducer<CoilModelState>;
+    deleteWire: Reducer<CoilModelState>;
+    addWire: Reducer<CoilModelState>;
+  };
   effects: {
-    calculateForResistance: Effect,
-    calculateForWraps: Effect,
-    getSweetSpot: Effect,
-  }
+    calculateForResistance: Effect;
+    calculateForWraps: Effect;
+    getSweetSpot: Effect;
+  };
 }
 
 const CoilModel: CoilModelType = {
@@ -40,10 +40,10 @@ const CoilModel: CoilModelType = {
     currentCoil: wireGenerator.normalCoil(),
   },
   effects: {
-    * calculateForResistance({ payload }, { call, put, cancel }) {
+    *calculateForResistance({ payload }, { call, put, cancel }) {
       const response = yield call(calculateForResistance, payload);
       if (response instanceof Response) {
-        cancel()
+        cancel();
       } else if (response instanceof Object) {
         yield put({
           type: 'setCoil',
@@ -51,10 +51,10 @@ const CoilModel: CoilModelType = {
         });
       }
     },
-    * calculateForWraps({ payload }, { call, put, cancel }) {
+    *calculateForWraps({ payload }, { call, put, cancel }) {
       const response = yield call(calculateForWraps, payload);
       if (response instanceof Response) {
-        cancel()
+        cancel();
       } else if (response instanceof Object) {
         yield put({
           type: 'setCoil',
@@ -62,10 +62,10 @@ const CoilModel: CoilModelType = {
         });
       }
     },
-    * getSweetSpot(_, { call, put, cancel }) {
+    *getSweetSpot(_, { call, put, cancel }) {
       const response = yield call(getSweetSpot);
       if (response instanceof Response) {
-        cancel()
+        cancel();
       } else if (response instanceof Object) {
         yield put({
           type: 'setSweetSpot',
@@ -79,7 +79,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -92,7 +93,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -105,7 +107,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -118,7 +121,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -131,7 +135,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -144,7 +149,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload }) {
+      { payload },
+    ) {
       return {
         ...state,
         currentCoil: {
@@ -157,7 +163,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload: { paths, type } }) {
+      { payload: { paths, type } },
+    ) {
       console.dir(paths);
       console.log(type);
       if (paths.length > 0) {
@@ -176,12 +183,14 @@ const CoilModel: CoilModelType = {
       };
       modifyWireOnPath(newState.currentCoil, newWire, paths);
       console.dir(newState);
-      return newState
+      return newState;
     },
     setWire(
       state = {
         currentCoil: wireGenerator.normalCoil(),
-      }, { payload: { wire, paths } }) {
+      },
+      { payload: { wire, paths } },
+    ) {
       const newState = {
         ...state,
         currentCoil: {
@@ -196,7 +205,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { paths }) {
+      { paths },
+    ) {
       const newState = {
         ...state,
         currentCoil: {
@@ -211,7 +221,8 @@ const CoilModel: CoilModelType = {
       state = {
         currentCoil: wireGenerator.normalCoil(),
       },
-      { payload: { wire, paths } }) {
+      { payload: { wire, paths } },
+    ) {
       const newState = {
         ...state,
         currentCoil: {
@@ -226,7 +237,6 @@ const CoilModel: CoilModelType = {
 
       return newState;
     },
-
   },
 };
 
@@ -236,15 +246,15 @@ function deleteWireOnPath(wire: Coil | Wire, paths: Path[]) {
   if (path !== undefined) {
     if (isLast) {
       if (path.style === WireStyle.CORE) {
-        wire.cores.splice(path.index, 1)
+        wire.cores.splice(path.index, 1);
       } else {
-        wire.outers.splice(path.index, 1)
+        wire.outers.splice(path.index, 1);
       }
     }
     if (path.style === WireStyle.CORE) {
-      deleteWireOnPath(wire.cores[path.index], paths)
+      deleteWireOnPath(wire.cores[path.index], paths);
     } else {
-      deleteWireOnPath(wire.outers[path.index], paths)
+      deleteWireOnPath(wire.outers[path.index], paths);
     }
   }
 }
@@ -252,9 +262,9 @@ function deleteWireOnPath(wire: Coil | Wire, paths: Path[]) {
 function addWireOnPath(wire: Coil | Wire, newWire: Wire, paths: Path[]) {
   const path = paths.shift();
   if (path === undefined) {
-    wire.cores.push(newWire)
+    wire.cores.push(newWire);
   } else {
-    addWireOnPath(wire.cores[path.index], newWire, paths)
+    addWireOnPath(wire.cores[path.index], newWire, paths);
   }
 }
 
@@ -262,9 +272,9 @@ function modifyWireOnPath(wire: Coil | Wire, newWire: Wire, paths: Path[]) {
   const path = paths.shift();
   if (path !== undefined) {
     if (path.style === WireStyle.CORE) {
-      modifyWireOnPath(wire.cores[path.index], newWire, paths)
+      modifyWireOnPath(wire.cores[path.index], newWire, paths);
     } else {
-      modifyWireOnPath(wire.outers[path.index], newWire, paths)
+      modifyWireOnPath(wire.outers[path.index], newWire, paths);
     }
   } else {
     Object.assign(wire, newWire);

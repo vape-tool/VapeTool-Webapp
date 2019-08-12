@@ -1,19 +1,14 @@
-import { AnyAction, Reducer } from 'redux';
+import { Reducer } from 'redux';
 import { parse, stringify } from 'qs';
 
-import { EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
+import { Effect } from '@/models/connect';
 
 export function getPageQuery(): {
   [key: string]: string;
 } {
   return parse(window.location.href.split('?')[1]);
 }
-
-export type Effect = (
-  action: AnyAction,
-  effects: EffectsCommandMap & { select: <T>(func: (state: {}) => T) => T },
-) => void;
 
 export interface ModelType {
   namespace: string;
@@ -34,7 +29,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * logout(_, { put }) {
+    *logout(_, { put }) {
       yield put({
         type: 'user/logout',
       });

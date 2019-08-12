@@ -8,6 +8,7 @@ import { UserModelState } from './user';
 import { CoilModelState } from './coil';
 import { PhotoModelState } from './photo';
 import { LiquidModelState } from './liquid';
+import { OhmModelState } from './ohm';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -22,6 +23,7 @@ export interface Loading {
     coil?: boolean;
     liquid?: boolean;
     photo?: boolean;
+    ohm?: boolean;
   };
 }
 
@@ -33,6 +35,7 @@ export interface ConnectState {
   coil: CoilModelState;
   liquid: LiquidModelState;
   photo: PhotoModelState;
+  ohm: OhmModelState;
 }
 
 export type Effect = (
