@@ -104,19 +104,19 @@ export default {
           path: '/cloud',
           name: 'cloud',
           icon: 'cloud',
-          component: './Cloud',
+          component: './cloud/Cloud',
         },
         {
           path: '/coil-calculator',
           name: 'coil-calculator',
           icon: 'https://vapetool.app/img/menu_icons/menu_coil_calculator.svg',
-          component: './CoilCalculator',
+          component: './coil//CoilCalculator',
         },
         {
           path: '/liquid-blender',
           name: 'liquid-blender',
           icon: 'https://vapetool.app/img/menu_icons/menu_liquid_blender.svg',
-          component: './LiquidBlender',
+          component: './liquid/LiquidBlender',
         },
         {
           path: '/ohm-law',

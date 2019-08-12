@@ -6,6 +6,7 @@ import { calculateResults } from '@/services/liquid';
 export interface LiquidModelState {
   currentLiquid: Liquid;
   results: Result[];
+  editingFlavor?: string;
 }
 
 export interface LiquidModelType {
@@ -22,9 +23,11 @@ export interface LiquidModelType {
     setLiquid: Reducer<LiquidModelState>;
     setResults: Reducer<LiquidModelState>;
 
+    addEmptyFlavor: Reducer<LiquidModelState>;
+    addFlavor: Reducer<LiquidModelState>;
+    editFlavor: Reducer<LiquidModelState>;
     setFlavor: Reducer<LiquidModelState>;
     removeFlavor: Reducer<LiquidModelState>;
-    addFlavor: Reducer<LiquidModelState>;
   };
   effects: {
     calculateResults: Effect;
@@ -166,6 +169,34 @@ const LiquidModel: LiquidModelType = {
       };
     },
 
+    editFlavor(
+      state: LiquidModelState = {
+        currentLiquid: new Liquid(),
+        results: [],
+      },
+      { payload },
+    ): LiquidModelState {
+      return {
+        ...state,
+        editingFlavor: payload,
+      };
+    },
+    addEmptyFlavor(
+      state: LiquidModelState = {
+        currentLiquid: new Liquid(),
+        results: [],
+      }): LiquidModelState {
+      const flavor = new Flavor();
+      state.currentLiquid.flavors.push(flavor);
+      return {
+        ...state,
+        editingFlavor: flavor.uid,
+        currentLiquid: {
+          ...state.currentLiquid,
+          flavors: state.currentLiquid.flavors,
+        },
+      };
+    },
     addFlavor(
       state: LiquidModelState = {
         currentLiquid: new Liquid(),
@@ -187,16 +218,25 @@ const LiquidModel: LiquidModelType = {
         currentLiquid: new Liquid(),
         results: [],
       },
-      { payload },
+      { payload: { uid, row } },
     ): LiquidModelState {
-      const newFlavors = state.currentLiquid.flavors.map((flavor: Flavor) =>
-        flavor.uid === payload.uid ? payload : flavor,
-      );
+      const newData = [...state.currentLiquid.flavors];
+      const index = newData.findIndex(item => uid === item.uid);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item,
+          ...row,
+        });
+      } else {
+        newData.push(row);
+      }
+
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          flavors: newFlavors,
+          flavors: newData,
         },
       };
     },

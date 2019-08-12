@@ -1,44 +1,44 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Col, InputNumber, Row, Slider, Table, Typography } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Slider, Table, Typography } from 'antd';
 import { connect } from 'dva';
+import { Result } from '@vapetool/types';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
+import FlavorTable from '@/components/FlavorTable';
 
 export interface LiquidBlenderProps extends ConnectProps {
   liquid: LiquidModelState;
   dispatch: Dispatch;
 }
 
-const flavorColumns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Manufacturer',
-    dataIndex: 'manufacturer',
-  },
-  {
-    title: 'Percentage [%]',
-    dataIndex: 'percentage',
-  },
-  {
-    title: 'Price [$]',
-    dataIndex: 'price',
-  },
-  {
-    title: 'Amount [ml]',
-    dataIndex: 'amount',
-  },
-];
-
 const resultColumns = [
   {
     title: 'Ingredient',
     dataIndex: 'name',
   },
+  {
+    title: 'Percentage',
+    dataIndex: 'percentage',
+  },
+  {
+    title: 'Amount',
+    dataIndex: 'ml',
+  },
+  {
+    title: 'Drops',
+    dataIndex: 'drips',
+  },
+  {
+    title: 'Weight',
+    dataIndex: 'weight',
+  },
+  {
+    title: 'Price',
+    dataIndex: 'price',
+  },
 ];
+
 
 class LiquidBlender extends React.Component<LiquidBlenderProps> {
   onBaseStrengthChange = (value: number | undefined): void =>
@@ -85,6 +85,10 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
       payload: 100 - value,
     });
 
+  onAddFlavorClick = () => this.props.dispatch({
+    type: 'liquid/addEmptyFlavor',
+  });
+
   render() {
     const {
       liquid: { currentLiquid, results },
@@ -93,7 +97,7 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
     return (
       <PageHeaderWrapper>
         <Card>
-          <Typography.Title level={2}>BASE</Typography.Title>
+          <Typography.Title level={1}>BASE</Typography.Title>
           <Typography.Title level={4}>Nicotine strength</Typography.Title>
           <InputNumber
             min={0.0}
@@ -146,10 +150,15 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
             onChange={this.onThinnerChange}
           />
 
-          <Typography.Title level={2}>FLAVORS</Typography.Title>
-          <Table columns={flavorColumns} dataSource={currentLiquid.flavors}/>
 
-          <Typography.Title level={2}>TARGET</Typography.Title>
+          <br/>
+          <br/>
+          <Typography.Title level={1}>FLAVORS</Typography.Title>
+          <FlavorTable/>
+          <Button onClick={this.onAddFlavorClick}>Add Flavor</Button>
+          <br/>
+          <br/>
+          <Typography.Title level={1}>TARGET</Typography.Title>
           <Typography.Title level={4}>Amount</Typography.Title>
           <InputNumber
             min={0.0}
@@ -200,8 +209,10 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
               />
             </Col>
           </Row>
-
-          <Table columns={resultColumns} dataSource={results}/>
+          <br/>
+          <br/>
+          <Typography.Title level={1}>RESULTS</Typography.Title>
+          <Table<Result> columns={resultColumns} dataSource={results}/>
         </Card>
       </PageHeaderWrapper>
     );
