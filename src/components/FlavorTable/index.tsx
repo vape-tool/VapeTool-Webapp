@@ -9,21 +9,30 @@ import { LiquidModelState } from '@/models/liquid';
 
 const EditableContext = React.createContext<FormComponentProps<string> | any>(null);
 
+type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
+
 interface EditableCellProps {
   editing: boolean;
-  dataIndex: string;
+  dataIndex: Column;
   title: string;
-  inputType: 'string' | 'number';
   flavor: Flavor;
   index: number;
 }
 
 class EditableCell extends React.Component<EditableCellProps> {
   getInput = () => {
-    if (this.props.inputType === 'number') {
-      return <InputNumber/>;
+    switch (this.props.dataIndex) {
+      case 'price':
+        return <InputNumber min={0}/>;
+      case 'ratio':
+        return <InputNumber max={100} min={0}/>;
+      case 'percentage':
+        return <InputNumber max={100} min={0}/>;
+      default:
+      case 'manufacturer':
+      case 'name':
+        return <Input/>;
     }
-    return <Input/>;
   };
 
   renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
@@ -31,7 +40,6 @@ class EditableCell extends React.Component<EditableCellProps> {
       editing,
       dataIndex,
       title,
-      inputType,
       flavor,
       index,
       children,
@@ -93,20 +101,20 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         editable: true,
       },
       {
-        title: 'Price [$]',
+        title: 'Price for 10ml [$]',
         dataIndex: 'price',
         width: '15%',
         editable: true,
       },
       {
-        title: 'Amount [ml]',
-        dataIndex: 'amount',
+        title: 'PG Ratio [%]',
+        dataIndex: 'ratio',
         width: '15%',
         editable: true,
       },
       {
-        title: 'operation',
-        dataIndex: 'operation',
+        title: 'Action',
+        dataIndex: 'action',
         render: (text: string, flavor: Flavor) => {
           const { editingFlavor } = this.props.liquid;
           const editable = this.isEditing(flavor);
@@ -122,14 +130,17 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
                   </Button>
                 )}
               </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel()}>
-                <a>Cancel</a>
-              </Popconfirm>
+              <Button onClick={this.cancel}>Cancel</Button>
             </span>
           ) : (
-            <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)}>
-              Edit
-            </Button>
+            <div>
+              <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)}>
+                Edit
+              </Button>
+              <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
+                <Button>Remove</Button>
+              </Popconfirm>
+            </div>
           );
         },
       },
@@ -142,6 +153,13 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
     this.props.dispatch({
       type: 'liquid/editFlavor',
       payload: undefined,
+    });
+  };
+
+  remove = (uid: string) => {
+    this.props.dispatch({
+      type: 'liquid/removeFlavor',
+      payload: uid,
     });
   };
 
@@ -183,7 +201,6 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         ...col,
         onCell: (flavor: Flavor) => ({
           flavor,
-          inputType: col.dataIndex === 'name' || col.dataIndex === 'manufacturer' ? 'text' : 'number',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(flavor),
@@ -199,9 +216,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           dataSource={this.props.liquid.currentLiquid.flavors}
           columns={columns}
           rowClassName={() => 'editable-row'}
-          pagination={{
-            onChange: this.cancel,
-          }}
+          pagination={false}
         />
       </EditableContext.Provider>
     );
