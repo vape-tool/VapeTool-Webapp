@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
+import { Button, Card, Col, Form, Icon, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { FormComponentProps } from 'antd/es/form';
 // @ts-ignore
@@ -28,7 +28,7 @@ class OhmLaw extends Component<OhmLawProps> {
       type: 'ohm/clear',
     });
 
-  calculate = e => {
+  calculate = (e: any) => {
     e.preventDefault();
     this.props.dispatch({
       type: 'ohm/calculate',
@@ -58,7 +58,8 @@ class OhmLaw extends Component<OhmLawProps> {
         },
       },
     };
-    const { voltage, resistance, current, power } = this.props.ohm;
+    const { voltage, resistance, current, power, lastEdit, latestEdit } = this.props.ohm;
+    const lastEdits = [lastEdit, latestEdit];
     return (
       <PageHeaderWrapper>
         <Card>
@@ -75,6 +76,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Voltage', value)}
                     placeholder="Volts [V]"
                   />
+                  {lastEdits.includes('voltage') && <Icon type="lock"/>}
                 </Form.Item>
                 <Form.Item label="Resistance">
                   <InputNumber
@@ -86,6 +88,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Resistance', value)}
                     placeholder="Ohms [Ω]"
                   />
+                  {lastEdits.includes('resistance') && <Icon type="lock"/>}
                 </Form.Item>
                 <Form.Item label="Current">
                   <InputNumber
@@ -97,6 +100,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Current', value)}
                     placeholder="Amps [A]"
                   />
+                  {lastEdits.includes('current') && <Icon type="lock"/>}
                 </Form.Item>
                 <Form.Item label="Power">
                   <InputNumber
@@ -108,6 +112,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Power', value)}
                     placeholder="Wats [W]"
                   />
+                  {lastEdits.includes('power') && <Icon type="lock"/>}
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
                   <Button type="primary" htmlType="submit">
@@ -129,7 +134,7 @@ class OhmLaw extends Component<OhmLawProps> {
   }
 }
 
-const OhmLawForm = Form.create({ name: 'ohm_law' })(OhmLaw);
+const OhmLawForm = Form.create<OhmLawProps>({ name: 'ohm_law' })(OhmLaw);
 
 export default connect(({ ohm }: ConnectState) => ({
   ohm,

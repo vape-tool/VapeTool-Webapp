@@ -80,14 +80,12 @@ const OhmModel: OhmModelType = {
       },
       { payload },
     ): OhmModelState {
-      const newState = {
+      return {
         ...state,
         current: payload,
         latestEdit: state.lastEdit !== 'current' ? state.lastEdit : state.latestEdit,
         lastEdit: 'current',
       };
-      console.log(newState);
-      return newState;
     },
     setPower(
       state = {
@@ -121,14 +119,13 @@ const OhmModel: OhmModelType = {
       console.log(last);
       console.log(latest);
       if (last && latest) {
-
         const lastValue = state[last];
         const latestValue = state[latest];
         console.log(lastValue);
         console.log(latestValue);
 
         if (lastValue !== undefined && latestValue !== undefined) {
-          if ('voltage' in factors && 'resistance' in factors) {
+          if (factors.includes('voltage') && factors.includes('resistance')) {
             const [voltage, resistance] = last === 'voltage' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
@@ -136,7 +133,7 @@ const OhmModel: OhmModelType = {
               power: (voltage ** 2) / resistance,
             };
           }
-          if ('voltage' in factors && 'current' in factors) {
+          if (factors.includes('voltage') && factors.includes('current')) {
             const [voltage, current] = last === 'voltage' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
@@ -144,7 +141,7 @@ const OhmModel: OhmModelType = {
               power: voltage * current,
             };
           }
-          if ('voltage' in factors && 'power' in factors) {
+          if (factors.includes('voltage') && factors.includes('power')) {
             const [voltage, power] = last === 'voltage' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
@@ -152,7 +149,7 @@ const OhmModel: OhmModelType = {
               current: power * voltage,
             };
           }
-          if ('current' in factors && 'resistance' in factors) {
+          if (factors.includes('current') && factors.includes('resistance')) {
             const [current, resistance] = last === 'current' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
@@ -160,7 +157,7 @@ const OhmModel: OhmModelType = {
               power: (current ** 2) * resistance,
             };
           }
-          if ('power' in factors && 'resistance' in factors) {
+          if (factors.includes('power') && factors.includes('resistance')) {
             const [power, resistance] = last === 'power' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
@@ -168,7 +165,7 @@ const OhmModel: OhmModelType = {
               current: Math.sqrt(power / resistance),
             };
           }
-          if ('power' in factors && 'current' in factors) {
+          if (factors.includes('power') && factors.includes('current')) {
             const [power, current] = last === 'power' ? [lastValue, latestValue] : [latestValue, lastValue];
             return {
               ...state,
