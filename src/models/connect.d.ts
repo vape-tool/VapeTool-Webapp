@@ -10,6 +10,7 @@ import { PhotoModelState } from './photo';
 import { LiquidModelState } from './liquid';
 import { OhmModelState } from './ohm';
 import { BatteriesModelState } from '@/models/batteries';
+import { ConverterModelState } from '@/models/converter';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -38,6 +39,7 @@ export interface ConnectState {
   photo: PhotoModelState;
   ohm: OhmModelState;
   batteries: BatteriesModelState;
+  converter: ConverterModelState;
 }
 
 export type Effect = (

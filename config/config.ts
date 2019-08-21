@@ -110,7 +110,7 @@ export default {
           path: '/coil-calculator',
           name: 'coil-calculator',
           icon: 'https://vapetool.app/img/menu_icons/menu_coil_calculator.svg',
-          component: './coil//CoilCalculator',
+          component: './coil/CoilCalculator',
         },
         {
           path: '/liquid-blender',
@@ -134,7 +134,7 @@ export default {
           path: '/converters',
           name: 'converters',
           icon: 'https://vapetool.app/img/menu_icons/menu_converters.svg',
-          component: './Converters',
+          component: './converters/Converters',
         },
         {
           path: '/battery-life',
@@ -143,10 +143,10 @@ export default {
           component: './batterylife/BatteryLife',
         },
         {
-          path: '/knowledge-zone',
-          name: 'knowledge-zone',
+          path: '/knowledge',
+          name: 'knowledge',
           icon: 'https://vapetool.app/img/menu_icons/menu_knowledge_zone.svg',
-          component: './KnowledgeZone',
+          component: './knowledge/Knowledge',
         },
         {
           name: 'center',
