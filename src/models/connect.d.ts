@@ -9,6 +9,7 @@ import { CoilModelState } from './coil';
 import { PhotoModelState } from './photo';
 import { LiquidModelState } from './liquid';
 import { OhmModelState } from './ohm';
+import { BatteriesModelState } from '@/models/batteries';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -36,6 +37,7 @@ export interface ConnectState {
   liquid: LiquidModelState;
   photo: PhotoModelState;
   ohm: OhmModelState;
+  batteries: BatteriesModelState;
 }
 
 export type Effect = (

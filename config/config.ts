@@ -125,6 +125,12 @@ export default {
           component: './ohm/OhmLaw',
         },
         {
+          path: '/batteries',
+          name: 'batteries',
+          icon: 'https://vapetool.app/img/menu_icons/menu_batteries.svg',
+          component: './batteries/Batteries',
+        },
+        {
           path: '/converters',
           name: 'converters',
           icon: 'https://vapetool.app/img/menu_icons/menu_converters.svg',
@@ -134,7 +140,7 @@ export default {
           path: '/battery-life',
           name: 'battery-life',
           icon: 'https://vapetool.app/img/menu_icons/menu_battery_life.svg',
-          component: './BatteryLife',
+          component: './batterylife/BatteryLife',
         },
         {
           path: '/knowledge-zone',

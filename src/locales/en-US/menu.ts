@@ -4,6 +4,7 @@ export default {
   'menu.coil-calculator': 'Coil Calculator',
   'menu.liquid-blender': 'Liquid Blender',
   'menu.ohm-law': 'Ohm Law',
+  'menu.batteries': 'Batteries',
   'menu.converters': 'Converters',
   'menu.battery-life': 'Battery Life',
   'menu.knowledge-zone': 'Knowledge Zone',
