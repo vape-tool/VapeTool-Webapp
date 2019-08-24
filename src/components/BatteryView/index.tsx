@@ -6,14 +6,16 @@ import { Battery } from '@/types/battery';
 interface BatteryViewProps {
   battery: Battery;
   height: number;
+  width: number;
 }
 
-const BatteryView: React.FC<BatteryViewProps> = ({ battery, height }) => (
-  <List.Item>
+const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width }) => (
+  <List.Item style={{ height, width }}>
     <Card
       className={styles.card}
       hoverable
-      cover={<img height={height} width="100%" alt={battery.model} src={battery.url}/>}
+      cover={<img style={{ objectFit: 'cover', height: Math.round(height / 1.5), width }} alt={battery.model}
+                  src={battery.url}/>}
     >
       <Card.Meta
         title={`${battery.brand} ${battery.model}`}
