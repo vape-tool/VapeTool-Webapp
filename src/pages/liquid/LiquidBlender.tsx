@@ -6,6 +6,7 @@ import { Result } from '@vapetool/types';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
+import NewFlavorModal from '@/components/NewFlavorModal';
 
 export interface LiquidBlenderProps extends ConnectProps {
   liquid: LiquidModelState;
@@ -85,135 +86,136 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
       payload: 100 - value,
     });
 
-  onAddFlavorClick = () => this.props.dispatch({
-    type: 'liquid/addEmptyFlavor',
+  showNewFlavorModal = () => this.props.dispatch({
+    type: 'liquid/showNewFlavorModal',
   });
 
   render() {
-    const {
-      liquid: { currentLiquid, results },
-    } = this.props;
+    const { liquid: { currentLiquid, results } } = this.props;
 
     return (
       <PageHeaderWrapper>
-        <Card>
-          <Typography.Title level={1}>BASE</Typography.Title>
-          <Typography.Title level={4}>Nicotine strength</Typography.Title>
-          <InputNumber
-            min={0.0}
-            step={1}
-            value={currentLiquid.baseStrength}
-            onChange={this.onBaseStrengthChange}
-          />
+        <div>
+          <Card>
+            <Typography.Title level={1}>BASE</Typography.Title>
+            <Typography.Title level={4}>Nicotine strength</Typography.Title>
+            <InputNumber
+              min={0.0}
+              step={1}
+              value={currentLiquid.baseStrength}
+              onChange={this.onBaseStrengthChange}
+            />
 
-          <Typography.Title level={4}>
-            Base Vegetable Glycerin and Propylene Glycol Ratio
-          </Typography.Title>
-          <Row>
-            <Col span={2}>
-              <InputNumber
-                min={0}
-                max={100}
-                step={5}
-                style={{ marginRight: 16 }}
-                value={100 - currentLiquid.baseRatio}
-                onChange={this.onBaseRatioChange}
-              />
-            </Col>
-            <Col span={12}>
-              <Slider
-                step={5}
-                min={0}
-                max={100}
-                onChange={this.onBaseRatioChange}
-                value={100 - currentLiquid.baseRatio}
-              />
-            </Col>
-            <Col span={2}>
-              <InputNumber
-                min={0}
-                max={100}
-                step={5}
-                style={{ marginLeft: 16 }}
-                value={currentLiquid.baseRatio}
-                onChange={(value: number | undefined) =>
-                  value && this.onBaseRatioChange(100 - value)
-                }
-              />
-            </Col>
-          </Row>
-          <Typography.Title level={4}>Thinner</Typography.Title>
-          <InputNumber
-            min={0.0}
-            step={1}
-            value={currentLiquid.thinner}
-            onChange={this.onThinnerChange}
-          />
+            <Typography.Title level={4}>
+              Base Vegetable Glycerin and Propylene Glycol Ratio
+            </Typography.Title>
+            <Row>
+              <Col span={2}>
+                <InputNumber
+                  min={0}
+                  max={100}
+                  step={5}
+                  style={{ marginRight: 16 }}
+                  value={100 - currentLiquid.baseRatio}
+                  onChange={this.onBaseRatioChange}
+                />
+              </Col>
+              <Col span={12}>
+                <Slider
+                  step={5}
+                  min={0}
+                  max={100}
+                  onChange={this.onBaseRatioChange}
+                  value={100 - currentLiquid.baseRatio}
+                />
+              </Col>
+              <Col span={2}>
+                <InputNumber
+                  min={0}
+                  max={100}
+                  step={5}
+                  style={{ marginLeft: 16 }}
+                  value={currentLiquid.baseRatio}
+                  onChange={(value: number | undefined) =>
+                    value && this.onBaseRatioChange(100 - value)
+                  }
+                />
+              </Col>
+            </Row>
+            <Typography.Title level={4}>Thinner</Typography.Title>
+            <InputNumber
+              min={0.0}
+              step={1}
+              value={currentLiquid.thinner}
+              onChange={this.onThinnerChange}
+            />
 
 
-          <br/>
-          <br/>
-          <Typography.Title level={1}>FLAVORS</Typography.Title>
-          <FlavorTable/>
-          <Button onClick={this.onAddFlavorClick}>Add Flavor</Button>
-          <br/>
-          <br/>
-          <Typography.Title level={1}>TARGET</Typography.Title>
-          <Typography.Title level={4}>Amount</Typography.Title>
-          <InputNumber
-            min={0.0}
-            step={1}
-            value={currentLiquid.amount}
-            onChange={this.onAmountChange}
-          />
-          <Typography.Title level={4}>Target strength</Typography.Title>
-          <InputNumber
-            min={0.0}
-            step={1}
-            value={currentLiquid.targetStrength}
-            onChange={this.onTargetStrengthChange}
-          />
-          <Typography.Title level={4}>
-            Target Vegetable Glycerin and Propylene Glycol Ratio
-          </Typography.Title>
-          <Row>
-            <Col span={2}>
-              <InputNumber
-                min={0}
-                max={100}
-                step={5}
-                style={{ marginRight: 16 }}
-                value={100 - currentLiquid.targetRatio}
-                onChange={this.onTargetRatioChange}
-              />
-            </Col>
-            <Col span={12}>
-              <Slider
-                step={5}
-                min={0}
-                max={100}
-                onChange={this.onTargetRatioChange}
-                value={100 - currentLiquid.targetRatio}
-              />
-            </Col>
-            <Col span={2}>
-              <InputNumber
-                min={0}
-                max={100}
-                step={5}
-                style={{ marginLeft: 16 }}
-                value={currentLiquid.targetRatio}
-                onChange={(value: number | undefined) =>
-                  value && this.onTargetRatioChange(100 - value)
-                }
-              />
-            </Col>
-          </Row>
-          <br/>
-          <br/>
-          <Typography.Title level={1}>RESULTS</Typography.Title>
-          <Table<Result> columns={resultColumns} dataSource={results}/>
-        </Card>
+            <br/>
+            <br/>
+            <Typography.Title level={1}>FLAVORS</Typography.Title>
+            <FlavorTable/>
+            <Button onClick={this.showNewFlavorModal}>Add Flavor</Button>
+            <br/>
+            <br/>
+            <Typography.Title level={1}>TARGET</Typography.Title>
+            <Typography.Title level={4}>Amount</Typography.Title>
+            <InputNumber
+              min={0.0}
+              step={1}
+              value={currentLiquid.amount}
+              onChange={this.onAmountChange}
+            />
+            <Typography.Title level={4}>Target strength</Typography.Title>
+            <InputNumber
+              min={0.0}
+              step={1}
+              value={currentLiquid.targetStrength}
+              onChange={this.onTargetStrengthChange}
+            />
+            <Typography.Title level={4}>
+              Target Vegetable Glycerin and Propylene Glycol Ratio
+            </Typography.Title>
+            <Row>
+              <Col span={2}>
+                <InputNumber
+                  min={0}
+                  max={100}
+                  step={5}
+                  style={{ marginRight: 16 }}
+                  value={100 - currentLiquid.targetRatio}
+                  onChange={this.onTargetRatioChange}
+                />
+              </Col>
+              <Col span={12}>
+                <Slider
+                  step={5}
+                  min={0}
+                  max={100}
+                  onChange={this.onTargetRatioChange}
+                  value={100 - currentLiquid.targetRatio}
+                />
+              </Col>
+              <Col span={2}>
+                <InputNumber
+                  min={0}
+                  max={100}
+                  step={5}
+                  style={{ marginLeft: 16 }}
+                  value={currentLiquid.targetRatio}
+                  onChange={(value: number | undefined) =>
+                    value && this.onTargetRatioChange(100 - value)
+                  }
+                />
+              </Col>
+            </Row>
+            <br/>
+            <br/>
+            <Typography.Title level={1}>RESULTS</Typography.Title>
+            <Table<Result> columns={resultColumns} dataSource={results}/>
+          </Card>
+        </div>
+        <NewFlavorModal/>
       </PageHeaderWrapper>
     );
   }

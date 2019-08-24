@@ -5,8 +5,9 @@ import { calculateResults } from '@/services/liquid';
 
 export interface LiquidModelState {
   currentLiquid: Liquid;
-  results: Result[];
+  results?: Result[];
   editingFlavor?: string;
+  showNewFlavorModal?: boolean;
 }
 
 export interface LiquidModelType {
@@ -23,7 +24,8 @@ export interface LiquidModelType {
     setLiquid: Reducer<LiquidModelState>;
     setResults: Reducer<LiquidModelState>;
 
-    addEmptyFlavor: Reducer<LiquidModelState>;
+    showNewFlavorModal: Reducer<LiquidModelState>;
+    hideNewFlavorModal: Reducer<LiquidModelState>;
     addFlavor: Reducer<LiquidModelState>;
     editFlavor: Reducer<LiquidModelState>;
     setFlavor: Reducer<LiquidModelState>;
@@ -39,6 +41,7 @@ const LiquidModel: LiquidModelType = {
   state: {
     currentLiquid: new Liquid(),
     results: [],
+    showNewFlavorModal: false,
   },
   effects: {
     * calculateResults({ payload }, { call, put, cancel }) {
@@ -57,7 +60,6 @@ const LiquidModel: LiquidModelType = {
     setBaseStrength(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -72,7 +74,6 @@ const LiquidModel: LiquidModelType = {
     setBaseRatio(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -87,7 +88,6 @@ const LiquidModel: LiquidModelType = {
     setThinner(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -102,7 +102,6 @@ const LiquidModel: LiquidModelType = {
     setAmount(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -117,7 +116,6 @@ const LiquidModel: LiquidModelType = {
     setTargetStrength(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -132,7 +130,6 @@ const LiquidModel: LiquidModelType = {
     setTargetRatio(
       state = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -145,10 +142,7 @@ const LiquidModel: LiquidModelType = {
       };
     },
     setResults(
-      state = {
-        currentLiquid: new Liquid(),
-        results: [],
-      },
+      state = { currentLiquid: new Liquid() },
       { payload },
     ): LiquidModelState {
       return {
@@ -157,10 +151,7 @@ const LiquidModel: LiquidModelType = {
       };
     },
     setLiquid(
-      state = {
-        currentLiquid: new Liquid(),
-        results: [],
-      },
+      state = { currentLiquid: new Liquid() },
       { payload },
     ): LiquidModelState {
       return {
@@ -181,26 +172,23 @@ const LiquidModel: LiquidModelType = {
         editingFlavor: payload,
       };
     },
-    addEmptyFlavor(
-      state: LiquidModelState = {
-        currentLiquid: new Liquid(),
-        results: [],
-      }): LiquidModelState {
-      const flavor = new Flavor();
-      state.currentLiquid.flavors.push(flavor);
+    showNewFlavorModal(
+      state: LiquidModelState = { currentLiquid: new Liquid() }): LiquidModelState {
       return {
         ...state,
-        editingFlavor: flavor.uid,
-        currentLiquid: {
-          ...state.currentLiquid,
-          flavors: state.currentLiquid.flavors,
-        },
+        showNewFlavorModal: true,
+      };
+    },
+    hideNewFlavorModal(
+      state: LiquidModelState = { currentLiquid: new Liquid() }): LiquidModelState {
+      return {
+        ...state,
+        showNewFlavorModal: false,
       };
     },
     addFlavor(
       state: LiquidModelState = {
         currentLiquid: new Liquid(),
-        results: [],
       },
       { payload },
     ): LiquidModelState {
@@ -214,10 +202,7 @@ const LiquidModel: LiquidModelType = {
       };
     },
     setFlavor(
-      state = {
-        currentLiquid: new Liquid(),
-        results: [],
-      },
+      state = { currentLiquid: new Liquid() },
       { payload: { uid, row } },
     ): LiquidModelState {
       const newData = [...state.currentLiquid.flavors];
@@ -241,10 +226,7 @@ const LiquidModel: LiquidModelType = {
       };
     },
     removeFlavor(
-      state = {
-        currentLiquid: new Liquid(),
-        results: [],
-      },
+      state = { currentLiquid: new Liquid() },
       { payload },
     ): LiquidModelState {
       const newFlavors = state.currentLiquid.flavors.filter(
