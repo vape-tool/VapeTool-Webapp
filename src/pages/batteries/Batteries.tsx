@@ -40,7 +40,7 @@ class Batteries extends React.PureComponent<BatteriesComponentProps, BatteriesCo
 
   private onResize = ({ width }: Size) => {
     this.gridWidth = width;
-    this.calculateColumnCount()
+    this.calculateColumnCount();
   };
 
   private calculateColumnCount = () => {
@@ -54,9 +54,11 @@ class Batteries extends React.PureComponent<BatteriesComponentProps, BatteriesCo
     this.gridWidth = width;
     const { columnWidth, rowHeight, columnCount } = this.state;
 
-    console.log(`render grid of dimenstions ${width}x${height}`);
+    console.log(`render grid of dimensions ${width}x${height}`);
     const { batteries } = this.props;
     const rowCount = Math.ceil(batteries.length / columnCount);
+    const getBattery = (columnIndex: number, rowIndex: number) =>
+      batteries[(rowIndex * columnCount + columnIndex) % batteries.length];
     return (
       <FixedSizeGrid
         columnCount={columnCount}
@@ -68,11 +70,13 @@ class Batteries extends React.PureComponent<BatteriesComponentProps, BatteriesCo
       >
         {({ columnIndex, rowIndex, style }: GridChildComponentProps) => (
           <div style={{ ...style }}>
-            <BatteryView height={rowHeight} width={columnWidth}
-                         battery={batteries[(rowIndex * columnCount + columnIndex) % batteries.length]}
+            <BatteryView
+              height={rowHeight}
+              width={columnWidth}
+              battery={getBattery(columnIndex, rowIndex)}
             />
-          </div>)
-        }
+          </div>
+        )}
       </FixedSizeGrid>
     );
   };
