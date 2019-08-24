@@ -1,7 +1,7 @@
 import { Subscription } from 'dva';
 import { Reducer } from 'redux';
 
-import { id, OnlineContentStatus } from '@vapetool/types';
+import { id } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { getBatteryUrl } from '@/services/storage';
 import { Battery } from '@/types/battery';
@@ -47,7 +47,8 @@ const BatteriesModel: BatteriesModelType = {
     },
     setBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       const newBatteries = state.batteries.map((it: Battery) =>
-        (battery === id(it) ? battery : it));
+        battery === id(it) ? battery : it,
+      );
       return {
         ...(state as BatteriesModelState),
         batteries: newBatteries,
@@ -58,13 +59,10 @@ const BatteriesModel: BatteriesModelType = {
   subscriptions: {
     subscribeBatteries({ dispatch }) {
       console.log('subscribeBatteries');
-      const ref = database
-        .ref('batteries')
-        .orderByChild('status')
-        .equalTo(OnlineContentStatus.ONLINE_PUBLIC)
-        .limitToLast(100);
+      const ref = database.ref('batteries').limitToLast(200);
 
       ref.on('child_added', (snapshot: DataSnapshot) => {
+        console.log('child_added');
         if (!snapshot || !snapshot.key) {
           return;
         }

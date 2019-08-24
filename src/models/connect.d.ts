@@ -25,6 +25,7 @@ export interface Loading {
     coil?: boolean;
     liquid?: boolean;
     photo?: boolean;
+    batteries?: boolean;
     ohm?: boolean;
   };
 }

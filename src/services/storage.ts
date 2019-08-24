@@ -33,7 +33,10 @@ export function getImageUrl(type: ImageType, uid: string): Promise<string> {
   }
 }
 
-function getDownloadUrl(type: 'users' | 'coils' | 'gears' | 'batteries', uid: string): Promise<string> {
+function getDownloadUrl(
+  type: 'users' | 'coils' | 'gears' | 'batteries',
+  uid: string,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     storage
       .ref(`${type}/images/${uid}.jpg`)
@@ -42,7 +45,7 @@ function getDownloadUrl(type: 'users' | 'coils' | 'gears' | 'batteries', uid: st
         if (url) {
           resolve(url);
         } else {
-          reject(new Error('User image not found'));
+          reject(new Error('Image not found'));
         }
       })
       .catch(e => reject(e));
