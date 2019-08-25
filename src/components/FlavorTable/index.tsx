@@ -4,6 +4,7 @@ import { Flavor } from '@vapetool/types';
 import { connect } from 'dva';
 import { FormComponentProps } from 'antd/es/form';
 import { WrappedFormUtils } from 'antd/es/form/Form';
+import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectState, Dispatch } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
 
@@ -120,23 +121,27 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           const editable = this.isEditing(flavor);
           return editable ? (
             <span>
+              <ButtonGroup>
               <EditableContext.Consumer>
                 {form => (
                   <Button
+                    type="primary"
                     icon="check"
                     onClick={() => this.save(form, flavor.uid)}
-                    style={{ marginRight: 8 }}
                   />
                 )}
               </EditableContext.Consumer>
               <Button onClick={this.cancel} icon="close"/>
+              </ButtonGroup>
             </span>
           ) : (
             <div>
-              <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)} icon="edit"/>
-              <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
-                <Button icon="delete"/>
-              </Popconfirm>
+              <ButtonGroup>
+                <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)} icon="edit"/>
+                <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
+                  <Button icon="delete"/>
+                </Popconfirm>
+              </ButtonGroup>
             </div>
           );
         },

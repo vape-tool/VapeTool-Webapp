@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { FormComponentProps } from 'antd/es/form';
 // @ts-ignore
 import Image from 'react-image-webp';
+import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { OhmModelState } from '@/models/ohm';
 
@@ -115,12 +116,14 @@ class OhmLaw extends Component<OhmLawProps> {
                   {lastEdits.includes('power') && <Icon type="lock"/>}
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
-                  <Button type="primary" htmlType="submit">
-                    Calculate
-                  </Button>
-                  <Button type="default" style={{ marginLeft: 8 }} onClick={this.handleClear}>
-                    Clear
-                  </Button>
+                  <ButtonGroup>
+                    <Button type="primary" htmlType="submit">
+                      Calculate
+                    </Button>
+                    <Button type="default" onClick={this.handleClear}>
+                      Clear
+                    </Button>
+                  </ButtonGroup>
                 </Form.Item>
               </Form>
             </Col>
