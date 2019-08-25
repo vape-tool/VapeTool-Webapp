@@ -44,8 +44,9 @@ const LiquidModel: LiquidModelType = {
     showNewFlavorModal: false,
   },
   effects: {
-    * calculateResults({ payload }, { call, put, cancel }) {
-      const response = yield call(calculateResults, payload);
+    * calculateResults(_, { select, call, put, cancel }) {
+      const currentLiquid = yield select((state: LiquidModelState) => state.currentLiquid);
+      const response = yield call(calculateResults, currentLiquid);
       if (response instanceof Response) {
         cancel();
       } else if (response instanceof Array) {

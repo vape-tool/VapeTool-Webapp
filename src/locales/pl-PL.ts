@@ -4,14 +4,13 @@ import menu from './en-US/menu';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
-import liquid from './en-US/liquid';
 
 export default {
-  'navBar.lang': 'Languages',
-  'app.currency': '$',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
+  'navBar.lang': 'Języki',
+  'app.currency': 'zł',
+  'layout.user.link.help': 'Pomoc',
+  'layout.user.link.privacy': 'Prywatność',
+  'layout.user.link.terms': 'Zasady',
   'app.preview.down.block': 'Download this page to your local project',
   ...globalHeader,
   ...menu,
@@ -19,5 +18,4 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...liquid,
 };

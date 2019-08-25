@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import { CoilModelState, ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
+import { unitFormatter, unitParser } from "@/utils/utils";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -85,13 +86,16 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
         <Title level={4}>Inner diameter of coil</Title>
         <InputNumber min={0.0} step={0.1}
+                     formatter={unitFormatter(1, 'mm')}
+                     parser={unitParser('mm')}
                      defaultValue={coil.currentCoil.innerDiameter}
                      value={coil.currentCoil.innerDiameter}
                      onChange={onInnerDiameterChange}/>
 
         <Title level={4}>Legs length per coil</Title>
         <InputNumber min={0.0} step={1}
-                     defaultValue={coil.currentCoil.legsLength}
+                     formatter={unitFormatter(0, 'mm')}
+                     parser={unitParser('mm')}
                      value={coil.currentCoil.legsLength}
                      onChange={onLegsLengthChange}/>
 
@@ -99,13 +103,14 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           <div style={{ marginRight: 32 }}>
             <Title level={4}>Resistance</Title>
             <InputNumber min={0.0} step={0.05}
-                         defaultValue={coil.currentCoil.resistance}
+                         formatter={unitFormatter(3, 'Ω')}
+                         parser={unitParser('Ω')}
                          value={coil.currentCoil.resistance}
                          onChange={onResistanceChange}/>
           </div>
           <div>
             <Title level={4}>Wraps per coil</Title>
-            <InputNumber min={0} step={1} defaultValue={coil.currentCoil.wraps}
+            <InputNumber min={0} step={1}
                          value={coil.currentCoil.wraps}
                          onChange={onWrapsChange}/>
           </div>

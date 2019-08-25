@@ -16,9 +16,8 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
   const onCreate = () => {
     form.validateFields((err, values) => {
       if (err) {
-        return;
+        return
       }
-
       const { name, manufacturer, percentage, price, ratio } = values;
 
       console.log('Received values of form: ', values);
@@ -38,31 +37,59 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
       type: 'liquid/hideNewFlavorModal',
     })
   };
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 },
+    },
+  };
   return (
     <Modal
+      centered
       visible={showNewFlavorModal || false}
       title="Add new flavor"
       okText="Add"
       onCancel={onCancel}
       onOk={onCreate}
     >
-      <Form layout="vertical">
+      <Form layout="horizontal" {...formItemLayout}>
         <Form.Item label="Name">
           {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please input the title of collection!' }],
+            rules: [{ required: true, message: 'Please input the flavor name!' }],
           })(<Input/>)}
         </Form.Item>
         <Form.Item label="Manufacturer">
           {getFieldDecorator('manufacturer')(<Input type="textarea"/>)}
         </Form.Item>
         <Form.Item label="Percentage">
-          {getFieldDecorator('percentage')(<InputNumber/>)}
+          {getFieldDecorator('percentage', {
+            rules: [{ required: true, message: 'Please input the flavor percentage!' }],
+          })(
+            <InputNumber
+              min={0} max={100} step={1}
+            />,
+          )}
         </Form.Item>
-        <Form.Item label="Price">
-          {getFieldDecorator('price')(<InputNumber/>)}
+        <Form.Item label="Price per 10ml">
+          {getFieldDecorator('price')(
+            <InputNumber
+              min={0} step={0.1}/>,
+          )}
         </Form.Item>
-        <Form.Item label="Ratio">
-          {getFieldDecorator('ratio')(<InputNumber/>)}
+        <Form.Item label="PG Ratio">
+          {getFieldDecorator('ratio', {
+            initialValue: 100,
+            rules: [{ required: true, message: 'Please input the flavor ratio!' }],
+          })(
+            <InputNumber
+              min={0} max={100} step={10}
+            />,
+          )}
         </Form.Item>
       </Form>
     </Modal>

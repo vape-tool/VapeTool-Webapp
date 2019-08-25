@@ -1,12 +1,17 @@
 import React from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Col, InputNumber, Row, Slider, Table, Typography } from 'antd';
+import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
 import { connect } from 'dva';
-import { Result } from '@vapetool/types';
+import { formatMessage } from 'umi-plugin-react/locale';
+
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
+import { unitFormatter, unitParser } from '@/utils/utils';
+import VgPgRatioView from '@/components/VgPgRatioView';
+import styles from './LiquidBlender.less';
+
+const { Title } = Typography;
 
 export interface LiquidBlenderProps extends ConnectProps {
   liquid: LiquidModelState;
@@ -90,133 +95,115 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
     type: 'liquid/showNewFlavorModal',
   });
 
+  onCalculateClick = () => this.props.dispatch({
+    type: 'liquid/calculateResults',
+  });
+
   render() {
     const { liquid: { currentLiquid, results } } = this.props;
+    const responsivenessProps = { xs: 24, xl: 8 };
+    const responsivenessCollections = { xs: 24, xl: 16 };
 
     return (
-      <PageHeaderWrapper>
-        <div>
-          <Card>
-            <Typography.Title level={1}>BASE</Typography.Title>
-            <Typography.Title level={4}>Nicotine strength</Typography.Title>
-            <InputNumber
-              min={0.0}
-              step={1}
-              value={currentLiquid.baseStrength}
-              onChange={this.onBaseStrengthChange}
-            />
+      <div>
+        <Row type="flex" style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
+          <Col {...responsivenessProps}>
+            <Card title={<Title level={1}>Base</Title>} style={{ height: '100%' }}>
+              <Row type="flex">
+                <Col xs={24}>
+                  <Title level={4}>Nicotine strength</Title>
+                </Col>
+                <Col xs={24}>
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    formatter={unitFormatter(0, 'mg/ml')}
+                    parser={unitParser('mg/ml')}
+                    value={currentLiquid.baseStrength}
+                    onChange={this.onBaseStrengthChange}
+                  />
+                </Col>
+              </Row>
 
-            <Typography.Title level={4}>
-              Base Vegetable Glycerin and Propylene Glycol Ratio
-            </Typography.Title>
-            <Row>
-              <Col span={2}>
-                <InputNumber
-                  min={0}
-                  max={100}
-                  step={5}
-                  style={{ marginRight: 16 }}
-                  value={100 - currentLiquid.baseRatio}
-                  onChange={this.onBaseRatioChange}
-                />
-              </Col>
-              <Col span={12}>
-                <Slider
-                  step={5}
-                  min={0}
-                  max={100}
-                  onChange={this.onBaseRatioChange}
-                  value={100 - currentLiquid.baseRatio}
-                />
-              </Col>
-              <Col span={2}>
-                <InputNumber
-                  min={0}
-                  max={100}
-                  step={5}
-                  style={{ marginLeft: 16 }}
-                  value={currentLiquid.baseRatio}
-                  onChange={(value: number | undefined) =>
-                    value && this.onBaseRatioChange(100 - value)
-                  }
-                />
-              </Col>
-            </Row>
-            <Typography.Title level={4}>Thinner</Typography.Title>
-            <InputNumber
-              min={0.0}
-              step={1}
-              value={currentLiquid.thinner}
-              onChange={this.onThinnerChange}
-            />
+              <Title level={4}>
+                Base Ratio
+              </Title>
+              <VgPgRatioView onRatioChange={this.onBaseRatioChange}
+                             ratio={currentLiquid.baseRatio}/>
+              <Title level={4}>Thinner</Title>
+              <InputNumber
+                min={0.0}
+                step={1}
+                formatter={unitFormatter(1, '%')}
+                parser={unitParser('%')}
+                value={currentLiquid.thinner}
+                onChange={this.onThinnerChange}
+              />
+            </Card>
+          </Col>
+          <Col {...responsivenessCollections}>
+            <Card title={<Title level={1}>Flavors</Title>}>
+              <FlavorTable/>
+              <Button type="dashed" icon="plus" size="large" style={{ width: '100%' }}
+                      onClick={this.showNewFlavorModal}>Add
+                Flavor</Button>
+            </Card>
+          </Col>
+          <Col {...responsivenessProps}>
+            <Card title={<Title level={1}>Target</Title>} style={{ height: '100%' }}>
+              <Row type="flex" justify="space-between">
+                <Col xs={8} xl={10}>
+                  <Title level={4}>Amount</Title>
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    formatter={unitFormatter(0, 'ml')}
+                    parser={unitParser('ml')}
+                    value={currentLiquid.amount}
+                    onChange={this.onAmountChange}
+                  />
+                </Col>
+                <Col xs={16} xl={14}>
+                  <Title level={4}>Target strength</Title>
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    formatter={unitFormatter(0, 'mg/ml')}
+                    parser={unitParser('mg/ml')}
+                    value={currentLiquid.targetStrength}
+                    onChange={this.onTargetStrengthChange}
+                  />
+                </Col>
+              </Row>
+              <Title level={4}>
+                Target Ratio
+              </Title>
+              <VgPgRatioView onRatioChange={this.onTargetRatioChange}
+                             ratio={currentLiquid.targetRatio}/>
+            </Card>
+          </Col>
+          <Col {...responsivenessCollections}>
+            <Card title={<Title level={1}>Results</Title>} extra={<Affix offsetBottom={50}>
+              <Button type="primary" icon="calculator" shape="round" size="large"
+                      onClick={this.onCalculateClick}>Calculate</Button>
+            </Affix>}>
 
-
-            <br/>
-            <br/>
-            <Typography.Title level={1}>FLAVORS</Typography.Title>
-            <FlavorTable/>
-            <Button onClick={this.showNewFlavorModal}>Add Flavor</Button>
-            <br/>
-            <br/>
-            <Typography.Title level={1}>TARGET</Typography.Title>
-            <Typography.Title level={4}>Amount</Typography.Title>
-            <InputNumber
-              min={0.0}
-              step={1}
-              value={currentLiquid.amount}
-              onChange={this.onAmountChange}
-            />
-            <Typography.Title level={4}>Target strength</Typography.Title>
-            <InputNumber
-              min={0.0}
-              step={1}
-              value={currentLiquid.targetStrength}
-              onChange={this.onTargetStrengthChange}
-            />
-            <Typography.Title level={4}>
-              Target Vegetable Glycerin and Propylene Glycol Ratio
-            </Typography.Title>
-            <Row>
-              <Col span={2}>
-                <InputNumber
-                  min={0}
-                  max={100}
-                  step={5}
-                  style={{ marginRight: 16 }}
-                  value={100 - currentLiquid.targetRatio}
-                  onChange={this.onTargetRatioChange}
-                />
-              </Col>
-              <Col span={12}>
-                <Slider
-                  step={5}
-                  min={0}
-                  max={100}
-                  onChange={this.onTargetRatioChange}
-                  value={100 - currentLiquid.targetRatio}
-                />
-              </Col>
-              <Col span={2}>
-                <InputNumber
-                  min={0}
-                  max={100}
-                  step={5}
-                  style={{ marginLeft: 16 }}
-                  value={currentLiquid.targetRatio}
-                  onChange={(value: number | undefined) =>
-                    value && this.onTargetRatioChange(100 - value)
-                  }
-                />
-              </Col>
-            </Row>
-            <br/>
-            <br/>
-            <Typography.Title level={1}>RESULTS</Typography.Title>
-            <Table<Result> columns={resultColumns} dataSource={results}/>
-          </Card>
-        </div>
+              <Table rowKey={result => result.name}
+                     columns={resultColumns}
+                     pagination={false}
+                     dataSource={results ? results.map(result => ({
+                       name: result.name,
+                       percentage: `${result.percentage.toFixed(1)}%`,
+                       ml: `${result.ml.toFixed(1)} ml`,
+                       drips: result.drips.toFixed(0),
+                       price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
+                       weight: `${result.weight.toFixed(3)} g`,
+                     })) : []}/>
+            </Card>
+          </Col>
+        </Row>
         <NewFlavorModal/>
-      </PageHeaderWrapper>
+      </div>
     );
   }
 }

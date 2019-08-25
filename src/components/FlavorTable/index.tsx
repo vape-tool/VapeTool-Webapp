@@ -85,7 +85,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
       {
         title: 'Name',
         dataIndex: 'name',
-        width: '25%',
+        width: '20%',
         editable: true,
       },
       {
@@ -97,19 +97,19 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
       {
         title: 'Percentage [%]',
         dataIndex: 'percentage',
-        width: '15%',
+        width: '17%',
         editable: true,
       },
       {
-        title: 'Price for 10ml [$]',
+        title: 'Price per 10ml [$]',
         dataIndex: 'price',
-        width: '15%',
+        width: '17%',
         editable: true,
       },
       {
         title: 'PG Ratio [%]',
         dataIndex: 'ratio',
-        width: '15%',
+        width: '17%',
         editable: true,
       },
       {
@@ -123,22 +123,19 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
               <EditableContext.Consumer>
                 {form => (
                   <Button
+                    icon="check"
                     onClick={() => this.save(form, flavor.uid)}
                     style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </Button>
+                  />
                 )}
               </EditableContext.Consumer>
-              <Button onClick={this.cancel}>Cancel</Button>
+              <Button onClick={this.cancel} icon="close"/>
             </span>
           ) : (
             <div>
-              <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)}>
-                Edit
-              </Button>
+              <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)} icon="edit"/>
               <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
-                <Button>Remove</Button>
+                <Button icon="delete"/>
               </Popconfirm>
             </div>
           );
@@ -215,6 +212,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           bordered
           dataSource={this.props.liquid.currentLiquid.flavors}
           columns={columns}
+          rowKey={flavor => flavor.uid}
           rowClassName={() => 'editable-row'}
           pagination={false}
         />

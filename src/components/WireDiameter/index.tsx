@@ -5,6 +5,7 @@ import { WireComponentProps } from '@/components/SingleWire';
 import { awgToMm, mmToAwg } from '@/utils/math';
 import { Path } from '@/models/coil';
 import { Dispatch } from '@/models/connect';
+import { unitFormatter, unitParser } from "@/utils/utils";
 
 export interface WireComponentProps {
   wire: Wire;
@@ -73,6 +74,8 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
         =
         <InputNumber min={0.0} step={0.1}
                      value={wire.mm}
+                     formatter={unitFormatter(1, 'mm')}
+                     parser={unitParser('mm')}
                      onChange={onMmChange}/>
       </Row>
       :
@@ -84,6 +87,8 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
           </div>
           <InputNumber min={0.0} step={0.1}
                        value={wire.width}
+                       formatter={unitFormatter(1, 'mm')}
+                       parser={unitParser('mm')}
                        onChange={onWidthChange}/>
         </div>
         <Typography.Text style={{ margin: 8 }}>x</Typography.Text>
@@ -93,6 +98,8 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
           </div>
           <InputNumber min={0.0} step={0.1}
                        value={wire.height}
+                       formatter={unitFormatter(1, 'mm')}
+                       parser={unitParser('mm')}
                        onChange={onHeightChange}/>
         </div>
       </Row>

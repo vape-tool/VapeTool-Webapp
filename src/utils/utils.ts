@@ -21,3 +21,13 @@ const isAntDesignProOrDev = (): boolean => {
 
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
+
+export function unitFormatter(decimals: number, unit: string):
+  (value: number | string | undefined) => string {
+  return (value: number | string | undefined) => `${value ? Number(value).toFixed(decimals) : value} ${unit}`;
+}
+
+export function unitParser(unit: string): (displayValue: string | undefined) => number | string {
+  return (displayValue: string | undefined) =>
+    (displayValue ? displayValue.replace(unit, '') : '');
+}

@@ -98,12 +98,16 @@ const SingleWire: React.FC<WireComponentProps> = props => {
           {material.name}
         </Option>)}
       </Select>
-      <Button>{Math.round(getResistancePerMeter(wire) * 1000) / 1000} [Ω/m]</Button>
+      <Button>{getResistancePerMeter(wire).toFixed(2)} [Ω/m]</Button>
 
       <Typography.Title level={4}><DiameterIcon style={{ color: 'primary' }}/>Diameter of wire</Typography.Title>
       <WireDiameter path={path} dispatch={dispatch} wire={wire}/>
       <br/>
-      <Typography.Text>Wire length: {Math.round(wire.totalLength) / 10}cm</Typography.Text>
+      <Typography.Text
+        disabled={!wire.totalLength}>
+        {wire.totalLength ? `Wire length: ${wire.totalLength.toFixed(1)}cm`
+          : 'Wire length: calculation required'}
+      </Typography.Text>
 
     </Card>
   )
