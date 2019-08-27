@@ -6,7 +6,7 @@ import { database, DataSnapshot } from '@/utils/firebase';
 import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
 import { ConnectState } from '@/models/connect';
-import { likePhoto } from '@/services/photo';
+import { commentPhoto, getPhotos, likePhoto } from '@/services/photo';
 
 export interface PhotoModelState {
   photos: Photo[];
@@ -17,8 +17,11 @@ export interface PhotoModelType {
   state: PhotoModelState;
   effects: {
     likePhoto: Effect;
+    commentPhoto: Effect;
+    fetchPhotos: Effect;
   };
   reducers: {
+    addPhotos: Reducer<PhotoModelState>;
     addPhoto: Reducer<PhotoModelState>;
     removePhoto: Reducer<PhotoModelState>;
     setPhoto: Reducer<PhotoModelState>;
@@ -45,11 +48,36 @@ const PhotoModel: PhotoModelType = {
       }
       yield call(likePhoto, payload, currentUser);
     },
+    * commentPhoto({ payload }, { select, call }) {
+      const currentUser = yield select((state: ConnectState) =>
+        (state.user.currentUser !== undefined ? state.user.currentUser : undefined),
+      );
+      if (!currentUser) {
+        return;
+      }
+
+      yield call(commentPhoto, payload, currentUser);
+    },
+    * fetchPhotos(_, { put, call }) {
+      const photos = yield call(getPhotos, 0, 100);
+      yield put({
+        type: 'setPhotos',
+        payload: Array.isArray(photos) ? photos : [],
+      });
+    },
   },
 
   reducers: {
+    addPhotos(state = { photos: [] }, { photos }): PhotoModelState {
+      state.photos.push(photos);
+      return {
+        ...(state as PhotoModelState),
+        photos: state.photos,
+      };
+    },
     addPhoto(state = { photos: [] }, { photo }): PhotoModelState {
       state.photos.push(photo);
+      state.photos.sort((a, b) => b.creationTime - b.creationTime);
       return {
         ...(state as PhotoModelState),
         photos: state.photos,

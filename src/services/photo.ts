@@ -1,6 +1,7 @@
 import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
 import { Photo, Photo as FirebasePhoto } from '@/types/photo';
 import { getImageUrl } from '@/services/storage';
+import { Author, Comment, User } from "@vapetool/types";
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
   return new Promise<Photo[]>((resolve, reject) => {
@@ -39,6 +40,15 @@ export function likePhoto(id: string, userId: string) {
       }
       return ServerValue.TIMESTAMP;
     });
+}
+
+export function commentPhoto(id: string, content: string, { uid, display_name }: User) {
+  const comment = new Comment(new Author(uid, display_name), content, ServerValue.TIMESTAMP);
+  return database
+    .ref('gear-comments')
+    .child(id)
+    .push()
+    .set(comment)
 }
 
 export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {

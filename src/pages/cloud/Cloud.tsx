@@ -19,11 +19,12 @@ const Cloud: React.FC<AuthComponentProps> = props => {
   } = props;
 
   return (
-    <div>
+    <div style={{ textAlign: 'center' }}>
       <List<Photo>
+        style={{ display: 'inline-block' }}
         className={styles.coverCardList}
         rowKey="uid"
-        grid={{ gutter: 24, xxl: 4, xl: 3, lg: 2, md: 2, sm: 2, xs: 1 }}
+        itemLayout="vertical"
         dataSource={photos || []}
         renderItem={photo => <PhotoView photo={photo} dispatch={dispatch}/>}
       />
