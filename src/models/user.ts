@@ -1,7 +1,7 @@
 import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
-import { Ban, User, UserPermission } from '@vapetool/types';
+import { User } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app';
 import { getUser, logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
@@ -11,14 +11,8 @@ import { ConnectState } from '@/models/connect';
 import { getAvatarUrl } from '@/services/storage';
 
 export interface CurrentUser extends User {
-  uid: string;
-  avatar: string;
   name: string;
-  email: string;
-  pro: boolean;
-  setup: boolean;
-  permission: UserPermission;
-  ban?: Ban;
+  avatar: string;
   title?: string;
   group?: string;
   signature?: string;
@@ -69,8 +63,10 @@ const UserModel: UserModelType = {
         const user = yield callUser as User;
         const avatarUrl = yield callAvatarUrl;
         const currentUser = {
+          ...user,
           uid: firebaseUser.uid,
           name: user.display_name || firebaseUser.displayName,
+          display_name: user.display_name || firebaseUser.displayName,
           avatar: avatarUrl || firebaseUser.photoURL,
         };
         yield put({

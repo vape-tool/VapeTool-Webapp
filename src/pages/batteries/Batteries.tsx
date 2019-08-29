@@ -6,6 +6,7 @@ import { FixedSizeGrid, GridChildComponentProps } from 'react-window';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import BatteryView from '@/components/BatteryView';
 import { Battery } from '@/types/battery';
+import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
 
 interface BatteriesComponentProps extends ConnectProps {
   batteries: Battery[];
@@ -18,7 +19,7 @@ interface BatteriesComponentState {
   columnCount: number;
 }
 
-class Batteries extends React.PureComponent<BatteriesComponentProps, BatteriesComponentState> {
+class Batteries extends React.Component<BatteriesComponentProps, BatteriesComponentState> {
   gridWidth: number = 0;
 
   cache: CellMeasurerCache = new CellMeasurerCache({
@@ -60,24 +61,27 @@ class Batteries extends React.PureComponent<BatteriesComponentProps, BatteriesCo
     const getBattery = (columnIndex: number, rowIndex: number) =>
       batteries[(rowIndex * columnCount + columnIndex) % batteries.length];
     return (
-      <FixedSizeGrid
-        columnCount={columnCount}
-        columnWidth={columnWidth}
-        width={width}
-        height={height}
-        rowCount={rowCount}
-        rowHeight={rowHeight}
-      >
-        {({ columnIndex, rowIndex, style }: GridChildComponentProps) => (
-          <div style={{ ...style }}>
-            <BatteryView
-              height={rowHeight}
-              width={columnWidth}
-              battery={getBattery(columnIndex, rowIndex)}
-            />
-          </div>
-        )}
-      </FixedSizeGrid>
+      <div>
+        <FixedSizeGrid
+          columnCount={columnCount}
+          columnWidth={columnWidth}
+          width={width}
+          height={height}
+          rowCount={rowCount}
+          rowHeight={rowHeight}
+        >
+          {({ columnIndex, rowIndex, style }: GridChildComponentProps) => (
+            <div style={{ ...style }}>
+              <BatteryView
+                height={rowHeight}
+                width={columnWidth}
+                battery={getBattery(columnIndex, rowIndex)}
+              />
+            </div>
+          )}
+        </FixedSizeGrid>
+        <BatteryPreviewDrawer/>
+      </div>
     );
   };
 }

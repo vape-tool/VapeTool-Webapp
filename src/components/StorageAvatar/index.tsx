@@ -5,6 +5,7 @@ import { getImageUrl, ImageType } from '@/services/storage';
 interface FirebaseImageProps {
   type: ImageType;
   id: string;
+  style?: any;
 }
 
 interface FirebaseImageState {
@@ -25,9 +26,9 @@ class FirebaseImage extends React.Component<FirebaseImageProps, FirebaseImageSta
   }
 
   render() {
-    const { type } = this.props;
+    const { type, style } = this.props;
     const { src } = this.state;
-    return <Avatar icon="user" alt={type} src={src}/>;
+    return <Avatar style={style} icon="user" alt={type} src={src}/>;
   }
 }
 

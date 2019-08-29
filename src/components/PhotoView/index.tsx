@@ -3,9 +3,10 @@ import React from 'react';
 import styles from '@/pages/account/center/components/UserPhotos/index.less';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Photo } from '@/types/photo';
-import { Comment } from '@vapetool/types'
+import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
 import { Dispatch } from '@/models/connect';
+import CommentView from '@/components/CommentView';
 
 interface PhotoViewProps {
   photo: Photo;
@@ -61,9 +62,13 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
   postComment = () => {
     this.props.dispatch({
       type: 'photo/commentPhoto',
-      payload: this.state.comment,
+      payload: { comment: this.state.comment, photoId: this.props.photo.uid },
     });
     message.info('Post')
+  };
+
+  onReplyComment = (comment: Comment) => {
+    this.setState({ comment: `@${comment.author.displayName} ` })
   };
 
   render() {
@@ -73,7 +78,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         {text}
       </span>
     );
-    const { photo } = this.props;
+    const { photo, dispatch } = this.props;
     const { likesCount, commentsCount, comment, displayComments } = this.state;
     return (
 
@@ -88,10 +93,6 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
             <Skeleton avatar={{ shape: 'square', size: 200 }}/>
           )
         }
-        // actions={[
-        //   <Icon type="like" onClick={() => this.onLikeClick(photo.uid)}/>,
-        //   <CommentIcon/>,
-        // ]}
       >
         <Card.Meta
           avatar={<FirebaseImage type="user" id={photo.author.uid}/>}
@@ -108,15 +109,13 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         </List.Item>
         {displayComments && displayComments.length > 0 &&
         <List<Comment>
-            bordered
             size="small"
             dataSource={displayComments}
             renderItem={item => (
-              <List.Item>
-                <FirebaseImage type="user" id={item.author.uid}/>
-                {item.content}
-              </List.Item>
-            )}
+              <CommentView comment={item}
+                           photo={photo}
+                           dispatch={dispatch}
+                           onReply={this.onReplyComment}/>)}
         />
         }
         <Input onPressEnter={this.postComment} value={comment} onChange={this.onChangeCommentText}
@@ -137,8 +136,8 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     this.commentsRef &&
     this.commentsRef.on('value', (snapshot: DataSnapshot) => {
       const comments: Comment[] = [];
-      snapshot.forEach(commentSnap => {
-        comments.push(commentSnap.val())
+      snapshot.forEach(snap => {
+        comments.push(Object.create({ ...snap.val(), uid: snap.key }))
       });
       this.setState({
         commentsCount: snapshot.numChildren(),

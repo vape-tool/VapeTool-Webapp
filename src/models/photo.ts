@@ -48,7 +48,7 @@ const PhotoModel: PhotoModelType = {
       }
       yield call(likePhoto, payload, currentUser);
     },
-    * commentPhoto({ payload }, { select, call }) {
+    * commentPhoto({ payload: { comment, photoId } }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
         (state.user.currentUser !== undefined ? state.user.currentUser : undefined),
       );
@@ -56,7 +56,7 @@ const PhotoModel: PhotoModelType = {
         return;
       }
 
-      yield call(commentPhoto, payload, currentUser);
+      yield call(commentPhoto, photoId, comment, currentUser);
     },
     * fetchPhotos(_, { put, call }) {
       const photos = yield call(getPhotos, 0, 100);

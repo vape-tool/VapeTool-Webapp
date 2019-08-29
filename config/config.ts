@@ -214,7 +214,7 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     '/api/': {
-      target: 'http://localhost:5000/vape-tool-pro/us-central1/',
+      target: 'http://home.stasbar.com:3000/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

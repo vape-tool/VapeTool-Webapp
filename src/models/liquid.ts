@@ -2,6 +2,7 @@ import { Reducer } from 'redux';
 import { Effect } from 'dva';
 import { Flavor, Liquid, Result } from '@vapetool/types';
 import { calculateResults } from '@/services/liquid';
+import { ConnectState } from "@/models/connect";
 
 export interface LiquidModelState {
   currentLiquid: Liquid;
@@ -45,7 +46,7 @@ const LiquidModel: LiquidModelType = {
   },
   effects: {
     * calculateResults(_, { select, call, put, cancel }) {
-      const currentLiquid = yield select((state: LiquidModelState) => state.currentLiquid);
+      const currentLiquid = yield select((state: ConnectState) => state.liquid.currentLiquid);
       const response = yield call(calculateResults, currentLiquid);
       if (response instanceof Response) {
         cancel();
