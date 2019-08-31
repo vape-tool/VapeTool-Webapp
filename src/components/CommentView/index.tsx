@@ -39,7 +39,7 @@ const CommentView: React.FC<CommentViewProps> = props => {
         {author.displayName}
       </Typography.Text>
       <span style={{ marginLeft: 8, flexGrow: 1, alignSelf: 'flex-start', textAlign: 'start' }}>{content}</span>
-      <Dropdown overlay={menu}>
+      <Dropdown overlay={menu} trigger={['click']}>
         <Button type="link" icon="more"/>
       </Dropdown>
     </div>

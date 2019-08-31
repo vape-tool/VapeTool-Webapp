@@ -6,7 +6,7 @@ import { database, DataSnapshot } from '@/utils/firebase';
 import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
 import { ConnectState } from '@/models/connect';
-import { commentPhoto, getPhotos, likePhoto } from '@/services/photo';
+import { commentPhoto, deletePhotoComment, getPhotos, likePhoto } from '@/services/photo';
 
 export interface PhotoModelState {
   photos: Photo[];
@@ -18,10 +18,11 @@ export interface PhotoModelType {
   effects: {
     likePhoto: Effect;
     commentPhoto: Effect;
+    deleteComment: Effect;
     fetchPhotos: Effect;
   };
   reducers: {
-    addPhotos: Reducer<PhotoModelState>;
+    setPhotos: Reducer<PhotoModelState>;
     addPhoto: Reducer<PhotoModelState>;
     removePhoto: Reducer<PhotoModelState>;
     setPhoto: Reducer<PhotoModelState>;
@@ -39,14 +40,14 @@ const PhotoModel: PhotoModelType = {
   },
 
   effects: {
-    * likePhoto({ payload }, { select, call }) {
+    * likePhoto({ photoId }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
         (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
       );
       if (!currentUser) {
         return;
       }
-      yield call(likePhoto, payload, currentUser);
+      yield call(likePhoto, photoId, currentUser);
     },
     * commentPhoto({ payload: { comment, photoId } }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
@@ -58,6 +59,11 @@ const PhotoModel: PhotoModelType = {
 
       yield call(commentPhoto, photoId, comment, currentUser);
     },
+    * deleteComment({ payload: { photoId, commentId } }, { call }) {
+      console.log('deleteComment');
+      console.log(`photoId: ${photoId} commentId: ${commentId}`);
+      yield call(deletePhotoComment, photoId, commentId);
+    },
     * fetchPhotos(_, { put, call }) {
       const photos = yield call(getPhotos, 0, 100);
       yield put({
@@ -68,11 +74,10 @@ const PhotoModel: PhotoModelType = {
   },
 
   reducers: {
-    addPhotos(state = { photos: [] }, { photos }): PhotoModelState {
-      state.photos.push(photos);
+    setPhotos(state = { photos: [] }, { photos }): PhotoModelState {
       return {
         ...(state as PhotoModelState),
-        photos: state.photos,
+        photos: photos.sort((a: Photo, b: Photo) => (b.creationTime - a.creationTime)),
       };
     },
     addPhoto(state = { photos: [] }, { photo }): PhotoModelState {
@@ -108,27 +113,28 @@ const PhotoModel: PhotoModelType = {
         .equalTo(OnlineContentStatus.ONLINE_PUBLIC)
         .limitToLast(100);
 
-      ref.on('child_added', (snapshot: DataSnapshot) => {
-        if (!snapshot || !snapshot.key) {
-          return;
-        }
-        getPhotoUrl(snapshot.key).then(url =>
-          dispatch({
-            type: 'addPhoto',
-            photo: Object.create({ ...snapshot.val(), url }) as Photo,
-          }),
-        );
-      });
-      ref.on('child_changed', (snapshot: DataSnapshot) => {
-        dispatch({
-          type: 'setPhoto',
-          photo: snapshot.val(),
+      ref.on('value', (snapshot: DataSnapshot) => {
+        console.log('fetched photos');
+        const photosPromise: Promise<Photo>[]
+          = new Array<Promise<Photo>>();
+        snapshot.forEach(snap => {
+          const battery = snap.val();
+          const promise = getPhotoUrl(snap.key || battery.uid)
+            .then((url: string) => {
+              if (battery.creationTime === undefined) {
+                battery.creationTime = battery.timestamp;
+                battery.lastTimeModified = battery.timestamp;
+              }
+              return Object.create({ ...battery, url })
+            });
+          photosPromise.push(promise)
         });
-      });
-      ref.on('child_removed', (snapshot: DataSnapshot) => {
-        dispatch({
-          type: 'removePhoto',
-          key: snapshot.key,
+
+        Promise.all(photosPromise).then(photos => {
+          dispatch({
+            type: 'setPhotos',
+            photos,
+          })
         });
       });
 

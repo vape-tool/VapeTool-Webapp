@@ -7,6 +7,7 @@ import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
 import { Dispatch } from '@/models/connect';
 import CommentView from '@/components/CommentView';
+import moment from 'moment';
 
 interface PhotoViewProps {
   photo: Photo;
@@ -54,7 +55,6 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     }
   }
 
-
   onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ comment: e.target.value })
   };
@@ -68,7 +68,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
   };
 
   onReplyComment = (comment: Comment) => {
-    this.setState({ comment: `@${comment.author.displayName} ` })
+    this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` })
   };
 
   render() {
@@ -80,8 +80,8 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     );
     const { photo, dispatch } = this.props;
     const { likesCount, commentsCount, comment, displayComments } = this.state;
-    return (
 
+    return (
       <Card
         style={{ maxWidth: 614 }}
         className={styles.card}
@@ -104,12 +104,14 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
             <IconText onClick={this.onLikeClick} type="like-o" text={`${likesCount || 0}`} key="list-vertical-like-o"/>,
             <IconText onClick={this.onLikeClick} type="message" text={`${commentsCount || 0}`}
                       key="list-vertical-message"/>,
+            <span>{moment(photo.creationTime).fromNow()}</span>,
           ]}>
 
         </List.Item>
         {displayComments && displayComments.length > 0 &&
         <List<Comment>
             size="small"
+            rowKey={item => item.uid}
             dataSource={displayComments}
             renderItem={item => (
               <CommentView comment={item}
@@ -145,10 +147,10 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       });
     });
 
-  private onLikeClick = (id: string) =>
+  private onLikeClick = () =>
     this.props.dispatch({
       type: 'photo/likePhoto',
-      payload: id,
+      photoId: this.props.photo.uid,
     });
 }
 

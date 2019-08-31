@@ -139,7 +139,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> =
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             display: 'inherit',
-          }} href={reviewUrl}>Read review</a></Col>}
+          }} href={reviewUrl} rel="noopener noreferrer" target="_blank">Read review</a></Col>}
 
 
           {!editBattery && affiliate && Array.from(affiliate, ([key, value]) => {
@@ -149,7 +149,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> =
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               display: 'inherit',
-            }} href={value}>Buy on {key}</a></Col>)
+            }} rel="noopener noreferrer" target="_blank" href={value}>Buy on {key}</a></Col>)
           })
           }
         </Row>

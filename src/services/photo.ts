@@ -30,10 +30,10 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
   });
 }
 
-export function likePhoto(id: string, userId: string) {
+export function likePhoto(photoId: string, userId: string) {
   return database
     .ref('gear-likes')
-    .child(id)
+    .child(photoId)
     .child(userId)
     .transaction(like => {
       if (like) {
@@ -50,6 +50,14 @@ export function commentPhoto(id: string, content: string, { uid, name }: Current
     .child(id)
     .push()
     .set(comment)
+}
+
+export function deletePhotoComment(photoId: string, commentId: string) {
+  return database
+    .ref('gear-comments')
+    .child(photoId)
+    .child(commentId)
+    .set(null)
 }
 
 export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
