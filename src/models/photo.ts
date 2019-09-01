@@ -10,6 +10,7 @@ import { commentPhoto, deletePhotoComment, getPhotos, likePhoto } from '@/servic
 
 export interface PhotoModelState {
   photos: Photo[];
+  selectedPhoto?: Photo;
 }
 
 export interface PhotoModelType {
@@ -22,6 +23,7 @@ export interface PhotoModelType {
     fetchPhotos: Effect;
   };
   reducers: {
+    selectPhoto: Reducer<PhotoModelState>;
     setPhotos: Reducer<PhotoModelState>;
     addPhoto: Reducer<PhotoModelState>;
     removePhoto: Reducer<PhotoModelState>;
@@ -37,6 +39,7 @@ const PhotoModel: PhotoModelType = {
 
   state: {
     photos: [],
+    selectedPhoto: undefined,
   },
 
   effects: {
@@ -74,6 +77,12 @@ const PhotoModel: PhotoModelType = {
   },
 
   reducers: {
+    selectPhoto(state = { photos: [] }, { photo }): PhotoModelState {
+      return {
+        ...(state as PhotoModelState),
+        selectedPhoto: photo,
+      };
+    },
     setPhotos(state = { photos: [] }, { photos }): PhotoModelState {
       return {
         ...(state as PhotoModelState),

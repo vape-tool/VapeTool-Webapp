@@ -6,6 +6,7 @@ import { Photo } from '@/types/photo';
 import styles from '@/pages/account/center/components/UserPhotos/index.less';
 import { PhotoModelState } from '@/models/photo';
 import PhotoView from '@/components/PhotoView';
+import PhotoPreviewModal from "@/components/PhotoPreviewModal";
 
 interface AuthComponentProps extends ConnectProps {
   photo: PhotoModelState;
@@ -26,8 +27,11 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         rowKey="uid"
         itemLayout="vertical"
         dataSource={photos || []}
-        renderItem={photo => <PhotoView photo={photo} dispatch={dispatch}/>}
+        renderItem={photo => <PhotoView displayCommentsLength={3}
+                                        photo={photo}
+                                        dispatch={dispatch}/>}
       />
+      <PhotoPreviewModal/>
     </div>
   );
 };

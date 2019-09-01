@@ -1,22 +1,27 @@
 import { Card, Icon, Input, List, message, Skeleton, Typography } from 'antd';
 import React from 'react';
-import styles from '@/pages/account/center/components/UserPhotos/index.less';
+import moment from 'moment';
+import { connect } from 'dva';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
-import { Dispatch } from '@/models/connect';
+import { ConnectState, Dispatch } from '@/models/connect';
 import CommentView from '@/components/CommentView';
-import moment from 'moment';
+import styles from './index.less';
+import { CurrentUser } from '@/models/user';
 
 interface PhotoViewProps {
   photo: Photo;
   dispatch: Dispatch;
+  displayCommentsLength: number;
+  user?: CurrentUser
 }
 
 interface PhotoViewState {
   // src?: string;
   likesCount?: number;
+  likedByMe?: boolean;
   commentsCount?: number;
   comment: string;
   displayComments?: Comment[];
@@ -26,10 +31,13 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
   state: PhotoViewState = {
     // src: undefined,
     likesCount: undefined,
+    likedByMe: undefined,
     commentsCount: undefined,
     comment: '',
     displayComments: undefined,
   };
+
+  private inputRef?: any = undefined;
 
   private likesRef?: Reference = undefined;
 
@@ -71,8 +79,23 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` })
   };
 
+  selectPhoto = () => this.props.dispatch({
+    type: 'photo/selectPhoto',
+    photo: this.props.photo,
+  });
+
   render() {
-    const IconText = ({ type, text, onClick }: { type: string, text: string, onClick: any }) => (
+    const LikeIconText = ({ type, text, onClick }
+                            : { type: string, text: string, onClick: any }) => (
+      <span>
+        <Icon onClick={onClick} type={type} theme={this.state.likedByMe ? 'filled' : 'outlined'}
+              className={this.state.likedByMe ? styles.liked : ''}
+              style={{ marginRight: 8 }}/>
+        {text}
+      </span>
+    );
+    const CommentIconText = ({ type, text, onClick }
+                               : { type: string, text: string, onClick: any }) => (
       <span>
         <Icon onClick={onClick} type={type} style={{ marginRight: 8 }}/>
         {text}
@@ -88,7 +111,8 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         hoverable
         cover={
           photo.url ? (
-            <img style={{ objectFit: 'cover', maxHeight: 714 }} alt={photo.description} src={photo.url}/>
+            <img onClick={this.selectPhoto}
+                 style={{ objectFit: 'cover', maxHeight: 714 }} alt={photo.description} src={photo.url}/>
           ) : (
             <Skeleton avatar={{ shape: 'square', size: 200 }}/>
           )
@@ -101,9 +125,10 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         <List.Item
           style={{ maxWidth: 614 }}
           actions={[
-            <IconText onClick={this.onLikeClick} type="like-o" text={`${likesCount || 0}`} key="list-vertical-like-o"/>,
-            <IconText onClick={this.onLikeClick} type="message" text={`${commentsCount || 0}`}
-                      key="list-vertical-message"/>,
+            <LikeIconText onClick={this.onLikeClick} type="like-o" text={`${likesCount || 0}`}
+                          key="list-vertical-like-o"/>,
+            <CommentIconText onClick={this.onCommentClick} type="message" text={`${commentsCount || 0}`}
+                             key="list-vertical-message"/>,
             <span>{moment(photo.creationTime).fromNow()}</span>,
           ]}>
 
@@ -120,9 +145,13 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
                            onReply={this.onReplyComment}/>)}
         />
         }
-        <Input onPressEnter={this.postComment} value={comment} onChange={this.onChangeCommentText}
-               placeholder="Add a comment..."
-               suffix={<a onClick={this.postComment}>Post</a>}/>
+        <Input
+          ref={ref => {
+            this.inputRef = ref
+          }}
+          onPressEnter={this.postComment} value={comment} onChange={this.onChangeCommentText}
+          placeholder="Add a comment..."
+          suffix={<a onClick={this.postComment}>Post</a>}/>
       </Card>
 
     );
@@ -132,6 +161,20 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     this.likesRef &&
     this.likesRef.on('value', (snapshot: DataSnapshot) => {
       this.setState({ likesCount: snapshot.numChildren() });
+      let likedByMe = false;
+      snapshot.forEach(snap => {
+        if (this.props.user !== undefined && snap.key === this.props.user.uid) {
+          likedByMe = true
+        }
+      });
+
+      this.setState({ likedByMe });
+    });
+
+  private onLikeClick = () =>
+    this.props.dispatch({
+      type: 'photo/likePhoto',
+      photoId: this.props.photo.uid,
     });
 
   private listenPhotoComments = () =>
@@ -143,15 +186,13 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       });
       this.setState({
         commentsCount: snapshot.numChildren(),
-        displayComments: comments.slice(Math.max(comments.length - 3, 0)),
+        displayComments:
+          comments.slice(Math.max(comments.length - this.props.displayCommentsLength, 0)),
       });
     });
 
-  private onLikeClick = () =>
-    this.props.dispatch({
-      type: 'photo/likePhoto',
-      photoId: this.props.photo.uid,
-    });
+  private onCommentClick = () =>
+    this.inputRef.focus();
 }
 
-export default PhotoView;
+export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PhotoView);
