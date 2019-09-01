@@ -3,6 +3,7 @@ import { Col, InputNumber, Row, Typography } from 'antd';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
+import { unitFormatter, unitParser } from "@/utils/utils";
 
 
 const TempTab: React.FC<ConverterComponentProps> = props => {
@@ -29,11 +30,19 @@ const TempTab: React.FC<ConverterComponentProps> = props => {
       <Row type="flex">
         <Col xs={10} md={12}>
           <Typography.Text>Celsius</Typography.Text>
-          <InputNumber size="large" min={-273.15} step={1} value={converter.celsius} onChange={onChangeCelsius}/>
+          <InputNumber size="large"
+                       min={-273.15}
+                       step={1}
+                       formatter={unitFormatter(2, '°C')}
+                       parser={unitParser('°C')}
+                       value={converter.celsius} onChange={onChangeCelsius}/>
         </Col>
         <Col xs={10} md={12}>
           <Typography.Text>Fahrenheit</Typography.Text>
-          <InputNumber size="large" step={1} value={converter.fahrenheit}
+          <InputNumber size="large" step={1}
+                       formatter={unitFormatter(2, '°F')}
+                       parser={unitParser('°F')}
+                       value={converter.fahrenheit}
                        onChange={onChangeFahrenheit}/>
         </Col>
       </Row>

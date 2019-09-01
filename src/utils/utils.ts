@@ -22,9 +22,9 @@ const isAntDesignProOrDev = (): boolean => {
 
 export { isAntDesignProOrDev, isAntDesignPro, isUrl };
 
-export function unitFormatter(decimals: number, unit: string):
+export function unitFormatter(decimals: number, unit?: string):
   (value: number | string | undefined) => string {
-  return (value: number | string | undefined) => `${value ? Number(value).toFixed(decimals) : value} ${unit}`;
+  return (value: number | string | undefined) => `${value ? Number(value).toFixed(decimals) : value}${unit ? ` ${unit}` : ''}`;
 }
 
 export function unitParser(unit: string): (displayValue: string | undefined) => number | string {
