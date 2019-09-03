@@ -2,6 +2,7 @@ import { Reducer } from 'redux';
 import { Effect } from 'dva';
 import { Coil, Wire, wireGenerator, WireStyle } from '@vapetool/types';
 import { calculateForResistance, calculateForWraps, getSweetSpot } from '@/services/coil';
+import { message } from 'antd';
 
 export interface Path {
   style: WireStyle;
@@ -40,37 +41,49 @@ const CoilModel: CoilModelType = {
     currentCoil: wireGenerator.normalCoil(),
   },
   effects: {
-    *calculateForResistance({ payload }, { call, put, cancel }) {
-      const response = yield call(calculateForResistance, payload);
-      if (response instanceof Response) {
-        cancel();
-      } else if (response instanceof Object) {
-        yield put({
-          type: 'setCoil',
-          payload: response,
-        });
+    * calculateForResistance({ payload }, { call, put, cancel }) {
+      try {
+        const response = yield call(calculateForResistance, payload);
+        if (response instanceof Response) {
+          cancel();
+        } else if (response instanceof Object) {
+          yield put({
+            type: 'setCoil',
+            payload: response,
+          });
+        }
+      } catch (e) {
+        message.error(e.message)
       }
     },
-    *calculateForWraps({ payload }, { call, put, cancel }) {
-      const response = yield call(calculateForWraps, payload);
-      if (response instanceof Response) {
-        cancel();
-      } else if (response instanceof Object) {
-        yield put({
-          type: 'setCoil',
-          payload: response,
-        });
+    * calculateForWraps({ payload }, { call, put, cancel }) {
+      try {
+        const response = yield call(calculateForWraps, payload);
+        if (response instanceof Response) {
+          cancel();
+        } else if (response instanceof Object) {
+          yield put({
+            type: 'setCoil',
+            payload: response,
+          });
+        }
+      } catch (e) {
+        message.error(e.message)
       }
     },
-    *getSweetSpot(_, { call, put, cancel }) {
-      const response = yield call(getSweetSpot);
-      if (response instanceof Response) {
-        cancel();
-      } else if (response instanceof Object) {
-        yield put({
-          type: 'setSweetSpot',
-          payload: response,
-        });
+    * getSweetSpot(_, { call, put, cancel }) {
+      try {
+        const response = yield call(getSweetSpot);
+        if (response instanceof Response) {
+          cancel();
+        } else if (response instanceof Object) {
+          yield put({
+            type: 'setSweetSpot',
+            payload: response,
+          });
+        }
+      } catch (e) {
+        message.error(e.message)
       }
     },
   },
