@@ -95,6 +95,12 @@ export default {
           component: './user/login',
         },
         {
+          hideInMenu: true,
+          name: 'payment',
+          path: '/payment',
+          component: './payment/Payment',
+        },
+        {
           path: '/',
           name: 'welcome',
           icon: 'smile',
