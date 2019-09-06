@@ -27,8 +27,9 @@ const CommentView: React.FC<CommentViewProps> = props => {
   };
   const menu = (
     <Menu>
-      {(user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR) &&
-      <Menu.Item onClick={deleteComment} key="delete">Delete</Menu.Item>}
+      {(user !== undefined
+        && (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR))
+      && <Menu.Item onClick={deleteComment} key="delete">Delete</Menu.Item>}
       <Menu.Item onClick={() => onReply(props.comment)} key="reply">Reply</Menu.Item>
     </Menu>
   );
