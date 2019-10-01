@@ -1,7 +1,8 @@
 import { Button, Col, Form, Input, Row } from 'antd';
 import React, { Component } from 'react';
-
 import { FormComponentProps } from 'antd/es/form';
+import { GetFieldDecoratorOptions } from 'antd/es/form/Form';
+
 import omit from 'omit.js';
 import ItemMap from './map';
 import LoginContext, { LoginContextProps } from './LoginContext';
@@ -11,7 +12,6 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export type WrappedLoginItemProps = Omit<LoginItemProps, 'form' | 'type' | 'updateActive'>;
 export type LoginItemKeyType = keyof typeof ItemMap;
-
 export interface LoginItemType {
   UserName: React.FC<WrappedLoginItemProps>;
   Password: React.FC<WrappedLoginItemProps>;
@@ -19,14 +19,13 @@ export interface LoginItemType {
   Captcha: React.FC<WrappedLoginItemProps>;
 }
 
-export interface LoginItemProps {
+export interface LoginItemProps extends GetFieldDecoratorOptions {
   name?: string;
-  rules?: any[];
   style?: React.CSSProperties;
-  onGetCaptcha?: (event?: MouseEvent) => void | Promise<any> | false;
+  onGetCaptcha?: (event?: MouseEvent) => void | Promise<boolean> | false;
   placeholder?: string;
   buttonText?: React.ReactNode;
-  onPressEnter?: (e: any) => void;
+  onPressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   countDown?: number;
   getCaptchaButtonText?: string;
   getCaptchaSecondText?: string;
@@ -34,9 +33,9 @@ export interface LoginItemProps {
   type?: string;
   defaultValue?: string;
   form?: FormComponentProps['form'];
-  customProps?: { [key: string]: any };
-  onChange?: (e: any) => void;
-  tabUtil?: any;
+  customProps?: { [key: string]: unknown };
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  tabUtil?: LoginContextProps['tabUtil'];
 }
 
 interface LoginItemState {
@@ -86,11 +85,11 @@ class WrapFormItem extends Component<LoginItemProps, LoginItemState> {
 
   getFormItemOptions = ({ onChange, defaultValue, customProps = {}, rules }: LoginItemProps) => {
     const options: {
-      rules?: any[];
+      rules?: LoginItemProps['rules'];
       onChange?: LoginItemProps['onChange'];
       initialValue?: LoginItemProps['defaultValue'];
     } = {
-      rules: rules || customProps.rules,
+      rules: rules || (customProps.rules as LoginItemProps['rules']),
     };
     if (onChange) {
       options.onChange = onChange;

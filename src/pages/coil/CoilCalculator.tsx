@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Button, Card, Col, InputNumber, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil } from '@vapetool/types';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
