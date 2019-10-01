@@ -8,8 +8,6 @@ import { connect } from 'dva';
 import { User as FirebaseUser } from 'firebase/app';
 import { Redirect } from 'umi';
 import UserPhotos from './components/UserPhotos';
-import Articles from './components/Articles';
-import Applications from './components/Applications';
 import { TagType } from './data.d';
 import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
@@ -132,13 +130,13 @@ class Center extends PureComponent<CenterProps, CenterState> {
       return <UserPhotos />;
     }
     if (tabKey === 'posts') {
-      return <Applications />;
+      return <UserPhotos />;
     }
     if (tabKey === 'coils') {
-      return <Articles />;
+      return <UserPhotos />;
     }
     if (tabKey === 'liquids') {
-      return <Articles />;
+      return <UserPhotos />;
     }
     return null;
   };
