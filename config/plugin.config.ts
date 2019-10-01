@@ -64,9 +64,16 @@ export default (config: any) => {
       cacheGroups: {
         vendors: {
           test: (module: { context: string }) => {
-            const packageName = getModulePackageName(module);
+            const packageName = getModulePackageName(module) || '';
             if (packageName) {
-              return ['bizcharts', '@antv_data-set'].indexOf(packageName) >= 0;
+              return [
+                'bizcharts',
+                'gg-editor',
+                'g6',
+                '@antv',
+                'gg-editor-core',
+                'bizcharts-plugin-slider',
+              ].includes(packageName);
             }
             return false;
           },
@@ -92,5 +99,6 @@ const getAntdSerials = (color: string) => {
     return ThemeColorReplacer.varyColor.lighten(color, i / devide10);
   });
   const colorPalettes = generate(color);
-  return lightens.concat(colorPalettes);
+  const rgb = ThemeColorReplacer.varyColor.toNum3(color.replace('#', '')).join(',');
+  return lightens.concat(colorPalettes).concat(rgb);
 };
