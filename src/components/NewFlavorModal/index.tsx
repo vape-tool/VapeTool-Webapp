@@ -7,7 +7,7 @@ import { ConnectState, Dispatch } from '@/models/connect';
 
 interface NewFlavorModalProps extends FormComponentProps {
   showNewFlavorModal: boolean;
-  dispatch: Dispatch
+  dispatch: Dispatch;
 }
 
 const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
@@ -16,7 +16,7 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
   const onCreate = () => {
     form.validateFields((err, values) => {
       if (err) {
-        return
+        return;
       }
       const { name, manufacturer, percentage, price, ratio } = values;
 
@@ -28,14 +28,14 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
       });
       dispatch({
         type: 'liquid/hideNewFlavorModal',
-      })
+      });
     });
   };
 
   const onCancel = () => {
     dispatch({
       type: 'liquid/hideNewFlavorModal',
-    })
+    });
   };
 
   const formItemLayout = {
@@ -61,35 +61,24 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
         <Form.Item label="Name">
           {getFieldDecorator('name', {
             rules: [{ required: true, message: 'Please input the flavor name!' }],
-          })(<Input/>)}
+          })(<Input />)}
         </Form.Item>
         <Form.Item label="Manufacturer">
-          {getFieldDecorator('manufacturer')(<Input type="textarea"/>)}
+          {getFieldDecorator('manufacturer')(<Input type="textarea" />)}
         </Form.Item>
         <Form.Item label="Percentage">
           {getFieldDecorator('percentage', {
             rules: [{ required: true, message: 'Please input the flavor percentage!' }],
-          })(
-            <InputNumber
-              min={0} max={100} step={1}
-            />,
-          )}
+          })(<InputNumber min={0} max={100} step={1} />)}
         </Form.Item>
         <Form.Item label="Price per 10ml">
-          {getFieldDecorator('price')(
-            <InputNumber
-              min={0} step={0.1}/>,
-          )}
+          {getFieldDecorator('price')(<InputNumber min={0} step={0.1} />)}
         </Form.Item>
         <Form.Item label="PG Ratio">
           {getFieldDecorator('ratio', {
             initialValue: 100,
             rules: [{ required: true, message: 'Please input the flavor ratio!' }],
-          })(
-            <InputNumber
-              min={0} max={100} step={10}
-            />,
-          )}
+          })(<InputNumber min={0} max={100} step={10} />)}
         </Form.Item>
       </Form>
     </Modal>
@@ -98,5 +87,6 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
 
 const form = Form.create<NewFlavorModalProps>({ name: 'new_flavor_modal' })(NewFlavorModal);
 
-export default connect(({ liquid: { showNewFlavorModal } }: ConnectState) =>
-  ({ showNewFlavorModal }))(form)
+export default connect(({ liquid: { showNewFlavorModal } }: ConnectState) => ({
+  showNewFlavorModal,
+}))(form);

@@ -60,11 +60,11 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
           rel="noopener noreferrer"
           className={styles.action}
         >
-          <Icon type="question-circle-o"/>
+          <Icon type="question-circle-o" />
         </a>
       </Tooltip>
-      <Avatar menu/>
-      <SelectLang className={styles.action}/>
+      <Avatar menu />
+      <SelectLang className={styles.action} />
     </div>
   );
 };

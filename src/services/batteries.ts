@@ -8,5 +8,5 @@ export function setAffiliate(batteryId: string, { name, link }: Affiliate) {
     .child(batteryId)
     .child('affiliate')
     .child(name)
-    .set(link)
+    .set(link);
 }

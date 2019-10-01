@@ -8,21 +8,20 @@ import { Battery } from '@/types/battery';
 import { ConnectState, Effect } from '@/models/connect';
 import { setAffiliate } from '@/services/batteries';
 
-
 export interface BatteriesModelState {
   batteries: Battery[];
   selectedBattery?: Battery;
   editBattery?: boolean;
   editingAffiliate?: string;
-  showNewAffiliateModal?: boolean
+  showNewAffiliateModal?: boolean;
 }
 
 export interface BatteriesModelType {
   namespace: string;
   state: BatteriesModelState;
   effects: {
-    setAffiliate: Effect
-  },
+    setAffiliate: Effect;
+  };
   reducers: {
     showNewAffiliateModal: Reducer<BatteriesModelState>;
     hideNewAffiliateModal: Reducer<BatteriesModelState>;
@@ -50,11 +49,12 @@ const BatteriesModel: BatteriesModelType = {
     showNewAffiliateModal: undefined,
   },
   effects: {
-    * setAffiliate({ affiliate }, { call, select, put }) {
+    *setAffiliate({ affiliate }, { call, select, put }) {
       console.log('model/setAffiliate');
       console.log(affiliate);
-      const selectedBattery = yield select((state: ConnectState) =>
-        state.batteries.selectedBattery);
+      const selectedBattery = yield select(
+        (state: ConnectState) => state.batteries.selectedBattery,
+      );
       console.log(`model/selected battery: ${selectedBattery}`);
       if (!selectedBattery) throw Error('can not set affiliate on undefined battery');
 
@@ -66,31 +66,31 @@ const BatteriesModel: BatteriesModelType = {
       return {
         ...(state as BatteriesModelState),
         showNewAffiliateModal: false,
-      }
+      };
     },
     showNewAffiliateModal(state = { batteries: [] }): BatteriesModelState {
       return {
         ...(state as BatteriesModelState),
         showNewAffiliateModal: true,
-      }
+      };
     },
     editAffiliate(state = { batteries: [] }, { name }): BatteriesModelState {
       return {
         ...(state as BatteriesModelState),
         editingAffiliate: name,
-      }
+      };
     },
     toggleEditBattery(state = { batteries: [] }): BatteriesModelState {
       return {
         ...(state as BatteriesModelState),
         editBattery: !state.editBattery,
-      }
+      };
     },
     selectBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       return {
         ...(state as BatteriesModelState),
         selectedBattery: battery,
-      }
+      };
     },
     addBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       state.batteries.push(battery);
@@ -108,19 +108,19 @@ const BatteriesModel: BatteriesModelType = {
     },
     setBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       const newBatteries = state.batteries.map((it: Battery) =>
-        (battery === id(it) ? battery : it),
+        battery === id(it) ? battery : it,
       );
       return {
         ...(state as BatteriesModelState),
         batteries: newBatteries,
       };
     },
-    setBatteries(state = { batteries: [] }, { batteries })
-      : BatteriesModelState {
+    setBatteries(state = { batteries: [] }, { batteries }): BatteriesModelState {
       console.log('setBatteries');
       const { selectedBattery } = state;
-      const refreshedSelectedBat = selectedBattery ?
-        batteries.find((battery: Battery) => battery.id === selectedBattery.id) : undefined;
+      const refreshedSelectedBat = selectedBattery
+        ? batteries.find((battery: Battery) => battery.id === selectedBattery.id)
+        : undefined;
       return {
         ...(state as BatteriesModelState),
         batteries,
@@ -136,25 +136,24 @@ const BatteriesModel: BatteriesModelType = {
 
       ref.on('value', (snapshot: DataSnapshot) => {
         console.log('fetched batteries');
-        const batteriesPromise: Promise<Battery>[]
-          = new Array<Promise<Battery>>();
+        const batteriesPromise: Promise<Battery>[] = new Array<Promise<Battery>>();
         snapshot.forEach(snap => {
-          const promise = getBatteryUrl(snap.key || id(snap.val()))
-            .then((url: string) => ({
-              ...snap.val(),
-              url,
-              id: snap.key,
-              affiliate: snap.val().affiliate ?
-                new Map(Object.entries(snap.val().affiliate)) : undefined,
-            }));
-          batteriesPromise.push(promise)
+          const promise = getBatteryUrl(snap.key || id(snap.val())).then((url: string) => ({
+            ...snap.val(),
+            url,
+            id: snap.key,
+            affiliate: snap.val().affiliate
+              ? new Map(Object.entries(snap.val().affiliate))
+              : undefined,
+          }));
+          batteriesPromise.push(promise);
         });
 
         Promise.all(batteriesPromise).then(batteries => {
           dispatch({
             type: 'setBatteries',
             batteries,
-          })
+          });
         });
       });
 

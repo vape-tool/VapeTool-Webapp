@@ -56,7 +56,7 @@ const UserModel: UserModelType = {
   },
 
   effects: {
-    * fetchCurrentUser({ firebaseUser }, { call, put }) {
+    *fetchCurrentUser({ firebaseUser }, { call, put }) {
       if (firebaseUser) {
         const callUser = call(getUser, firebaseUser.uid);
         const callAvatarUrl = call(getAvatarUrl, firebaseUser.uid);
@@ -75,12 +75,12 @@ const UserModel: UserModelType = {
         });
       }
     },
-    * logout(_, { call }) {
+    *logout(_, { call }) {
       yield call(logoutFirebase);
     },
-    * fetchCurrentUserPhotos(_, { put, call, select }) {
+    *fetchCurrentUserPhotos(_, { put, call, select }) {
       const uid = yield select((state: ConnectState) =>
-        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
+        state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined,
       );
       console.log(`fetchCurrentUserPhotos uid: ${uid}`);
       if (!uid) {

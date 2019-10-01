@@ -26,9 +26,9 @@ class UserPhotos extends Component<Partial<UserModelState>> {
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.description} src={item.url}/>}
+              cover={<img alt={item.description} src={item.url} />}
             >
-              <Card.Meta title={<a>{item.description}</a>}/>
+              <Card.Meta title={<a>{item.description}</a>} />
               <div className={styles.cardItemContent}>
                 <span>{moment(item.lastTimeModified).fromNow()}</span>
               </div>

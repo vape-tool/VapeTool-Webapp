@@ -129,16 +129,16 @@ class Center extends PureComponent<CenterProps, CenterState> {
 
   renderChildrenByTabKey = (tabKey: CenterState['tabKey']) => {
     if (tabKey === 'photos') {
-      return <UserPhotos/>;
+      return <UserPhotos />;
     }
     if (tabKey === 'posts') {
-      return <Applications/>;
+      return <Applications />;
     }
     if (tabKey === 'coils') {
-      return <Articles/>;
+      return <Articles />;
     }
     if (tabKey === 'liquids') {
-      return <Articles/>;
+      return <Articles />;
     }
     return null;
   };
@@ -151,7 +151,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
     console.log(firebaseUser);
     if (!firebaseUser) {
       console.log('firebaseUser is null so redirect');
-      return <Redirect to="/user/login"/>;
+      return <Redirect to="/user/login" />;
     }
     return (
       <GridContent>
@@ -161,27 +161,27 @@ class Center extends PureComponent<CenterProps, CenterState> {
               {!dataLoading ? (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar}/>
+                    <img alt="" src={currentUser.avatar} />
                     <div className={styles.name}>{currentUser.name}</div>
                     <div>{currentUser.signature}</div>
                   </div>
                   <div className={styles.detail}>
                     <p>
-                      <i className={styles.title}/>
+                      <i className={styles.title} />
                       {currentUser.title}
                     </p>
                     <p>
-                      <i className={styles.group}/>
+                      <i className={styles.group} />
                       {currentUser.group}
                     </p>
                   </div>
-                  <Divider dashed/>
+                  <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
                     {currentUser.tags &&
-                    currentUser.tags
-                      .concat(newTags)
-                      .map(item => <Tag key={item.key}>{item.label}</Tag>)}
+                      currentUser.tags
+                        .concat(newTags)
+                        .map(item => <Tag key={item.key}>{item.label}</Tag>)}
                     {inputVisible && (
                       <Input
                         ref={ref => this.saveInputRef(ref)}
@@ -199,11 +199,11 @@ class Center extends PureComponent<CenterProps, CenterState> {
                         onClick={this.showInput}
                         style={{ background: '#fff', borderStyle: 'dashed' }}
                       >
-                        <Icon type="plus"/>
+                        <Icon type="plus" />
                       </Tag>
                     )}
                   </div>
-                  <Divider style={{ marginTop: 16 }} dashed/>
+                  <Divider style={{ marginTop: 16 }} dashed />
                 </div>
               ) : null}
             </Card>

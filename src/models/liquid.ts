@@ -46,7 +46,7 @@ const LiquidModel: LiquidModelType = {
     showNewFlavorModal: false,
   },
   effects: {
-    * calculateResults(_, { select, call, put, cancel }) {
+    *calculateResults(_, { select, call, put, cancel }) {
       try {
         const currentLiquid = yield select((state: ConnectState) => state.liquid.currentLiquid);
 
@@ -60,7 +60,7 @@ const LiquidModel: LiquidModelType = {
           });
         }
       } catch (e) {
-        message.error(e.message)
+        message.error(e.message);
       }
     },
   },
@@ -149,19 +149,13 @@ const LiquidModel: LiquidModelType = {
         },
       };
     },
-    setResults(
-      state = { currentLiquid: new Liquid() },
-      { payload },
-    ): LiquidModelState {
+    setResults(state = { currentLiquid: new Liquid() }, { payload }): LiquidModelState {
       return {
         ...(state as LiquidModelState),
         results: payload,
       };
     },
-    setLiquid(
-      state = { currentLiquid: new Liquid() },
-      { payload },
-    ): LiquidModelState {
+    setLiquid(state = { currentLiquid: new Liquid() }, { payload }): LiquidModelState {
       return {
         ...state,
         currentLiquid: payload,
@@ -181,14 +175,16 @@ const LiquidModel: LiquidModelType = {
       };
     },
     showNewFlavorModal(
-      state: LiquidModelState = { currentLiquid: new Liquid() }): LiquidModelState {
+      state: LiquidModelState = { currentLiquid: new Liquid() },
+    ): LiquidModelState {
       return {
         ...state,
         showNewFlavorModal: true,
       };
     },
     hideNewFlavorModal(
-      state: LiquidModelState = { currentLiquid: new Liquid() }): LiquidModelState {
+      state: LiquidModelState = { currentLiquid: new Liquid() },
+    ): LiquidModelState {
       return {
         ...state,
         showNewFlavorModal: false,
@@ -233,10 +229,7 @@ const LiquidModel: LiquidModelType = {
         },
       };
     },
-    removeFlavor(
-      state = { currentLiquid: new Liquid() },
-      { payload },
-    ): LiquidModelState {
+    removeFlavor(state = { currentLiquid: new Liquid() }, { payload }): LiquidModelState {
       const newFlavors = state.currentLiquid.flavors.filter(
         (flavor: Flavor) => flavor.uid !== payload,
       );

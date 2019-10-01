@@ -35,10 +35,6 @@ class Batteries extends React.Component<BatteriesComponentProps, BatteriesCompon
     columnCount: 0,
   };
 
-  public render() {
-    return <AutoSizer onResize={this.onResize}>{this.renderGrid}</AutoSizer>;
-  }
-
   private onResize = ({ width }: Size) => {
     this.gridWidth = width;
     this.calculateColumnCount();
@@ -80,10 +76,14 @@ class Batteries extends React.Component<BatteriesComponentProps, BatteriesCompon
             </div>
           )}
         </FixedSizeGrid>
-        <BatteryPreviewDrawer/>
+        <BatteryPreviewDrawer />
       </div>
     );
   };
+
+  render() {
+    return <AutoSizer onResize={this.onResize}>{this.renderGrid}</AutoSizer>;
+  }
 }
 
 export default connect(({ batteries: { batteries } }: ConnectState) => ({ batteries }))(Batteries);

@@ -35,7 +35,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * successLogin(_, { put }) {
+    *successLogin(_, { put }) {
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };
@@ -54,7 +54,7 @@ const Model: ModelType = {
       yield put(routerRedux.replace(redirect || '/'));
     },
 
-    * getCaptcha({ payload }, { call }) {
+    *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
   },

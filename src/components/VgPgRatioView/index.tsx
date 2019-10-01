@@ -1,13 +1,13 @@
 import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
 import React from 'react';
-import { unitFormatter, unitParser } from '@/utils/utils';
 import { formatMessage } from 'umi-plugin-react/locale';
+import { unitFormatter, unitParser } from '@/utils/utils';
 
 const { Text } = Typography;
 
 interface VgPgRatioProps {
   onRatioChange: any;
-  ratio: number
+  ratio: number;
 }
 
 const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
@@ -47,13 +47,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
         />
       </Col>
       <Col {...responsivenessRatioSlider}>
-        <Slider
-          step={5}
-          min={0}
-          max={100}
-          onChange={onRatioChange}
-          value={100 - ratio}
-        />
+        <Slider step={5} min={0} max={100} onChange={onRatioChange} value={100 - ratio} />
       </Col>
       <Col {...responsivenessRatioPg}>
         <Tooltip title={formatMessage({ id: 'liquid.pg' })}>
@@ -67,13 +61,11 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
           formatter={unitFormatter(0, '%')}
           parser={unitParser('%')}
           value={ratio}
-          onChange={(value: number | undefined) =>
-            value && onRatioChange(100 - value)
-          }
+          onChange={(value: number | undefined) => value && onRatioChange(100 - value)}
         />
       </Col>
     </Row>
-  )
+  );
 };
 
-export default VgPgRatioView
+export default VgPgRatioView;

@@ -14,7 +14,10 @@ export function getSweetSpot(coil: Coil): Promise<Coil> {
   return sendRequest('resistance', coil);
 }
 
-export async function sendRequest(calcFor: 'wraps' | 'resistance' | 'sweetSpot', coil: Coil): Promise<Coil> {
+export async function sendRequest(
+  calcFor: 'wraps' | 'resistance' | 'sweetSpot',
+  coil: Coil,
+): Promise<Coil> {
   try {
     if (!auth.currentUser) {
       throw Error('You are not logged in');
@@ -23,6 +26,6 @@ export async function sendRequest(calcFor: 'wraps' | 'resistance' | 'sweetSpot',
     return await request.post(`/api/calculator/coil/${calcFor}`, { data: { coil, idToken } });
   } catch (e) {
     console.error(e);
-    throw e
+    throw e;
   }
 }

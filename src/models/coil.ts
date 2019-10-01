@@ -1,8 +1,8 @@
 import { Reducer } from 'redux';
 import { Effect } from 'dva';
 import { Coil, Wire, wireGenerator, WireStyle } from '@vapetool/types';
-import { calculateForResistance, calculateForWraps, getSweetSpot } from '@/services/coil';
 import { message } from 'antd';
+import { calculateForResistance, calculateForWraps, getSweetSpot } from '@/services/coil';
 
 export interface Path {
   style: WireStyle;
@@ -41,7 +41,7 @@ const CoilModel: CoilModelType = {
     currentCoil: wireGenerator.normalCoil(),
   },
   effects: {
-    * calculateForResistance({ payload }, { call, put, cancel }) {
+    *calculateForResistance({ payload }, { call, put, cancel }) {
       try {
         const response = yield call(calculateForResistance, payload);
         if (response instanceof Response) {
@@ -53,10 +53,10 @@ const CoilModel: CoilModelType = {
           });
         }
       } catch (e) {
-        message.error(e.message)
+        message.error(e.message);
       }
     },
-    * calculateForWraps({ payload }, { call, put, cancel }) {
+    *calculateForWraps({ payload }, { call, put, cancel }) {
       try {
         const response = yield call(calculateForWraps, payload);
         if (response instanceof Response) {
@@ -68,10 +68,10 @@ const CoilModel: CoilModelType = {
           });
         }
       } catch (e) {
-        message.error(e.message)
+        message.error(e.message);
       }
     },
-    * getSweetSpot(_, { call, put, cancel }) {
+    *getSweetSpot(_, { call, put, cancel }) {
       try {
         const response = yield call(getSweetSpot);
         if (response instanceof Response) {
@@ -83,7 +83,7 @@ const CoilModel: CoilModelType = {
           });
         }
       } catch (e) {
-        message.error(e.message)
+        message.error(e.message);
       }
     },
   },

@@ -77,7 +77,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Voltage', value)}
                     placeholder="Volts [V]"
                   />
-                  {lastEdits.includes('voltage') && <Icon type="lock"/>}
+                  {lastEdits.includes('voltage') && <Icon type="lock" />}
                 </Form.Item>
                 <Form.Item label="Resistance">
                   <InputNumber
@@ -89,7 +89,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Resistance', value)}
                     placeholder="Ohms [Ω]"
                   />
-                  {lastEdits.includes('resistance') && <Icon type="lock"/>}
+                  {lastEdits.includes('resistance') && <Icon type="lock" />}
                 </Form.Item>
                 <Form.Item label="Current">
                   <InputNumber
@@ -101,7 +101,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Current', value)}
                     placeholder="Amps [A]"
                   />
-                  {lastEdits.includes('current') && <Icon type="lock"/>}
+                  {lastEdits.includes('current') && <Icon type="lock" />}
                 </Form.Item>
                 <Form.Item label="Power">
                   <InputNumber
@@ -113,7 +113,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     onChange={value => this.onChange('Power', value)}
                     placeholder="Wats [W]"
                   />
-                  {lastEdits.includes('power') && <Icon type="lock"/>}
+                  {lastEdits.includes('power') && <Icon type="lock" />}
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
                   <ButtonGroup>
@@ -128,7 +128,7 @@ class OhmLaw extends Component<OhmLawProps> {
               </Form>
             </Col>
             <Col xs={18} sm={16} md={10} lg={8}>
-              <Image webp={guideImage} style={{ width: '100%' }}/>
+              <Image webp={guideImage} style={{ width: '100%' }} />
             </Col>
           </Row>
         </Card>

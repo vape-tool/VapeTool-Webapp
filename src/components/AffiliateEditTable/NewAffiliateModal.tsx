@@ -6,7 +6,7 @@ import { ConnectState, Dispatch } from '@/models/connect';
 
 interface NewAffiliateModalProps extends FormComponentProps {
   showNewAffiliateModal: boolean;
-  dispatch: Dispatch
+  dispatch: Dispatch;
 }
 
 const NewAffiliateModal: React.FC<NewAffiliateModalProps> = props => {
@@ -15,7 +15,7 @@ const NewAffiliateModal: React.FC<NewAffiliateModalProps> = props => {
   const onCreate = () => {
     form.validateFields((err, values) => {
       if (err) {
-        return
+        return;
       }
       console.log('Received values of form: ', values);
       form.resetFields();
@@ -26,14 +26,14 @@ const NewAffiliateModal: React.FC<NewAffiliateModalProps> = props => {
       });
       dispatch({
         type: 'batteries/hideNewAffiliateModal',
-      })
+      });
     });
   };
 
   const onCancel = () => {
     dispatch({
       type: 'batteries/hideNewAffiliateModal',
-    })
+    });
   };
 
   const formItemLayout = {
@@ -59,20 +59,23 @@ const NewAffiliateModal: React.FC<NewAffiliateModalProps> = props => {
         <Form.Item label="Name">
           {getFieldDecorator('name', {
             rules: [{ required: true, message: 'Please input the affiliate name!' }],
-          })(<Input/>)}
+          })(<Input />)}
         </Form.Item>
 
         <Form.Item label="Link">
           {getFieldDecorator('link', {
             rules: [{ required: true, message: 'Please input the affiliate link!' }],
-          })(<Input type="textarea"/>)}
+          })(<Input type="textarea" />)}
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-const form = Form.create<NewAffiliateModalProps>({ name: 'new_affiliate_modal' })(NewAffiliateModal);
+const form = Form.create<NewAffiliateModalProps>({ name: 'new_affiliate_modal' })(
+  NewAffiliateModal,
+);
 
-export default connect(({ batteries }: ConnectState) =>
-  ({ showNewAffiliateModal: batteries.showNewAffiliateModal }))(form)
+export default connect(({ batteries }: ConnectState) => ({
+  showNewAffiliateModal: batteries.showNewAffiliateModal,
+}))(form);

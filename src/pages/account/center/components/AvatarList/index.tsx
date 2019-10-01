@@ -30,32 +30,29 @@ const avatarSizeToClassName = (size?: SizeType | 'mini') =>
     [styles.avatarItemMini]: size === 'mini',
   });
 
-const Item: React.FC<AvatarItemProps> = ({
-                                           src, size, tips, onClick = () => {
-  }
-                                         }) => {
+const Item: React.FC<AvatarItemProps> = ({ src, size, tips, onClick = () => {} }) => {
   const cls = avatarSizeToClassName(size);
 
   return (
     <li className={cls} onClick={onClick}>
       {tips ? (
         <Tooltip title={tips}>
-          <Avatar src={src} size={size} style={{ cursor: 'pointer' }}/>
+          <Avatar src={src} size={size} style={{ cursor: 'pointer' }} />
         </Tooltip>
       ) : (
-        <Avatar src={src} size={size}/>
+        <Avatar src={src} size={size} />
       )}
     </li>
   );
 };
 
 const AvatarList: React.FC<AvatarListProps> & { Item: typeof Item } = ({
-                                                                         children,
-                                                                         size,
-                                                                         maxLength = 5,
-                                                                         excessItemsStyle,
-                                                                         ...other
-                                                                       }) => {
+  children,
+  size,
+  maxLength = 5,
+  excessItemsStyle,
+  ...other
+}) => {
   const numOfChildren = React.Children.count(children);
   const numToShow = maxLength >= numOfChildren ? numOfChildren : maxLength;
   const childrenArray = React.Children.toArray(children) as React.ReactElement<AvatarItemProps>[];

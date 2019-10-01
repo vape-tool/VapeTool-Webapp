@@ -11,4 +11,4 @@ const DiameterSvg = () => (
 );
 
 const DiameterIcon = (props: any) => <Icon component={DiameterSvg} {...props} />;
-export default DiameterIcon
+export default DiameterIcon;

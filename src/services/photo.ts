@@ -1,7 +1,7 @@
+import { Author, Comment } from '@vapetool/types';
 import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
 import { Photo, Photo as FirebasePhoto } from '@/types/photo';
 import { getImageUrl } from '@/services/storage';
-import { Author, Comment } from '@vapetool/types';
 import { CurrentUser } from '@/models/user';
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
@@ -49,7 +49,7 @@ export function commentPhoto(id: string, content: string, { uid, name }: Current
     .ref('gear-comments')
     .child(id)
     .push()
-    .set(comment)
+    .set(comment);
 }
 
 export function deletePhotoComment(photoId: string, commentId: string) {
@@ -57,7 +57,7 @@ export function deletePhotoComment(photoId: string, commentId: string) {
     .ref('gear-comments')
     .child(photoId)
     .child(commentId)
-    .set(null)
+    .set(null);
 }
 
 export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {

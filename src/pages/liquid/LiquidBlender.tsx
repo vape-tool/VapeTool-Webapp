@@ -45,7 +45,6 @@ const resultColumns = [
   },
 ];
 
-
 class LiquidBlender extends React.Component<LiquidBlenderProps> {
   onBaseStrengthChange = (value: number | undefined): void =>
     value &&
@@ -91,16 +90,20 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
       payload: 100 - value,
     });
 
-  showNewFlavorModal = () => this.props.dispatch({
-    type: 'liquid/showNewFlavorModal',
-  });
+  showNewFlavorModal = () =>
+    this.props.dispatch({
+      type: 'liquid/showNewFlavorModal',
+    });
 
-  onCalculateClick = () => this.props.dispatch({
-    type: 'liquid/calculateResults',
-  });
+  onCalculateClick = () =>
+    this.props.dispatch({
+      type: 'liquid/calculateResults',
+    });
 
   render() {
-    const { liquid: { currentLiquid, results } } = this.props;
+    const {
+      liquid: { currentLiquid, results },
+    } = this.props;
     const responsivenessProps = { xs: 24, xl: 8 };
     const responsivenessCollections = { xs: 24, xl: 16 };
 
@@ -125,11 +128,11 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                 </Col>
               </Row>
 
-              <Title level={4}>
-                Base Ratio
-              </Title>
-              <VgPgRatioView onRatioChange={this.onBaseRatioChange}
-                             ratio={currentLiquid.baseRatio}/>
+              <Title level={4}>Base Ratio</Title>
+              <VgPgRatioView
+                onRatioChange={this.onBaseRatioChange}
+                ratio={currentLiquid.baseRatio}
+              />
               <Title level={4}>Thinner</Title>
               <InputNumber
                 min={0.0}
@@ -143,10 +146,16 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
           </Col>
           <Col {...responsivenessCollections}>
             <Card title={<Title level={1}>Flavors</Title>}>
-              <FlavorTable/>
-              <Button type="dashed" icon="plus" size="large" style={{ width: '100%' }}
-                      onClick={this.showNewFlavorModal}>Add
-                Flavor</Button>
+              <FlavorTable />
+              <Button
+                type="dashed"
+                icon="plus"
+                size="large"
+                style={{ width: '100%' }}
+                onClick={this.showNewFlavorModal}
+              >
+                Add Flavor
+              </Button>
             </Card>
           </Col>
           <Col {...responsivenessProps}>
@@ -175,34 +184,51 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                   />
                 </Col>
               </Row>
-              <Title level={4}>
-                Target Ratio
-              </Title>
-              <VgPgRatioView onRatioChange={this.onTargetRatioChange}
-                             ratio={currentLiquid.targetRatio}/>
+              <Title level={4}>Target Ratio</Title>
+              <VgPgRatioView
+                onRatioChange={this.onTargetRatioChange}
+                ratio={currentLiquid.targetRatio}
+              />
             </Card>
           </Col>
           <Col {...responsivenessCollections}>
-            <Card title={<Title level={1}>Results</Title>} extra={<Affix offsetBottom={50}>
-              <Button type="primary" icon="calculator" shape="round" size="large"
-                      onClick={this.onCalculateClick}>Calculate</Button>
-            </Affix>}>
-
-              <Table rowKey={result => result.name}
-                     columns={resultColumns}
-                     pagination={false}
-                     dataSource={results ? results.map(result => ({
-                       name: result.name,
-                       percentage: `${result.percentage.toFixed(1)}%`,
-                       ml: `${result.ml.toFixed(1)} ml`,
-                       drips: result.drips.toFixed(0),
-                       price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
-                       weight: `${result.weight.toFixed(3)} g`,
-                     })) : []}/>
+            <Card
+              title={<Title level={1}>Results</Title>}
+              extra={
+                <Affix offsetBottom={50}>
+                  <Button
+                    type="primary"
+                    icon="calculator"
+                    shape="round"
+                    size="large"
+                    onClick={this.onCalculateClick}
+                  >
+                    Calculate
+                  </Button>
+                </Affix>
+              }
+            >
+              <Table
+                rowKey={result => result.name}
+                columns={resultColumns}
+                pagination={false}
+                dataSource={
+                  results
+                    ? results.map(result => ({
+                        name: result.name,
+                        percentage: `${result.percentage.toFixed(1)}%`,
+                        ml: `${result.ml.toFixed(1)} ml`,
+                        drips: result.drips.toFixed(0),
+                        price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
+                        weight: `${result.weight.toFixed(3)} g`,
+                      }))
+                    : []
+                }
+              />
             </Card>
           </Col>
         </Row>
-        <NewFlavorModal/>
+        <NewFlavorModal />
       </div>
     );
   }

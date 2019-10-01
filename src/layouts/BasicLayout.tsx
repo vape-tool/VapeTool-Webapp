@@ -4,7 +4,11 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 
-import ProLayout, { BasicLayoutProps as ProLayoutProps, MenuDataItem, Settings, } from '@ant-design/pro-layout';
+import ProLayout, {
+  BasicLayoutProps as ProLayoutProps,
+  MenuDataItem,
+  Settings,
+} from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';

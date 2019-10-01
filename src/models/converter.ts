@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { awgToMm, mmToAwg } from '@/utils/math';
 
 export interface ConverterModelState {
   currentTab: 'awg' | 'inch' | 'temp';
@@ -45,60 +46,42 @@ const ConverterModel: ConverterModelType = {
         currentTab: payload,
       };
     },
-    setAwg(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setAwg(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         awg: payload,
-        mm: (92.0 ** ((36.0 - payload) / 39.0)) * 0.127,
+        mm: awgToMm(payload),
       };
     },
-    setMm(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setMm(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         mm: payload,
-        awg: Math.log((92.0 ** 36) / ((payload / 0.127) ** 39.0)) / Math.log(92.0),
+        awg: mmToAwg(payload),
       };
     },
-    setNominator(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setNominator(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         nominator: payload,
-        inchMm: state && state.denominator ? (payload / state.denominator) / 0.039370 : 0,
+        inchMm: state && state.denominator ? payload / state.denominator / 0.03937 : 0,
       };
     },
-    setDenominator(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setDenominator(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         denominator: payload,
-        inchMm: state && state.nominator ? (state.nominator / payload) / 0.039370 : 0,
+        inchMm: state && state.nominator ? state.nominator / payload / 0.03937 : 0,
       };
     },
-    setCelsius(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setCelsius(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         celsius: payload,
         fahrenheit: payload * (9.0 / 5.0) + 32.0,
       };
     },
-    setFahrenheit(
-      state,
-      { payload },
-    ): ConverterModelState {
+    setFahrenheit(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         fahrenheit: payload,

@@ -41,10 +41,8 @@ class Login extends Component<LoginProps, LoginState> {
   static defaultProps = {
     className: '',
     defaultActiveKey: '',
-    onTabChange: () => {
-    },
-    onSubmit: () => {
-    },
+    onTabChange: () => {},
+    onSubmit: () => {},
   };
 
   constructor(props: LoginProps) {

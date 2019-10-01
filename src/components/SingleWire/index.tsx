@@ -52,13 +52,12 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = ({ key, label }: any): void => {
-  };
+  const handleMaterialChange = ({ key, label }: any): void => {};
   const onDeleteClick = () => {
     dispatch({
       type: 'coil/deleteWire',
       paths: path,
-    })
+    });
   };
   const onChangeKindClick = () => {
     wire.kind = wire.kind === WireKind.ROUND ? WireKind.RIBBON : WireKind.ROUND;
@@ -66,27 +65,34 @@ const SingleWire: React.FC<WireComponentProps> = props => {
     dispatch({
       type: 'coil/setWire',
       payload: { paths: path, wire },
-    })
+    });
   };
 
   return (
-    <Card type="inner"
-          title={<Row>
-            {wire.style === WireStyle.CORE ? <CoreIcon/> : <OuterIcon/>}
-            {WireStyle[wire.style]}
-          </Row>}
-          extra={<Row type="flex" gutter={8}><Col>
-            {wire.kind === WireKind.ROUND ?
-              <RoundIcon onClick={onChangeKindClick}/>
-              :
-              <Icon onClick={onChangeKindClick} type="minus"/>
-            }
+    <Card
+      type="inner"
+      title={
+        <Row>
+          {wire.style === WireStyle.CORE ? <CoreIcon /> : <OuterIcon />}
+          {WireStyle[wire.style]}
+        </Row>
+      }
+      extra={
+        <Row type="flex" gutter={8}>
+          <Col>
+            {wire.kind === WireKind.ROUND ? (
+              <RoundIcon onClick={onChangeKindClick} />
+            ) : (
+              <Icon onClick={onChangeKindClick} type="minus" />
+            )}
           </Col>
-            <Col>
-              <Icon onClick={onDeleteClick} type="close"/>
-            </Col>
-          </Row>}
-          style={{ width: '100%', maxWidth: 400 }}>
+          <Col>
+            <Icon onClick={onDeleteClick} type="close" />
+          </Col>
+        </Row>
+      }
+      style={{ width: '100%', maxWidth: 400 }}
+    >
       <Select
         size="default"
         labelInValue
@@ -94,23 +100,27 @@ const SingleWire: React.FC<WireComponentProps> = props => {
         style={{ width: '100%', maxWidth: 220 }}
         onChange={handleMaterialChange}
       >
-        {materials.map(material => <Option key={material.name} value={material.id}>
-          {material.name}
-        </Option>)}
+        {materials.map(material => (
+          <Option key={material.name} value={material.id}>
+            {material.name}
+          </Option>
+        ))}
       </Select>
       <Button>{getResistancePerMeter(wire).toFixed(2)} [Ω/m]</Button>
 
-      <Typography.Title level={4}><DiameterIcon style={{ color: 'primary' }}/>Diameter of wire</Typography.Title>
-      <WireDiameter path={path} dispatch={dispatch} wire={wire}/>
-      <br/>
-      <Typography.Text
-        disabled={!wire.totalLength}>
-        {wire.totalLength ? `Wire length: ${wire.totalLength.toFixed(1)}cm`
+      <Typography.Title level={4}>
+        <DiameterIcon style={{ color: 'primary' }} />
+        Diameter of wire
+      </Typography.Title>
+      <WireDiameter path={path} dispatch={dispatch} wire={wire} />
+      <br />
+      <Typography.Text disabled={!wire.totalLength}>
+        {wire.totalLength
+          ? `Wire length: ${wire.totalLength.toFixed(1)}cm`
           : 'Wire length: calculation required'}
       </Typography.Text>
-
     </Card>
-  )
+  );
 };
 
 export default SingleWire;

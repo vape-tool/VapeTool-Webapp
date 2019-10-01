@@ -9,7 +9,6 @@ import { StateType } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
 
-
 interface LoginProps {
   dispatch: Dispatch<any>;
   userLogin: StateType;
@@ -30,9 +29,9 @@ export interface FormDataType {
 
 @connect(
   ({
-     userLogin,
-     loading,
-   }: {
+    userLogin,
+    loading,
+  }: {
     userLogin: StateType;
     loading: {
       effects: {
@@ -60,7 +59,7 @@ class Login extends Component<LoginProps, LoginState> {
           type: 'userLogin/successLogin',
         });
 
-        return false
+        return false;
       },
     },
   };
@@ -68,7 +67,7 @@ class Login extends Component<LoginProps, LoginState> {
   render() {
     return (
       <div className={styles.main}>
-        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth}/>
+        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth} />
       </div>
     );
   }

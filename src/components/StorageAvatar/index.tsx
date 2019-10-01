@@ -21,14 +21,13 @@ class FirebaseImage extends React.Component<FirebaseImageProps, FirebaseImageSta
     const { type, id } = this.props;
     getImageUrl(type, id)
       .then(src => this.setState({ src }))
-      .catch(() => {
-      });
+      .catch(() => {});
   }
 
   render() {
     const { type, style } = this.props;
     const { src } = this.state;
-    return <Avatar style={style} icon="user" alt={type} src={src}/>;
+    return <Avatar style={style} icon="user" alt={type} src={src} />;
   }
 }
 

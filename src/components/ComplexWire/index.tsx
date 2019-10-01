@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
-import Image from 'react-image-webp'
+import Image from 'react-image-webp';
 import SingleWire from '@/components/SingleWire';
 import { Dispatch } from '@/models/connect';
 import { Path } from '@/models/coil';
@@ -10,7 +10,7 @@ import { Path } from '@/models/coil';
 const { Option } = Select;
 
 // eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable global-require */
+/* eslint global-require: 0 react/no-array-index-key: 0 */
 
 export interface WireComponentProps {
   complexWire: Coil | Wire;
@@ -18,7 +18,7 @@ export interface WireComponentProps {
   path: Path[];
 }
 
-const types: { name: string, src: any }[] = [
+const types: { name: string; src: any }[] = [
   {
     name: WireType[WireType.NORMAL],
     src: require('@/assets/coil_type_normal.webp'),
@@ -80,7 +80,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
   const { complexWire, dispatch, path } = props;
 
   const handleTypeChange = ({ key, label }: any): void =>
-    key && dispatch && dispatch({
+    key &&
+    dispatch &&
+    dispatch({
       type: 'coil/setType',
       payload: {
         type: WireType[key],
@@ -88,7 +90,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
       },
     });
   const onPitchChange = (value: number | undefined): void =>
-    value && dispatch && dispatch({
+    value &&
+    dispatch &&
+    dispatch({
       type: 'coil/setInnerDiameter',
       payload: value,
     });
@@ -110,43 +114,54 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         style={{ width: 220 }}
         onChange={handleTypeChange}
       >
-        {types.map(type => <Option key={type.name} value={type.name}>
-          <div>
-            <Image style={{ width: imageSize }} webp={type.src}/>
-            {type.name}
-          </div>
-        </Option>)}
+        {types.map(type => (
+          <Option key={type.name} value={type.name}>
+            <div>
+              <Image style={{ width: imageSize }} webp={type.src} />
+              {type.name}
+            </div>
+          </Option>
+        ))}
       </Select>
-      {complexWire.pitch > 0 && <div>
+      {complexWire.pitch > 0 && (
+        <div>
           <Typography.Title level={4}>Pitch</Typography.Title>
-          <InputNumber min={0.0} step={0.1}
-                       defaultValue={complexWire.pitch}
-                       value={complexWire.pitch}
-                       onChange={onPitchChange}/></div>
-      }
-
+          <InputNumber
+            min={0.0}
+            step={0.1}
+            defaultValue={complexWire.pitch}
+            value={complexWire.pitch}
+            onChange={onPitchChange}
+          />
+        </div>
+      )}
 
       {complexWire.cores.map((wire: Wire, index: number) => {
         const childPath = path.slice();
         childPath.push({ style: WireStyle.CORE, index });
-        return isComplex(wire) ?
-          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire}/> :
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
+        return isComplex(wire) ? (
+          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire} />
+        ) : (
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+        );
       })}
 
-      <Button style={{ width: '100%', maxWidth: 400 }} onClick={onAddWireClick}>+</Button>
+      <Button style={{ width: '100%', maxWidth: 400 }} onClick={onAddWireClick}>
+        +
+      </Button>
 
       {complexWire.outers.map((wire: Wire, index: number) => {
         const childPath = path.slice();
         childPath.push({ style: WireStyle.OUTER, index });
 
-        return isComplex(wire) ?
-          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch}/> :
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
+        return isComplex(wire) ? (
+          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch} />
+        ) : (
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+        );
       })}
-
     </Card>
-  )
+  );
 };
 
 export default ComplexWire;

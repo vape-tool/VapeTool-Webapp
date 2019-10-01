@@ -9,15 +9,21 @@ import { Comment } from '@/types/comment';
 import { CurrentUser } from '@/models/user';
 
 interface CommentViewProps {
-  user: CurrentUser
-  comment: Comment
-  photo: Photo
-  dispatch: Dispatch
+  user: CurrentUser;
+  comment: Comment;
+  photo: Photo;
+  dispatch: Dispatch;
   onReply: (comment: Comment) => void;
 }
 
 const CommentView: React.FC<CommentViewProps> = props => {
-  const { dispatch, onReply, user, photo, comment: { uid, content, author } } = props;
+  const {
+    dispatch,
+    onReply,
+    user,
+    photo,
+    comment: { uid, content, author },
+  } = props;
 
   const deleteComment = () => {
     dispatch({
@@ -27,25 +33,33 @@ const CommentView: React.FC<CommentViewProps> = props => {
   };
   const menu = (
     <Menu>
-      {(user !== undefined
-        && (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR))
-      && <Menu.Item onClick={deleteComment} key="delete">Delete</Menu.Item>}
-      <Menu.Item onClick={() => onReply(props.comment)} key="reply">Reply</Menu.Item>
+      {user !== undefined &&
+        (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR) && (
+          <Menu.Item onClick={deleteComment} key="delete">
+            Delete
+          </Menu.Item>
+        )}
+      <Menu.Item onClick={() => onReply(props.comment)} key="reply">
+        Reply
+      </Menu.Item>
     </Menu>
   );
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignContent: 'stretch' }}>
-      <FirebaseImage type="user" id={author.uid} style={{ flexShrink: 0 }}/>
+    <div
+      style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignContent: 'stretch' }}
+    >
+      <FirebaseImage type="user" id={author.uid} style={{ flexShrink: 0 }} />
       <Typography.Text strong style={{ marginLeft: 8, flexShrink: 0 }}>
         {author.displayName}
       </Typography.Text>
-      <span style={{ marginLeft: 8, flexGrow: 1, alignSelf: 'flex-start', textAlign: 'start' }}>{content}</span>
+      <span style={{ marginLeft: 8, flexGrow: 1, alignSelf: 'flex-start', textAlign: 'start' }}>
+        {content}
+      </span>
       <Dropdown overlay={menu} trigger={['click']}>
-        <Button type="link" icon="more"/>
+        <Button type="link" icon="more" />
       </Dropdown>
     </div>
   );
 };
 
-
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(CommentView)
+export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(CommentView);

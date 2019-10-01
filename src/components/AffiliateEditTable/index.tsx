@@ -23,15 +23,7 @@ interface EditableCellProps {
 
 class EditableCell extends React.Component<EditableCellProps> {
   renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      affiliate,
-      index,
-      children,
-      ...restProps
-    } = this.props;
+    const { editing, dataIndex, title, affiliate, index, children, ...restProps } = this.props;
     return (
       <td {...restProps}>
         {editing ? (
@@ -44,7 +36,7 @@ class EditableCell extends React.Component<EditableCellProps> {
                 },
               ],
               initialValue: affiliate[dataIndex],
-            })(<Input/>)}
+            })(<Input />)}
           </Form.Item>
         ) : (
           children
@@ -59,9 +51,9 @@ class EditableCell extends React.Component<EditableCellProps> {
 }
 
 interface EditableTableProps extends FormComponentProps {
-  selectedBattery: Battery
-  editingAffiliate: string
-  dispatch: Dispatch
+  selectedBattery: Battery;
+  editingAffiliate: string;
+  dispatch: Dispatch;
 }
 
 class EditableTable extends React.Component<EditableTableProps, {}> {
@@ -82,12 +74,17 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         width: '60%',
         editable: true,
         render: (text: string, affiliate: Affiliate) => (
-          <a style={{
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            display: 'inherit',
-          }} href={text}>{text.substring(0, 30)}</a>
+          <a
+            style={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              display: 'inherit',
+            }}
+            href={text}
+          >
+            {text.substring(0, 30)}
+          </a>
         ),
       },
       {
@@ -99,24 +96,18 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           return editable ? (
             <span>
               <ButtonGroup>
-              <EditableContext.Consumer>
-                {form => (
-                  <Button
-                    type="primary"
-                    icon="check"
-                    onClick={() => this.save(form)}
-                  />
-                )}
-              </EditableContext.Consumer>
-              <Button onClick={this.cancel} icon="close"/>
+                <EditableContext.Consumer>
+                  {form => <Button type="primary" icon="check" onClick={() => this.save(form)} />}
+                </EditableContext.Consumer>
+                <Button onClick={this.cancel} icon="close" />
               </ButtonGroup>
             </span>
           ) : (
             <div>
               <ButtonGroup>
-                <Button onClick={() => this.edit(affiliate.name)} icon="edit"/>
+                <Button onClick={() => this.edit(affiliate.name)} icon="edit" />
                 <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(affiliate.name)}>
-                  <Button icon="delete"/>
+                  <Button icon="delete" />
                 </Popconfirm>
               </ButtonGroup>
             </div>
@@ -146,7 +137,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
     console.log('setAffiliate');
     this.props.dispatch({
       type: 'batteries/showNewAffiliateModal',
-    })
+    });
   };
 
   edit(name: string) {
@@ -165,7 +156,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         type: 'batteries/setAffiliate',
         affiliate: { ...row },
       });
-      this.cancel()
+      this.cancel();
     });
   }
 
@@ -198,20 +189,27 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           <Table<Affiliate>
             components={components}
             bordered
-            dataSource={Array.from(this.props.selectedBattery.affiliate || [])
-              .map(([key, value]) =>
-                Object.create({
-                  name: key,
-                  link: value,
-                }))}
+            dataSource={Array.from(this.props.selectedBattery.affiliate || []).map(([key, value]) =>
+              Object.create({
+                name: key,
+                link: value,
+              }),
+            )}
             columns={columns}
             rowKey={affiliate => affiliate.name}
             rowClassName={() => 'editable-row'}
             pagination={false}
           />
         </EditableContext.Provider>
-        <Button icon="plus" type="dashed" style={{ width: '100%' }} onClick={this.showNewAffiliateModal}>Add</Button>
-        <NewAffiliateModal/>
+        <Button
+          icon="plus"
+          type="dashed"
+          style={{ width: '100%' }}
+          onClick={this.showNewAffiliateModal}
+        >
+          Add
+        </Button>
+        <NewAffiliateModal />
       </div>
     );
   }

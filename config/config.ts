@@ -101,6 +101,18 @@ export default {
           component: './payment/Payment',
         },
         {
+          hideInMenu: true,
+          name: 'paymentSuccess',
+          path: '/payment/success',
+          component: './payment/Success',
+        },
+        {
+          hideInMenu: true,
+          name: 'paymentCancel',
+          path: '/payment/cancel',
+          component: './payment/Cancel',
+        },
+        {
           path: '/',
           name: 'welcome',
           icon: 'smile',

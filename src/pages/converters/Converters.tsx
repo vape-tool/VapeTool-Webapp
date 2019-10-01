@@ -29,20 +29,18 @@ const tabList = [
 ];
 
 const Converters: React.FC<ConverterComponentProps> = props => {
-  const {
-    converter,
-    dispatch,
-  } = props;
+  const { converter, dispatch } = props;
 
-  const onTabChange = (key: string) => dispatch({
-    type: 'converter/setTab',
-    payload: key,
-  });
+  const onTabChange = (key: string) =>
+    dispatch({
+      type: 'converter/setTab',
+      payload: key,
+    });
 
   const contentList = {
-    awg: <AwgTab/>,
-    inch: <InchTab/>,
-    temp: <TempTab/>,
+    awg: <AwgTab />,
+    inch: <InchTab />,
+    temp: <TempTab />,
   };
 
   return (

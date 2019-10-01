@@ -24,28 +24,20 @@ class EditableCell extends React.Component<EditableCellProps> {
   getInput = () => {
     switch (this.props.dataIndex) {
       case 'price':
-        return <InputNumber min={0}/>;
+        return <InputNumber min={0} />;
       case 'ratio':
-        return <InputNumber max={100} min={0}/>;
+        return <InputNumber max={100} min={0} />;
       case 'percentage':
-        return <InputNumber max={100} min={0}/>;
+        return <InputNumber max={100} min={0} />;
       default:
       case 'manufacturer':
       case 'name':
-        return <Input/>;
+        return <Input />;
     }
   };
 
   renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      flavor,
-      index,
-      children,
-      ...restProps
-    } = this.props;
+    const { editing, dataIndex, title, flavor, index, children, ...restProps } = this.props;
     return (
       <td {...restProps}>
         {editing ? (
@@ -73,8 +65,8 @@ class EditableCell extends React.Component<EditableCellProps> {
 }
 
 interface EditableTableProps extends FormComponentProps {
-  liquid: LiquidModelState
-  dispatch: Dispatch
+  liquid: LiquidModelState;
+  dispatch: Dispatch;
 }
 
 class EditableTable extends React.Component<EditableTableProps, {}> {
@@ -122,24 +114,28 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
           return editable ? (
             <span>
               <ButtonGroup>
-              <EditableContext.Consumer>
-                {form => (
-                  <Button
-                    type="primary"
-                    icon="check"
-                    onClick={() => this.save(form, flavor.uid)}
-                  />
-                )}
-              </EditableContext.Consumer>
-              <Button onClick={this.cancel} icon="close"/>
+                <EditableContext.Consumer>
+                  {form => (
+                    <Button
+                      type="primary"
+                      icon="check"
+                      onClick={() => this.save(form, flavor.uid)}
+                    />
+                  )}
+                </EditableContext.Consumer>
+                <Button onClick={this.cancel} icon="close" />
               </ButtonGroup>
             </span>
           ) : (
             <div>
               <ButtonGroup>
-                <Button disabled={editingFlavor !== undefined} onClick={() => this.edit(flavor.uid)} icon="edit"/>
+                <Button
+                  disabled={editingFlavor !== undefined}
+                  onClick={() => this.edit(flavor.uid)}
+                  icon="edit"
+                />
                 <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
-                  <Button icon="delete"/>
+                  <Button icon="delete" />
                 </Popconfirm>
               </ButtonGroup>
             </div>
