@@ -1,4 +1,4 @@
-import { Card, Col, Divider, Icon, Input, Row, Tag } from 'antd';
+import { Button, Card, Col, Divider, Icon, Input, Row, Tag } from 'antd';
 import React, { PureComponent } from 'react';
 
 import { Dispatch } from 'redux';
@@ -13,6 +13,7 @@ import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 
+const { NODE_ENV } = process.env;
 const operationTabList = [
   {
     key: 'photos',
@@ -202,6 +203,19 @@ class Center extends PureComponent<CenterProps, CenterState> {
                     )}
                   </div>
                   <Divider style={{ marginTop: 16 }} dashed />
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    target="_blank"
+                    href={`https://www.${
+                      NODE_ENV === 'development' ? 'sandbox.' : ''
+                    }paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=${
+                      NODE_ENV === 'production' ? 'ETUSF9JPSL3E8' : '62E6JFJB7ENUC'
+                    }`}
+                  >
+                    Cancel subscription
+                  </Button>
                 </div>
               ) : null}
             </Card>
