@@ -8,13 +8,13 @@ import { unitFormatter, unitParser } from '@/utils/utils';
 const TempTab: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
 
-  const onChangeCelsius = (value: number | undefined): void =>
+  const onChangeCelsius = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setCelsius',
       payload: value,
     });
-  const onChangeFahrenheit = (value: number | undefined): void =>
+  const onChangeFahrenheit = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setFahrenheit',

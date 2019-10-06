@@ -1,13 +1,13 @@
 version: '3.5'
 
 services:
-  ant-design-pro_dev:
+  vapetool-webapp_dev:
     ports:
       - 8000:8000
     build:
       context: ../
       dockerfile: Dockerfile.dev
-    container_name: 'ant-design-pro_dev'
+    container_name: 'vapetool-webapp_dev'
     volumes:
       - ../src:/usr/src/app/src
       - ../config:/usr/src/app/config

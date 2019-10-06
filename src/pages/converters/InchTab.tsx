@@ -8,13 +8,13 @@ import { unitFormatter } from '@/utils/utils';
 const InchTab: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
 
-  const onChangeNominator = (value: number | undefined): void =>
+  const onChangeNominator = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setNominator',
       payload: value,
     });
-  const onChangeDenominator = (value: number | undefined): void =>
+  const onChangeDenominator = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setDenominator',
