@@ -103,7 +103,7 @@ export default {
       routes: [
         {
           path: '/',
-          component: '../layouts/UserLayout',
+          component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
           routes: [
             {

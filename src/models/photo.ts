@@ -45,7 +45,7 @@ const PhotoModel: PhotoModelType = {
   effects: {
     *likePhoto({ photoId }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
-        state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined,
+        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
       );
       if (!currentUser) {
         return;
@@ -54,7 +54,7 @@ const PhotoModel: PhotoModelType = {
     },
     *commentPhoto({ payload: { comment, photoId } }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
-        state.user.currentUser !== undefined ? state.user.currentUser : undefined,
+        (state.user.currentUser !== undefined ? state.user.currentUser : undefined),
       );
       if (!currentUser) {
         return;

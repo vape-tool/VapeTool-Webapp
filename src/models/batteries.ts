@@ -108,7 +108,7 @@ const BatteriesModel: BatteriesModelType = {
     },
     setBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       const newBatteries = state.batteries.map((it: Battery) =>
-        battery === id(it) ? battery : it,
+        (battery === id(it) ? battery : it),
       );
       return {
         ...(state as BatteriesModelState),

@@ -36,6 +36,12 @@ const Model: ModelType = {
 
   effects: {
     *successLogin(_, { put }) {
+      yield put({
+        type: 'user/updateUserState',
+      });
+      // TODO does it throw ?
+      //  check user/currentUser at this point
+      //  why it doesn't redirect ?
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };

@@ -1,9 +1,9 @@
-import { Effect, Subscription } from 'dva';
+import { Effect } from 'dva';
 import { Reducer } from 'redux';
 
 import { User } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app';
-import { getUser, logoutFirebase } from '@/services/user';
+import { getUser, logoutFirebase, saveUser } from '@/services/user';
 import { auth } from '@/utils/firebase';
 import { getUserPhotos } from '@/services/photo';
 import { Photo } from '@/types/photo';
@@ -12,7 +12,7 @@ import { getAvatarUrl } from '@/services/storage';
 
 export interface CurrentUser extends User {
   name: string;
-  avatar: string;
+  avatar?: string;
   title?: string;
   group?: string;
   signature?: string;
@@ -34,15 +34,13 @@ export interface UserModelType {
   state: UserModelState;
   effects: {
     logout: Effect;
-    fetchCurrentUser: Effect;
+    updateUserState: Effect;
+    saveUser: Effect;
     fetchCurrentUserPhotos: Effect;
   };
   reducers: {
     setUser: Reducer<UserModelState>;
     setUserPhotos: Reducer<UserModelState>;
-  };
-  subscriptions: {
-    firebaseUser: Subscription;
   };
 }
 
@@ -56,31 +54,59 @@ const UserModel: UserModelType = {
   },
 
   effects: {
-    *fetchCurrentUser({ firebaseUser }, { call, put }) {
+    * updateUserState(_, { call, put }) {
+      const firebaseUser = auth.currentUser;
+      console.log('onAuthStateChanged');
+      console.dir(firebaseUser);
       if (firebaseUser) {
+        // Success login
         const callUser = call(getUser, firebaseUser.uid);
-        const callAvatarUrl = call(getAvatarUrl, firebaseUser.uid);
-        const user = yield callUser as User;
-        const avatarUrl = yield callAvatarUrl;
+        let user: User | null = yield callUser as User;
+        if (user == null) {
+          user = yield call(saveUser, firebaseUser);
+          // TODO check if this return nonull
+        }
+        const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
+        const avatarUrl: string | null = yield callAvatarUrl;
         const currentUser = {
           ...user,
           uid: firebaseUser.uid,
-          name: user.display_name || firebaseUser.displayName,
-          display_name: user.display_name || firebaseUser.displayName,
+          name: user!.display_name || firebaseUser.displayName,
+          display_name: user!.display_name || firebaseUser.displayName,
           avatar: avatarUrl || firebaseUser.photoURL,
         };
         yield put({
           type: 'setUser',
           payload: { firebaseUser, currentUser },
         });
+      } else {
+        // Logout
+        yield put({
+          type: 'setUser',
+          payload: { firebaseUser: undefined, currentUser: undefined },
+        });
       }
     },
-    *logout(_, { call }) {
+    * saveUser({ firebaseUser }, { call, put }) {
+      const user = yield call(
+        saveUser,
+        firebaseUser.uid,
+        firebaseUser.display_name,
+        firebaseUser.email,
+        firebaseUser.avatar,
+      );
+      yield put({
+        type: 'setUser',
+        payload: { firebaseUser, currentUser: user },
+      });
+    },
+    * logout(_, { call }) {
       yield call(logoutFirebase);
     },
-    *fetchCurrentUserPhotos(_, { put, call, select }) {
+    * fetchCurrentUserPhotos(_, { put, call, select }) {
       const uid = yield select((state: ConnectState) =>
-        state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined,
+        // eslint-disable-next-line no-confusing-arrow
+        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
       );
       console.log(`fetchCurrentUserPhotos uid: ${uid}`);
       if (!uid) {
@@ -107,27 +133,6 @@ const UserModel: UserModelType = {
         ...(state as UserModelState),
         userPhotos: action.payload,
       };
-    },
-  },
-
-  subscriptions: {
-    firebaseUser({ dispatch }) {
-      // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
-        console.log('onAuthStateChanged');
-        console.dir(firebaseUser);
-        if (firebaseUser) {
-          dispatch({
-            type: 'fetchCurrentUser',
-            firebaseUser,
-          });
-        } else {
-          dispatch({
-            type: 'setUser',
-            payload: { firebaseUser: undefined, currentUser: undefined },
-          });
-        }
-      });
     },
   },
 };
