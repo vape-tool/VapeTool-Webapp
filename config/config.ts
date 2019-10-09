@@ -87,94 +87,107 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
-      path: '/',
-      component: '../layouts/BasicLayout',
-      Routes: ['src/pages/Authorized'],
-      authority: ['admin', 'user'],
+      path: '/user',
+      component: '../layouts/UserLayout',
       routes: [
         {
-          hideInMenu: true,
           name: 'login',
           path: '/user/login',
           component: './user/login',
         },
-        {
-          hideInMenu: true,
-          name: 'payment',
-          path: '/payment',
-          component: './payment/Payment',
-        },
-        {
-          hideInMenu: true,
-          name: 'paymentSuccess',
-          path: '/payment/success',
-          component: './payment/Success',
-        },
-        {
-          hideInMenu: true,
-          name: 'paymentCancel',
-          path: '/payment/cancel',
-          component: './payment/Cancel',
-        },
+      ],
+    },
+    {
+      path: '/',
+      component: '../layouts/SecurityLayout',
+      routes: [
         {
           path: '/',
-          name: 'welcome',
-          icon: 'smile',
-          component: './Welcome',
-        },
-        {
-          path: '/cloud',
-          name: 'cloud',
-          icon: 'cloud',
-          component: './cloud/Cloud',
-        },
-        {
-          path: '/coil-calculator',
-          name: 'coil-calculator',
-          icon: 'https://vapetool.app/img/menu_icons/menu_coil_calculator.svg',
-          component: './coil/CoilCalculator',
-        },
-        {
-          path: '/liquid-blender',
-          name: 'liquid-blender',
-          icon: 'https://vapetool.app/img/menu_icons/menu_liquid_blender.svg',
-          component: './liquid/LiquidBlender',
-        },
-        {
-          path: '/ohm-law',
-          name: 'ohm-law',
-          icon: 'https://vapetool.app/img/menu_icons/menu_ohm_law.svg',
-          component: './ohm/OhmLaw',
-        },
-        {
-          path: '/batteries',
-          name: 'batteries',
-          icon: 'https://vapetool.app/img/menu_icons/menu_batteries.svg',
-          component: './batteries/Batteries',
-        },
-        {
-          path: '/converters',
-          name: 'converters',
-          icon: 'https://vapetool.app/img/menu_icons/menu_converters.svg',
-          component: './converters/Converters',
-        },
-        {
-          path: '/battery-life',
-          name: 'battery-life',
-          icon: 'https://vapetool.app/img/menu_icons/menu_battery_life.svg',
-          component: './batterylife/BatteryLife',
-        },
-        {
-          path: '/knowledge',
-          name: 'knowledge',
-          icon: 'https://vapetool.app/img/menu_icons/menu_knowledge_zone.svg',
-          component: './knowledge/Knowledge',
-        },
-        {
-          name: 'center',
-          icon: 'user',
-          path: '/account/center',
-          component: './account/center',
+          component: '../layouts/UserLayout',
+          authority: ['admin', 'user'],
+          routes: [
+            {
+              hideInMenu: true,
+              name: 'payment',
+              path: '/payment',
+              component: './payment/Payment',
+            },
+            {
+              hideInMenu: true,
+              name: 'paymentSuccess',
+              path: '/payment/success',
+              component: './payment/Success',
+            },
+            {
+              hideInMenu: true,
+              name: 'paymentCancel',
+              path: '/payment/cancel',
+              component: './payment/Cancel',
+            },
+            {
+              path: '/',
+              name: 'welcome',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
+              path: '/cloud',
+              name: 'cloud',
+              icon: 'cloud',
+              component: './cloud/Cloud',
+            },
+            {
+              path: '/coil-calculator',
+              name: 'coil-calculator',
+              icon: 'https://vapetool.app/img/menu_icons/menu_coil_calculator.svg',
+              component: './coil/CoilCalculator',
+            },
+            {
+              path: '/liquid-blender',
+              name: 'liquid-blender',
+              icon: 'https://vapetool.app/img/menu_icons/menu_liquid_blender.svg',
+              component: './liquid/LiquidBlender',
+            },
+            {
+              path: '/ohm-law',
+              name: 'ohm-law',
+              icon: 'https://vapetool.app/img/menu_icons/menu_ohm_law.svg',
+              component: './ohm/OhmLaw',
+            },
+            {
+              path: '/batteries',
+              name: 'batteries',
+              icon: 'https://vapetool.app/img/menu_icons/menu_batteries.svg',
+              component: './batteries/Batteries',
+            },
+            {
+              path: '/converters',
+              name: 'converters',
+              icon: 'https://vapetool.app/img/menu_icons/menu_converters.svg',
+              component: './converters/Converters',
+            },
+            {
+              path: '/battery-life',
+              name: 'battery-life',
+              icon: 'https://vapetool.app/img/menu_icons/menu_battery_life.svg',
+              component: './batterylife/BatteryLife',
+            },
+            {
+              path: '/knowledge',
+              name: 'knowledge',
+              icon: 'https://vapetool.app/img/menu_icons/menu_knowledge_zone.svg',
+              component: './knowledge/Knowledge',
+            },
+            {
+              name: 'center',
+              icon: 'user',
+              path: '/account/center',
+              component: './account/center',
+            },
+            {
+              component: './404',
+            },
+          ],
         },
         {
           component: './404',
