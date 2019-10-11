@@ -1,8 +1,11 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
-import { getFakeCaptcha } from './service';
+import { User } from '@vapetool/types';
 import { getPageQuery, setAuthority } from './utils/utils';
+import { auth } from '@/utils/firebase';
+import { getUser, saveUser } from '@/services/user';
+import { getAvatarUrl } from '@/services/storage';
 
 export interface StateType {
   status?: 'ok' | 'error';
@@ -20,7 +23,6 @@ export interface ModelType {
   state: StateType;
   effects: {
     successLogin: Effect;
-    getCaptcha: Effect;
   };
   reducers: {
     changeLoginStatus: Reducer<StateType>;
@@ -35,10 +37,42 @@ const Model: ModelType = {
   },
 
   effects: {
-    *successLogin(_, { put }) {
-      yield put({
-        type: 'user/updateUserState',
-      });
+    * successLogin(_, { put, call }) {
+      const firebaseUser = auth.currentUser;
+      console.log('updateUserState');
+      console.dir(firebaseUser);
+      if (firebaseUser) {
+        // Success login
+        const callUser = call(getUser, firebaseUser.uid);
+        let user: User | null = yield callUser as User;
+        if (user == null) {
+          console.log('user not yet saved to database, saving now');
+          user = yield call(saveUser, firebaseUser);
+          console.log(user)
+        } else {
+          console.log(`User is already created in db ${user}`)
+        }
+        const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
+        const avatarUrl: string | null = yield callAvatarUrl;
+        console.log(`avatarUrl: ${avatarUrl}`);
+        const currentUser = {
+          ...user,
+          uid: firebaseUser.uid,
+          name: user!.display_name || firebaseUser.displayName,
+          display_name: user!.display_name || firebaseUser.displayName,
+          avatar: avatarUrl || firebaseUser.photoURL,
+        };
+        yield put({
+          type: 'user/setUser',
+          payload: { firebaseUser, currentUser },
+        });
+      } else {
+        // Logout
+        yield put({
+          type: 'user/setUser',
+          payload: { firebaseUser: undefined, currentUser: undefined },
+        });
+      }
       // TODO does it throw ?
       //  check user/currentUser at this point
       //  why it doesn't redirect ?
@@ -57,11 +91,9 @@ const Model: ModelType = {
           return;
         }
       }
-      yield put(routerRedux.replace(redirect || '/'));
-    },
 
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
+      console.log(`isAbout to redirect to ${redirect || '/'}`);
+      yield put(routerRedux.replace(redirect || '/'));
     },
   },
 

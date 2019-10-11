@@ -3,12 +3,10 @@ import { Reducer } from 'redux';
 
 import { User } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app';
-import { getUser, logoutFirebase, saveUser } from '@/services/user';
-import { auth } from '@/utils/firebase';
+import { logoutFirebase, saveUser } from '@/services/user';
 import { getUserPhotos } from '@/services/photo';
 import { Photo } from '@/types/photo';
 import { ConnectState } from '@/models/connect';
-import { getAvatarUrl } from '@/services/storage';
 
 export interface CurrentUser extends User {
   name: string;
@@ -34,7 +32,6 @@ export interface UserModelType {
   state: UserModelState;
   effects: {
     logout: Effect;
-    updateUserState: Effect;
     saveUser: Effect;
     fetchCurrentUserPhotos: Effect;
   };
@@ -54,39 +51,6 @@ const UserModel: UserModelType = {
   },
 
   effects: {
-    * updateUserState(_, { call, put }) {
-      const firebaseUser = auth.currentUser;
-      console.log('onAuthStateChanged');
-      console.dir(firebaseUser);
-      if (firebaseUser) {
-        // Success login
-        const callUser = call(getUser, firebaseUser.uid);
-        let user: User | null = yield callUser as User;
-        if (user == null) {
-          user = yield call(saveUser, firebaseUser);
-          // TODO check if this return nonull
-        }
-        const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
-        const avatarUrl: string | null = yield callAvatarUrl;
-        const currentUser = {
-          ...user,
-          uid: firebaseUser.uid,
-          name: user!.display_name || firebaseUser.displayName,
-          display_name: user!.display_name || firebaseUser.displayName,
-          avatar: avatarUrl || firebaseUser.photoURL,
-        };
-        yield put({
-          type: 'setUser',
-          payload: { firebaseUser, currentUser },
-        });
-      } else {
-        // Logout
-        yield put({
-          type: 'setUser',
-          payload: { firebaseUser: undefined, currentUser: undefined },
-        });
-      }
-    },
     * saveUser({ firebaseUser }, { call, put }) {
       const user = yield call(
         saveUser,
@@ -122,6 +86,8 @@ const UserModel: UserModelType = {
 
   reducers: {
     setUser(state, { payload: { firebaseUser, currentUser } }): UserModelState {
+      console.log('setUser');
+      console.log(currentUser);
       return {
         ...(state as UserModelState),
         currentUser,

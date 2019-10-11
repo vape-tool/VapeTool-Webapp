@@ -1,12 +1,13 @@
 import React from 'react';
 import { List } from 'antd';
 import { connect } from 'dva';
-import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { Photo } from '@/types/photo';
 import styles from '@/pages/account/center/components/UserPhotos/index.less';
 import { PhotoModelState } from '@/models/photo';
 import PhotoView from '@/components/PhotoView';
 import PhotoPreviewModal from '@/components/PhotoPreviewModal';
+import { Dispatch } from 'redux';
 
 interface AuthComponentProps extends ConnectProps {
   photo: PhotoModelState;

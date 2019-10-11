@@ -40,7 +40,7 @@ export interface FormDataType {
     };
   }) => ({
     userLogin,
-    submitting: loading.effects['userLogin/login'],
+    submitting: loading.effects['userLogin/successLogin'],
   }),
 )
 class Login extends Component<LoginProps, LoginState> {
