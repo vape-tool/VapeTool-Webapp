@@ -1,11 +1,11 @@
-import { Subscription } from 'dva';
+import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
 import { id } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { getBatteryUrl } from '@/services/storage';
 import { Battery } from '@/types/battery';
-import { ConnectState, Effect } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { setAffiliate } from '@/services/batteries';
 
 export interface BatteriesModelState {

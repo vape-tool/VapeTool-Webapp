@@ -15,18 +15,6 @@ interface LoginProps {
   submitting: boolean;
 }
 
-interface LoginState {
-  type: string;
-  autoLogin: boolean;
-}
-
-export interface FormDataType {
-  userName: string;
-  password: string;
-  mobile: string;
-  captcha: string;
-}
-
 @connect(
   ({
     userLogin,
@@ -43,7 +31,7 @@ export interface FormDataType {
     submitting: loading.effects['userLogin/successLogin'],
   }),
 )
-class Login extends Component<LoginProps, LoginState> {
+class Login extends Component<LoginProps> {
   uiConfig: firebaseui.auth.Config = {
     signInFlow: 'popup',
     signInOptions: [

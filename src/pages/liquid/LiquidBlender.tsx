@@ -3,7 +3,8 @@ import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'a
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 
-import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { Dispatch } from 'redux';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
@@ -46,7 +47,7 @@ const resultColumns = [
 ];
 
 class LiquidBlender extends React.Component<LiquidBlenderProps> {
-  onBaseStrengthChange = (value: number | undefined): void =>
+  onBaseStrengthChange = (value: number | undefined) =>
     value &&
     this.props.dispatch({
       type: 'liquid/setBaseStrength',
@@ -61,21 +62,21 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
       payload: 100 - value,
     });
 
-  onThinnerChange = (value: number | undefined): void =>
+  onThinnerChange = (value: number | undefined) =>
     value &&
     this.props.dispatch({
       type: 'liquid/setThinner',
       payload: value,
     });
 
-  onAmountChange = (value: number | undefined): void =>
+  onAmountChange = (value: number | undefined) =>
     value &&
     this.props.dispatch({
       type: 'liquid/setAmount',
       payload: value,
     });
 
-  onTargetStrengthChange = (value: number | undefined): void =>
+  onTargetStrengthChange = (value: number | undefined) =>
     value &&
     this.props.dispatch({
       type: 'liquid/setTargetStrength',

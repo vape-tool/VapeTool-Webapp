@@ -73,9 +73,6 @@ const Model: ModelType = {
           payload: { firebaseUser: undefined, currentUser: undefined },
         });
       }
-      // TODO does it throw ?
-      //  check user/currentUser at this point
-      //  why it doesn't redirect ?
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };

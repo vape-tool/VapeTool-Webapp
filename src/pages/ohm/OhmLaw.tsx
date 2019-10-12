@@ -6,7 +6,8 @@ import { FormComponentProps } from 'antd/es/form';
 // @ts-ignore
 import Image from 'react-image-webp';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { Dispatch } from 'redux';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { OhmModelState } from '@/models/ohm';
 
 const guideImage = require('@/assets/ohm_law.webp');

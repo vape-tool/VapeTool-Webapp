@@ -2,23 +2,23 @@ import { storage } from '@/utils/firebase';
 
 export type ImageType = 'user' | 'gear' | 'photo' | 'coil' | 'battery';
 
-export function getBatteryUrl(uid: string): Promise<string | null> {
+export function getBatteryUrl(uid: string): Promise<string> {
   return getImageUrl('battery', uid);
 }
 
-export function getPhotoUrl(uid: string): Promise<string | null> {
+export function getPhotoUrl(uid: string): Promise<string> {
   return getImageUrl('photo', uid);
 }
 
-export function getAvatarUrl(uid: string): Promise<string | null> {
+export function getAvatarUrl(uid: string): Promise<string> {
   return getImageUrl('user', uid);
 }
 
-export function getCoilUrl(uid: string): Promise<string | null> {
+export function getCoilUrl(uid: string): Promise<string> {
   return getImageUrl('coil', uid);
 }
 
-export function getImageUrl(type: ImageType, uid: string): Promise<string | null> {
+export function getImageUrl(type: ImageType, uid: string): Promise<string> {
   switch (type) {
     case 'photo':
       return getDownloadUrl('gears', uid);
@@ -36,21 +36,17 @@ export function getImageUrl(type: ImageType, uid: string): Promise<string | null
 function getDownloadUrl(
   type: 'users' | 'coils' | 'gears' | 'batteries',
   uid: string,
-): Promise<string | null> {
+): Promise<string> {
   return new Promise((resolve, reject) => {
     storage
       .ref(`${type}/images/${uid}.jpg`)
       .getDownloadURL()
       .then(url => {
-        if (url) {
-          resolve(url);
-        } else {
-          resolve(null);
-        }
+        resolve(url);
       })
       .catch(e => {
         console.error(e);
-        resolve(null);
+        reject(e);
       });
   });
 }
