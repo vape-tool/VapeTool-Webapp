@@ -2,11 +2,12 @@ import { Card, Icon, Input, List, message, Skeleton, Typography } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
+import { Dispatch } from 'redux';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import CommentView from '@/components/CommentView';
 import styles from './index.less';
 import { CurrentUser } from '@/models/user';
@@ -124,10 +125,10 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
 
   render() {
     const LikeIconText = ({
-      type,
-      text,
-      onClick,
-    }: {
+                            type,
+                            text,
+                            onClick,
+                          }: {
       type: string;
       text: string;
       onClick: any;
@@ -143,17 +144,18 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         {text}
       </span>
     );
-    const CommentIconText = ({
-      type,
-      text,
-      onClick,
-    }: {
-      type: string;
-      text: string;
-      onClick: any;
-    }) => (
+    const CommentIconText = (
+      {
+        type,
+        text,
+        onClick,
+      }: {
+        type: string;
+        text: string;
+        onClick: any;
+      }) => (
       <span>
-        <Icon onClick={onClick} type={type} style={{ marginRight: 8 }} />
+        <Icon onClick={onClick} type={type} style={{ marginRight: 8 }}/>
         {text}
       </span>
     );
@@ -174,12 +176,12 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               src={photo.url}
             />
           ) : (
-            <Skeleton avatar={{ shape: 'square', size: 200 }} />
+            <Skeleton avatar={{ shape: 'square', size: 200 }}/>
           )
         }
       >
         <Card.Meta
-          avatar={<FirebaseImage type="user" id={photo.author.uid} />}
+          avatar={<FirebaseImage type="user" id={photo.author.uid}/>}
           description={<Typography.Text>{photo.description}</Typography.Text>}
         />
         <List.Item

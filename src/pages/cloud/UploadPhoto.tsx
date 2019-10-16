@@ -7,13 +7,15 @@ import { UploadFile } from 'antd/es/upload/interface';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { UploadPhotoState } from '@/pages/cloud/model';
+import { UploadPhotoState } from '@/models/uploadPhoto';
 
 const { Dragger } = Upload;
+const IMAGE_FORMAT = 'image/jpeg';
+const IMAGE_QUALITY = 0.92;
 
 interface UploadPhotoProps extends ConnectState {
   dispatch: Dispatch
-  uploadPhoto: UploadPhotoState
+  uploadPhotoUrl: UploadPhotoState
   submitting: boolean
 }
 
@@ -32,28 +34,36 @@ interface UploadPhotoProps extends ConnectState {
 class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
   imageRef: HTMLImageElement | undefined = undefined;
 
-  fileUrl: string | undefined = undefined;
+  croppedFileUrl: string | undefined = undefined; // TODO move to redux state
+
+  croppedWidth: number | undefined = undefined; // TODO move to redux state
+
+  croppedHeight: number | undefined = undefined; // TODO move to redux state
 
   // If you setState the crop in here you should return false.
   onImageLoaded = (target: HTMLImageElement) => {
     this.imageRef = target;
     // Center a square percent crop.
-    const width = target.width > target.height ? (target.height / target.width) * 100 : 100;
-    const height = target.height > target.width ? (target.width / target.height) * 100 : 100;
-    const x = width === 100 ? 0 : (100 - width) / 2;
-    const y = height === 100 ? 0 : (100 - height) / 2;
+    const width = target.width > target.height ? target.height : target.width;
+    const height = target.height > target.width ? target.width : target.height;
+    const x = width === target.width ? 0 : (target.width - width) / 2;
+    const y = height === target.height ? 0 : (target.height - height) / 2;
+
+    const crop: Crop = {
+      unit: 'px',
+      aspect: 1,
+      width,
+      height,
+      x,
+      y,
+    };
 
     this.props.dispatch({
       type: 'uploadPhoto/setCrop',
-      crop: {
-        unit: '%',
-        aspect: 1,
-        width,
-        height,
-        x,
-        y,
-      },
+      crop,
     });
+
+    this.makeClientCrop(crop);
     return false;
   };
 
@@ -71,15 +81,15 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
   };
 
 
-  getCroppedImg(image: HTMLImageElement, crop: Crop, fileName: string): Promise<string> {
+  getCroppedImgUrl(image: HTMLImageElement, crop: Crop): Promise<{ url: string, blob: Blob }> {
     const canvas: HTMLCanvasElement = document.createElement('canvas');
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     if (!crop.width || !crop.height) {
       throw new Error(`crop width ${crop.width} and crop height ${crop.height} must be positive number`)
     }
-    canvas.width = crop.width;
-    canvas.height = crop.height;
+    canvas.width = Math.ceil(crop.width * scaleX);
+    canvas.height = Math.ceil(crop.height * scaleY);
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if (!ctx) {
       throw new Error('Could not retrieve context')
@@ -96,23 +106,25 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
       crop.height * scaleY,
       0,
       0,
-      crop.width,
-      crop.height,
+      crop.width * scaleX,
+      crop.height * scaleY,
     );
 
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<{ url: string, blob: Blob }>((resolve, reject) => {
       canvas.toBlob((blob: Blob | null) => {
         if (!blob) {
           // reject(new Error('Canvas is empty'));
           console.error('Canvas is empty');
           return;
         }
-        if (this.fileUrl) {
-          window.URL.revokeObjectURL(this.fileUrl);
+        if (this.croppedFileUrl) {
+          window.URL.revokeObjectURL(this.croppedFileUrl);
         }
-        this.fileUrl = window.URL.createObjectURL(blob);
-        resolve(this.fileUrl);
-      }, 'image/jpeg');
+        this.croppedFileUrl = window.URL.createObjectURL(blob);
+        this.croppedWidth = crop.width! * scaleX;
+        this.croppedHeight = crop.height! * scaleY;
+        resolve(Object.create({ url: this.croppedFileUrl, blob }));
+      }, IMAGE_FORMAT, IMAGE_QUALITY);
     });
   }
 
@@ -121,9 +133,9 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
     }
-    const isLt2M = file.size / 1024 / 1024 < 2;
+    const isLt2M = file.size / 1024 / 1024 < 20;
     if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
+      message.error('Image must smaller than 20MB!');
     }
     return isJpgOrPng && isLt2M;
   };
@@ -164,28 +176,43 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
     }
   };
 
-  postImage = () => {
+  postPhoto = () => {
     this.props.dispatch({
-      type: 'postImage',
+      type: 'uploadPhoto/postPhoto',
+    })
+  };
+
+  resetPhoto = () => {
+    this.props.dispatch({
+      type: 'uploadPhoto/reset',
     })
   };
 
   async makeClientCrop(crop: Crop) {
     if (this.imageRef && crop.width && crop.height) {
-      const croppedImageUrl = await this.getCroppedImg(
+      const { url, blob } = await this.getCroppedImgUrl(
         this.imageRef,
         crop,
-        'newFile.jpeg',
       );
       this.props.dispatch({
-        type: 'uploadPhoto/setCroppedImageUrl',
-        croppedImageUrl,
+        type: 'uploadPhoto/setCroppedImage',
+        url,
+        blob,
+        width: this.croppedWidth,
+        height: this.croppedHeight,
       });
     }
   }
 
+  onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.dispatch({
+      type: 'uploadPhoto/setDescription',
+      description: e.target.value,
+    });
+  };
+
   render() {
-    const { crop, croppedImageUrl, src } = this.props.uploadPhoto;
+    const { crop, croppedImageUrl, src, description } = this.props.uploadPhoto;
     return (
       <div className="App">
         <Row type="flex">
@@ -194,7 +221,8 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
           <Col xs={24} md={12}>
 
             <Input size="large" style={{ padding: '20px 20px 20px 20px' }}
-                   placeholder="Say something about this photo"/>
+                   placeholder="Say something about this photo" onChange={this.onDescriptionChange}
+                   defaultValue={description}/>
 
             {!src && <Dragger name="upload_photo" multiple={false}
                               onChange={this.onUploadChange}
@@ -205,8 +233,7 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
                 </p>
                 <p className="ant-upload-text">Click or drag file to this area to upload</p>
                 <p className="ant-upload-hint">Please upload only vape related photos. Breaking those rules will result
-                    in
-                    account suspension.</p>
+                    in account suspension.</p>
             </Dragger>
             }
             {src && (
@@ -214,18 +241,30 @@ class UploadPhoto extends React.PureComponent<UploadPhotoProps> {
                 imageStyle={{ maxHeight: '80vh' }}
                 src={src}
                 crop={crop}
+                minHeight={100}
+                minWidth={100}
+                keepSelection
                 onImageLoaded={this.onImageLoaded}
                 onComplete={this.onCropComplete}
                 onChange={this.onCropChange}
               />
             )}
             {croppedImageUrl && (
-              <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl}/>
+              <img alt="Crop" width={400} style={{ maxWidth: '100%' }} src={croppedImageUrl}/>
             )}
-            {src && (
-              <Button type="primary" icon="check" size="large" style={{ float: 'right' }} onClick={this.postImage}>
-                Post
-              </Button>
+            {croppedImageUrl && (
+              <Row>
+                <Col xs={6}>
+                  <Button size="large" icon="close" block onClick={this.resetPhoto}>
+                    Reset
+                  </Button>
+                </Col>
+                <Col xs={18}>
+                  <Button type="primary" size="large" block onClick={this.postPhoto}>
+                    Post
+                  </Button>
+                </Col>
+              </Row>
             )}
           </Col>
           <Col xs={0} md={6}>

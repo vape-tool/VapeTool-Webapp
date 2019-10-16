@@ -84,7 +84,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
       {
         title: 'Manufacturer',
         dataIndex: 'manufacturer',
-        width: '5%',
+        width: '17%',
         editable: true,
       },
       {

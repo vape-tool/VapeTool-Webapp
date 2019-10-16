@@ -8,13 +8,13 @@ import { unitFormatter } from '@/utils/utils';
 const AwgTab: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
 
-  const onChangeAwg = (value: number | undefined): void =>
+  const onChangeAwg = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setAwg',
       payload: value,
     });
-  const onChangeMm = (value: number | undefined): void =>
+  const onChangeMm = (value: number | undefined) =>
     value &&
     dispatch({
       type: 'converter/setMm',

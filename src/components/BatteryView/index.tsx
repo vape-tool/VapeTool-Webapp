@@ -19,6 +19,7 @@ const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispa
       battery,
     });
 
+
   return (
     <List.Item style={{ height, width }}>
       <Card

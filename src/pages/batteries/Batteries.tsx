@@ -1,89 +1,32 @@
 import React from 'react';
-import AutoSizer, { Size } from 'react-virtualized-auto-sizer';
 import { connect } from 'dva';
-import { CellMeasurerCache } from 'react-virtualized';
-import { FixedSizeGrid, GridChildComponentProps } from 'react-window';
+import { List } from 'antd';
+import { id } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import BatteryView from '@/components/BatteryView';
 import { Battery } from '@/types/battery';
 import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
+import styles from '@/pages/account/center/components/UserPhotos/index.less';
 
 interface BatteriesComponentProps extends ConnectProps {
   batteries: Battery[];
 }
 
-interface BatteriesComponentState {
-  columnWidth: number;
-  rowHeight: number;
-  gutterSize: number;
-  columnCount: number;
-}
+const Batteries: React.FC<BatteriesComponentProps> = (props: BatteriesComponentProps) => {
+  console.log('render batteries');
 
-class Batteries extends React.Component<BatteriesComponentProps, BatteriesComponentState> {
-  gridWidth: number = 0;
-
-  cache: CellMeasurerCache = new CellMeasurerCache({
-    defaultHeight: 300,
-    defaultWidth: 300,
-    fixedWidth: true,
-  });
-
-  state: BatteriesComponentState = {
-    columnWidth: 300,
-    rowHeight: 300,
-    gutterSize: 10,
-    columnCount: 0,
-  };
-
-  private onResize = ({ width }: Size) => {
-    this.gridWidth = width;
-    this.calculateColumnCount();
-  };
-
-  private calculateColumnCount = () => {
-    const { columnWidth, gutterSize } = this.state;
-    const columnCount = Math.floor(this.gridWidth / (columnWidth + gutterSize));
-    console.log(`columnCount: ${columnCount}`);
-    this.setState({ columnCount });
-  };
-
-  private renderGrid = ({ width, height }: Size) => {
-    this.gridWidth = width;
-    const { columnWidth, rowHeight, columnCount } = this.state;
-
-    console.log(`render grid of dimensions ${width}x${height}`);
-    const { batteries } = this.props;
-    const rowCount = Math.ceil(batteries.length / columnCount);
-    const getBattery = (columnIndex: number, rowIndex: number) =>
-      batteries[(rowIndex * columnCount + columnIndex) % batteries.length];
+  const { batteries } = props;
     return (
       <div>
-        <FixedSizeGrid
-          columnCount={columnCount}
-          columnWidth={columnWidth}
-          width={width}
-          height={height}
-          rowCount={rowCount}
-          rowHeight={rowHeight}
-        >
-          {({ columnIndex, rowIndex, style }: GridChildComponentProps) => (
-            <div style={{ ...style }}>
-              <BatteryView
-                height={rowHeight}
-                width={columnWidth}
-                battery={getBattery(columnIndex, rowIndex)}
-              />
-            </div>
-          )}
-        </FixedSizeGrid>
-        <BatteryPreviewDrawer />
+        <List<Battery>
+          className={styles.coverCardList}
+          grid={{ gutter: 24, xxl: 4, xl: 3, lg: 2, md: 2, sm: 2, xs: 1 }}
+          dataSource={batteries || []}
+          renderItem={battery => <BatteryView key={id(battery)} battery={battery} height={300}/>}
+        />
+        <BatteryPreviewDrawer/>
       </div>
     );
-  };
-
-  render() {
-    return <AutoSizer onResize={this.onResize}>{this.renderGrid}</AutoSizer>;
-  }
 }
 
 export default connect(({ batteries: { batteries } }: ConnectState) => ({ batteries }))(Batteries);

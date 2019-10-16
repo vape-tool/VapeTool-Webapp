@@ -43,7 +43,7 @@ const PhotoModel: PhotoModelType = {
   },
 
   effects: {
-    *likePhoto({ photoId }, { select, call }) {
+    * likePhoto({ photoId }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
         (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
       );
@@ -52,7 +52,7 @@ const PhotoModel: PhotoModelType = {
       }
       yield call(likePhoto, photoId, currentUser);
     },
-    *commentPhoto({ payload: { comment, photoId } }, { select, call }) {
+    * commentPhoto({ payload: { comment, photoId } }, { select, call }) {
       const currentUser = yield select((state: ConnectState) =>
         (state.user.currentUser !== undefined ? state.user.currentUser : undefined),
       );
@@ -62,12 +62,12 @@ const PhotoModel: PhotoModelType = {
 
       yield call(commentPhoto, photoId, comment, currentUser);
     },
-    *deleteComment({ payload: { photoId, commentId } }, { call }) {
+    * deleteComment({ payload: { photoId, commentId } }, { call }) {
       console.log('deleteComment');
       console.log(`photoId: ${photoId} commentId: ${commentId}`);
       yield call(deletePhotoComment, photoId, commentId);
     },
-    *fetchPhotos(_, { put, call }) {
+    * fetchPhotos(_, { put, call }) {
       const photos = yield call(getPhotos, 0, 100);
       yield put({
         type: 'setPhotos',
@@ -127,6 +127,9 @@ const PhotoModel: PhotoModelType = {
         const photosPromise: Promise<Photo>[] = new Array<Promise<Photo>>();
         snapshot.forEach(snap => {
           const battery = snap.val();
+          if (!battery || !battery.author) {
+            console.error(`REMOVE EMPTY PHOTO: ${snap.key}`);
+          }
           const promise = getPhotoUrl(snap.key || battery.uid).then((url: string) => {
             if (battery.creationTime === undefined) {
               battery.creationTime = battery.timestamp;

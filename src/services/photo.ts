@@ -1,7 +1,7 @@
-import { Author, Comment } from '@vapetool/types';
+import { Author, Comment, OnlineStatus } from '@vapetool/types';
 import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
 import { Photo, Photo as FirebasePhoto } from '@/types/photo';
-import { getImageUrl } from '@/services/storage';
+import { getImageUrl, uploadPhoto } from '@/services/storage';
 import { CurrentUser } from '@/models/user';
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
@@ -79,4 +79,53 @@ export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
         reject(e);
       });
   });
+}
+
+export async function createPhoto(imageBlob: Blob | File, description: string, author: Author,
+                                  width: number, height: number): Promise<string> {
+  console.log(imageBlob);
+  console.log(description);
+  console.log(author);
+  console.log(width);
+  console.log(height);
+  if (!author || !author.uid || !author.displayName) {
+    throw new Error('Author can not be null')
+  }
+  if (!description) {
+    throw new Error('Description can not be empty')
+  }
+  if (!imageBlob) {
+    throw new Error('Image can not be empty')
+  }
+  if (!width || !height) {
+    throw new Error('Width and height can not be null')
+  }
+  const uid = database
+    .ref('gears')
+    .push()
+    .key;
+
+  if (uid == null) {
+    throw new Error('Could not push new photo to db')
+  }
+  try {
+    await database.ref(`gears/${uid}`)
+      .set({
+        uid,
+        author,
+        description,
+        status: OnlineStatus.ONLINE_PUBLIC,
+        creationTime: ServerValue.TIMESTAMP,
+        lastTimeModified: ServerValue.TIMESTAMP,
+        width,
+        height,
+        reports: 0,
+      });
+
+    await uploadPhoto(imageBlob, uid);
+    return uid;
+  } catch (e) {
+    database.ref(`gears/${uid}`).remove();
+    throw e;
+  }
 }

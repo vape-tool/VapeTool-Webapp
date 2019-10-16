@@ -3,13 +3,13 @@ import { Card } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { ConverterModelState } from '@/models/converter';
 import AwgTab from '@/pages/converters/AwgTab';
 import InchTab from '@/pages/converters/InchTab';
 import TempTab from '@/pages/converters/TempTab';
 
-export interface ConverterComponentProps extends ConnectProps {
+export interface ConverterComponentProps {
   converter: ConverterModelState;
   dispatch: Dispatch;
 }

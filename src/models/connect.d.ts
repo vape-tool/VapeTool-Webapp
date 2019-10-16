@@ -1,5 +1,4 @@
 import { AnyAction, Dispatch } from 'redux';
-import { EffectsCommandMap } from 'dva';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
 import { GlobalModelState } from './global';
@@ -11,6 +10,7 @@ import { LiquidModelState } from './liquid';
 import { OhmModelState } from './ohm';
 import { BatteriesModelState } from '@/models/batteries';
 import { ConverterModelState } from '@/models/converter';
+import { UploadPhotoState } from '@/models/uploadPhoto';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -27,6 +27,7 @@ export interface Loading {
     photo?: boolean;
     batteries?: boolean;
     ohm?: boolean;
+    uploadPhoto?: boolean;
   };
 }
 
@@ -41,6 +42,7 @@ export interface ConnectState {
   ohm: OhmModelState;
   batteries: BatteriesModelState;
   converter: ConverterModelState;
+  uploadPhoto: UploadPhotoState;
 }
 
 export interface Route extends MenuDataItem {

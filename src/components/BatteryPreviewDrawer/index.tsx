@@ -1,8 +1,10 @@
 import { Button, Col, Divider, Drawer, Row } from 'antd';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'dva';
 import { UserPermission } from '@vapetool/types';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { Dispatch } from 'redux';
+import useMedia from 'react-media-hook2';
+import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types/battery';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/models/user';
@@ -59,6 +61,9 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       type: 'batteries/toggleEditBattery',
     });
 
+  const [collapsed, setCollapsed] = useState(false);
+  useMedia({ query: { maxWidth: 500 }, onChange: setCollapsed });
+
   if (!selectedBattery) {
     return <div></div>;
   }
@@ -77,9 +82,10 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
     affiliate,
   } = selectedBattery;
 
+
   return (
     <Drawer
-      width={500}
+      width={collapsed ? 400 : 500}
       title={`${brand} ${model}`}
       placement="right"
       closable
@@ -88,33 +94,33 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
     >
       <Row>
         <Col span={24}>
-          <img src={url} alt={model} style={{ width: '100%' }} />
+          <img src={url} alt={model} style={{ width: '100%' }}/>
         </Col>
       </Row>
-      <br />
+      <br/>
 
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Brand" content={brand} />
+          <DescriptionItem title="Brand" content={brand}/>
         </Col>
         <Col span={12}>
-          <DescriptionItem title="Model" content={model} />
+          <DescriptionItem title="Model" content={model}/>
         </Col>
       </Row>
       <Row>
         <Col span={8}>
-          <DescriptionItem title="Chemistry" content={chemistry} />
+          <DescriptionItem title="Chemistry" content={chemistry}/>
         </Col>
         <Col span={8}>
-          <DescriptionItem title="Size" content={size} />
+          <DescriptionItem title="Size" content={size}/>
         </Col>
         <Col span={8}>
-          <DescriptionItem title="Capacity" content={capacity} />
+          <DescriptionItem title="Capacity" content={capacity}/>
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Stable current" content={stableCurrent} />
+          <DescriptionItem title="Stable current" content={stableCurrent}/>
         </Col>
         <Col span={12}>
           <DescriptionItem
@@ -125,7 +131,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Max vaping current" content={maxVapingCurrent} />
+          <DescriptionItem title="Max vaping current" content={maxVapingCurrent}/>
         </Col>
         <Col span={12}>
           <DescriptionItem
@@ -136,13 +142,13 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Nominal voltage" content={voltage} />
+          <DescriptionItem title="Nominal voltage" content={voltage}/>
         </Col>
         <Col span={12}>
-          <DescriptionItem title="Cut-off" content={cutOff} />
+          <DescriptionItem title="Cut-off" content={cutOff}/>
         </Col>
       </Row>
-      <Divider />
+      <Divider/>
 
       <Row>
         <Col xs={12}>
@@ -177,29 +183,29 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
         )}
 
         {!editBattery &&
-          affiliate &&
-          Array.from(affiliate, ([key, value]) => {
-            console.log(`${key} ${value}`);
-            return (
-              <Col xs="auto">
-                <a
-                  style={{
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    display: 'inherit',
-                  }}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href={value}
-                >
-                  Buy on {key}
-                </a>
-              </Col>
-            );
-          })}
+        affiliate &&
+        Array.from(affiliate, ([key, value]) => {
+          console.log(`${key} ${value}`);
+          return (
+            <Col xs="auto">
+              <a
+                style={{
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  display: 'inherit',
+                }}
+                rel="noopener noreferrer"
+                target="_blank"
+                href={value}
+              >
+                Buy on {key}
+              </a>
+            </Col>
+          );
+        })}
       </Row>
-      {editBattery && <AffiliateEditTable />}
+      {editBattery && <AffiliateEditTable/>}
     </Drawer>
   );
 };

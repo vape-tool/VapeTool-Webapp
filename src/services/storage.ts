@@ -50,3 +50,9 @@ function getDownloadUrl(
       });
   });
 }
+
+export async function uploadPhoto(imageBlob: Blob | File, uid: string) {
+  return storage
+    .ref(`gears/images/${uid}.jpg`)
+    .put(imageBlob)
+}

@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil } from '@vapetool/types';
-import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { Dispatch } from 'redux';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
 
@@ -19,7 +20,7 @@ let lastEdit: 'wraps' | 'resistance' | undefined;
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, currentCoil } = props;
 
-  const onSetupChange = ({ key, label }: any): void =>
+  const onSetupChange = ({ key, label }: any) =>
     key &&
     dispatch &&
     dispatch({
@@ -27,7 +28,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       payload: Number(key),
     });
 
-  const onInnerDiameterChange = (value: number | undefined): void =>
+  const onInnerDiameterChange = (value: number | undefined) =>
     value &&
     dispatch &&
     dispatch({
@@ -35,7 +36,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       payload: value,
     });
 
-  const onLegsLengthChange = (value: number | undefined): void =>
+  const onLegsLengthChange = (value: number | undefined) =>
     value &&
     dispatch &&
     dispatch({
@@ -43,7 +44,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       payload: value,
     });
 
-  const onResistanceChange = (value: number | undefined): void => {
+  const onResistanceChange = (value: number | undefined) => {
     lastEdit = 'resistance';
     return (
       value &&
@@ -55,7 +56,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     );
   };
 
-  const onWrapsChange = (value: number | undefined): void => {
+  const onWrapsChange = (value: number | undefined) => {
     lastEdit = 'wraps';
     return (
       value &&
