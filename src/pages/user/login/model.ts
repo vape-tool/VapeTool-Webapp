@@ -37,42 +37,36 @@ const Model: ModelType = {
   },
 
   effects: {
-    * successLogin(_, { put, call }) {
+    *successLogin(_, { put, call }) {
       const firebaseUser = auth.currentUser;
-      console.log('updateUserState');
-      console.dir(firebaseUser);
-      if (firebaseUser) {
-        // Success login
-        const callUser = call(getUser, firebaseUser.uid);
-        let user: User | null = yield callUser as User;
-        if (user == null) {
-          console.log('user not yet saved to database, saving now');
-          user = yield call(saveUser, firebaseUser);
-          console.log(user)
-        } else {
-          console.log(`User is already created in db ${user}`)
-        }
-        const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
-        const avatarUrl: string | null = yield callAvatarUrl;
-        console.log(`avatarUrl: ${avatarUrl}`);
-        const currentUser = {
-          ...user,
-          uid: firebaseUser.uid,
-          name: user!.display_name || firebaseUser.displayName,
-          display_name: user!.display_name || firebaseUser.displayName,
-          avatar: avatarUrl || firebaseUser.photoURL,
-        };
-        yield put({
-          type: 'user/setUser',
-          payload: { firebaseUser, currentUser },
-        });
-      } else {
-        // Logout
-        yield put({
-          type: 'user/setUser',
-          payload: { firebaseUser: undefined, currentUser: undefined },
-        });
+      if (!firebaseUser) {
+        // It should never happen
+        throw new Error('Success login with null firebaseUser');
       }
+      const callUser = call(getUser, firebaseUser.uid);
+      let user: User | null = yield callUser as User;
+      if (user == null) {
+        console.log('user not yet saved to database, saving now');
+        user = yield call(saveUser, firebaseUser);
+        console.log(user);
+      } else {
+        console.log(`User is already created in db ${user}`);
+      }
+      const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
+      const avatarUrl: string | null = yield callAvatarUrl;
+      console.log(`avatarUrl: ${avatarUrl}`);
+      const currentUser = {
+        ...user,
+        uid: firebaseUser.uid,
+        name: user!.display_name || firebaseUser.displayName,
+        display_name: user!.display_name || firebaseUser.displayName,
+        avatar: avatarUrl || firebaseUser.photoURL,
+      };
+      // TODO can we remove it from here and call it only from SecurityLayout
+      yield put({
+        type: 'user/setUser',
+        currentUser,
+      });
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };

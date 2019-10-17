@@ -1,12 +1,17 @@
-import { Effect } from 'dva';
+import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
-import { User } from '@vapetool/types';
 import { User as FirebaseUser } from 'firebase/app';
-import { logoutFirebase, saveUser } from '@/services/user';
+import { User } from '@vapetool/types';
+import { routerRedux } from 'dva/router';
+import { stringify } from 'qs';
+import { getUser, logoutFirebase, saveUser } from '@/services/user';
 import { getUserPhotos } from '@/services/photo';
 import { Photo } from '@/types/photo';
 import { ConnectState } from '@/models/connect';
+import { getPageQuery } from '@/utils/utils';
+import { auth } from '@/utils/firebase';
+import { getAvatarUrl } from '@/services/storage';
 
 export interface CurrentUser extends User {
   name: string;
@@ -31,13 +36,17 @@ export interface UserModelType {
   namespace: string;
   state: UserModelState;
   effects: {
+    fetchCurrent: Effect;
     logout: Effect;
-    saveUser: Effect;
     fetchCurrentUserPhotos: Effect;
   };
   reducers: {
     setUser: Reducer<UserModelState>;
     setUserPhotos: Reducer<UserModelState>;
+    setFirebaseUser: Reducer<UserModelState>;
+  };
+  subscriptions: {
+    firebaseUser: Subscription;
   };
 }
 
@@ -46,32 +55,76 @@ const UserModel: UserModelType = {
 
   state: {
     currentUser: undefined,
-    firebaseUser: undefined,
     userPhotos: undefined,
+    firebaseUser: undefined,
   },
 
   effects: {
-    * saveUser({ firebaseUser }, { call, put }) {
-      const user = yield call(
-        saveUser,
-        firebaseUser.uid,
-        firebaseUser.display_name,
-        firebaseUser.email,
-        firebaseUser.avatar,
-      );
+    *fetchCurrent(_, { put, call, select }) {
+      const currentUser = yield select((state: ConnectState) => state.user.currentUser);
+      if (currentUser) {
+        return;
+      }
+      const firebaseUser = auth.currentUser;
+      if (!firebaseUser) {
+        // It should never happen
+        console.error('restoreLogin with null firebaseUser');
+        throw new Error('Success login with null firebaseUser');
+      }
+      let user: User | null = yield call(getUser, firebaseUser.uid);
+      if (user == null) {
+        console.log('user not yet saved to database, saving now');
+        user = yield call(saveUser, firebaseUser);
+        console.log(user);
+      } else {
+        console.log(`User is already created in db ${user}`);
+      }
+      const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
+      const avatarUrl: string | null = yield callAvatarUrl;
+      console.log(`avatarUrl: ${avatarUrl}`);
+      const newCurrentUser = {
+        ...user,
+        uid: firebaseUser.uid,
+        name: user!.display_name || firebaseUser.displayName,
+        display_name: user!.display_name || firebaseUser.displayName,
+        avatar: avatarUrl || firebaseUser.photoURL,
+      };
       yield put({
         type: 'setUser',
-        payload: { firebaseUser, currentUser: user },
+        currentUser: newCurrentUser,
       });
     },
-    * logout(_, { call }) {
+    *logout(_, { call, put }) {
+      console.log('user/logout calling logoutFirebase');
       yield call(logoutFirebase);
+      console.log('user/logout calling setUser null, null');
+      yield put({
+        type: 'setUser',
+        currentUser: undefined,
+      });
+      console.log('done');
+
+      // TODO not sure if it's necessary since wrapper handle it for us
+      const { redirect } = getPageQuery();
+      // redirect
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        yield put(
+          routerRedux.replace({
+            pathname: '/user/login',
+            search: stringify({
+              redirect: window.location.href,
+            }),
+          }),
+        );
+      }
     },
-    * fetchCurrentUserPhotos(_, { put, call, select }) {
-      const uid = yield select((state: ConnectState) =>
-        // eslint-disable-next-line no-confusing-arrow
-        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
-      );
+    *fetchCurrentUserPhotos(_, { put, call, select }) {
+      const uid = yield select((state: ConnectState) => {
+        if (state.user.currentUser) {
+          return state.user.currentUser.uid;
+        }
+        return undefined;
+      });
       console.log(`fetchCurrentUserPhotos uid: ${uid}`);
       if (!uid) {
         return;
@@ -85,12 +138,17 @@ const UserModel: UserModelType = {
   },
 
   reducers: {
-    setUser(state, { payload: { firebaseUser, currentUser } }): UserModelState {
+    setUser(state, { currentUser }): UserModelState {
       console.log('setUser');
       console.log(currentUser);
       return {
         ...(state as UserModelState),
         currentUser,
+      };
+    },
+    setFirebaseUser(state, { firebaseUser }): UserModelState {
+      return {
+        ...(state as UserModelState),
         firebaseUser,
       };
     },
@@ -99,6 +157,15 @@ const UserModel: UserModelType = {
         ...(state as UserModelState),
         userPhotos: action.payload,
       };
+    },
+  },
+  subscriptions: {
+    firebaseUser({ dispatch }) {
+      // Subscribe history(url) change, trigger `load` action if pathname is `/`
+      return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
+        console.log(`onAuthStateChanged ${firebaseUser != null}`);
+        dispatch({ type: 'setFirebaseUser', firebaseUser });
+      });
     },
   },
 };

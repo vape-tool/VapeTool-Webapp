@@ -22,7 +22,7 @@ export async function sendRequest(
     if (!auth.currentUser) {
       throw Error('You are not logged in');
     }
-    const idToken = await auth.currentUser.getIdToken(false);
+    const idToken = await auth.currentUser!.getIdToken(false);
     return await request.post(`/api/calculator/coil/${calcFor}`, { data: { coil, idToken } });
   } catch (e) {
     console.error(e);

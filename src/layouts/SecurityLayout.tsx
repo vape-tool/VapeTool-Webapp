@@ -2,61 +2,59 @@ import React from 'react';
 import { connect } from 'dva';
 import { Redirect } from 'umi';
 import { stringify } from 'querystring';
+import { User as FirebaseUser } from 'firebase/app';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import { CurrentUser } from '@/models/user';
 import PageLoading from '@/components/PageLoading';
+import { getCurrentUser } from '@/utils/firebase';
 
 interface SecurityLayoutProps extends ConnectProps {
-  loading: boolean;
-  currentUser: CurrentUser;
+  firebaseUser?: FirebaseUser;
 }
 
-interface SecurityLayoutState {
+export interface LayoutState {
   isReady: boolean;
+  firebaseUser: FirebaseUser | null;
 }
 
-class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayoutState> {
-  state: SecurityLayoutState = {
+class SecurityLayout extends React.Component<SecurityLayoutProps, LayoutState> {
+  state: LayoutState = {
     isReady: false,
+    firebaseUser: null,
   };
 
   componentDidMount() {
-    this.setState({
-      isReady: true,
-    });
-    const { dispatch } = this.props;
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-    }
+    this.checkIfUserAlreadyLoggedIn();
   }
 
+  checkIfUserAlreadyLoggedIn = async () => {
+    const firebaseUser = await getCurrentUser();
+    this.setState({
+      isReady: true,
+      firebaseUser,
+    });
+  };
+
   render() {
-    const { isReady } = this.state;
-    const { children, loading, currentUser } = this.props;
+    const { isReady, firebaseUser } = this.state;
+    const { children } = this.props;
     // You can replace it to your authentication rule (such as check token exists)
     // 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）
 
-    const isLogin = currentUser && currentUser.uid;
-    console.log(`isLogin: ${isLogin}`);
+    console.log(`isLogin: ${firebaseUser != null || this.props.firebaseUser}`);
     console.log('currentUser');
-    console.log(currentUser);
-    const queryString = stringify({
-      redirect: window.location.href,
-    });
+    console.log(firebaseUser);
+    const queryString = stringify({ redirect: window.location.href });
 
-    if ((!isLogin && loading) || !isReady) {
-      return <PageLoading/>;
+    if (!isReady) {
+      return <PageLoading />;
     }
-    if (!isLogin) {
-      return <Redirect to={`/user/login?${queryString}`}></Redirect>;
+    if (!firebaseUser && !this.props.firebaseUser) {
+      return <Redirect to={`/user/login?${queryString}`} />;
     }
     return children;
   }
 }
 
-export default connect(({ user, loading }: ConnectState) => ({
-  currentUser: user.currentUser,
-  loading: loading.models.user,
+export default connect(({ user }: ConnectState) => ({
+  firebaseUser: user.firebaseUser,
 }))(SecurityLayout);

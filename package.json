@@ -86,7 +86,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.8.6",
-    "react-firebaseui": "^3.1.2",
+    "react-firebaseui": "^4.0.0",
     "react-image-crop": "^8.3.1",
     "react-image-webp": "^0.3.1",
     "react-media": "^1.10.0",

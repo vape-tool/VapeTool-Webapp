@@ -7,14 +7,26 @@ export const dva = {
     onError(e) {
       e.preventDefault();
     },
-    extraEnhancers: [persistEnhancer({
-      storage,
-      blacklist: ['uploadPhoto']
-    }),
+    extraEnhancers: [
+      persistEnhancer({
+        storage,
+        whitelist: [
+          'user',
+          'batteries',
+          'coil',
+          'converter',
+          'global',
+          'liquid',
+          'ohm',
+          'photo',
+          'setting',
+        ],
+      }),
       persistEnhancer({
         sessionStorage,
-        whitelist: ['uploadPhoto']
-      })],
+        whitelist: ['uploadPhoto'],
+      }),
+    ],
   },
   plugins: [process.env.APP_TYPE === 'build' ? null : require('dva-logger')()],
 };

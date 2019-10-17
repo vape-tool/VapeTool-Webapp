@@ -20,13 +20,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     const { key } = event;
 
     if (key === 'logout') {
-      const { dispatch } = this.props;
-      if (dispatch) {
-        dispatch({
-          type: 'login/logout',
-        });
-      }
-
+      this.props.dispatch!({ type: 'user/logout' });
       return;
     }
     router.push(`/account/${key}`);
@@ -70,6 +64,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     );
   }
 }
+
 export default connect(({ user }: ConnectState) => ({
   currentUser: user.currentUser,
 }))(AvatarDropdown);

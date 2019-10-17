@@ -92,7 +92,7 @@ export default {
       routes: [
         {
           path: '/user',
-          component: '../layouts/UserLayout',
+          component: '../layouts/SignupLayout',
           routes: [
             {
               name: 'login',
@@ -207,7 +207,7 @@ export default {
         {
           component: './404',
         },
-      ]
+      ],
     },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn

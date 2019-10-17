@@ -5,8 +5,9 @@ import { connect } from 'dva';
 import { FormComponentProps } from 'antd/es/form';
 import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
+import { Dispatch } from 'redux';
 
 const EditableContext = React.createContext<FormComponentProps<string> | any>(null);
 

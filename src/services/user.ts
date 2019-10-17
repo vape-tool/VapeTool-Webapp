@@ -4,7 +4,7 @@ import request from '@/utils/request';
 import { auth, database } from '@/utils/firebase';
 
 export function getUser(uid: string): Promise<User | null> {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     database
       .ref(`users/${uid}`)
       .once('value')
@@ -40,6 +40,7 @@ export function saveUser(firebaseUser: firebase.User): Promise<User | null> {
 }
 
 function uploadAvatar(avatarUrl: string) {
+  console.log(avatarUrl);
   // TODO push avator to storage
 }
 
@@ -55,6 +56,9 @@ export async function queryNotices(): Promise<any> {
   return request('/api/notices');
 }
 
-export function logoutFirebase(): Promise<void> {
-  return auth.signOut();
+export async function logoutFirebase(): Promise<void> {
+  return auth
+    .signOut()
+    .then(() => console.log('signed out complete'))
+    .catch(err => console.error(err));
 }
