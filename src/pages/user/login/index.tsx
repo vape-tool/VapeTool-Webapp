@@ -1,17 +1,19 @@
 import { notification } from 'antd';
 import React, { Component } from 'react';
-
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { StyledFirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login';
+// @ts-ignore
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { StateType } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
 import { getPageFragment } from '@/utils/utils';
 import PageLoading from '@/components/PageLoading';
-import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
+import FacebookIcon from "@/assets/FacebookIcon";
 
 interface LoginProps {
   dispatch: Dispatch<any>;
@@ -38,32 +40,6 @@ interface LoginProps {
 class Login extends Component<LoginProps> {
   redirectingFromProvider = false;
 
-
-  componentDidMount(): void {
-    const query = getPageFragment();
-    console.log('componentDidMount');
-    console.log(query);
-    if (query && query.id_token) {
-      this.redirectingFromProvider = true;
-      console.log(`query.id_token: ${query.id_token}`);
-      const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
-      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult).then(() => {
-        console.log('DONE Successfully redirected')
-      })
-    }
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  signInSuccessWithAuthResult = (): boolean => {
-    notification.info({ message: 'User logged in' });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userLogin/successLogin',
-    });
-
-    return false;
-  };
-
   uiConfig: firebaseui.auth.Config = {
     signInFlow: 'redirect',
     signInOptions: [
@@ -74,13 +50,37 @@ class Login extends Component<LoginProps> {
     },
   };
 
-  responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    console.log(response);
+  componentDidMount(): void {
+    const query = getPageFragment();
+    if (query && query.id_token) {
+      this.redirectingFromProvider = true;
+      const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
+      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
+    }
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  signInSuccessWithAuthResult(): boolean {
+    notification.info({ message: 'User logged in' });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userLogin/successLogin',
+    });
+
+    return false;
+  }
+
+
+  responseGoogle(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
     if (response.hasOwnProperty('error')) {
-      notification.error({ message: response.error });
+      const res: any = response;
+      if (res.error !== 'idpiframe_initialization_failed') {
+        console.error(res.error);
+        notification.error({ message: res.error });
+      }
     } else if (response.hasOwnProperty('code')) {
       const res = response as GoogleLoginResponseOffline;
-      console.log(`responseGoogle offline code: ${res.code}`)
+      console.warn(res)
     } else {
       const res = response as GoogleLoginResponse;
       const accessToken = res.getAuthResponse().access_token;
@@ -88,30 +88,30 @@ class Login extends Component<LoginProps> {
       const credentials = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
       auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult)
     }
-  };
+  }
 
-  onFacebookClick = () => {
-
-  };
-
-  onFacebookCallback = (userInfo: ReactFacebookLoginInfo) => {
-    console.log('onFacebookCallback');
-    console.log(userInfo.accessToken);
+  onFacebookCallback(userInfo: ReactFacebookLoginInfo) {
     const credentials = firebase.auth.FacebookAuthProvider.credential(userInfo.accessToken);
     auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
-  };
+  }
+
+  onFacebookError(response: ReactFacebookFailureResponse) {
+    if (response.status !== 'unknown') {
+      console.error(response.status);
+      notification.error({ message: response.status });
+    }
+  }
 
   render() {
     // TODO seems to doesnt work
     if (this.redirectingFromProvider) {
       return <PageLoading/>;
     }
-    // TODO remove react-google-login and implement it by hand
+    // TODO remove react-google-login and implement it by hand based on raw http requests
     return (
       <div className={styles.main}>
         <GoogleLogin
           className={styles.providerButton}
-          style={{ margin: '24px', padding: '24px' }}
           clientId="526012004991-p594on1n90qhp04qgtamgp3pjlpo7rsi.apps.googleusercontent.com"
           buttonText="Sign in with Google"
           uxMode="redirect"
@@ -124,7 +124,37 @@ class Login extends Component<LoginProps> {
         <FacebookLogin
           appId="647403118692702"
           fields="name,email,picture"
-          onClick={this.onFacebookClick}
+          render={(renderProps: any) => (<div onClick={renderProps.onClick}
+                                              className={styles.providerButton}
+                                              style={{
+                                                backgroundColor: '#4C69BA',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                color: '#fff',
+                                                boxShadow: '0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)',
+                                                padding: 0,
+                                                borderRadius: 2,
+                                                border: '1px solid transparent',
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                fontFamily: 'Roboto, sans-serif',
+                                              }}
+          >
+            <FacebookIcon style={{
+              backgroundColor: '#4C69BA',
+              marginRight: 10,
+              padding: 10,
+              borderRadius: 2,
+            }}/>
+            <span style={{
+              paddingRight: 10,
+              fontWeight: 500,
+              paddingLeft: 0,
+              paddingTop: 10,
+              paddingBottom: 10,
+            }}>Sign in with facebook</span>
+          </div>)}
+          onFailure={this.onFacebookError}
           callback={this.onFacebookCallback}/>
         <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth}/>
       </div>
