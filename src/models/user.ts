@@ -95,18 +95,14 @@ const UserModel: UserModelType = {
       });
     },
     *logout(_, { call, put }) {
-      console.log('user/logout calling logoutFirebase');
       yield call(logoutFirebase);
-      console.log('user/logout calling setUser null, null');
       yield put({
         type: 'setUser',
         currentUser: undefined,
       });
-      console.log('done');
 
       // TODO not sure if it's necessary since wrapper handle it for us
       const { redirect } = getPageQuery();
-      // redirect
       if (window.location.pathname !== '/user/login' && !redirect) {
         yield put(
           routerRedux.replace({
@@ -125,7 +121,6 @@ const UserModel: UserModelType = {
         }
         return undefined;
       });
-      console.log(`fetchCurrentUserPhotos uid: ${uid}`);
       if (!uid) {
         return;
       }
@@ -139,8 +134,6 @@ const UserModel: UserModelType = {
 
   reducers: {
     setUser(state, { currentUser }): UserModelState {
-      console.log('setUser');
-      console.log(currentUser);
       return {
         ...(state as UserModelState),
         currentUser,

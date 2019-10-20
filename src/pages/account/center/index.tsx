@@ -50,7 +50,7 @@ interface CenterState {
 @connect(({ loading, user }: ConnectState) => ({
   currentUser: user.currentUser,
   firebaseUser: user.firebaseUser,
-  currentUserLoading: loading.effects['user/fetchCurrentUser'],
+  currentUserLoading: loading.effects['user/fetchCurrent'],
   photosLoading: loading.effects['user/fetchCurrentUserPhotos'],
 }))
 class Center extends PureComponent<CenterProps, CenterState> {
@@ -84,7 +84,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/fetchCurrentUser',
+      type: 'user/fetchCurrent',
     });
     dispatch({
       type: 'user/fetchCurrentUserPhotos',
