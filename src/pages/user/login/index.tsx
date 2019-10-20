@@ -9,6 +9,8 @@ import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 import { StateType } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
+import { getPageFragment } from '@/utils/utils';
+import PageLoading from '@/components/PageLoading';
 
 interface LoginProps {
   dispatch: Dispatch<any>;
@@ -33,6 +35,23 @@ interface LoginProps {
   }),
 )
 class Login extends Component<LoginProps> {
+  redirectingFromProvider = false;
+
+
+  componentDidMount(): void {
+    const query = getPageFragment();
+    console.log('componentDidMount');
+    console.log(query);
+    if (query && query.id_token) {
+      this.redirectingFromProvider = true;
+      console.log(`query.id_token: ${query.id_token}`);
+      const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
+      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult).then(() => {
+        console.log('DONE Successfully redirected')
+      })
+    }
+  }
+
   // eslint-disable-next-line react/sort-comp
   signInSuccessWithAuthResult = (): boolean => {
     notification.info({ message: 'User logged in' });
@@ -47,8 +66,6 @@ class Login extends Component<LoginProps> {
   uiConfig: firebaseui.auth.Config = {
     signInFlow: 'redirect',
     signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
@@ -59,7 +76,7 @@ class Login extends Component<LoginProps> {
   responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.log(response);
     if (response.hasOwnProperty('error')) {
-      notification.error({ message: response['error'] });
+      notification.error({ message: response.error });
     } else if (response.hasOwnProperty('code')) {
       const res = response as GoogleLoginResponseOffline;
       console.log(`responseGoogle offline code: ${res.code}`)
@@ -73,12 +90,21 @@ class Login extends Component<LoginProps> {
   };
 
   render() {
+    // TODO seems to doesnt work
+    if (this.redirectingFromProvider) {
+      return <PageLoading/>;
+    }
+    // TODO remove react-google-login and implement it by hand
     return (
       <div className={styles.main}>
         <GoogleLogin
+          className={styles.providerButton}
+          style={{ margin: '24px', padding: '24px' }}
           clientId="526012004991-p594on1n90qhp04qgtamgp3pjlpo7rsi.apps.googleusercontent.com"
           buttonText="Sign in with Google"
           uxMode="redirect"
+          responseType="id_token permission token"
+          scope="openid email profile"
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
           cookiePolicy="single_host_origin"
