@@ -11,6 +11,7 @@ import styles from './style.less';
 import { auth } from '@/utils/firebase';
 import { getPageFragment } from '@/utils/utils';
 import PageLoading from '@/components/PageLoading';
+import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
 
 interface LoginProps {
   dispatch: Dispatch<any>;
@@ -89,6 +90,17 @@ class Login extends Component<LoginProps> {
     }
   };
 
+  onFacebookClick = () => {
+
+  };
+
+  onFacebookCallback = (userInfo: ReactFacebookLoginInfo) => {
+    console.log('onFacebookCallback');
+    console.log(userInfo.accessToken);
+    const credentials = firebase.auth.FacebookAuthProvider.credential(userInfo.accessToken);
+    auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
+  };
+
   render() {
     // TODO seems to doesnt work
     if (this.redirectingFromProvider) {
@@ -109,6 +121,11 @@ class Login extends Component<LoginProps> {
           onFailure={this.responseGoogle}
           cookiePolicy="single_host_origin"
         />
+        <FacebookLogin
+          appId="647403118692702"
+          fields="name,email,picture"
+          onClick={this.onFacebookClick}
+          callback={this.onFacebookCallback}/>
         <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth}/>
       </div>
     );
