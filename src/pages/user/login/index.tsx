@@ -41,6 +41,17 @@ interface LoginProps {
 class Login extends Component<LoginProps> {
   redirectingFromProvider = false;
 
+  // eslint-disable-next-line react/sort-comp
+  signInSuccessWithAuthResult = (): boolean => {
+    notification.info({ message: 'User logged in' });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userLogin/successLogin',
+    });
+
+    return false;
+  };
+
   uiConfig: firebaseui.auth.Config = {
     signInFlow: 'redirect',
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
@@ -56,17 +67,6 @@ class Login extends Component<LoginProps> {
       const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
       auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
     }
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  signInSuccessWithAuthResult(): boolean {
-    notification.info({ message: 'User logged in' });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userLogin/successLogin',
-    });
-
-    return false;
   }
 
   responseGoogle(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
