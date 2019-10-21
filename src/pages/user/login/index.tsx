@@ -2,18 +2,19 @@ import { notification } from 'antd';
 import React, { Component } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import { StyledFirebaseAuth } from 'react-firebaseui';
+import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login';
 // @ts-ignore
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { StateType } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
 import { getPageFragment } from '@/utils/utils';
 import PageLoading from '@/components/PageLoading';
-import FacebookIcon from "@/assets/FacebookIcon";
+import FacebookIcon from '@/assets/FacebookIcon';
+import GoogleIcon from '@/assets/GoogleIcon';
 
 interface LoginProps {
   dispatch: Dispatch<any>;
@@ -23,9 +24,9 @@ interface LoginProps {
 
 @connect(
   ({
-     userLogin,
-     loading,
-   }: {
+    userLogin,
+    loading,
+  }: {
     userLogin: StateType;
     loading: {
       effects: {
@@ -42,9 +43,7 @@ class Login extends Component<LoginProps> {
 
   uiConfig: firebaseui.auth.Config = {
     signInFlow: 'redirect',
-    signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    ],
+    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
     callbacks: {
       signInSuccessWithAuthResult: this.signInSuccessWithAuthResult,
     },
@@ -70,7 +69,6 @@ class Login extends Component<LoginProps> {
     return false;
   }
 
-
   responseGoogle(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
     if (response.hasOwnProperty('error')) {
       const res: any = response;
@@ -80,13 +78,13 @@ class Login extends Component<LoginProps> {
       }
     } else if (response.hasOwnProperty('code')) {
       const res = response as GoogleLoginResponseOffline;
-      console.warn(res)
+      console.warn(res);
     } else {
       const res = response as GoogleLoginResponse;
       const accessToken = res.getAuthResponse().access_token;
       const idToken = res.getAuthResponse().id_token;
       const credentials = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult)
+      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
     }
   }
 
@@ -95,19 +93,70 @@ class Login extends Component<LoginProps> {
     auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
   }
 
-  onFacebookError(response: ReactFacebookFailureResponse) {
+  onFacebookError = (response: ReactFacebookFailureResponse) => {
     if (response.status !== 'unknown') {
       console.error(response.status);
       notification.error({ message: response.status });
     }
-  }
+  };
 
   render() {
     // TODO seems to doesnt work
     if (this.redirectingFromProvider) {
-      return <PageLoading/>;
+      return <PageLoading />;
     }
-    // TODO remove react-google-login and implement it by hand based on raw http requests
+
+    const LoginButton = ({
+      name,
+      onClick,
+      bgColor,
+      textColor,
+      Icon,
+    }: {
+      name: string;
+      onClick: any;
+      bgColor: string;
+      textColor: string;
+      Icon: any;
+    }) => (
+      <div
+        onClick={onClick}
+        className={styles.providerButton}
+        style={{
+          backgroundColor: bgColor,
+          display: 'inline-flex',
+          alignItems: 'center',
+          color: textColor,
+          boxShadow: '0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)',
+          padding: 0,
+          borderRadius: 2,
+          border: '1px solid transparent',
+          fontSize: 14,
+          fontWeight: 500,
+          fontFamily: 'Roboto, sans-serif',
+        }}
+      >
+        <Icon
+          style={{
+            backgroundColor: bgColor,
+            marginRight: 10,
+            padding: 10,
+            borderRadius: 2,
+          }}
+        />
+        <span
+          style={{
+            paddingRight: 10,
+            fontWeight: 500,
+            paddingLeft: 0,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          Sign in with {name}
+        </span>
+      </div>
+    );
     return (
       <div className={styles.main}>
         <GoogleLogin
@@ -120,43 +169,32 @@ class Login extends Component<LoginProps> {
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
           cookiePolicy="single_host_origin"
+          render={props => (
+            <LoginButton
+              name="Google"
+              onClick={props.onClick}
+              bgColor="#fff"
+              textColor="rgba(0, 0, 0, .54)"
+              Icon={GoogleIcon}
+            />
+          )}
         />
         <FacebookLogin
           appId="647403118692702"
           fields="name,email,picture"
-          render={(renderProps: any) => (<div onClick={renderProps.onClick}
-                                              className={styles.providerButton}
-                                              style={{
-                                                backgroundColor: '#4C69BA',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                color: '#fff',
-                                                boxShadow: '0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)',
-                                                padding: 0,
-                                                borderRadius: 2,
-                                                border: '1px solid transparent',
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                fontFamily: 'Roboto, sans-serif',
-                                              }}
-          >
-            <FacebookIcon style={{
-              backgroundColor: '#4C69BA',
-              marginRight: 10,
-              padding: 10,
-              borderRadius: 2,
-            }}/>
-            <span style={{
-              paddingRight: 10,
-              fontWeight: 500,
-              paddingLeft: 0,
-              paddingTop: 10,
-              paddingBottom: 10,
-            }}>Sign in with facebook</span>
-          </div>)}
+          render={(props: any) => (
+            <LoginButton
+              name="Facebook"
+              onClick={props.onClick}
+              bgColor="#4C69BA"
+              textColor="#fff"
+              Icon={FacebookIcon}
+            />
+          )}
           onFailure={this.onFacebookError}
-          callback={this.onFacebookCallback}/>
-        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth}/>
+          callback={this.onFacebookCallback}
+        />
+        <FirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth} />
       </div>
     );
   }
