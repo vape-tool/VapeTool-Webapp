@@ -101,7 +101,6 @@ class Login extends Component<LoginProps> {
   };
 
   render() {
-    // TODO seems to doesnt work
     if (this.redirectingFromProvider) {
       return <PageLoading />;
     }
@@ -124,16 +123,7 @@ class Login extends Component<LoginProps> {
         className={styles.providerButton}
         style={{
           backgroundColor: bgColor,
-          display: 'inline-flex',
-          alignItems: 'center',
           color: textColor,
-          boxShadow: '0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)',
-          padding: 0,
-          borderRadius: 2,
-          border: '1px solid transparent',
-          fontSize: 14,
-          fontWeight: 500,
-          fontFamily: 'Roboto, sans-serif',
         }}
       >
         <Icon

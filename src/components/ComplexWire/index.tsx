@@ -3,8 +3,8 @@ import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
 import Image from 'react-image-webp';
+import { Dispatch } from 'redux';
 import SingleWire from '@/components/SingleWire';
-import { Dispatch } from '@/models/connect';
 import { Path } from '@/models/coil';
 
 const { Option } = Select;
@@ -79,7 +79,7 @@ const types: { name: string; src: any }[] = [
 const ComplexWire: React.FC<WireComponentProps> = props => {
   const { complexWire, dispatch, path } = props;
 
-  const handleTypeChange = ({ key, label }: any): void =>
+  const handleTypeChange = ({ key }: any) =>
     key &&
     dispatch &&
     dispatch({
@@ -89,7 +89,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         paths: path,
       },
     });
-  const onPitchChange = (value: number | undefined): void =>
+  const onPitchChange = (value: number | undefined) =>
     value &&
     dispatch &&
     dispatch({
@@ -115,10 +115,10 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         onChange={handleTypeChange}
       >
         {types.map(type => (
-          <Option key={type.name} value={type.name}>
+          <Option key={type.name} value={type.name.replace(/_/g, ' ')}>
             <div>
-              <Image style={{ width: imageSize }} webp={type.src} />
-              {type.name}
+              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
+              {type.name.replace(/_/g, ' ')}
             </div>
           </Option>
         ))}
