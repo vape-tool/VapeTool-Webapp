@@ -34,6 +34,7 @@ const UserWizard: React.FC<{
   };
 
   const onAvatarLoaded = (file: UploadFile) => {
+    // TODO Resize image to 300x300 or so
     getBase64(file.originFileObj, imageUrl =>
       dispatch({
         type: 'userWizard/setNewImageUrl',
