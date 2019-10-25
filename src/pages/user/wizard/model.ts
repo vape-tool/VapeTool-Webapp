@@ -7,6 +7,7 @@ import { getPageQuery } from '@/utils/utils';
 export interface UserWizardState {
   displayName?: string;
   avatarUrl?: string;
+  newImageUrl?: string;
 }
 
 export interface ModelType {
@@ -18,6 +19,7 @@ export interface ModelType {
   reducers: {
     setDisplayName: Reducer<UserWizardState>;
     setAvatarUrl: Reducer<UserWizardState>;
+    setNewImageUrl: Reducer<UserWizardState>;
   };
 }
 
@@ -27,6 +29,7 @@ const UserWizardModel: ModelType = {
   state: {
     displayName: undefined,
     avatarUrl: undefined,
+    newImageUrl: undefined,
   },
 
   effects: {
@@ -68,6 +71,12 @@ const UserWizardModel: ModelType = {
       return {
         ...state,
         displayName,
+      };
+    },
+    setNewImageUrl(state, { newImageUrl }) {
+      return {
+        ...state,
+        newImageUrl,
       };
     },
   },
