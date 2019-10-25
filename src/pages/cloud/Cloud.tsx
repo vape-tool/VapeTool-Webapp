@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Photo } from '@/types/photo';
-import styles from '@/pages/account/center/components/UserPhotos/index.less';
+import styles from '@/pages/user/center/components/UserPhotos/index.less';
 import { PhotoModelState } from '@/models/photo';
 import PhotoView from '@/components/PhotoView';
 import PhotoPreviewModal from '@/components/PhotoPreviewModal';
@@ -26,9 +26,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         rowKey="uid"
         itemLayout="vertical"
         dataSource={photos || []}
-        renderItem={photo => (
-          <PhotoView displayCommentsLength={3} photo={photo}/>
-        )}
+        renderItem={photo => <PhotoView displayCommentsLength={3} photo={photo} />}
       />
       <PhotoPreviewModal />
     </div>

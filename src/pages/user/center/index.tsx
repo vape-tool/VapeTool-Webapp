@@ -8,10 +8,10 @@ import { connect } from 'dva';
 import { User as FirebaseUser } from 'firebase/app';
 import { Redirect } from 'umi';
 import UserPhotos from './components/UserPhotos';
-import { TagType } from './data.d';
 import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
+import { TagType } from '@/pages/user/center/data';
 
 const { NODE_ENV } = process.env;
 const operationTabList = [

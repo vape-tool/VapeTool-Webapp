@@ -91,13 +91,13 @@ export default {
       component: '../layouts/BlankLayout',
       routes: [
         {
-          path: '/user',
+          path: '/login',
           component: '../layouts/SignupLayout',
           routes: [
             {
               name: 'login',
-              path: '/user/login',
-              component: './user/login',
+              path: '/login',
+              component: './login',
             },
           ],
         },
@@ -133,6 +133,12 @@ export default {
                   name: 'uploadPhoto',
                   path: '/cloud/upload-photo',
                   component: './cloud/UploadPhoto',
+                },
+                {
+                  hideInMenu: true,
+                  name: 'accountWizard',
+                  path: '/user/wizard',
+                  component: './user/wizard',
                 },
                 {
                   path: '/',
@@ -191,8 +197,8 @@ export default {
                 {
                   name: 'center',
                   icon: 'user',
-                  path: '/account/center',
-                  component: './account/center',
+                  path: '/user/center',
+                  component: './user/center',
                 },
                 {
                   component: './404',

@@ -39,6 +39,19 @@ export function saveUser(firebaseUser: firebase.User): Promise<User | null> {
     .then(() => getUser(uid));
 }
 
+export function updateDisplayName(uid: string, displayName?: string): Promise<User | null> {
+  if (!displayName) {
+    console.error('Displayname can not be empty');
+    return Promise.resolve(null);
+  }
+  return database
+    .ref(`users/${uid}`)
+    .update({
+      displayName,
+    })
+    .then(() => getUser(uid));
+}
+
 function uploadAvatar(avatarUrl: string) {
   console.log(avatarUrl);
   // TODO push avator to storage

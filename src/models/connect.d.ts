@@ -11,6 +11,7 @@ import { OhmModelState } from './ohm';
 import { BatteriesModelState } from '@/models/batteries';
 import { ConverterModelState } from '@/models/converter';
 import { UploadPhotoState } from '@/models/uploadPhoto';
+import { UserWizardState } from '@/pages/user/wizard/model';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -28,6 +29,7 @@ export interface Loading {
     batteries?: boolean;
     ohm?: boolean;
     uploadPhoto?: boolean;
+    userWizard?: boolean;
   };
 }
 
@@ -43,6 +45,7 @@ export interface ConnectState {
   batteries: BatteriesModelState;
   converter: ConverterModelState;
   uploadPhoto: UploadPhotoState;
+  userWizard: UserWizardState;
 }
 
 export interface Route extends MenuDataItem {

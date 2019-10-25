@@ -71,6 +71,7 @@ const UserModel: UserModelType = {
         console.error('restoreLogin with null firebaseUser');
         throw new Error('Success login with null firebaseUser');
       }
+      console.log(`Current user logged in ${firebaseUser.uid}`);
       let user: User | null = yield call(getUser, firebaseUser.uid);
       if (user == null) {
         console.log('user not yet saved to database, saving now');

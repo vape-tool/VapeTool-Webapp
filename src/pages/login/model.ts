@@ -43,6 +43,7 @@ const Model: ModelType = {
         // It should never happen
         throw new Error('Success login with null firebaseUser');
       }
+      console.log(`Successfully logged in ${firebaseUser.uid}`);
       const callUser = call(getUser, firebaseUser.uid);
       let user: User | null = yield callUser as User;
       if (user == null) {

@@ -1,7 +1,7 @@
 import { Card, List, Typography } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
-import styles from '@/pages/account/center/components/UserPhotos/index.less';
+import styles from '@/pages/user/center/components/UserPhotos/index.less';
 import { Battery } from '@/types/battery';
 import { ConnectProps, ConnectState } from '@/models/connect';
 
@@ -18,7 +18,6 @@ const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispa
       type: 'batteries/selectBattery',
       battery,
     });
-
 
   return (
     <List.Item style={{ height, width }}>
