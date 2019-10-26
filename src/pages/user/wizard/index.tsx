@@ -8,6 +8,7 @@ import styles from '@/pages/user/center/Center.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import FirebaseImage from '@/components/StorageAvatar';
+import ButtonGroup from 'antd/es/button/button-group';
 
 const UserWizard: React.FC<{
   currentUser: CurrentUser;
@@ -62,29 +63,23 @@ const UserWizard: React.FC<{
         <div className={styles.avatarHolder}>
           <Upload onChange={onFileChange} showUploadList={false}>
             <div onClick={onEditAvatar} style={{ display: 'grid' }}>
-              {newImageUrl && (
-                <Avatar
-                  src={newImageUrl}
-                  size={200}
-                  shape="square"
-                  style={{ gridColumn: 1, gridRow: 1 }}
-                />
-              )}
-              {!newImageUrl && (
-                <FirebaseImage type="user" id={currentUser.uid} size={200} shape="square" />
-              )}
-              <Icon type="upload" style={{ gridColumn: 1, gridRow: 1, position: 'absolute' }} />
+              <div style={{ gridColumn: 1, gridRow: 1 }}>
+                {newImageUrl && <Avatar src={newImageUrl} size={200} shape="square" />}
+                {!newImageUrl && (
+                  <FirebaseImage type="user" id={currentUser.uid} size={200} shape="square" />
+                )}
+              </div>
+              <Icon
+                type="upload"
+                style={{ gridColumn: 1, gridRow: 1, zIndex: 1, textAlign: 'right', fontSize: 20 }}
+              />
             </div>
           </Upload>
-          <div
-            className={styles.name}
-            style={{
-              boxSizing: 'inherit',
-              display: 'block',
-            }}
-          >
+          <br />
+          <div className={styles.name}>
             <span
               style={{
+                paddingTop: 20,
                 display: 'block',
                 outline: 0,
                 wordWrap: 'break-word',
@@ -94,6 +89,8 @@ const UserWizard: React.FC<{
                 lineHeight: '37px',
                 fontSize: 28,
                 fontFamily: 'Proxima Nova Bold,Helvetica Neue,Helvetica,Arial,sans-serif',
+                borderBottom: '1px solid',
+                borderColor: '#CCC',
               }}
               contentEditable
               spellCheck={false}
@@ -104,9 +101,14 @@ const UserWizard: React.FC<{
           </div>
           <div>{currentUser.signature}</div>
         </div>
-        <Button icon="save" onClick={onSave}>
-          Save
-        </Button>
+        <div style={{ textAlign: 'right' }}>
+          <ButtonGroup>
+            <Button onClick={onSave}>Cancel</Button>
+            <Button icon="save" type="primary" onClick={onSave}>
+              Save
+            </Button>
+          </ButtonGroup>
+        </div>
       </Card>
     </div>
   );
