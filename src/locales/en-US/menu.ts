@@ -12,6 +12,8 @@ export default {
   'menu.more-blocks': 'More Blocks',
   'menu.home': 'Home',
   'menu.login': 'Login',
+  'menu.userWizard': 'User Wizard',
+  'menu.uploadPhoto': 'Upload Photo',
   'menu.register': 'Register',
   'menu.register.result': 'Register Result',
   'menu.dashboard': 'Dashboard',

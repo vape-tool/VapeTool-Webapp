@@ -52,7 +52,9 @@ function getDownloadUrl(
 }
 
 export async function uploadPhoto(imageBlob: Blob | File, uid: string) {
-  return storage
-    .ref(`gears/images/${uid}.jpg`)
-    .put(imageBlob)
+  return storage.ref(`gears/images/${uid}.jpg`).put(imageBlob);
+}
+
+export async function uploadAvatar(imageBlob: Blob | File, userUid: string) {
+  return storage.ref(`users/images/${userUid}.jpg`).put(imageBlob);
 }

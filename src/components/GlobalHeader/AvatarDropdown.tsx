@@ -1,4 +1,4 @@
-import { Avatar, Icon, Menu, Spin } from 'antd';
+import { Icon, Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
@@ -9,6 +9,7 @@ import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import FirebaseImage from '@/components/StorageAvatar';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
   currentUser?: CurrentUser;
@@ -27,13 +28,22 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
   };
 
   render(): React.ReactNode {
-    const { currentUser = { avatar: '', name: '' }, menu } = this.props;
+    const { menu } = this.props;
+    const currentUser = this.props.currentUser ? this.props.currentUser : { uid: '', name: '' };
     if (!menu) {
-      return (
+      return currentUser && currentUser.name && currentUser.uid ? (
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+          <FirebaseImage
+            size="small"
+            type="user"
+            id={currentUser.uid}
+            className={styles.avatar}
+            alt="avatar"
+          />
           <span className={styles.name}>{currentUser.name}</span>
         </span>
+      ) : (
+        <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
       );
     }
     const menuHeaderDropdown = (
@@ -52,10 +62,16 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       </Menu>
     );
 
-    return currentUser && currentUser.name ? (
+    return currentUser && currentUser.name && currentUser.uid ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+          <FirebaseImage
+            size="small"
+            type="user"
+            id={currentUser.uid}
+            className={styles.avatar}
+            alt="avatar"
+          />
           <span className={styles.name}>{currentUser.name}</span>
         </span>
       </HeaderDropdown>

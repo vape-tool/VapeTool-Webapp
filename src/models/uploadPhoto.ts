@@ -7,13 +7,15 @@ import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/photo';
 
 export interface UploadPhotoState {
-  src?: string | null
-  crop?: ReactCrop.Crop
-  croppedImageUrl?: string
-  croppedImageBlob?: Blob | File
-  description?: string
-  width?: number,
-  height?: number,
+  src?: string;
+  crop?: ReactCrop.Crop;
+  croppedImageUrl?: string;
+  croppedImageBlob?: Blob | File;
+  description?: string;
+  width?: number;
+  height?: number;
+  showPhotoChooser?: boolean;
+  cancelled?: boolean;
 }
 
 export interface ModelType {
@@ -28,6 +30,8 @@ export interface ModelType {
     setCroppedImage: Reducer<UploadPhotoState>;
     reset: Reducer<UploadPhotoState>;
     setDescription: Reducer<UploadPhotoState>;
+    showPhotoChooser: Reducer<UploadPhotoState>;
+    hidePhotoChooser: Reducer<UploadPhotoState>;
   };
 }
 
@@ -45,20 +49,27 @@ const Model: ModelType = {
   },
 
   effects: {
-    * postPhoto(_, { call, select }) {
+    *postPhoto(_, { call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
-      const { croppedImageBlob, description, width, height } =
-        yield select((state: ConnectState) =>
-          (Object.create({
-            croppedImageBlob: state.uploadPhoto.croppedImageBlob,
-            description: state.uploadPhoto.description,
-            width: state.uploadPhoto.width,
-            height: state.uploadPhoto.height,
-          })));
+      const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>
+        Object.create({
+          croppedImageBlob: state.uploadPhoto.croppedImageBlob,
+          description: state.uploadPhoto.description,
+          width: state.uploadPhoto.width,
+          height: state.uploadPhoto.height,
+        }),
+      );
 
       try {
-        yield call(createPhoto, croppedImageBlob, description, new Author(uid, name), width, height)
+        yield call(
+          createPhoto,
+          croppedImageBlob,
+          description,
+          new Author(uid, name),
+          width,
+          height,
+        );
         console.log('Successfully published photo');
         message.success('Successfully published photo');
       } catch (e) {
@@ -88,22 +99,37 @@ const Model: ModelType = {
         croppedImageBlob: blob,
         width,
         height,
+        showPhotoChooser: false,
       };
     },
     setDescription(state, { description }) {
       return {
         ...state,
         description,
-      }
+      };
     },
     reset() {
       return {
         src: undefined,
         croppedImageUrl: undefined,
+        croppedImageBlob: undefined,
         crop: undefined,
         height: undefined,
         width: undefined,
-      }
+      };
+    },
+    showPhotoChooser(state) {
+      return {
+        ...state,
+        showPhotoChooser: true,
+      };
+    },
+    hidePhotoChooser(state) {
+      return {
+        ...state,
+        showPhotoChooser: false,
+        cancelled: true,
+      };
     },
   },
 };

@@ -6,8 +6,10 @@ interface FirebaseImageProps {
   type: ImageType;
   id: string;
   style?: any;
-  size?: number;
+  size?: number | 'small' | 'large' | 'default';
   shape?: 'circle' | 'square';
+  className?: any;
+  alt?: string;
 }
 
 interface FirebaseImageState {
@@ -27,9 +29,19 @@ class FirebaseImage extends React.Component<FirebaseImageProps, FirebaseImageSta
   }
 
   render() {
-    const { type, style, size, shape } = this.props;
+    const { type, style, size, shape, className, alt } = this.props;
     const { src } = this.state;
-    return <Avatar style={style} icon="user" alt={type} src={src} size={size} shape={shape} />;
+    return (
+      <Avatar
+        style={style}
+        icon="user"
+        alt={alt || type}
+        src={src}
+        size={size}
+        shape={shape}
+        className={className}
+      />
+    );
   }
 }
 

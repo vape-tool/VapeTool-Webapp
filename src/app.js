@@ -1,6 +1,5 @@
 import { persistEnhancer } from 'dva-model-persist';
 import storage from 'dva-model-persist/lib/storage';
-import * as sessionStorage from 'dva-model-persist/lib/storage/session';
 /* eslint-disable */
 export const dva = {
   config: {
@@ -21,10 +20,6 @@ export const dva = {
           'photo',
           'setting',
         ],
-      }),
-      persistEnhancer({
-        sessionStorage,
-        whitelist: ['uploadPhoto'],
       }),
     ],
   },

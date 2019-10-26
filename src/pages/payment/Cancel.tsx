@@ -1,21 +1,15 @@
 import React from 'react';
 import { Button, Result } from 'antd';
-import { routerRedux } from 'dva/router';
-import { stringify } from 'qs';
 import { connect } from 'dva';
 import { ConnectProps } from '@/models/connect';
 
 const CancelPayment: React.FC<ConnectProps> = (props: ConnectProps) => {
   const onBuyAgainClick = () =>
     props.dispatch &&
-    props.dispatch(
-      routerRedux.replace({
-        pathname: '/payment',
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      }),
-    );
+    props.dispatch({
+      type: 'global/redirectTo',
+      path: '/payment',
+    });
 
   return (
     <Result

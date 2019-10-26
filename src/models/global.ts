@@ -1,9 +1,12 @@
 import { Reducer } from 'redux';
-import { Subscription, Effect } from 'dva';
+import { Effect, Subscription } from 'dva';
 
 import { NoticeIconData } from '@/components/NoticeIcon';
 import { queryNotices } from '@/services/user';
 import { ConnectState } from './connect.d';
+import { getPageQuery } from '@/utils/utils';
+import { routerRedux } from 'dva/router';
+import { stringify } from 'qs';
 
 export interface NoticeItem extends NoticeIconData {
   id: string;
@@ -20,6 +23,8 @@ export interface GlobalModelType {
   namespace: 'global';
   state: GlobalModelState;
   effects: {
+    redirectBack: Effect;
+    redirectTo: Effect;
     fetchNotices: Effect;
     clearNotices: Effect;
     changeNoticeReadState: Effect;
@@ -41,6 +46,36 @@ const GlobalModel: GlobalModelType = {
   },
 
   effects: {
+    *redirectBack(_, { put }) {
+      const urlParams = new URL(window.location.href);
+      const params = getPageQuery();
+      let { redirect } = params as { redirect: string };
+      if (redirect) {
+        const redirectUrlParams = new URL(redirect);
+        if (redirectUrlParams.origin === urlParams.origin) {
+          redirect = redirect.substr(urlParams.origin.length);
+          if (redirect.match(/^\/.*#/)) {
+            redirect = redirect.substr(redirect.indexOf('#') + 1);
+          }
+        } else {
+          window.location.href = redirect;
+          return;
+        }
+      }
+
+      console.log(`isAbout to redirect to ${redirect || '/'}`);
+      yield put(routerRedux.replace(redirect || '/'));
+    },
+    *redirectTo({ path }, { put }) {
+      yield put(
+        routerRedux.replace({
+          pathname: path,
+          search: stringify({
+            redirect: window.location.href,
+          }),
+        }),
+      );
+    },
     *fetchNotices(_, { call, put, select }) {
       const data = yield call(queryNotices);
       yield put({

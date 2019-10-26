@@ -1,11 +1,10 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { routerRedux } from 'dva/router';
 import { User } from '@vapetool/types';
-import { getPageQuery, setAuthority } from './utils/utils';
+import { routerRedux } from 'dva/router';
+import { setAuthority } from './utils/utils';
 import { auth } from '@/utils/firebase';
-import { getUser, saveUser } from '@/services/user';
-import { getAvatarUrl } from '@/services/storage';
+import { getUser, initializeUser } from '@/services/user';
 
 export interface StateType {
   status?: 'ok' | 'error';
@@ -48,44 +47,22 @@ const Model: ModelType = {
       let user: User | null = yield callUser as User;
       if (user == null) {
         console.log('user not yet saved to database, saving now');
-        user = yield call(saveUser, firebaseUser);
+        user = yield call(initializeUser, firebaseUser);
         console.log(user);
+        yield put(routerRedux.replace({ pathname: '/user/wizard' }));
       } else {
         console.log(`User is already created in db ${user}`);
+        yield put({ type: 'global/redirectBack' });
       }
-      const callAvatarUrl = yield call(getAvatarUrl, firebaseUser.uid);
-      const avatarUrl: string | null = yield callAvatarUrl;
-      console.log(`avatarUrl: ${avatarUrl}`);
       const currentUser = {
         ...user,
         uid: firebaseUser.uid,
-        name: user!.display_name || firebaseUser.displayName,
         display_name: user!.display_name || firebaseUser.displayName,
-        avatar: avatarUrl || firebaseUser.photoURL,
       };
-      // TODO can we remove it from here and call it only from SecurityLayout
       yield put({
         type: 'user/setUser',
         currentUser,
       });
-      const urlParams = new URL(window.location.href);
-      const params = getPageQuery();
-      let { redirect } = params as { redirect: string };
-      if (redirect) {
-        const redirectUrlParams = new URL(redirect);
-        if (redirectUrlParams.origin === urlParams.origin) {
-          redirect = redirect.substr(urlParams.origin.length);
-          if (redirect.match(/^\/.*#/)) {
-            redirect = redirect.substr(redirect.indexOf('#') + 1);
-          }
-        } else {
-          window.location.href = redirect;
-          return;
-        }
-      }
-
-      console.log(`isAbout to redirect to ${redirect || '/'}`);
-      yield put(routerRedux.replace(redirect || '/'));
     },
   },
 

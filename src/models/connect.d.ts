@@ -11,7 +11,7 @@ import { OhmModelState } from './ohm';
 import { BatteriesModelState } from '@/models/batteries';
 import { ConverterModelState } from '@/models/converter';
 import { UploadPhotoState } from '@/models/uploadPhoto';
-import { UserWizardState } from '@/pages/user/wizard/model';
+import { UserWizardState } from '@/models/userWizard';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 

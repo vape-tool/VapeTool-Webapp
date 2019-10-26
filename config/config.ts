@@ -136,7 +136,7 @@ export default {
                 },
                 {
                   hideInMenu: true,
-                  name: 'accountWizard',
+                  name: 'userWizard',
                   path: '/user/wizard',
                   component: './user/wizard',
                 },

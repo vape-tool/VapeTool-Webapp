@@ -12,6 +12,7 @@ import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import { TagType } from '@/pages/user/center/data';
+import FirebaseImage from '@/components/StorageAvatar';
 
 const { NODE_ENV } = process.env;
 const operationTabList = [
@@ -142,6 +143,13 @@ class Center extends PureComponent<CenterProps, CenterState> {
     return null;
   };
 
+  onEditProfileClick = () => {
+    this.props.dispatch({
+      type: 'global/redirectTo',
+      path: '/user/wizard',
+    });
+  };
+
   render() {
     const { newTags, inputVisible, inputValue, tabKey } = this.state;
     const { firebaseUser, currentUser, currentUserLoading } = this.props;
@@ -150,7 +158,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
     console.log(firebaseUser);
     if (!firebaseUser) {
       console.log('firebaseUser is null so redirect');
-      return <Redirect to="/user/login" />;
+      return <Redirect to="/login" />;
     }
     return (
       <GridContent>
@@ -160,7 +168,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
               {!dataLoading ? (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
+                    <FirebaseImage type="user" id={currentUser.uid} size={150} />
                     <div className={styles.name}>{currentUser.name}</div>
                     <div>{currentUser.signature}</div>
                   </div>
@@ -204,7 +212,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
                   </div>
                   <Divider style={{ marginTop: 16 }} dashed />
                   <Button
-                    type="primary"
+                    type="link"
                     shape="round"
                     size="large"
                     target="_blank"
@@ -215,6 +223,9 @@ class Center extends PureComponent<CenterProps, CenterState> {
                     }`}
                   >
                     Cancel subscription
+                  </Button>
+                  <Button type="link" shape="round" size="large" onClick={this.onEditProfileClick}>
+                    Edit profile
                   </Button>
                 </div>
               ) : null}

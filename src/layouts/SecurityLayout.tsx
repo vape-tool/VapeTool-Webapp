@@ -49,7 +49,7 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, LayoutState> {
       return <PageLoading />;
     }
     if (!firebaseUser && !this.props.firebaseUser) {
-      return <Redirect to={`/user/login?${queryString}`} />;
+      return <Redirect to={`/login?${queryString}`} />;
     }
     return children;
   }
