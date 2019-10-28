@@ -57,6 +57,7 @@ const UserModel: UserModelType = {
   },
 
   effects: {
+    // TODO try to unify with successfullyLogin
     *fetchCurrent(_, { put, call, select }) {
       const currentUser = yield select((state: ConnectState) => state.user.currentUser);
       if (currentUser) {

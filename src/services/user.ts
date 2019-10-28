@@ -2,6 +2,7 @@ import { User, UserPermission } from '@vapetool/types';
 import firebase from 'firebase';
 import request from '@/utils/request';
 import { auth, database } from '@/utils/firebase';
+import { uploadAvatar } from '@/services/storage';
 
 export function getUser(uid: string): Promise<User | null> {
   return new Promise(resolve => {
@@ -26,7 +27,7 @@ export function getUser(uid: string): Promise<User | null> {
 export function initializeUser(firebaseUser: firebase.User): Promise<User | null> {
   const { uid, email, photoURL, displayName } = firebaseUser;
   if (photoURL) {
-    uploadAvatar(photoURL);
+    initializeAvatar(photoURL, uid);
   }
   return database
     .ref(`users/${uid}`)
@@ -56,12 +57,27 @@ export function updateDisplayName(uid: string, displayName: string): Promise<Use
   });
 }
 
-function uploadAvatar(avatarUrl: string) {
-  console.log(avatarUrl);
-  request.get(avatarUrl, { responseType: 'blob' }).then(response => {
-    console.log('uploadAvatar Response');
-    console.log(response);
-  });
+function initializeAvatar(avatarUrl: string, userId: string) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', avatarUrl);
+  xhr.responseType = 'blob';
+  xhr.onreadystatechange = function() {
+    // Only run if the request is complete
+    if (xhr.readyState !== 4) return;
+
+    // Process the response
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // If successful
+      uploadAvatar(this.response, userId)
+        .then(() => console.log('Successfully uploaded user photo'))
+        .catch(e => console.error(e));
+    } else {
+      // If failed
+      console.error(`Failed to fetch user avatar from 
+      url: ${avatarUrl} status: ${this.status} statusText: ${this.statusText}`);
+    }
+  };
+  xhr.send();
 }
 
 export async function query(): Promise<any> {
