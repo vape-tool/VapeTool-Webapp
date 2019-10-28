@@ -8,11 +8,10 @@ import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login';
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { routerRedux } from 'dva/router';
 import { StateType } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
-import { getPageFragment } from '@/utils/utils';
-import PageLoading from '@/components/PageLoading';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
 
@@ -39,16 +38,10 @@ interface LoginProps {
   }),
 )
 class Login extends Component<LoginProps> {
-  redirectingFromProvider = false;
-
   // eslint-disable-next-line react/sort-comp
   signInSuccessWithAuthResult = (): boolean => {
     notification.info({ message: 'User logged in' });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userLogin/successLogin',
-    });
-
+    this.props.dispatch(routerRedux.replace({ pathname: '/login/success' }));
     return false;
   };
 
@@ -59,15 +52,6 @@ class Login extends Component<LoginProps> {
       signInSuccessWithAuthResult: this.signInSuccessWithAuthResult,
     },
   };
-
-  componentDidMount(): void {
-    const query = getPageFragment();
-    if (query && query.id_token) {
-      this.redirectingFromProvider = true;
-      const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
-      auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
-    }
-  }
 
   responseGoogle(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
     if (response.hasOwnProperty('error')) {
@@ -90,7 +74,13 @@ class Login extends Component<LoginProps> {
 
   onFacebookCallback(userInfo: ReactFacebookLoginInfo) {
     const credentials = firebase.auth.FacebookAuthProvider.credential(userInfo.accessToken);
-    auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
+    auth
+      .signInWithCredential(credentials)
+      .then(this.signInSuccessWithAuthResult)
+      .catch(e => {
+        console.error(e);
+        notification.error({ message: e.message });
+      });
   }
 
   onFacebookError = (response: ReactFacebookFailureResponse) => {
@@ -101,10 +91,6 @@ class Login extends Component<LoginProps> {
   };
 
   render() {
-    if (this.redirectingFromProvider) {
-      return <PageLoading />;
-    }
-
     const LoginButton = ({
       name,
       onClick,
@@ -154,6 +140,7 @@ class Login extends Component<LoginProps> {
           clientId="526012004991-p594on1n90qhp04qgtamgp3pjlpo7rsi.apps.googleusercontent.com"
           buttonText="Sign in with Google"
           uxMode="redirect"
+          redirectUri={`${window.location.origin}/login/success`}
           responseType="id_token permission token"
           scope="openid email profile"
           onSuccess={this.responseGoogle}

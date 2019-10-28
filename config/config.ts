@@ -99,6 +99,11 @@ export default {
               path: '/login',
               component: './login',
             },
+            {
+              name: 'successLogin',
+              path: '/login/success',
+              component: './login/success',
+            },
           ],
         },
         {
