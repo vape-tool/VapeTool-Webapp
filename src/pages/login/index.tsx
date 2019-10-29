@@ -5,7 +5,6 @@ import { connect } from 'dva';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
-import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login';
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { routerRedux } from 'dva/router';
@@ -71,24 +70,6 @@ class Login extends Component<LoginProps> {
       auth.signInWithCredential(credentials).then(this.signInSuccessWithAuthResult);
     }
   }
-
-  onFacebookCallback(userInfo: ReactFacebookLoginInfo) {
-    const credentials = firebase.auth.FacebookAuthProvider.credential(userInfo.accessToken);
-    auth
-      .signInWithCredential(credentials)
-      .then(this.signInSuccessWithAuthResult)
-      .catch(e => {
-        console.error(e);
-        notification.error({ message: e.message });
-      });
-  }
-
-  onFacebookError = (response: ReactFacebookFailureResponse) => {
-    if (response.status !== 'unknown') {
-      console.error(response.status);
-      notification.error({ message: response.status });
-    }
-  };
 
   render() {
     const LoginButton = ({
@@ -159,7 +140,8 @@ class Login extends Component<LoginProps> {
         <FacebookLogin
           appId="647403118692702"
           fields="name,email,picture"
-          redirectUri={`${window.location.origin}/login`}
+          redirectUri={`${window.location.origin}/login/success`}
+          responseType="token"
           render={(props: any) => (
             <LoginButton
               name="Facebook"
@@ -169,8 +151,6 @@ class Login extends Component<LoginProps> {
               Icon={FacebookIcon}
             />
           )}
-          onFailure={this.onFacebookError}
-          callback={this.onFacebookCallback}
         />
         <FirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth} />
       </div>

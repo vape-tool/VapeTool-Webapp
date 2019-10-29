@@ -13,16 +13,40 @@ const LoginSuccess: React.FC<{
   firebaseUser: FirebaseUser;
   dispatch: Dispatch;
 }> = props => {
-  const query = getPageFragment();
-  const comesFromGoogleRedirect = query && query.id_token;
+  const fragment = getPageFragment();
+  console.log('fragment');
+  console.log(fragment);
+  const comesFromGoogleRedirect = fragment && fragment.id_token;
+  const comesFromFacebookRedirect =
+    fragment && fragment.state === 'facebookdirect' && fragment.access_token;
   if (comesFromGoogleRedirect) {
-    // TODO is it called two times as well ?
-    //  If yes then it's propably because we rerender when firebaseUser changes
-    const credentials = firebase.auth.GoogleAuthProvider.credential(query.id_token);
-    auth.signInWithCredential(credentials).then(() => {
-      // TODO why is it called two times ?
-      notification.info({ message: 'User logged in' });
-    });
+    // TODO clear page fragment preventing from double login because of redraw
+    //  because of firebaseUser state change
+    console.log('comes from google redirect');
+    const credentials = firebase.auth.GoogleAuthProvider.credential(fragment.id_token);
+    auth
+      .signInWithCredential(credentials)
+      .then(() => {
+        notification.info({ message: 'User logged in' });
+      })
+      .catch(e => {
+        console.error('signInWithCredentialFacebook error');
+        console.error(e);
+        notification.error({ message: e.message });
+      });
+  } else if (comesFromFacebookRedirect) {
+    console.log('comes from facebook redirect');
+    const credentials = firebase.auth.FacebookAuthProvider.credential(fragment.access_token);
+    auth
+      .signInWithCredential(credentials)
+      .then(() => {
+        notification.info({ message: 'User logged in' });
+      })
+      .catch(e => {
+        console.error('signInWithCredentialFacebook error');
+        console.error(e);
+        notification.error({ message: e.message });
+      });
   }
 
   if (props.firebaseUser) {
