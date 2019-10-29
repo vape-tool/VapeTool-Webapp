@@ -42,6 +42,7 @@ const errorHandler = (error: { response: Response }): Response => {
  */
 const request = extend({
   errorHandler,
+  timeout: 5000,
   credentials: 'include', // cookie
 });
 

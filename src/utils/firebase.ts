@@ -11,6 +11,13 @@ export const database = firebase.database();
 export const storage = firebase.storage();
 export const auth: firebase.auth.Auth = firebase.auth();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import ServerValue = firebase.database.ServerValue;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import DataSnapshot = firebase.database.DataSnapshot;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import Reference = firebase.database.Reference;
+
 let userLoaded: boolean = false;
 
 export function getCurrentUser(): Promise<FirebaseUser | null> {
