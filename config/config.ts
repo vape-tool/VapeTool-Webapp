@@ -279,4 +279,10 @@ export default {
       },
     },
   },
+  copy: [
+    {
+      from: 'img',
+      to: 'img',
+    },
+  ],
 } as IConfig;
