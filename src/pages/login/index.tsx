@@ -159,6 +159,7 @@ class Login extends Component<LoginProps> {
         <FacebookLogin
           appId="647403118692702"
           fields="name,email,picture"
+          redirectUri={`${window.location.origin}/login`}
           render={(props: any) => (
             <LoginButton
               name="Facebook"
