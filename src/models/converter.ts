@@ -64,14 +64,17 @@ const ConverterModel: ConverterModelType = {
       return {
         ...(state as ConverterModelState),
         nominator: payload,
-        inchMm: state && state.denominator ? payload / state.denominator / 0.03937 : 0,
+        inchMm:
+          state && state.denominator && state.denominator !== 0
+            ? payload / state.denominator / 0.03937
+            : 0,
       };
     },
     setDenominator(state, { payload }): ConverterModelState {
       return {
         ...(state as ConverterModelState),
         denominator: payload,
-        inchMm: state && state.nominator ? state.nominator / payload / 0.03937 : 0,
+        inchMm: state && state.nominator && payload !== 0 ? state.nominator / payload / 0.03937 : 0,
       };
     },
     setCelsius(state, { payload }): ConverterModelState {

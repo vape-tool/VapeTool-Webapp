@@ -31,6 +31,7 @@ const InchTab: React.FC<ConverterComponentProps> = props => {
             min={1}
             max={10}
             step={1}
+            precision={0}
             value={converter.nominator}
             formatter={unitFormatter(0)}
             onChange={onChangeNominator}
@@ -43,6 +44,7 @@ const InchTab: React.FC<ConverterComponentProps> = props => {
             min={1}
             max={100}
             step={1}
+            precision={0}
             formatter={unitFormatter(0)}
             value={converter.denominator}
             onChange={onChangeDenominator}

@@ -3,7 +3,6 @@ import { Col, InputNumber, Row, Typography } from 'antd';
 import { connect } from 'dva';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
-import { unitFormatter, unitParser } from '@/utils/utils';
 
 const TempTab: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
@@ -30,8 +29,7 @@ const TempTab: React.FC<ConverterComponentProps> = props => {
             size="large"
             min={-273.15}
             step={1}
-            formatter={unitFormatter(2, '°C')}
-            parser={unitParser('°C')}
+            precision={1}
             value={converter.celsius}
             onChange={onChangeCelsius}
           />
@@ -41,8 +39,7 @@ const TempTab: React.FC<ConverterComponentProps> = props => {
           <InputNumber
             size="large"
             step={1}
-            formatter={unitFormatter(2, '°F')}
-            parser={unitParser('°F')}
+            precision={1}
             value={converter.fahrenheit}
             onChange={onChangeFahrenheit}
           />

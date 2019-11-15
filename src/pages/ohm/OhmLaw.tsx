@@ -74,6 +74,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     size="large"
                     step={0.1}
                     min={0.01}
+                    precision={2}
                     style={{ width: '100%', maxWidth: 200 }}
                     onChange={value => this.onChange('Voltage', value)}
                     placeholder="Volts [V]"
@@ -86,6 +87,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     size="large"
                     step={0.1}
                     min={0.01}
+                    precision={2}
                     style={{ width: '100%', maxWidth: 200 }}
                     onChange={value => this.onChange('Resistance', value)}
                     placeholder="Ohms [Ω]"
@@ -98,6 +100,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     size="large"
                     step={0.1}
                     min={0.01}
+                    precision={2}
                     style={{ width: '100%', maxWidth: 200 }}
                     onChange={value => this.onChange('Current', value)}
                     placeholder="Amps [A]"
@@ -110,6 +113,7 @@ class OhmLaw extends Component<OhmLawProps> {
                     size="large"
                     step={0.1}
                     min={0.01}
+                    precision={2}
                     style={{ width: '100%', maxWidth: 200 }}
                     onChange={value => this.onChange('Power', value)}
                     placeholder="Wats [W]"
