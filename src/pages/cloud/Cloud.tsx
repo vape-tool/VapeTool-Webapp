@@ -5,19 +5,16 @@ import { Dispatch } from 'redux';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Photo } from '@/types/photo';
 import styles from '@/pages/user/center/components/UserPhotos/index.less';
-import { PhotoModelState } from '@/models/photo';
 import PhotoView from '@/components/PhotoView';
 import PhotoPreviewModal from '@/components/PhotoPreviewModal';
 
 interface AuthComponentProps extends ConnectProps {
-  photo: PhotoModelState;
+  photos: Photo[];
   dispatch: Dispatch;
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const {
-    photo: { photos },
-  } = props;
+  const { photos } = props;
 
   return (
     <div>
@@ -25,14 +22,14 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         className={styles.coverCardList}
         rowKey="uid"
         itemLayout="vertical"
-        dataSource={photos || []}
-        renderItem={photo => <PhotoView displayCommentsLength={3} photo={photo} />}
+        dataSource={photos}
+        renderItem={photo => <PhotoView displayCommentsLength={3} photo={photo}/>}
       />
-      <PhotoPreviewModal />
+      <PhotoPreviewModal/>
     </div>
   );
 };
 
 export default connect(({ photo }: ConnectState) => ({
-  photo,
+  photos: photo.photos,
 }))(Cloud);

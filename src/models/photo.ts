@@ -6,7 +6,7 @@ import { database, DataSnapshot } from '@/utils/firebase';
 import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
 import { ConnectState } from '@/models/connect';
-import { commentPhoto, deletePhotoComment, getPhotos, likePhoto } from '@/services/photo';
+import { commentPhoto, deletePhotoComment, likePhoto } from '@/services/photo';
 
 export interface PhotoModelState {
   photos: Photo[];
@@ -20,7 +20,7 @@ export interface PhotoModelType {
     likePhoto: Effect;
     commentPhoto: Effect;
     deleteComment: Effect;
-    fetchPhotos: Effect;
+    // fetchPhotos: Effect;
   };
   reducers: {
     selectPhoto: Reducer<PhotoModelState>;
@@ -67,13 +67,14 @@ const PhotoModel: PhotoModelType = {
       console.log(`photoId: ${photoId} commentId: ${commentId}`);
       yield call(deletePhotoComment, photoId, commentId);
     },
-    * fetchPhotos(_, { put, call }) {
-      const photos = yield call(getPhotos, 0, 100);
-      yield put({
-        type: 'setPhotos',
-        payload: Array.isArray(photos) ? photos : [],
-      });
-    },
+    // Its unused for now
+    // * fetchPhotos(_, { put, call }) {
+    //   const photos = yield call(getPhotos, 0, 100);
+    //   yield put({
+    //     type: 'setPhotos',
+    //     payload: Array.isArray(photos) ? photos : [],
+    //   });
+    // },
   },
 
   reducers: {
@@ -126,26 +127,30 @@ const PhotoModel: PhotoModelType = {
         console.log('fetched photos');
         const photosPromise: Promise<Photo>[] = new Array<Promise<Photo>>();
         snapshot.forEach(snap => {
-          const battery = snap.val();
-          if (!battery || !battery.author) {
+          const photo = snap.val();
+          if (!photo || Object.entries(photo).length === 0 || !photo.author) {
             console.error(`REMOVE EMPTY PHOTO: ${snap.key}`);
+            return;
           }
-          const promise = getPhotoUrl(snap.key || battery.uid).then((url: string) => {
-            if (battery.creationTime === undefined) {
-              battery.creationTime = battery.timestamp;
-              battery.lastTimeModified = battery.timestamp;
+          const promise = getPhotoUrl(snap.key || photo.uid).then((url: string) => {
+            if (photo.creationTime === undefined) {
+              // backwards compatibility
+              photo.creationTime = photo.timestamp;
+              photo.lastTimeModified = photo.timestamp;
             }
-            return Object.create({ ...battery, url });
+            return { ...photo, url };
           });
           photosPromise.push(promise);
         });
 
-        Promise.all(photosPromise).then(photos => {
-          dispatch({
-            type: 'setPhotos',
-            photos,
-          });
-        });
+        Promise.all(photosPromise)
+          .then(photos => {
+            dispatch({
+              type: 'setPhotos',
+              photos,
+            });
+          })
+          .catch(err => console.error('failed to fetch photosUrls ', err));
       });
 
       return () => {

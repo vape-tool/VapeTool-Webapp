@@ -4,7 +4,8 @@ import { connect } from 'dva';
 import { FormComponentProps } from 'antd/es/form';
 import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { Dispatch } from 'redux';
+import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types/battery';
 import { Affiliate } from '@/types/affiliate';
 import NewAffiliateModal from '@/components/AffiliateEditTable/NewAffiliateModal';
@@ -73,7 +74,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         dataIndex: 'link',
         width: '60%',
         editable: true,
-        render: (text: string, affiliate: Affiliate) => (
+        render: (text: string, _: Affiliate) => (
           <a
             style={{
               textOverflow: 'ellipsis',
@@ -186,7 +187,7 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
     return (
       <div>
         <EditableContext.Provider value={this.props.form}>
-          <Table<Affiliate>
+          <Table
             components={components}
             bordered
             dataSource={Array.from(this.props.selectedBattery.affiliate || []).map(([key, value]) =>

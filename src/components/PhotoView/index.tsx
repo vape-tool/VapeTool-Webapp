@@ -111,7 +111,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     this.commentsRef.on('value', (snapshot: DataSnapshot) => {
       const comments: Comment[] = [];
       snapshot.forEach(snap => {
-        comments.push(Object.create({ ...snap.val(), uid: snap.key }));
+        comments.push({ ...snap.val(), uid: snap.key });
       });
       this.setState({
         commentsCount: snapshot.numChildren(),

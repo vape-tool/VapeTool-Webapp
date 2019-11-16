@@ -68,12 +68,14 @@ export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
       .endAt(to)
       .once('value')
       .then(snapshots => {
-        const firebasePhotos = new Array<FirebasePhoto>(snapshots.numChildren());
+        const firebasePhotos = new Array<FirebasePhoto>();
         snapshots.forEach((snapshot: DataSnapshot) => {
           const firebasePhoto = snapshot.val();
-          firebasePhotos.push(firebasePhoto);
+          if (firebasePhoto && Object.entries(firebasePhoto).length !== 0) {
+            firebasePhotos.push(firebasePhoto);
+          }
         });
-        return firebasePhotos;
+        resolve(firebasePhotos);
       })
       .catch(e => {
         reject(e);
@@ -100,13 +102,14 @@ export async function createPhoto(
   if (!width || !height) {
     throw new Error('Width and height can not be null');
   }
-  const uid = database.ref('gears').push().key;
+  const newObjectUid = await database.ref('gears').push();
+  const uid = newObjectUid.key;
 
   if (uid == null) {
     throw new Error('Could not push new photo to db');
   }
   try {
-    await database.ref(`gears/${uid}`).set({
+    const newObject = {
       uid,
       author,
       description,
@@ -116,9 +119,14 @@ export async function createPhoto(
       width,
       height,
       reports: 0,
-    });
+    };
+    console.log('uploading photo');
+    console.dir(newObject);
 
+    // It must be published to storage prior to database because db will trigger
+    // update listener before storage is completed
     await uploadPhoto(imageBlob, uid);
+    await database.ref(`gears/${uid}`).set(newObject);
     return uid;
   } catch (e) {
     database.ref(`gears/${uid}`).remove();
