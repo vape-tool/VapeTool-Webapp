@@ -24,7 +24,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       this.props.dispatch!({ type: 'user/logout' });
       return;
     }
-    router.push(`/account/${key}`);
+    router.push(`/user/${key}`);
   };
 
   render(): React.ReactNode {
