@@ -1,5 +1,5 @@
 import React from 'react';
-import { List } from 'antd';
+import { Affix, Button, List } from 'antd';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -14,6 +14,13 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
+  const onUploadPhotoClicked = () =>
+    props.dispatch &&
+    props.dispatch({
+      type: 'global/redirectTo',
+      path: '/cloud/upload-photo',
+    });
+
   const { photos } = props;
 
   return (
@@ -26,6 +33,15 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         renderItem={photo => <PhotoView displayCommentsLength={3} photo={photo}/>}
       />
       <PhotoPreviewModal/>
+      <Affix offsetBottom={30} offset={60}>
+        <Button
+          type="primary"
+          icon="plus"
+          shape="circle"
+          size="large"
+          onClick={onUploadPhotoClicked}
+        />
+      </Affix>
     </div>
   );
 };
