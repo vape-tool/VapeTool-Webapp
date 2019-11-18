@@ -3,9 +3,9 @@ import { Effect } from 'dva';
 import ReactCrop from 'react-image-crop';
 import { Author } from '@vapetool/types';
 import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/photo';
-import { routerRedux } from 'dva/router';
 
 export interface UploadPhotoState {
   src?: string;
@@ -50,7 +50,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * postPhoto(_, { put, call, select }) {
+    *postPhoto(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>

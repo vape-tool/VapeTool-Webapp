@@ -6,7 +6,7 @@ import { User as FirebaseUser } from 'firebase';
 
 const firebaseConfig = require('@/firebase-config.json');
 
-// firebaseConfig.databaseURL = 'ws://localhost:5555';
+firebaseConfig.databaseURL = 'ws://localhost:5555';
 firebase.initializeApp(firebaseConfig);
 export const database = firebase.database();
 export const storage = firebase.storage();

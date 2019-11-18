@@ -12,6 +12,7 @@ import { BatteriesModelState } from '@/models/batteries';
 import { ConverterModelState } from '@/models/converter';
 import { UploadPhotoState } from '@/models/uploadPhoto';
 import { UserWizardState } from '@/models/userWizard';
+import { UploadState } from '@/models/upload';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -44,6 +45,7 @@ export interface ConnectState {
   ohm: OhmModelState;
   batteries: BatteriesModelState;
   converter: ConverterModelState;
+  upload: UploadState;
   uploadPhoto: UploadPhotoState;
   userWizard: UserWizardState;
 }
