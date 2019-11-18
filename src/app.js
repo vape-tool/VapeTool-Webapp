@@ -1,5 +1,5 @@
 import { persistEnhancer } from 'dva-model-persist';
-import storage from 'dva-model-persist/lib/storage';
+import storage from 'dva-model-persist/lib/storage/session';
 /* eslint-disable */
 export const dva = {
   config: {

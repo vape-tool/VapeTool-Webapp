@@ -133,3 +133,18 @@ export async function createPhoto(
     throw e;
   }
 }
+
+export async function deletePhoto(photoId: string): Promise<any> {
+  return database
+    .ref('gears')
+    .child(photoId)
+    .set(null);
+}
+
+export async function reportPhoto(photoId: string, userId: string): Promise<any> {
+  return database
+    .ref('gear-reports')
+    .child(photoId)
+    .child(userId)
+    .set(ServerValue.TIMESTAMP)
+}

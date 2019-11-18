@@ -5,6 +5,7 @@ import { Author } from '@vapetool/types';
 import { message } from 'antd';
 import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/photo';
+import { routerRedux } from 'dva/router';
 
 export interface UploadPhotoState {
   src?: string;
@@ -49,7 +50,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    *postPhoto(_, { call, select }) {
+    * postPhoto(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>
@@ -70,10 +71,10 @@ const Model: ModelType = {
           width,
           height,
         );
-        console.log('Successfully published photo');
         message.success('Successfully published photo');
+        yield put({ type: 'reset' });
+        yield put(routerRedux.replace({ pathname: '/cloud' }));
       } catch (e) {
-        console.error(e);
         message.error('Failed uo upload photo to cloud');
       }
     },

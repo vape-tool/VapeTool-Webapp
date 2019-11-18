@@ -1,4 +1,4 @@
-import { Coil } from '@vapetool/types';
+import { Coil, Properties } from '@vapetool/types';
 import request from '@/utils/request';
 import { auth } from '@/utils/firebase';
 
@@ -10,14 +10,14 @@ export function calculateForResistance(coil: Coil): Promise<Coil> {
   return sendRequest('resistance', coil);
 }
 
-export function getSweetSpot(coil: Coil): Promise<Coil> {
-  return sendRequest('resistance', coil);
+export function calculateProperties(coil: Coil): Promise<Properties> {
+  return sendRequest('properties', coil);
 }
 
-export async function sendRequest(
-  calcFor: 'wraps' | 'resistance' | 'sweetSpot',
+export async function sendRequest<T>(
+  calcFor: 'wraps' | 'resistance' | 'properties',
   coil: Coil,
-): Promise<Coil> {
+): Promise<T> {
   try {
     if (!auth.currentUser) {
       throw Error('You are not logged in');

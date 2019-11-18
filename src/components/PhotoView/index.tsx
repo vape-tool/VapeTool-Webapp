@@ -1,8 +1,9 @@
-import { Card, Icon, Input, List, message, Skeleton, Typography } from 'antd';
+import { Card, Icon, Input, List, Menu, message, Modal, Skeleton, Typography } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
+import { UserPermission } from '@vapetool/types';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
@@ -11,6 +12,7 @@ import { ConnectState } from '@/models/connect';
 import CommentView from '@/components/CommentView';
 import styles from './index.less';
 import { CurrentUser } from '@/models/user';
+import Dropdown from 'antd/es/dropdown';
 
 interface PhotoViewProps {
   photo: Photo;
@@ -106,23 +108,6 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       photoId: this.props.photo.uid,
     });
 
-  private listenPhotoComments = () =>
-    this.commentsRef &&
-    this.commentsRef.on('value', (snapshot: DataSnapshot) => {
-      const comments: Comment[] = [];
-      snapshot.forEach(snap => {
-        comments.push({ ...snap.val(), uid: snap.key });
-      });
-      this.setState({
-        commentsCount: snapshot.numChildren(),
-        displayComments: comments.slice(
-          Math.max(comments.length - this.props.displayCommentsLength, 0),
-        ),
-      });
-    });
-
-  private onCommentClick = () => this.inputRef.focus();
-
   render() {
     const LikeIconText = ({
                             type,
@@ -159,8 +144,24 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         {text}
       </span>
     );
-    const { photo, dispatch } = this.props;
+    const { photo, dispatch, user } = this.props;
     const { likesCount, commentsCount, comment, displayComments } = this.state;
+
+    const optionsMenu = (
+      <Menu>
+        <Menu.Item key="report" onClick={this.onReportClick}>
+          <Icon type="flag"/>
+          Report
+        </Menu.Item>
+        <Menu.Item key="delete" onClick={() => this.onDeleteClick(photo.uid, dispatch)}
+                   disabled={!user
+                   || (user.uid !== photo.author.uid
+                     && user.permission < UserPermission.ONLINE_MODERATOR)}>
+          <Icon type="delete"/>
+          Delete
+        </Menu.Item>
+      </Menu>
+    );
 
     return (
       <Card
@@ -200,8 +201,12 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               key="list-vertical-message"
             />,
             <span>{moment(photo.creationTime).fromNow()}</span>,
-          ]}
-        ></List.Item>
+            <Dropdown overlay={optionsMenu}>
+              <Icon type="more"/>
+            </Dropdown>,
+          ]}>
+        </List.Item>
+
         {displayComments && displayComments.length > 0 && (
           <List<Comment>
             size="small"
@@ -230,6 +235,44 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       </Card>
     );
   }
+
+  private onReportClick = () =>
+    this.props.dispatch({
+      type: 'photo/reportPhoto',
+      photoId: this.props.photo.uid,
+    });
+
+  private listenPhotoComments = () =>
+    this.commentsRef &&
+    this.commentsRef.on('value', (snapshot: DataSnapshot) => {
+      const comments: Comment[] = [];
+      snapshot.forEach(snap => {
+        comments.push({ ...snap.val(), uid: snap.key });
+      });
+      this.setState({
+        commentsCount: snapshot.numChildren(),
+        displayComments: comments.slice(
+          Math.max(comments.length - this.props.displayCommentsLength, 0),
+        ),
+      });
+    });
+
+  private onCommentClick = () => this.inputRef.focus();
+
+  private onDeleteClick = (photoUid: string, dispatch: Dispatch) => {
+    Modal.confirm({
+      title: 'Are you sure delete this photo?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispatch({
+          type: 'photo/deletePhoto',
+          photoId: photoUid,
+        });
+      },
+    });
+  };
 }
 
 export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PhotoView);

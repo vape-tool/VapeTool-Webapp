@@ -2,11 +2,12 @@ import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
 import { OnlineContentStatus } from '@vapetool/types';
+import { message, notification } from 'antd';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
 import { ConnectState } from '@/models/connect';
-import { commentPhoto, deletePhotoComment, likePhoto } from '@/services/photo';
+import { commentPhoto, deletePhoto, deletePhotoComment, likePhoto, reportPhoto } from '@/services/photo';
 
 export interface PhotoModelState {
   photos: Photo[];
@@ -20,6 +21,8 @@ export interface PhotoModelType {
     likePhoto: Effect;
     commentPhoto: Effect;
     deleteComment: Effect;
+    deletePhoto: Effect;
+    reportPhoto: Effect;
     // fetchPhotos: Effect;
   };
   reducers: {
@@ -63,9 +66,34 @@ const PhotoModel: PhotoModelType = {
       yield call(commentPhoto, photoId, comment, currentUser);
     },
     * deleteComment({ payload: { photoId, commentId } }, { call }) {
-      console.log('deleteComment');
-      console.log(`photoId: ${photoId} commentId: ${commentId}`);
-      yield call(deletePhotoComment, photoId, commentId);
+      try {
+        yield call(deletePhotoComment, photoId, commentId);
+        message.success('Successfully deleted comment');
+      } catch (e) {
+        notification.error({ message: e.message });
+      }
+    },
+    * deletePhoto({ photoId }, { call }) {
+      try {
+        yield call(deletePhoto, photoId);
+        message.success('Successfully deleted photo');
+      } catch (e) {
+        notification.error({ message: e.message });
+      }
+    },
+    * reportPhoto({ photoId }, { call, select }) {
+      const currentUser = yield select((state: ConnectState) =>
+        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
+      );
+      if (!currentUser) {
+        return;
+      }
+      try {
+        yield call(reportPhoto, photoId, currentUser);
+        message.success('Successfully reported photo');
+      } catch (e) {
+        notification.error({ message: e.message });
+      }
     },
     // Its unused for now
     // * fetchPhotos(_, { put, call }) {
