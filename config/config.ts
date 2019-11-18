@@ -135,6 +135,12 @@ export default {
                 },
                 {
                   hideInMenu: true,
+                  name: 'upload',
+                  path: '/cloud/upload',
+                  component: './cloud/Upload',
+                },
+                {
+                  hideInMenu: true,
                   name: 'uploadPhoto',
                   path: '/cloud/upload-photo',
                   component: './cloud/UploadPhoto',

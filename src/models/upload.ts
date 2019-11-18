@@ -13,7 +13,7 @@ interface ModelType {
 }
 
 const Model: ModelType = {
-  namespace: 'uploadPhoto',
+  namespace: 'upload',
 
   state: { currentTab: 'post' },
 

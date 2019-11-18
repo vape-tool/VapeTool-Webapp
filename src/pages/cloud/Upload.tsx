@@ -1,8 +1,10 @@
-import { Tabs } from 'antd';
+import { Tabs, Row, Col, Icon } from 'antd';
 import React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
+import UploadPost from '@/components/UploadPost';
+import UploadPhoto from '@/pages/cloud/UploadPhoto';
 
 interface UploadProps {
   currentTab: string;
@@ -19,18 +21,47 @@ const Upload: React.FC<UploadProps> = props => {
   };
 
   return (
-    <Tabs onChange={onTabChange} type="card" activeKey={currentTab}>
-      <Tabs.TabPane tab="Post" key="post">
-        <UploadPost />
-        Content of Tab Pane 1
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Photo" key="photo">
-        Content of Tab Pane 2
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Url" key="url">
-        Content of Tab Pane 3
-      </Tabs.TabPane>
-    </Tabs>
+    <Row type="flex">
+      <Col xs={0} md={4} lg={6} xl={8} />
+      <Col xs={24} md={16} lg={14} xl={10}>
+        <Tabs onChange={onTabChange} type="card" activeKey={currentTab}>
+          <Tabs.TabPane
+            tab={
+              <span>
+                <Icon type="form" />
+                Post
+              </span>
+            }
+            key="post"
+          >
+            <UploadPost />
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={
+              <span>
+                <Icon type="picture" />
+                Post
+              </span>
+            }
+            key="photo"
+          >
+            <UploadPhoto />
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={
+              <span>
+                <Icon type="link" />
+                Post
+              </span>
+            }
+            key="link"
+          >
+            <UploadPost />
+          </Tabs.TabPane>
+        </Tabs>
+      </Col>
+      <Col xs={0} md={4} lg={6} xl={8} />
+    </Row>
   );
 };
 

@@ -13,6 +13,7 @@ import { ConverterModelState } from '@/models/converter';
 import { UploadPhotoState } from '@/models/uploadPhoto';
 import { UserWizardState } from '@/models/userWizard';
 import { UploadState } from '@/models/upload';
+import {UploadPostState} from '@/models/uploadPost';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -47,6 +48,7 @@ export interface ConnectState {
   converter: ConverterModelState;
   upload: UploadState;
   uploadPhoto: UploadPhotoState;
+  uploadPost: UploadPostState;
   userWizard: UserWizardState;
 }
 

@@ -75,7 +75,7 @@ const Model: ModelType = {
         yield put({ type: 'reset' });
         yield put(routerRedux.replace({ pathname: '/cloud' }));
       } catch (e) {
-        message.error('Failed uo upload photo to cloud');
+        message.error('Failed upload photo to cloud');
       }
     },
   },
