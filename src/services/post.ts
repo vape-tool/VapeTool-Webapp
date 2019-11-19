@@ -1,9 +1,9 @@
-import { Author } from '@vapetool/types';
-import { database } from '@/utils/firebase';
+import { Author, OnlineStatus } from '@vapetool/types';
+import { database, ServerValue } from '@/utils/firebase';
 
 export async function createPost(
   title: string,
-  description: string,
+  text: string,
   author: Author,
 ): Promise<string> {
   if (!author || !author.uid || !author.displayName) {
@@ -17,30 +17,25 @@ export async function createPost(
   const uid = newObjectUid.key;
 
   if (uid == null) {
-    throw new Error('Could not push new photo to db');
+    throw new Error('Could not push new post to db');
   }
   try {
     const newObject = {
       uid,
       author,
-      description,
+      title,
+      text,
       status: OnlineStatus.ONLINE_PUBLIC,
       creationTime: ServerValue.TIMESTAMP,
       lastTimeModified: ServerValue.TIMESTAMP,
-      width,
-      height,
-      reports: 0,
     };
-    console.log('uploading photo');
+    console.log('uploading post');
     console.dir(newObject);
 
-    // It must be published to storage prior to database because db will trigger
-    // update listener before storage is completed
-    await uploadPhoto(imageBlob, uid);
-    await database.ref(`gears/${uid}`).set(newObject);
+    await database.ref(`posts/${uid}`).set(newObject);
     return uid;
   } catch (e) {
-    database.ref(`gears/${uid}`).remove();
+    database.ref(`posts/${uid}`).remove();
     throw e;
   }
 }

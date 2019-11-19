@@ -16,7 +16,7 @@ interface UploadPhotoProps {
 const UploadPhoto: React.FC<UploadPhotoProps> = props => {
   const { croppedImageUrl, description, showPhotoChooser, cancelled } = props.uploadPhoto;
   const { dispatch } = props;
-  const postPhoto = () => dispatch({ type: 'uploadPhoto/postPhoto' });
+  const postPhoto = () => dispatch({ type: 'uploadPhoto/submit' });
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: 'uploadPhoto/setDescription',

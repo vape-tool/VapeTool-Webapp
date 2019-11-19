@@ -2,20 +2,24 @@ import { Reducer } from 'redux';
 import { message } from 'antd';
 import { Author } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
+import { Effect } from 'dva';
 import { ConnectState } from '@/models/connect';
+import { createPost } from '@/services/post';
 
 export interface UploadPostState {
   title?: string;
-  description?: string;
+  text?: string;
 }
 
 interface ModelType {
   namespace: string;
   state: UploadPostState;
   effects: {
-    submitPost: Effect;
+    submit: Effect;
   };
   reducers: {
+    setTitle: Reducer<UploadPostState>;
+    setText: Reducer<UploadPostState>;
     reset: Reducer<UploadPostState>;
   };
 }
@@ -23,21 +27,24 @@ interface ModelType {
 const Model: ModelType = {
   namespace: 'uploadPost',
 
-  state: { currentTab: 'post' },
+  state: {
+    title: undefined,
+    text: undefined,
+  },
 
   effects: {
-    *submitPost(_, { put, call, select }) {
+    * submit(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
-      const { title, description } = yield select((state: ConnectState) =>
+      const { title, text } = yield select((state: ConnectState) =>
         Object.create({
           title: state.uploadPost.title,
-          description: state.uploadPost.description,
+          text: state.uploadPost.text,
         }),
       );
 
       try {
-        yield call(createPost, title, description, new Author(uid, name));
+        yield call(createPost, title, text, new Author(uid, name));
         message.success('Successfully published post');
         yield put({ type: 'reset' });
         yield put(routerRedux.replace({ pathname: '/cloud' }));
@@ -48,6 +55,18 @@ const Model: ModelType = {
   },
 
   reducers: {
+    setTitle(state, { title }): UploadPostState {
+      return {
+        ...state,
+        title,
+      };
+    },
+    setText(state, { text }): UploadPostState {
+      return {
+        ...state,
+        text,
+      };
+    },
     reset() {
       return {
         title: undefined,

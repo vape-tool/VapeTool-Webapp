@@ -63,7 +63,7 @@
     "@mdi/js": "^4.5.95",
     "@mdi/react": "^1.2.1",
     "@svgr/webpack": "^4.3.3",
-    "@vapetool/types": "^1.3.16",
+    "@vapetool/types": "^1.3.17",
     "antd": "^3.25.0",
     "classnames": "^2.2.6",
     "draft-js": "^0.11.2",

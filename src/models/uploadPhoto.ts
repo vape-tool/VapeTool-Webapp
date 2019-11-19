@@ -23,7 +23,7 @@ export interface ModelType {
   namespace: string;
   state: UploadPhotoState;
   effects: {
-    postPhoto: Effect;
+    submit: Effect;
   };
   reducers: {
     setSrc: Reducer<UploadPhotoState>;
@@ -50,7 +50,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    *postPhoto(_, { put, call, select }) {
+    * submit(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>
