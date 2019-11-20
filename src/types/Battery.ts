@@ -1,7 +1,6 @@
 import { Battery as FirebaseBattery } from '@vapetool/types';
 
-export class Battery extends FirebaseBattery {
+export interface Battery extends FirebaseBattery {
   url: string;
-
   id: string;
 }

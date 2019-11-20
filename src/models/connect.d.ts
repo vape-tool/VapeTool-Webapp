@@ -5,7 +5,7 @@ import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
 import { CoilModelState } from './coil';
-import { PhotoModelState } from './photo';
+import { CloudModelState } from './cloud';
 import { LiquidModelState } from './liquid';
 import { OhmModelState } from './ohm';
 import { BatteriesModelState } from '@/models/batteries';
@@ -13,7 +13,7 @@ import { ConverterModelState } from '@/models/converter';
 import { UploadPhotoState } from '@/models/uploadPhoto';
 import { UserWizardState } from '@/models/userWizard';
 import { UploadState } from '@/models/upload';
-import {UploadPostState} from '@/models/uploadPost';
+import { UploadPostState } from '@/models/uploadPost';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -27,7 +27,7 @@ export interface Loading {
     user?: boolean;
     coil?: boolean;
     liquid?: boolean;
-    photo?: boolean;
+    cloud?: boolean;
     batteries?: boolean;
     ohm?: boolean;
     uploadPhoto?: boolean;
@@ -42,7 +42,7 @@ export interface ConnectState {
   user: UserModelState;
   coil: CoilModelState;
   liquid: LiquidModelState;
-  photo: PhotoModelState;
+  cloud: CloudModelState;
   ohm: OhmModelState;
   batteries: BatteriesModelState;
   converter: ConverterModelState;

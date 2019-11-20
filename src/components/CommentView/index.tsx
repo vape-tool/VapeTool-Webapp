@@ -28,7 +28,7 @@ const CommentView: React.FC<CommentViewProps> = props => {
 
   const deleteComment = () => {
     dispatch({
-      type: 'photo/deleteComment',
+      type: 'cloud/deleteComment',
       payload: { photoId: photo.uid, commentId: uid },
     });
   };

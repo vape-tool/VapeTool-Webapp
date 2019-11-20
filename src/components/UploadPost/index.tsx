@@ -9,10 +9,11 @@ import { CurrentUser } from '@/models/user';
 interface UploadPostProps {
   currentUser?: CurrentUser;
   dispatch: Dispatch;
+  type: 'post' | 'link';
 }
 
 const UploadPost: React.FC<UploadPostProps> = props => {
-  const { dispatch } = props;
+  const { dispatch, type } = props;
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
 
   const onTextChange = (e: any) => {
@@ -27,9 +28,12 @@ const UploadPost: React.FC<UploadPostProps> = props => {
       title: e.target.value,
     });
   };
+  const capitalize = (s: string) => {
+    return s.charAt(0).toUpperCase() + s.slice(1)
+  };
   const onPostClick = () => {
     dispatch({
-      type: 'uploadPost/submit',
+      type: `uploadPost/submit${capitalize(type)}`,
     });
   };
 
@@ -39,8 +43,11 @@ const UploadPost: React.FC<UploadPostProps> = props => {
         <Input placeholder="Title" onChange={onTitleChange}/>
         <br/>
         <br/>
-        <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange}/>
-        <Editor editorState={editorState} onChange={setEditorState}/>
+        <Input.TextArea allowClear
+                        placeholder={type === 'post' ? 'Text (optional)' : 'URL'}
+                        onChange={onTextChange}/>
+        <Editor editorState={editorState}
+                onChange={setEditorState}/>
         <Button type="primary" onClick={onPostClick}>
           Post
         </Button>

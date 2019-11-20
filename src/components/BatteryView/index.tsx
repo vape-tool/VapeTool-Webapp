@@ -2,7 +2,7 @@ import { Card, List, Typography } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import styles from '@/pages/user/center/components/UserPhotos/index.less';
-import { Battery } from '@/types/battery';
+import { Battery } from '@/types/Battery';
 import { ConnectProps, ConnectState } from '@/models/connect';
 
 interface BatteryViewProps extends ConnectProps {

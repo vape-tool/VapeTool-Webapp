@@ -1,4 +1,4 @@
-import { Tabs, Row, Col, Icon } from 'antd';
+import { Col, Icon, Row, Tabs } from 'antd';
 import React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
@@ -34,13 +34,13 @@ const Upload: React.FC<UploadProps> = props => {
             }
             key="post"
           >
-            <UploadPost />
+            <UploadPost type="post"/>
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <Icon type="picture" />
-                Post
+                Image
               </span>
             }
             key="photo"
@@ -51,12 +51,12 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <Icon type="link" />
-                Post
+                Link
               </span>
             }
             key="link"
           >
-            <UploadPost />
+            <UploadPost type="link"/>
           </Tabs.TabPane>
         </Tabs>
       </Col>

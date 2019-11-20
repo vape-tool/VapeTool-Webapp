@@ -4,7 +4,7 @@ import { Author } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
 import { Effect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { createPost } from '@/services/post';
+import { createLink, createPost } from '@/services/post';
 
 export interface UploadPostState {
   title?: string;
@@ -15,7 +15,8 @@ interface ModelType {
   namespace: string;
   state: UploadPostState;
   effects: {
-    submit: Effect;
+    submitPost: Effect;
+    submitLink: Effect;
   };
   reducers: {
     setTitle: Reducer<UploadPostState>;
@@ -33,7 +34,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * submit(_, { put, call, select }) {
+    * submitPost(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { title, text } = yield select((state: ConnectState) =>
@@ -49,7 +50,28 @@ const Model: ModelType = {
         yield put({ type: 'reset' });
         yield put(routerRedux.replace({ pathname: '/cloud' }));
       } catch (e) {
+        console.error(e);
         message.error('Failed upload post to cloud');
+      }
+    },
+    * submitLink(_, { put, call, select }) {
+      const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
+
+      const { title, url } = yield select((state: ConnectState) =>
+        ({
+          title: state.uploadPost.title,
+          url: state.uploadPost.text,
+        }),
+      );
+
+      try {
+        yield call(createLink, title, url, new Author(uid, name));
+        message.success('Successfully published link');
+        yield put({ type: 'reset' });
+        yield put(routerRedux.replace({ pathname: '/cloud' }));
+      } catch (e) {
+        console.error(e);
+        message.error('Failed upload link to cloud');
       }
     },
   },

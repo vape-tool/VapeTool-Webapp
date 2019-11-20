@@ -1,29 +1,28 @@
-import { Card, Icon, Input, List, Menu, Modal, Skeleton, Typography } from 'antd';
+import { Card, Icon, Input, List, Menu, Modal, Typography } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
-import { UserPermission } from '@vapetool/types';
+import { Link, UserPermission } from '@vapetool/types';
 import Dropdown from 'antd/es/dropdown';
+import Microlink from '@microlink/react'
 import FirebaseImage from '@/components/StorageAvatar';
-import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
 import { ConnectState } from '@/models/connect';
 import CommentView from '@/components/CommentView';
 import styles from './index.less';
 import { CurrentUser } from '@/models/user';
-import { LikeIconText } from '../LikeIconText';
-import { CommentIconText } from '@/components/CommentIconText';
 
-interface PhotoViewProps {
-  photo: Photo;
+interface LinkViewProps {
+  link: Link;
   dispatch: Dispatch;
   displayCommentsLength: number;
   user?: CurrentUser;
 }
 
-interface PhotoViewState {
+interface LinkViewState {
+  // src?: string;
   likesCount?: number;
   likedByMe?: boolean;
   commentsCount?: number;
@@ -31,8 +30,9 @@ interface PhotoViewState {
   displayComments?: Comment[];
 }
 
-class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
-  state: PhotoViewState = {
+class LinkView extends React.Component<LinkViewProps, LinkViewState> {
+  state: LinkViewState = {
+    // src: undefined,
     likesCount: undefined,
     likedByMe: undefined,
     commentsCount: undefined,
@@ -46,15 +46,15 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
 
   private commentsRef?: Reference = undefined;
 
-  // TODO make a template, extract the listeners etc, just take ref path as parameter
   componentDidMount(): void {
-    const { photo } = this.props;
+    const { link } = this.props;
+    // getLinkUrl(link.uid).then(src => this.setState({ src }));
 
-    this.likesRef = database.ref('gear-likes').child(photo.uid);
-    this.commentsRef = database.ref('gear-comments').child(photo.uid);
+    this.likesRef = database.ref('link-likes').child(link.uid);
+    this.commentsRef = database.ref('link-comments').child(link.uid);
 
-    this.listenPhotoLikes();
-    this.listenPhotoComments();
+    this.listenLinkLikes();
+    this.listenLinkComments();
   }
 
   componentWillUnmount(): void {
@@ -66,9 +66,65 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     }
   }
 
+  onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ comment: e.target.value });
+  };
+
+  linkComment = () => {
+    this.props.dispatch({
+      type: 'cloud/commentLink',
+      payload: { comment: this.state.comment, linkId: this.props.link.uid },
+    });
+  };
+
+  onReplyComment = (comment: Comment) => {
+    this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` });
+  };
+
+  selectItem = () =>
+    this.props.dispatch({
+      type: 'cloud/selectItem',
+      item: this.props.link,
+    });
+
   render() {
-    const { photo, dispatch, user } = this.props;
-    const { likesCount, commentsCount, comment, displayComments, likedByMe } = this.state;
+    const LikeIconText = ({
+                            type,
+                            text,
+                            onClick,
+                          }: {
+      type: string;
+      text: string;
+      onClick: any;
+    }) => (
+      <span>
+        <Icon
+          onClick={onClick}
+          type={type}
+          theme={this.state.likedByMe ? 'filled' : 'outlined'}
+          className={this.state.likedByMe ? styles.liked : ''}
+          style={{ marginRight: 8 }}
+        />
+        {text}
+      </span>
+    );
+    const CommentIconText = (
+      {
+        type,
+        text,
+        onClick,
+      }: {
+        type: string;
+        text: string;
+        onClick: any;
+      }) => (
+      <span>
+        <Icon onClick={onClick} type={type} style={{ marginRight: 8 }}/>
+        {text}
+      </span>
+    );
+    const { link, dispatch, user } = this.props;
+    const { likesCount, commentsCount, comment, displayComments } = this.state;
 
     const optionsMenu = (
       <Menu>
@@ -76,38 +132,29 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
           <Icon type="flag"/>
           Report
         </Menu.Item>
-        <Menu.Item key="delete" onClick={() => this.onDeleteClick(photo.uid, dispatch)}
+        <Menu.Item key="delete" onClick={() => this.onDeleteClick(link.uid, dispatch)}
                    disabled={!user
-                   || (user.uid !== photo.author.uid
+                   || (user.uid !== link.author.uid
                      && user.permission < UserPermission.ONLINE_MODERATOR)}>
           <Icon type="delete"/>
           Delete
         </Menu.Item>
       </Menu>
     );
-
     return (
       <Card
         style={{ maxWidth: 614, margin: 'auto' }}
         className={styles.card}
         hoverable
-        cover={
-          photo.url ? (
-            <img
-              onClick={this.selectItem}
-              style={{ objectFit: 'cover', maxHeight: 714 }}
-              alt={photo.description}
-              src={photo.url}
-            />
-          ) : (
-            <Skeleton avatar={{ shape: 'square', size: 200 }}/>
-          )
-        }
+        onClick={this.selectItem}
       >
         <Card.Meta
-          avatar={<FirebaseImage type="user" id={photo.author.uid}/>}
-          description={<Typography.Text>{photo.description}</Typography.Text>}
+          avatar={<FirebaseImage type="user" id={link.author.uid}/>}
+          title={<Typography.Text>{link.title}</Typography.Text>}
+          description={<Typography.Text>{link.url}</Typography.Text>}
         />
+        <br/>
+        <Microlink url={link.url} lazy/>
         <List.Item
           style={{ maxWidth: 614 }}
           actions={[
@@ -116,7 +163,6 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               type="like-o"
               text={`${likesCount || 0}`}
               key="list-vertical-like-o"
-              likedByMe={likedByMe}
             />,
             <CommentIconText
               onClick={this.onCommentClick}
@@ -124,7 +170,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               text={`${commentsCount || 0}`}
               key="list-vertical-message"
             />,
-            <span>{moment(photo.creationTime).fromNow()}</span>,
+            <span>{moment(link.creationTime).fromNow()}</span>,
             <Dropdown overlay={optionsMenu}>
               <Icon type="more"/>
             </Dropdown>,
@@ -139,7 +185,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
             renderItem={item => (
               <CommentView
                 comment={item}
-                photo={photo}
+                link={link}
                 dispatch={dispatch}
                 onReply={this.onReplyComment}
               />
@@ -150,17 +196,17 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
           ref={ref => {
             this.inputRef = ref;
           }}
-          onPressEnter={this.postComment}
+          onPressEnter={this.linkComment}
           value={comment}
           onChange={this.onChangeCommentText}
           placeholder="Add a comment..."
-          suffix={<a onClick={this.postComment}>Post</a>}
+          suffix={<a onClick={this.linkComment}>Link</a>}
         />
       </Card>
     );
   }
 
-  private listenPhotoLikes = () =>
+  private listenLinkLikes = () =>
     this.likesRef &&
     this.likesRef.on('value', (snapshot: DataSnapshot) => {
       this.setState({ likesCount: snapshot.numChildren() });
@@ -174,15 +220,19 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       this.setState({ likedByMe });
     });
 
-  onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ comment: e.target.value });
-  };
+  private onLikeClick = () =>
+    this.props.dispatch({
+      type: 'cloud/likeLink',
+      linkId: this.props.link.uid,
+    });
 
-  onReplyComment = (comment: Comment) => {
-    this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` });
-  };
+  private onReportClick = () =>
+    this.props.dispatch({
+      type: 'cloud/reportLink',
+      linkId: this.props.link.uid,
+    });
 
-  private listenPhotoComments = () =>
+  private listenLinkComments = () =>
     this.commentsRef &&
     this.commentsRef.on('value', (snapshot: DataSnapshot) => {
       const comments: Comment[] = [];
@@ -199,46 +249,20 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
 
   private onCommentClick = () => this.inputRef.focus();
 
-  private selectItem = () =>
-    this.props.dispatch({
-      type: 'cloud/selectItem',
-      item: this.props.photo,
-    });
-
-  private onLikeClick = () =>
-    this.props.dispatch({
-      type: 'photo/like',
-      id: this.props.photo.uid,
-    });
-
-  private onReportClick = () =>
-    this.props.dispatch({
-      type: 'photo/report',
-      id: this.props.photo.uid,
-    });
-
-  private postComment = () => {
-    this.props.dispatch({
-      type: 'photo/comment',
-      comment: this.state.comment,
-      photoId: this.props.photo.uid,
-    });
-  };
-
-  private onDeleteClick = (id: string, dispatch: Dispatch) => {
+  private onDeleteClick = (linkUid: string, dispatch: Dispatch) => {
     Modal.confirm({
-      title: 'Are you sure delete this photo ?',
+      title: 'Are you sure delete this link?',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk() {
         dispatch({
-          type: 'photo/delete',
-          id,
+          type: 'cloud/deleteLink',
+          linkId: linkUid,
         });
       },
     });
   };
 }
 
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PhotoView);
+export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(LinkView);

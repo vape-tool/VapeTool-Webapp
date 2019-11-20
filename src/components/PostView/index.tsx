@@ -1,29 +1,27 @@
-import { Card, Icon, Input, List, Menu, Modal, Skeleton, Typography } from 'antd';
+import { Card, Icon, Input, List, Menu, Modal, Typography } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
-import { UserPermission } from '@vapetool/types';
+import { Post, UserPermission } from '@vapetool/types';
 import Dropdown from 'antd/es/dropdown';
 import FirebaseImage from '@/components/StorageAvatar';
-import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
 import { ConnectState } from '@/models/connect';
 import CommentView from '@/components/CommentView';
 import styles from './index.less';
 import { CurrentUser } from '@/models/user';
-import { LikeIconText } from '../LikeIconText';
-import { CommentIconText } from '@/components/CommentIconText';
 
-interface PhotoViewProps {
-  photo: Photo;
+interface PostViewProps {
+  post: Post;
   dispatch: Dispatch;
   displayCommentsLength: number;
   user?: CurrentUser;
 }
 
-interface PhotoViewState {
+interface PostViewState {
+  // src?: string;
   likesCount?: number;
   likedByMe?: boolean;
   commentsCount?: number;
@@ -31,8 +29,9 @@ interface PhotoViewState {
   displayComments?: Comment[];
 }
 
-class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
-  state: PhotoViewState = {
+class PostView extends React.Component<PostViewProps, PostViewState> {
+  state: PostViewState = {
+    // src: undefined,
     likesCount: undefined,
     likedByMe: undefined,
     commentsCount: undefined,
@@ -46,15 +45,15 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
 
   private commentsRef?: Reference = undefined;
 
-  // TODO make a template, extract the listeners etc, just take ref path as parameter
   componentDidMount(): void {
-    const { photo } = this.props;
+    const { post } = this.props;
+    // getPostUrl(post.uid).then(src => this.setState({ src }));
 
-    this.likesRef = database.ref('gear-likes').child(photo.uid);
-    this.commentsRef = database.ref('gear-comments').child(photo.uid);
+    this.likesRef = database.ref('post-likes').child(post.uid);
+    this.commentsRef = database.ref('post-comments').child(post.uid);
 
-    this.listenPhotoLikes();
-    this.listenPhotoComments();
+    this.listenPostLikes();
+    this.listenPostComments();
   }
 
   componentWillUnmount(): void {
@@ -66,9 +65,65 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     }
   }
 
+  onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ comment: e.target.value });
+  };
+
+  postComment = () => {
+    this.props.dispatch({
+      type: 'cloud/commentPost',
+      payload: { comment: this.state.comment, postId: this.props.post.uid },
+    });
+  };
+
+  onReplyComment = (comment: Comment) => {
+    this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` });
+  };
+
+  selectItem = () =>
+    this.props.dispatch({
+      type: 'cloud/selectItem',
+      item: this.props.post,
+    });
+
   render() {
-    const { photo, dispatch, user } = this.props;
-    const { likesCount, commentsCount, comment, displayComments, likedByMe } = this.state;
+    const LikeIconText = ({
+                            type,
+                            text,
+                            onClick,
+                          }: {
+      type: string;
+      text: string;
+      onClick: any;
+    }) => (
+      <span>
+        <Icon
+          onClick={onClick}
+          type={type}
+          theme={this.state.likedByMe ? 'filled' : 'outlined'}
+          className={this.state.likedByMe ? styles.liked : ''}
+          style={{ marginRight: 8 }}
+        />
+        {text}
+      </span>
+    );
+    const CommentIconText = (
+      {
+        type,
+        text,
+        onClick,
+      }: {
+        type: string;
+        text: string;
+        onClick: any;
+      }) => (
+      <span>
+        <Icon onClick={onClick} type={type} style={{ marginRight: 8 }}/>
+        {text}
+      </span>
+    );
+    const { post, dispatch, user } = this.props;
+    const { likesCount, commentsCount, comment, displayComments } = this.state;
 
     const optionsMenu = (
       <Menu>
@@ -76,9 +131,9 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
           <Icon type="flag"/>
           Report
         </Menu.Item>
-        <Menu.Item key="delete" onClick={() => this.onDeleteClick(photo.uid, dispatch)}
+        <Menu.Item key="delete" onClick={() => this.onDeleteClick(post.uid, dispatch)}
                    disabled={!user
-                   || (user.uid !== photo.author.uid
+                   || (user.uid !== post.author.uid
                      && user.permission < UserPermission.ONLINE_MODERATOR)}>
           <Icon type="delete"/>
           Delete
@@ -91,22 +146,12 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
         style={{ maxWidth: 614, margin: 'auto' }}
         className={styles.card}
         hoverable
-        cover={
-          photo.url ? (
-            <img
-              onClick={this.selectItem}
-              style={{ objectFit: 'cover', maxHeight: 714 }}
-              alt={photo.description}
-              src={photo.url}
-            />
-          ) : (
-            <Skeleton avatar={{ shape: 'square', size: 200 }}/>
-          )
-        }
+        onClick={this.selectItem}
       >
         <Card.Meta
-          avatar={<FirebaseImage type="user" id={photo.author.uid}/>}
-          description={<Typography.Text>{photo.description}</Typography.Text>}
+          avatar={<FirebaseImage type="user" id={post.author.uid}/>}
+          title={<Typography.Text>{post.title}</Typography.Text>}
+          description={<Typography.Text>{post.text}</Typography.Text>}
         />
         <List.Item
           style={{ maxWidth: 614 }}
@@ -116,7 +161,6 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               type="like-o"
               text={`${likesCount || 0}`}
               key="list-vertical-like-o"
-              likedByMe={likedByMe}
             />,
             <CommentIconText
               onClick={this.onCommentClick}
@@ -124,7 +168,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
               text={`${commentsCount || 0}`}
               key="list-vertical-message"
             />,
-            <span>{moment(photo.creationTime).fromNow()}</span>,
+            <span>{moment(post.creationTime).fromNow()}</span>,
             <Dropdown overlay={optionsMenu}>
               <Icon type="more"/>
             </Dropdown>,
@@ -139,7 +183,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
             renderItem={item => (
               <CommentView
                 comment={item}
-                photo={photo}
+                post={post}
                 dispatch={dispatch}
                 onReply={this.onReplyComment}
               />
@@ -160,7 +204,7 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
     );
   }
 
-  private listenPhotoLikes = () =>
+  private listenPostLikes = () =>
     this.likesRef &&
     this.likesRef.on('value', (snapshot: DataSnapshot) => {
       this.setState({ likesCount: snapshot.numChildren() });
@@ -174,15 +218,19 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
       this.setState({ likedByMe });
     });
 
-  onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ comment: e.target.value });
-  };
+  private onLikeClick = () =>
+    this.props.dispatch({
+      type: 'cloud/likePost',
+      postId: this.props.post.uid,
+    });
 
-  onReplyComment = (comment: Comment) => {
-    this.setState({ comment: `@${comment.author.displayName.trim().replace(' ', '_')} ` });
-  };
+  private onReportClick = () =>
+    this.props.dispatch({
+      type: 'cloud/reportPost',
+      postId: this.props.post.uid,
+    });
 
-  private listenPhotoComments = () =>
+  private listenPostComments = () =>
     this.commentsRef &&
     this.commentsRef.on('value', (snapshot: DataSnapshot) => {
       const comments: Comment[] = [];
@@ -199,46 +247,20 @@ class PhotoView extends React.Component<PhotoViewProps, PhotoViewState> {
 
   private onCommentClick = () => this.inputRef.focus();
 
-  private selectItem = () =>
-    this.props.dispatch({
-      type: 'cloud/selectItem',
-      item: this.props.photo,
-    });
-
-  private onLikeClick = () =>
-    this.props.dispatch({
-      type: 'photo/like',
-      id: this.props.photo.uid,
-    });
-
-  private onReportClick = () =>
-    this.props.dispatch({
-      type: 'photo/report',
-      id: this.props.photo.uid,
-    });
-
-  private postComment = () => {
-    this.props.dispatch({
-      type: 'photo/comment',
-      comment: this.state.comment,
-      photoId: this.props.photo.uid,
-    });
-  };
-
-  private onDeleteClick = (id: string, dispatch: Dispatch) => {
+  private onDeleteClick = (postUid: string, dispatch: Dispatch) => {
     Modal.confirm({
-      title: 'Are you sure delete this photo ?',
+      title: 'Are you sure delete this post?',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk() {
         dispatch({
-          type: 'photo/delete',
-          id,
+          type: 'clodu/deletePost',
+          postId: postUid,
         });
       },
     });
   };
 }
 
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PhotoView);
+export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PostView);

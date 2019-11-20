@@ -6,7 +6,7 @@ import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
-import { Battery } from '@/types/battery';
+import { Battery } from '@/types/Battery';
 import { Affiliate } from '@/types/affiliate';
 import NewAffiliateModal from '@/components/AffiliateEditTable/NewAffiliateModal';
 

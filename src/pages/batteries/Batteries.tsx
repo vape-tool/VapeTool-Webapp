@@ -4,7 +4,7 @@ import { List } from 'antd';
 import { id } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import BatteryView from '@/components/BatteryView';
-import { Battery } from '@/types/battery';
+import { Battery } from '@/types/Battery';
 import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
 import styles from '@/pages/user/center/components/UserPhotos/index.less';
 

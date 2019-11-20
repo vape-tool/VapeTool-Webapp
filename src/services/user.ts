@@ -69,7 +69,7 @@ function initializeAvatar(avatarUrl: string, userId: string) {
     if (xhr.status >= 200 && xhr.status < 300) {
       // If successful
       uploadAvatar(this.response, userId)
-        .then(() => console.log('Successfully uploaded user photo'))
+        .then(() => console.log('Successfully uploaded user cloud'))
         .catch(e => console.error(e));
     } else {
       // If failed

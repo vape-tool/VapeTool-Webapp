@@ -71,11 +71,11 @@ const Model: ModelType = {
           width,
           height,
         );
-        message.success('Successfully published photo');
+        message.success('Successfully published cloud');
         yield put({ type: 'reset' });
         yield put(routerRedux.replace({ pathname: '/cloud' }));
       } catch (e) {
-        message.error('Failed upload photo to cloud');
+        message.error('Failed upload cloud to cloud');
       }
     },
   },

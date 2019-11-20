@@ -4,7 +4,7 @@ import { Reducer } from 'redux';
 import { id } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { getBatteryUrl } from '@/services/storage';
-import { Battery } from '@/types/battery';
+import { Battery } from '@/types/Battery';
 import { ConnectState } from '@/models/connect';
 import { setAffiliate } from '@/services/batteries';
 
@@ -49,7 +49,7 @@ const BatteriesModel: BatteriesModelType = {
     showNewAffiliateModal: undefined,
   },
   effects: {
-    *setAffiliate({ affiliate }, { call, select, put }) {
+    * setAffiliate({ affiliate }, { call, select }) {
       console.log('model/setAffiliate');
       console.log(affiliate);
       const selectedBattery = yield select(

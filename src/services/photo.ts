@@ -1,6 +1,6 @@
-import { Author, Comment, OnlineStatus } from '@vapetool/types';
+import { Author, Comment, OnlineStatus, Photo as FirebasePhoto } from '@vapetool/types';
 import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
-import { Photo, Photo as FirebasePhoto } from '@/types/photo';
+import { Photo } from '@/types/photo';
 import { getImageUrl, uploadPhoto } from '@/services/storage';
 import { CurrentUser } from '@/models/user';
 
@@ -106,21 +106,22 @@ export async function createPhoto(
   const uid = newObjectUid.key;
 
   if (uid == null) {
-    throw new Error('Could not push new photo to db');
+    throw new Error('Could not push new cloud to db');
   }
   try {
-    const newObject = {
+    const newObject: FirebasePhoto = {
       uid,
       author,
       description,
       status: OnlineStatus.ONLINE_PUBLIC,
       creationTime: ServerValue.TIMESTAMP,
       lastTimeModified: ServerValue.TIMESTAMP,
+      timestamp: ServerValue.TIMESTAMP,
       width,
       height,
       reports: 0,
     };
-    console.log('uploading photo');
+    console.log('uploading cloud');
     console.dir(newObject);
 
     // It must be published to storage prior to database because db will trigger
