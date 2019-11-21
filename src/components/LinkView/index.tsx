@@ -200,7 +200,7 @@ class LinkView extends React.Component<LinkViewProps, LinkViewState> {
           value={comment}
           onChange={this.onChangeCommentText}
           placeholder="Add a comment..."
-          suffix={<a onClick={this.linkComment}>Link</a>}
+          suffix={<a onClick={this.linkComment}>Post</a>}
         />
       </Card>
     );

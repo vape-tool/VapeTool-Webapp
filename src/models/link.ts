@@ -1,14 +1,14 @@
 import { Effect } from 'dva';
 import { message, notification } from 'antd';
 import { ConnectState } from '@/models/connect';
-import { commentPhoto, deletePhoto, deletePhotoComment, likePhoto, reportPhoto } from '@/services/items';
+import { commentLink, deleteLink, deleteLinkComment, likeLink, reportLink } from '@/services/items';
 
-export interface PhotoModelState {
+export interface LinkModelState {
 }
 
-export interface PhotoModelType {
+export interface LinkModelType {
   namespace: string;
-  state: PhotoModelState;
+  state: LinkModelState;
   effects: {
     like: Effect;
     delete: Effect;
@@ -18,8 +18,8 @@ export interface PhotoModelType {
   };
 }
 
-const PhotoModel: PhotoModelType = {
-  namespace: 'Photo',
+const LinkModel: LinkModelType = {
+  namespace: 'Link',
   state: {},
   effects: {
     * like({ photoId }, { select, call }) {
@@ -29,12 +29,12 @@ const PhotoModel: PhotoModelType = {
       if (!currentUser) {
         return;
       }
-      yield call(likePhoto, photoId, currentUser);
+      yield call(likeLink, photoId, currentUser);
     },
     * delete({ photoId }, { call }) {
       try {
-        yield call(deletePhoto, photoId);
-        message.success('Successfully deleted Photo');
+        yield call(deleteLink, photoId);
+        message.success('Successfully deleted Link');
       } catch (e) {
         notification.error({ message: e.message });
       }
@@ -47,8 +47,8 @@ const PhotoModel: PhotoModelType = {
         return;
       }
       try {
-        yield call(reportPhoto, photoId, currentUser);
-        message.success('Successfully reported Photo');
+        yield call(reportLink, photoId, currentUser);
+        message.success('Successfully reported Link');
       } catch (e) {
         notification.error({ message: e.message });
       }
@@ -61,11 +61,11 @@ const PhotoModel: PhotoModelType = {
         return;
       }
 
-      yield call(commentPhoto, photoId, comment, currentUser);
+      yield call(commentLink, photoId, comment, currentUser);
     },
     * deleteComment({ photoId, commentId }, { call }) {
       try {
-        yield call(deletePhotoComment, photoId, commentId);
+        yield call(deleteLinkComment, photoId, commentId);
         message.success('Successfully deleted comment');
       } catch (e) {
         notification.error({ message: e.message });
@@ -74,4 +74,4 @@ const PhotoModel: PhotoModelType = {
   },
 };
 
-export default PhotoModel;
+export default LinkModel;

@@ -4,7 +4,7 @@ import { Author } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
 import { Effect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { createLink, createPost } from '@/services/post';
+import { createLink, createPost } from '@/services/items';
 
 export interface UploadPostState {
   title?: string;
