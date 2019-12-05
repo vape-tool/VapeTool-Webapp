@@ -107,16 +107,15 @@ class PostView extends React.Component<PostViewProps, PostViewState> {
         {text}
       </span>
     );
-    const CommentIconText = (
-      {
-        type,
-        text,
-        onClick,
-      }: {
-        type: string;
-        text: string;
-        onClick: any;
-      }) => (
+    const CommentIconText = ({
+                               type,
+                               text,
+                               onClick,
+                             }: {
+      type: string;
+      text: string;
+      onClick: any;
+    }) => (
       <span>
         <Icon onClick={onClick} type={type} style={{ marginRight: 8 }}/>
         {text}
@@ -131,10 +130,14 @@ class PostView extends React.Component<PostViewProps, PostViewState> {
           <Icon type="flag"/>
           Report
         </Menu.Item>
-        <Menu.Item key="delete" onClick={() => this.onDeleteClick(post.uid, dispatch)}
-                   disabled={!user
-                   || (user.uid !== post.author.uid
-                     && user.permission < UserPermission.ONLINE_MODERATOR)}>
+        <Menu.Item
+          key="delete"
+          onClick={() => this.onDeleteClick(post.uid, dispatch)}
+          disabled={
+            !user ||
+            (user.uid !== post.author.uid && user.permission < UserPermission.ONLINE_MODERATOR)
+          }
+        >
           <Icon type="delete"/>
           Delete
         </Menu.Item>
@@ -142,12 +145,7 @@ class PostView extends React.Component<PostViewProps, PostViewState> {
     );
 
     return (
-      <Card
-        style={{ maxWidth: 614, margin: 'auto' }}
-        className={styles.card}
-        hoverable
-        onClick={this.selectItem}
-      >
+      <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
           avatar={<FirebaseImage type="user" id={post.author.uid}/>}
           title={<Typography.Text>{post.title}</Typography.Text>}
@@ -172,8 +170,8 @@ class PostView extends React.Component<PostViewProps, PostViewState> {
             <Dropdown overlay={optionsMenu}>
               <Icon type="more"/>
             </Dropdown>,
-          ]}>
-        </List.Item>
+          ]}
+        ></List.Item>
 
         {displayComments && displayComments.length > 0 && (
           <List<Comment>

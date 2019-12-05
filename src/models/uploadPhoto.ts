@@ -5,7 +5,7 @@ import { Author } from '@vapetool/types';
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { ConnectState } from '@/models/connect';
-import { createPhoto } from '@/services/photo';
+import { createPhoto } from '@/services/items';
 
 export interface UploadPhotoState {
   src?: string;
