@@ -280,9 +280,9 @@ export default {
     '/api/': {
       target: 'https://web.vapetool.app/',
       changeOrigin: true,
-      pathRewrite: {
-        '^/api': '',
-      },
+      // pathRewrite: {
+      //   '^/api': '',
+      // },
     },
   },
   copy: [

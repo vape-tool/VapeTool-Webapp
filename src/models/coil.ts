@@ -3,6 +3,7 @@ import { Effect } from 'dva';
 import { Coil, Properties, Wire, wireGenerator, WireStyle } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateForResistance, calculateForWraps, calculateProperties } from '@/services/coil';
+import { ConnectState } from '@/models/connect';
 
 export interface Path {
   style: WireStyle;
@@ -47,7 +48,7 @@ const CoilModel: CoilModelType = {
   namespace: 'coil',
   state: initialState,
   effects: {
-    * calculateForResistance({ coil }, { call, put, cancel }) {
+    *calculateForResistance({ coil }, { call, put, cancel }) {
       try {
         const response = yield call(calculateForResistance, coil);
         if (response instanceof Response) {
@@ -63,7 +64,7 @@ const CoilModel: CoilModelType = {
         message.error(e.message);
       }
     },
-    * calculateForWraps({ coil }, { call, put, cancel }) {
+    *calculateForWraps({ coil }, { call, put, cancel }) {
       try {
         const response = yield call(calculateForWraps, coil);
         if (response instanceof Response) {
@@ -79,9 +80,10 @@ const CoilModel: CoilModelType = {
         message.error(e.message);
       }
     },
-    * calculateProperties({ coil }, { call, put, cancel }) {
+    *calculateProperties({ coil }, { call, put, cancel, select }) {
       try {
-        const response = yield call(calculateProperties, coil);
+        const baseVoltage = yield select((state: ConnectState) => state.coil.baseVoltage);
+        const response = yield call(calculateProperties, coil, baseVoltage);
         if (response instanceof Response) {
           cancel();
         } else if (response instanceof Object) {
