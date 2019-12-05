@@ -99,8 +99,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         {descriptionItem('Heat', 'heat', 'mW/cm^2')}
         {descriptionItem('Surface', 'surface', 'cm^2')}
         {descriptionItem('Total length', 'totalLength', 'mm')}
-        {descriptionItem('Total width', 'totalWidth', 'mm')}
-        {descriptionItem('Total height', 'totalHeight', 'mm')}
+        {/* {descriptionItem('Total width', 'totalWidth', 'mm')} */} //TODO fix it
+        {/* {descriptionItem('Total height', 'totalHeight', 'mm')} */} //TODO fix it
       </Descriptions>
     </Col>
   );
