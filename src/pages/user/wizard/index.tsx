@@ -61,7 +61,7 @@ const UserWizard: React.FC<{
                   }}
                   placeholder={currentUser.name}
                   onChange={onDisplayNameChange}
-                  value={displayName || currentUser.name}
+                  value={displayName}
                 />
               </div>
             </div>
