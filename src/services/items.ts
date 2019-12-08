@@ -2,12 +2,9 @@ import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } fro
 import { database, ServerValue } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { uploadPhoto } from '@/services/storage';
+import { ItemName } from '@/types/Item';
 
-export async function createPost(
-  title: string,
-  text: string,
-  author: Author,
-): Promise<string> {
+export async function createPost(title: string, text: string, author: Author): Promise<string> {
   if (!author || !author.uid || !author.displayName) {
     throw new Error('Author can not be null');
   }
@@ -37,11 +34,7 @@ export async function createPost(
   return uid;
 }
 
-export async function createLink(
-  title: string,
-  url: string,
-  author: Author,
-): Promise<string> {
+export async function createLink(title: string, url: string, author: Author): Promise<string> {
   if (!author || !author.uid || !author.displayName) {
     throw new Error('Author can not be null');
   }
@@ -142,7 +135,8 @@ export function likeLink(itemId: string, userId: string) {
   return like('link', itemId, userId);
 }
 
-function like(what: 'post' | 'link' | 'gear', id: string, userId: string) {
+function like(what: ItemName, id: string, userId: string) {
+  console.trace(`like ${what} ${id} ${userId}`);
   return database
     .ref(`${what}-likes`)
     .child(id)
@@ -167,31 +161,31 @@ export function reportLink(linkId: string, userId: string): Promise<any> {
   return report('link', linkId, userId);
 }
 
-function report(what: 'post' | 'link' | 'gear', id: string, userId: string): Promise<any> {
+function report(what: ItemName, id: string, userId: string): Promise<any> {
   return database
     .ref(`${what}-reports`)
     .child(id)
     .child(userId)
-    .set(ServerValue.TIMESTAMP)
+    .set(ServerValue.TIMESTAMP);
 }
 
 export function deletePhoto(postId: string): Promise<any> {
-  return deleteItem('gears', postId);
+  return deleteItem('gear', postId);
 }
 
 export function deletePost(postId: string): Promise<any> {
-  return deleteItem('posts', postId);
+  return deleteItem('post', postId);
 }
 
 export function deleteLink(linkId: string): Promise<any> {
-  return deleteItem('links', linkId);
+  return deleteItem('link', linkId);
 }
 
-function deleteItem(what: 'posts' | 'links' | 'gears', id: string): Promise<any> {
+function deleteItem(what: ItemName, id: string): Promise<any> {
   return database
-    .ref(what)
+    .ref(`${what}s`)
     .child(id)
-    .remove()
+    .remove();
 }
 
 export function commentPhoto(id: string, content: string, { uid, name }: CurrentUser) {
@@ -206,7 +200,7 @@ export function commentLink(id: string, content: string, { uid, name }: CurrentU
   return commentItem('link', id, content, { uid, name } as CurrentUser);
 }
 
-function commentItem(what: 'post' | 'link' | 'gear', id: string, content: string, { uid, name }: CurrentUser) {
+function commentItem(what: ItemName, id: string, content: string, { uid, name }: CurrentUser) {
   const comment = new Comment(new Author(uid, name), content, ServerValue.TIMESTAMP);
   return database
     .ref(`${what}-comments`)
@@ -227,7 +221,7 @@ export function deleteLinkComment(linkId: string, commentId: string) {
   return deleteItemComment('link', linkId, commentId);
 }
 
-function deleteItemComment(what: 'post' | 'link' | 'gear', id: string, commentId: string) {
+function deleteItemComment(what: ItemName, id: string, commentId: string) {
   return database
     .ref(`${what}-comments`)
     .child(id)

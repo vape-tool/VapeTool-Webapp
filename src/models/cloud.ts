@@ -1,12 +1,9 @@
-import { Effect, Subscription } from 'dva';
+import { Subscription } from 'dva';
 import { Reducer } from 'redux';
 import { OnlineStatus } from '@vapetool/types';
-import { message, notification } from 'antd';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
-import { ConnectState } from '@/models/connect';
-import { commentPhoto, deletePhoto, deletePhotoComment, likePhoto, reportPhoto } from '@/services/photo';
 import { Post } from '@/types/Post';
 import { Link } from '@/types/Link';
 
@@ -14,22 +11,12 @@ export interface CloudModelState {
   photos: Photo[];
   posts: Post[];
   links: Link[];
-  selectedItem?: Photo | Post | Link;
 }
 
 export interface CloudModelType {
   namespace: string;
   state: CloudModelState;
-  effects: {
-    likePhoto: Effect;
-    commentPhoto: Effect;
-    deleteComment: Effect;
-    deletePhoto: Effect;
-    reportPhoto: Effect;
-    // fetchPhotos: Effect;
-  };
   reducers: {
-    selectItem: Reducer<CloudModelState>;
     setPhotos: Reducer<CloudModelState>;
     setPosts: Reducer<CloudModelState>;
     setLinks: Reducer<CloudModelState>;
@@ -45,81 +32,23 @@ const initialState: CloudModelState = {
   photos: [],
   posts: [],
   links: [],
-  selectedItem: undefined,
 };
 
 const CloudModel: CloudModelType = {
   namespace: 'cloud',
   state: initialState,
 
-  effects: {
-    * likePhoto({ photoId }, { select, call }) {
-      const currentUser = yield select((state: ConnectState) =>
-        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
-      );
-      if (!currentUser) {
-        return;
-      }
-      yield call(likePhoto, photoId, currentUser);
-    },
-    * commentPhoto({ payload: { comment, photoId } }, { select, call }) {
-      const currentUser = yield select((state: ConnectState) =>
-        (state.user.currentUser !== undefined ? state.user.currentUser : undefined),
-      );
-      if (!currentUser) {
-        return;
-      }
-
-      yield call(commentPhoto, photoId, comment, currentUser);
-    },
-    * deleteComment({ payload: { photoId, commentId } }, { call }) {
-      try {
-        yield call(deletePhotoComment, photoId, commentId);
-        message.success('Successfully deleted comment');
-      } catch (e) {
-        notification.error({ message: e.message });
-      }
-    },
-    * deletePhoto({ photoId }, { call }) {
-      try {
-        yield call(deletePhoto, photoId);
-        message.success('Successfully deleted cloud');
-      } catch (e) {
-        notification.error({ message: e.message });
-      }
-    },
-    * reportPhoto({ photoId }, { call, select }) {
-      const currentUser = yield select((state: ConnectState) =>
-        (state.user.currentUser !== undefined ? state.user.currentUser.uid : undefined),
-      );
-      if (!currentUser) {
-        return;
-      }
-      try {
-        yield call(reportPhoto, photoId, currentUser);
-        message.success('Successfully reported cloud');
-      } catch (e) {
-        notification.error({ message: e.message });
-      }
-    },
-    // Its unused for now
-    // * fetchPhotos(_, { put, call }) {
-    //   const photos = yield call(getPhotos, 0, 100);
-    //   yield put({
-    //     type: 'setPhotos',
-    //     payload: Array.isArray(photos) ? photos : [],
-    //   });
-    // },
-  },
+  // Its unused for now
+  // * fetchPhotos(_, { put, call }) {
+  //   const photos = yield call(getPhotos, 0, 100);
+  //   yield put({
+  //     type: 'setPhotos',
+  //     payload: Array.isArray(photos) ? photos : [],
+  //   });
+  // },
 
   reducers: {
     // TODO merge them together
-    selectItem(state = initialState, { item }): CloudModelState {
-      return {
-        ...(state as CloudModelState),
-        selectedItem: item,
-      };
-    },
     setPosts(state = initialState, { posts }): CloudModelState {
       return {
         ...(state as CloudModelState),
@@ -129,13 +58,13 @@ const CloudModel: CloudModelType = {
     setPhotos(state = initialState, { photos }): CloudModelState {
       return {
         ...(state as CloudModelState),
-        photos: photos.sort((a: Photo, b: Photo) => (b.creationTime - a.creationTime)),
+        photos: photos.sort((a: Photo, b: Photo) => b.creationTime - a.creationTime),
       };
     },
     setLinks(state = initialState, { links }): CloudModelState {
       return {
         ...(state as CloudModelState),
-        links: links.sort((a: Link, b: Link) => (b.creationTime - a.creationTime)),
+        links: links.sort((a: Link, b: Link) => b.creationTime - a.creationTime),
       };
     },
   },

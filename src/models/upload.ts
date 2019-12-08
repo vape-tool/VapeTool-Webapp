@@ -15,7 +15,7 @@ interface ModelType {
 const Model: ModelType = {
   namespace: 'upload',
 
-  state: { currentTab: 'post' },
+  state: { currentTab: 'photo' },
 
   reducers: {
     setTab(state, { tab }) {

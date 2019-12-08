@@ -34,7 +34,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * submitPost(_, { put, call, select }) {
+    *submitPost(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { title, text } = yield select((state: ConnectState) =>
@@ -54,15 +54,17 @@ const Model: ModelType = {
         message.error('Failed upload post to cloud');
       }
     },
-    * submitLink(_, { put, call, select }) {
+    *submitLink(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
-      const { title, url } = yield select((state: ConnectState) =>
-        ({
-          title: state.uploadPost.title,
-          url: state.uploadPost.text,
-        }),
-      );
+      // eslint-disable-next-line prefer-const
+      let { title, url }: { title: string; url: string } = yield select((state: ConnectState) => ({
+        title: state.uploadPost.title,
+        url: state.uploadPost.text,
+      }));
+      if (!url.startsWith('http')) {
+        url = `https://${url}`;
+      }
 
       try {
         yield call(createLink, title, url, new Author(uid, name));
