@@ -5,33 +5,27 @@ import { UserPermission } from '@vapetool/types';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
-import { Photo } from '@/types/photo';
 import { Comment } from '@/types/comment';
 import { CurrentUser } from '@/models/user';
 
 interface CommentViewProps {
   user: CurrentUser;
   comment: Comment;
-  photo: Photo;
   dispatch: Dispatch;
   onReply: (comment: Comment) => void;
+  onDelete: (comment: Comment) => void;
 }
 
 const CommentView: React.FC<CommentViewProps> = props => {
   const {
-    dispatch,
-    onReply,
+    comment: { content, author },
     user,
-    photo,
-    comment: { uid, content, author },
+    onReply,
+    onDelete,
   } = props;
 
-  const deleteComment = () => {
-    dispatch({
-      type: 'cloud/deleteComment',
-      payload: { photoId: photo.uid, commentId: uid },
-    });
-  };
+  const deleteComment = () => onDelete(props.comment);
+
   const menu = (
     <Menu>
       {user !== undefined &&
