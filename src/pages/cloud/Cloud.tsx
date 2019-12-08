@@ -31,7 +31,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
   const { photos, posts, links } = props;
 
   if (photos === undefined || posts === undefined || links === undefined) {
-    return <PageLoading/>
+    return <PageLoading />;
   }
   let items = [...photos, ...posts, ...links];
   items = items.sort((a, b) => Number(b.creationTime) - Number(a.creationTime));
@@ -44,19 +44,19 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         dataSource={items}
         renderItem={item => {
           if (item.$type === 'photo') {
-            return <PhotoView displayCommentsLength={3} photo={item}/>
+            return <PhotoView displayCommentsLength={3} item={item} />;
           }
           if (item.$type === 'post') {
-            return <PostView displayCommentsLength={3} post={item}/>
+            return <PostView displayCommentsLength={3} item={item} />;
           }
           if (item.$type === 'link') {
-            return <LinkView displayCommentsLength={3} link={item}/>
+            return <LinkView displayCommentsLength={3} item={item} />;
           }
-          return <div></div>
+          return <div></div>;
         }}
       />
-      <PhotoPreviewModal/>
-      <Affix offsetBottom={30} offset={60}>
+      <PhotoPreviewModal />
+      <Affix offsetBottom={30}>
         <Button
           type="primary"
           icon="plus"

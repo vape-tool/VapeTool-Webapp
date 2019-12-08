@@ -17,7 +17,7 @@ interface PhotoPreviewModalProps {
   selectedItem?: Photo | Post | Link;
 }
 
-const PhotoPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewModalProps) => {
+const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewModalProps) => {
   const { dispatch, selectedItem } = props;
   console.log(`selected ${selectedItem}`);
   const onCancel = () => {
@@ -27,27 +27,15 @@ const PhotoPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreview
     });
   };
   if (!selectedItem) {
-    return (<div></div>);
+    return <div></div>;
   }
   let content;
   if (selectedItem.$type === 'photo') {
-    content = <PhotoView
-      photo={selectedItem}
-      dispatch={dispatch}
-      displayCommentsLength={Number.MAX_SAFE_INTEGER}
-    />
+    content = <PhotoView item={selectedItem} displayCommentsLength={Number.MAX_SAFE_INTEGER} />;
   } else if (selectedItem.$type === 'post') {
-    content = <PostView
-      post={selectedItem}
-      dispatch={dispatch}
-      displayCommentsLength={Number.MAX_SAFE_INTEGER}
-    />
+    content = <PostView item={selectedItem} displayCommentsLength={Number.MAX_SAFE_INTEGER} />;
   } else {
-    content = <LinkView
-      link={selectedItem}
-      dispatch={dispatch}
-      displayCommentsLength={Number.MAX_SAFE_INTEGER}
-    />
+    content = <LinkView item={selectedItem} displayCommentsLength={Number.MAX_SAFE_INTEGER} />;
   }
   return (
     <Modal
@@ -62,7 +50,7 @@ const PhotoPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreview
   );
 };
 
-export default connect(({ cloud, user }: ConnectState) => ({
+export default connect(({ preview, user }: ConnectState) => ({
   user: user.currentUser,
-  selectedItem: cloud.selectedItem,
-}))(PhotoPreviewModal);
+  selectedItem: preview.selectedItem,
+}))(ItemPreviewModal);

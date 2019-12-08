@@ -14,6 +14,7 @@ import { UploadPhotoState } from '@/models/uploadPhoto';
 import { UserWizardState } from '@/models/userWizard';
 import { UploadState } from '@/models/upload';
 import { UploadPostState } from '@/models/uploadPost';
+import { PreviewModelState } from '@/models/preview';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -28,10 +29,12 @@ export interface Loading {
     coil?: boolean;
     liquid?: boolean;
     cloud?: boolean;
+    operation?: boolean;
     batteries?: boolean;
     ohm?: boolean;
     uploadPhoto?: boolean;
     userWizard?: boolean;
+    preview?: boolean;
   };
 }
 
@@ -43,6 +46,7 @@ export interface ConnectState {
   coil: CoilModelState;
   liquid: LiquidModelState;
   cloud: CloudModelState;
+  operation: CloudModelState;
   ohm: OhmModelState;
   batteries: BatteriesModelState;
   converter: ConverterModelState;
@@ -50,6 +54,7 @@ export interface ConnectState {
   uploadPhoto: UploadPhotoState;
   uploadPost: UploadPostState;
   userWizard: UserWizardState;
+  preview: PreviewModelState;
 }
 
 export interface Route extends MenuDataItem {

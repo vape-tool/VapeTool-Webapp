@@ -28,17 +28,6 @@ const Upload: React.FC<UploadProps> = props => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="form" />
-                Post
-              </span>
-            }
-            key="post"
-          >
-            <UploadPost type="post"/>
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={
-              <span>
                 <Icon type="picture" />
                 Image
               </span>
@@ -50,13 +39,24 @@ const Upload: React.FC<UploadProps> = props => {
           <Tabs.TabPane
             tab={
               <span>
+                <Icon type="form" />
+                Post
+              </span>
+            }
+            key="post"
+          >
+            <UploadPost type="post" />
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={
+              <span>
                 <Icon type="link" />
                 Link
               </span>
             }
             key="link"
           >
-            <UploadPost type="link"/>
+            <UploadPost type="link" />
           </Tabs.TabPane>
         </Tabs>
       </Col>
