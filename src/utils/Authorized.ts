@@ -8,6 +8,11 @@ let Authorized = RenderAuthorize(getAuthority());
 const reloadAuthorized = (): void => {
   Authorized = RenderAuthorize(getAuthority());
 };
+/**
+ * hard code
+ * block need it。
+ */
+window.reloadAuthorized = reloadAuthorized;
 
 export { reloadAuthorized };
 export default Authorized;

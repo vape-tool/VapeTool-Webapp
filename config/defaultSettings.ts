@@ -44,7 +44,8 @@ export interface DefaultSettings {
 
 export default {
   navTheme: 'dark',
-  primaryColor: '#2480b3',
+  // primaryColor: '#2480b3',
+  primaryColor: 'daybreak',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: true,
