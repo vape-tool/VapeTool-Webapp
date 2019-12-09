@@ -1,5 +1,5 @@
 import { getMenuData, getPageTitle, MenuDataItem } from '@ant-design/pro-layout';
-import DocumentTitle from 'react-document-title';
+import { Helmet } from 'react-helmet';
 import Link from 'umi/link';
 import React from 'react';
 import { connect } from 'dva';
@@ -62,15 +62,18 @@ class SignupLayout extends React.Component<SignupLayoutProps, LayoutState> {
     } = this.props;
     const { breadcrumb } = getMenuData(routes);
 
+    const title = getPageTitle({
+      pathname: location.pathname,
+      breadcrumb,
+      formatMessage,
+      ...this.props,
+    });
     return (
-      <DocumentTitle
-        title={getPageTitle({
-          pathname: location.pathname,
-          breadcrumb,
-          formatMessage,
-          ...this.props,
-        })}
-      >
+      <>
+        <Helmet>
+          <title>{title}</title>
+          <meta name="description" content={title} />
+        </Helmet>
         <div className={styles.container}>
           <div className={styles.lang}>
             <SelectLang />
@@ -102,7 +105,7 @@ class SignupLayout extends React.Component<SignupLayoutProps, LayoutState> {
             </span>
           </div>
         </div>
-      </DocumentTitle>
+      </>
     );
   }
 }

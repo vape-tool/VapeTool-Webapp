@@ -11,6 +11,7 @@ export default {
   'menu.center': 'My Account',
   'menu.more-blocks': 'More Blocks',
   'menu.home': 'Home',
+  'menu.admin': 'admin',
   'menu.login': 'Login',
   'menu.userWizard': 'User Wizard',
   'menu.uploadPhoto': 'Upload Photo',

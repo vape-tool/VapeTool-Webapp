@@ -2,6 +2,7 @@ import React from 'react';
 import { Spin } from 'antd';
 import isEqual from 'lodash/isEqual';
 import { isComponentClass } from './Secured';
+
 // eslint-disable-next-line import/no-cycle
 
 interface PromiseRenderProps<T, K> {
@@ -67,7 +68,7 @@ export default class PromiseRender<T, K> extends React.Component<
     if (React.isValidElement(target)) {
       return (props: any) => React.cloneElement(target, props);
     }
-    return () => target as (React.ReactNode & null);
+    return () => target as React.ReactNode & null;
   };
 
   render() {
