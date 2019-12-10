@@ -136,7 +136,6 @@ export function likeLink(itemId: string, userId: string) {
 }
 
 function like(what: ItemName, id: string, userId: string) {
-  console.trace(`like ${what} ${id} ${userId}`);
   return database
     .ref(`${what}-likes`)
     .child(id)
