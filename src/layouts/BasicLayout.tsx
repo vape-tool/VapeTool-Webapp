@@ -70,21 +70,21 @@ const defaultFooterDom = (
     copyright="2019 Created with ❤️ for Vapers"
     links={[
       {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
+        key: 'android',
+        title: 'Vape Tool on Android',
+        href: 'https://play.google.com/store/apps/details?id=com.stasbar.vape_tool',
         blankTarget: true,
       },
       {
         key: 'github',
         title: <Icon type="github" />,
-        href: 'https://github.com/ant-design/ant-design-pro',
+        href: 'https://github.com/vape-tool/VapeTool-Webapp',
         blankTarget: true,
       },
       {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
+        key: 'privacy policy',
+        title: 'Privacy Policy',
+        href: 'https://vapetool.app/privacy_policy',
         blankTarget: true,
       },
     ]}

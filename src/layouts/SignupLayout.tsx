@@ -1,4 +1,4 @@
-import { getMenuData, getPageTitle, MenuDataItem } from '@ant-design/pro-layout';
+import { DefaultFooter, getMenuData, getPageTitle, MenuDataItem } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
 import Link from 'umi/link';
 import React from 'react';
@@ -7,9 +7,10 @@ import { formatMessage } from 'umi-plugin-react/locale';
 
 import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import { User as FirebaseUser } from 'firebase';
+import { Icon } from 'antd';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
-import { User as FirebaseUser } from 'firebase';
 import { getCurrentUser } from '@/utils/firebase';
 import { LayoutState } from '@/layouts/SecurityLayout';
 import PageLoading from '../components/PageLoading';
@@ -90,20 +91,29 @@ class SignupLayout extends React.Component<SignupLayoutProps, LayoutState> {
             </div>
             {children}
           </div>
-          <div
-            style={{
-              padding: '0px 24px 24px',
-              textAlign: 'center',
-            }}
-          >
-            <span>
-              Vape Tool ©2019 Created with{' '}
-              <span aria-label="love" role="img">
-                ❤️
-              </span>{' '}
-              for Vapers
-            </span>
-          </div>
+          <DefaultFooter
+            copyright="2019 Created with ❤️ for Vapers"
+            links={[
+              {
+                key: 'android',
+                title: 'Vape Tool on Android',
+                href: 'https://play.google.com/store/apps/details?id=com.stasbar.vape_tool',
+                blankTarget: true,
+              },
+              {
+                key: 'github',
+                title: <Icon type="github" />,
+                href: 'https://github.com/vape-tool/VapeTool-Webapp',
+                blankTarget: true,
+              },
+              {
+                key: 'privacy policy',
+                title: 'Privacy Policy',
+                href: 'https://vapetool.app/privacy_policy',
+                blankTarget: true,
+              },
+            ]}
+          />
         </div>
       </>
     );

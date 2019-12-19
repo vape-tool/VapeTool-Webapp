@@ -22,7 +22,7 @@ const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewM
   console.log(`selected ${selectedItem}`);
   const onCancel = () => {
     dispatch({
-      type: 'cloud/selectItem',
+      type: 'preview/selectItem',
       item: undefined,
     });
   };

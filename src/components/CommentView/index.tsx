@@ -43,7 +43,7 @@ const CommentView: React.FC<CommentViewProps> = props => {
     <div
       style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignContent: 'stretch' }}
     >
-      <FirebaseImage type="user" id={author.uid} style={{ flexShrink: 0 }} />
+      <FirebaseImage type="user" id={author.uid} size="small" style={{ flexShrink: 0 }} />
       <Typography.Text strong style={{ marginLeft: 8, flexShrink: 0 }}>
         {author.displayName}
       </Typography.Text>
