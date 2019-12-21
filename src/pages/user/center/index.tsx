@@ -10,12 +10,16 @@ import { Redirect } from 'umi';
 import UserPhotos from './components/UserPhotos';
 import styles from './Center.less';
 import { ConnectState } from '@/models/connect';
-import { CurrentUser } from '@/models/user';
+import { CurrentUser, UserContent } from '@/models/user';
 import { TagType } from '@/pages/user/center/data';
 import FirebaseImage from '@/components/StorageAvatar';
+import UserPosts from './components/UserPosts';
+import UserLinks from './components/UserLinks';
+import UserLiquids from '@/components/UserLiquids';
+import UserCoils from '@/components/UserCoils';
 
 const { NODE_ENV } = process.env;
-const operationTabList = [
+const operationTabList: { key: UserContent, tab: any }[] = [
   {
     key: 'photos',
     tab: <span>Photos</span>,
@@ -23,6 +27,10 @@ const operationTabList = [
   {
     key: 'posts',
     tab: <span>Posts</span>,
+  },
+  {
+    key: 'links',
+    tab: <span>Links</span>,
   },
   {
     key: 'coils',
@@ -43,7 +51,7 @@ interface CenterProps extends RouteChildrenProps {
 
 interface CenterState {
   newTags: TagType[];
-  tabKey: 'photos' | 'posts' | 'coils' | 'liquids';
+  tabKey: UserContent;
   inputVisible: boolean;
   inputValue: string;
 }
@@ -52,7 +60,7 @@ interface CenterState {
   currentUser: user.currentUser,
   firebaseUser: user.firebaseUser,
   currentUserLoading: loading.effects['user/fetchCurrent'],
-  photosLoading: loading.effects['user/fetchCurrentUserPhotos'],
+  loadingItems: loading.effects['user/fetchItems'],
 }))
 class Center extends PureComponent<CenterProps, CenterState> {
   // static getDerivedStateFromProps(
@@ -86,9 +94,6 @@ class Center extends PureComponent<CenterProps, CenterState> {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
-    });
-    dispatch({
-      type: 'user/fetchCurrentUserPhotos',
     });
   }
 
@@ -129,16 +134,19 @@ class Center extends PureComponent<CenterProps, CenterState> {
 
   renderChildrenByTabKey = (tabKey: CenterState['tabKey']) => {
     if (tabKey === 'photos') {
-      return <UserPhotos />;
+      return <UserPhotos/>;
     }
     if (tabKey === 'posts') {
-      return <UserPhotos />;
+      return <UserPosts/>;
+    }
+    if (tabKey === 'links') {
+      return <UserLinks/>;
     }
     if (tabKey === 'coils') {
-      return <UserPhotos />;
+      return <UserCoils/>;
     }
     if (tabKey === 'liquids') {
-      return <UserPhotos />;
+      return <UserLiquids/>;
     }
     return null;
   };
@@ -158,7 +166,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
     console.log(firebaseUser);
     if (!firebaseUser) {
       console.log('firebaseUser is null so redirect');
-      return <Redirect to="/login" />;
+      return <Redirect to="/login"/>;
     }
     return (
       <GridContent>
@@ -168,27 +176,27 @@ class Center extends PureComponent<CenterProps, CenterState> {
               {!dataLoading ? (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <FirebaseImage type="user" id={currentUser.uid} size={150} />
+                    <FirebaseImage type="user" id={currentUser.uid} size={150}/>
                     <div className={styles.name}>{currentUser.name}</div>
                     <div>{currentUser.signature}</div>
                   </div>
                   <div className={styles.detail}>
                     <p>
-                      <i className={styles.title} />
+                      <i className={styles.title}/>
                       {currentUser.title}
                     </p>
                     <p>
-                      <i className={styles.group} />
+                      <i className={styles.group}/>
                       {currentUser.group}
                     </p>
                   </div>
-                  <Divider dashed />
+                  <Divider dashed/>
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
                     {currentUser.tags &&
-                      currentUser.tags
-                        .concat(newTags)
-                        .map(item => <Tag key={item.key}>{item.label}</Tag>)}
+                    currentUser.tags
+                      .concat(newTags)
+                      .map(item => <Tag key={item.key}>{item.label}</Tag>)}
                     {inputVisible && (
                       <Input
                         ref={ref => this.saveInputRef(ref)}
@@ -206,11 +214,11 @@ class Center extends PureComponent<CenterProps, CenterState> {
                         onClick={this.showInput}
                         style={{ background: '#fff', borderStyle: 'dashed' }}
                       >
-                        <Icon type="plus" />
+                        <Icon type="plus"/>
                       </Tag>
                     )}
                   </div>
-                  <Divider style={{ marginTop: 16 }} dashed />
+                  <Divider style={{ marginTop: 16 }} dashed/>
                   <Button
                     type="link"
                     shape="round"

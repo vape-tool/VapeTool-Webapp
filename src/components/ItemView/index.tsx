@@ -1,12 +1,8 @@
 import { Icon, Input, List, Menu, Modal } from 'antd';
 import React from 'react';
-import { Photo } from '@/types/photo';
-import { Comment } from '@/types/comment';
 import { database, DataSnapshot, Reference } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
 import { Dispatch } from 'redux';
 import { ItemName } from '@/types/Item';
 import {
@@ -22,6 +18,7 @@ import { CommentIconText } from '@/components/CommentIconText';
 import moment from 'moment';
 import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
+import { Liquid, Coil, Post, Link, Photo, Comment } from '@/types';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -30,7 +27,7 @@ export interface ItemViewProps<T> {
   user?: CurrentUser;
 }
 
-export interface ItemViewState<T> {
+export interface ItemViewState {
   likesCount?: number;
   likedByMe?: boolean;
   commentsCount?: number;
@@ -38,18 +35,16 @@ export interface ItemViewState<T> {
   displayComments?: Comment[];
 }
 
-export abstract class ItemView<
-  T extends Photo | Post | Link,
+export abstract class ItemView<T extends Photo | Post | Link | Coil | Liquid,
   Props extends ItemViewProps<T> = ItemViewProps<T>,
-  State extends ItemViewState<T> = ItemViewState<T>
-> extends React.Component<ItemViewProps<T>, ItemViewState<T>> {
+  State extends ItemViewState = ItemViewState> extends React.Component<Props, State> {
   protected inputRef?: any = undefined;
 
   protected likesRef?: Reference = undefined;
 
   private commentsRef?: Reference = undefined;
 
-  constructor(props: Readonly<ItemViewProps<T>>) {
+  constructor(props: Readonly<Props>) {
     super(props);
     this.state = {
       commentsCount: undefined,
@@ -154,7 +149,7 @@ export abstract class ItemView<
             <Icon type="more" />
           </Dropdown>,
         ]}
-      ></List.Item>
+      />
     );
   };
 

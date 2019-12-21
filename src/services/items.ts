@@ -1,8 +1,33 @@
 import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } from '@vapetool/types';
-import { database, ServerValue } from '@/utils/firebase';
+import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { uploadPhoto } from '@/services/storage';
 import { ItemName } from '@/types/Item';
+
+
+// TODO determine if will be used
+export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
+  return new Promise<FirebasePhoto[]>((resolve, reject) => {
+    database
+      .ref('gears')
+      .startAt(from)
+      .endAt(to)
+      .once('value')
+      .then(snapshots => {
+        const firebasePhotos = new Array<FirebasePhoto>();
+        snapshots.forEach((snapshot: DataSnapshot) => {
+          const firebasePhoto = snapshot.val();
+          if (firebasePhoto && Object.entries(firebasePhoto).length !== 0) {
+            firebasePhotos.push(firebasePhoto);
+          }
+        });
+        resolve(firebasePhotos);
+      })
+      .catch(e => {
+        reject(e);
+      });
+  });
+}
 
 export async function createPost(title: string, text: string, author: Author): Promise<string> {
   if (!author || !author.uid || !author.displayName) {

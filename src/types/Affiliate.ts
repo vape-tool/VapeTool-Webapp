@@ -1,4 +1,4 @@
-export interface Affiliate {
+export default interface Affiliate {
   name: string;
   link: string;
 }
