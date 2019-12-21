@@ -1,18 +1,21 @@
-import { Photo } from '@/types/Photo';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
+import { Photo, Post, Link, Liquid, Coil } from '@/types'
 import { Dispatch, Reducer } from 'redux';
-import { Photo as FirebasePhoto } from '@vapetool/types/dist/photo';
-import { Post as FirebasePost } from '@vapetool/types/dist/post';
-import { Link as FirebaseLink } from '@vapetool/types/dist/link';
+import {
+  Photo as FirebasePhoto,
+  Post as FirebasePost,
+  Link as FirebaseLink,
+  Coil as FirebaseCoil,
+  Liquid as FirebaseLiquid,
+} from '@vapetool/types';
 
 export interface PreviewModelState {
-  selectedItem?: Photo | Post | Link;
+  selectedItem?: Photo | Post | Link | Coil | Liquid;
 }
 
 export function dispatchSelectItem(
   dispatch: Dispatch,
-  item: Photo | FirebasePhoto | Post | FirebasePost | Link | FirebaseLink | undefined,
+  item: Photo | FirebasePhoto | Post | FirebasePost | Link | FirebaseLink | Coil | FirebaseCoil
+    | Liquid | FirebaseLiquid | undefined,
 ) {
   dispatch({
     type: 'preview/selectItem',

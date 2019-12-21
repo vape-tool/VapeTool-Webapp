@@ -1,14 +1,26 @@
 import { Effect, Subscription } from 'dva';
-import { Reducer } from 'redux';
-
+import { Dispatch, Reducer } from 'redux';
 import { User as FirebaseUser } from 'firebase/app';
-import { User } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
 import { getUser, initializeUser, logoutFirebase } from '@/services/user';
-import { getUserPhotos } from '@/services/photo';
+import { getUserCoils, getUserLinks, getUserLiquids, getUserPhotos, getUserPosts } from '@/services/userCenter';
 import { Photo } from '@/types/photo';
 import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
+import { Post } from '@/types/Post';
+import { Link } from '@/types/Link';
+import { Coil } from '@/types/Coil';
+import { User } from '@vapetool/types';
+import { Liquid } from '@/types/Liquid';
+
+export type UserContent = 'photos' | 'posts' | 'links' | 'coils' | 'liquids'
+
+export function dispatchFetchUserItems(dispatch: Dispatch, what: UserContent) {
+  dispatch({
+    type: 'user/fetchItems',
+    what,
+  });
+}
 
 export interface CurrentUser extends User {
   name: string;
@@ -26,6 +38,10 @@ export interface UserModelState {
   currentUser?: CurrentUser;
   firebaseUser?: FirebaseUser;
   userPhotos?: Photo[];
+  userPosts?: Post[];
+  userLinks?: Link[];
+  userCoils?: Coil[];
+  userLiquids?: Liquid[];
 }
 
 export interface UserModelType {
@@ -34,11 +50,11 @@ export interface UserModelType {
   effects: {
     fetchCurrent: Effect;
     logout: Effect;
-    fetchCurrentUserPhotos: Effect;
+    fetchItems: Effect;
   };
   reducers: {
     setUser: Reducer<UserModelState>;
-    setUserPhotos: Reducer<UserModelState>;
+    setItems: Reducer<UserModelState>;
     setFirebaseUser: Reducer<UserModelState>;
     clearUserState: Reducer<UserModelState>;
   };
@@ -58,7 +74,7 @@ const UserModel: UserModelType = {
 
   effects: {
     // TODO try to unify with successfullyLogin
-    *fetchCurrent(_, { put, call, select }) {
+    * fetchCurrent(_, { put, call, select }) {
       const currentUser = yield select((state: ConnectState) => state.user.currentUser);
       if (currentUser) {
         return;
@@ -89,7 +105,7 @@ const UserModel: UserModelType = {
         currentUser: newCurrentUser,
       });
     },
-    *logout(_, { call, put }) {
+    * logout(_, { call, put }) {
       yield call(logoutFirebase);
       yield put({
         type: 'setUser',
@@ -101,7 +117,7 @@ const UserModel: UserModelType = {
         path: '/login',
       });
     },
-    *fetchCurrentUserPhotos(_, { put, call, select }) {
+    * fetchItems({ what }, { put, call, select }) {
       const uid = yield select((state: ConnectState) => {
         if (state.user.currentUser) {
           return state.user.currentUser.uid;
@@ -111,10 +127,32 @@ const UserModel: UserModelType = {
       if (!uid) {
         return;
       }
-      const photos = yield call(getUserPhotos, uid);
+
+      let items;
+      switch (what) {
+        case 'photos':
+          items = yield call(getUserPhotos, uid);
+          break;
+        case 'posts':
+          items = yield call(getUserPosts, uid);
+          break;
+        case 'links':
+          items = yield call(getUserLinks, uid);
+          break;
+        case 'coils':
+          items = yield call(getUserCoils, uid);
+          break;
+        case 'liquids':
+          items = yield call(getUserLiquids, uid);
+          break;
+        default:
+          throw new Error(`Illegal type ${what}`)
+      }
+
       yield put({
-        type: 'setUserPhotos',
-        payload: Array.isArray(photos) ? photos : [],
+        type: 'setItems',
+        what,
+        items: Array.isArray(items) ? items : [],
       });
     },
   },
@@ -135,18 +173,18 @@ const UserModel: UserModelType = {
         firebaseUser,
       };
     },
-    setUserPhotos(state, action): UserModelState {
+    setItems(state, { what, items }): UserModelState {
       return {
         ...(state as UserModelState),
-        userPhotos: action.payload,
+        userPhotos: what === 'gears' ? items : state?.userPhotos,
+        userPosts: what === 'posts' ? items : state?.userPosts,
+        userLinks: what === 'links' ? items : state?.userLinks,
+        userCoils: what === 'coils' ? items : state?.userCoils,
+        userLiquids: what === 'liquids' ? items : state?.userLiquids,
       };
     },
-    clearUserState(state): UserModelState {
-      return {
-        ...(state as UserModelState),
-        firebaseUser: undefined,
-        userPhotos: undefined,
-      };
+    clearUserState(): UserModelState {
+      return {};
     },
   },
   subscriptions: {

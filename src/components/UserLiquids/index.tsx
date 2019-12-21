@@ -5,30 +5,29 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './index.less';
 import { ConnectState, UserModelState } from '@/models/connect';
-import { Photo } from '@/types/photo';
+import { Liquid } from '@/types/Liquid';
 
 @connect(({ user }: ConnectState) => ({
-  userPhotos: user.userPhotos,
+  userLiquids: user.userLiquids,
 }))
-class UserPhotos extends Component<Partial<UserModelState>> {
+class UserLiquids extends Component<Partial<UserModelState>> {
   render() {
-    const { userPhotos } = this.props;
-    console.log('userPhotos');
-    console.dir(userPhotos);
+    const { userLiquids } = this.props;
+    console.log('userLiquids');
+    console.dir(userLiquids);
     return (
-      <List<Photo>
+      <List<Liquid>
         className={styles.coverCardList}
         rowKey="id"
         grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-        dataSource={userPhotos || []}
+        dataSource={userLiquids || []}
         renderItem={item => (
           <List.Item>
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.description} src={item.url} />}
             >
-              <Card.Meta title={<a>{item.description}</a>} />
+              <Card.Meta title={item.name} description={item.description}/>
               <div className={styles.cardItemContent}>
                 <span>{moment(item.lastTimeModified).fromNow()}</span>
               </div>
@@ -40,4 +39,4 @@ class UserPhotos extends Component<Partial<UserModelState>> {
   }
 }
 
-export default UserPhotos;
+export default UserLiquids;
