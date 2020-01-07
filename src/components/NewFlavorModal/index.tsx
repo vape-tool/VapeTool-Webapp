@@ -3,7 +3,8 @@ import * as React from 'react';
 import { FormComponentProps } from 'antd/es/form';
 import { connect } from 'dva';
 import { Flavor } from '@vapetool/types';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
+import { Dispatch } from 'redux';
 
 interface NewFlavorModalProps extends FormComponentProps {
   showNewFlavorModal: boolean;

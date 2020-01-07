@@ -4,11 +4,11 @@ import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types'
 import { getResistancePerMeter } from '@/utils/math';
 import { Path } from '@/models/coil';
 import WireDiameter from '@/components/WireDiameter';
-import { Dispatch } from '@/models/connect';
 import RoundIcon from '@/assets/RoundIcon';
 import DiameterIcon from '@/assets/DiameterIcon';
 import CoreIcon from '@/assets/CoreIcon';
 import OuterIcon from '@/assets/OuterIcon';
+import { Dispatch } from 'redux';
 
 const { Option } = Select;
 
@@ -52,7 +52,8 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = ({ key, label }: any): void => {};
+  const handleMaterialChange = (): void => {
+  };
   const onDeleteClick = () => {
     dispatch({
       type: 'coil/deleteWire',

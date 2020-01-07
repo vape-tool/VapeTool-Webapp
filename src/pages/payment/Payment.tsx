@@ -5,7 +5,7 @@ const bitcoinIcon = require('@/assets/bitcoin.png');
 
 const { NODE_ENV } = process.env;
 
-const Payment: React.FC = props => {
+const Payment: React.FC = () => {
   const description =
     'Logo; Unlock eaccess to 15 coil types calculator ; Sweet Spot Finder ; Advanced Coil specs ; Batteries charts; Min. battery resistance; Wires length; Visualize coils; Ad-free; Support project development';
 

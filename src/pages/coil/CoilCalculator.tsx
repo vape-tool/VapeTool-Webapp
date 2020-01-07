@@ -3,14 +3,14 @@ import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography }
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
 import { Dispatch } from 'redux';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
 
 const { Option } = Select;
 const { Title } = Typography;
 
-export interface CoilCalculatorProps extends ConnectProps {
+export interface CoilCalculatorProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;

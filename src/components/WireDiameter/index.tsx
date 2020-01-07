@@ -1,17 +1,9 @@
 import * as React from 'react';
-import { Wire, WireKind } from '@vapetool/types';
+import { WireKind } from '@vapetool/types';
 import { Button, InputNumber, notification, Row, Typography } from 'antd';
 import { WireComponentProps } from '@/components/SingleWire';
 import { awgToMm, mmToAwg } from '@/utils/math';
-import { Path } from '@/models/coil';
-import { Dispatch } from '@/models/connect';
 import { unitFormatter, unitParser } from '@/utils/utils';
-
-export interface WireComponentProps {
-  wire: Wire;
-  path: Path[];
-  dispatch: Dispatch;
-}
 
 const WireDiameter: React.FC<WireComponentProps> = props => {
   const { wire, dispatch, path } = props;

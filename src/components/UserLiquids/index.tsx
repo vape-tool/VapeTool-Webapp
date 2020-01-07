@@ -1,11 +1,10 @@
 import { Card, List } from 'antd';
 import React, { Component } from 'react';
-
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from './index.less';
+import styles from '../ItemView/index.less';
 import { ConnectState, UserModelState } from '@/models/connect';
-import { Liquid } from '@/types/Liquid';
+import { Liquid } from '@/types';
 
 @connect(({ user }: ConnectState) => ({
   userLiquids: user.userLiquids,
@@ -23,10 +22,7 @@ class UserLiquids extends Component<Partial<UserModelState>> {
         dataSource={userLiquids || []}
         renderItem={item => (
           <List.Item>
-            <Card
-              className={styles.card}
-              hoverable
-            >
+            <Card className={styles.card} hoverable>
               <Card.Meta title={item.name} description={item.description}/>
               <div className={styles.cardItemContent}>
                 <span>{moment(item.lastTimeModified).fromNow()}</span>

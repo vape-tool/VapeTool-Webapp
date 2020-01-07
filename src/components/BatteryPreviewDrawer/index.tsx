@@ -5,7 +5,7 @@ import { UserPermission } from '@vapetool/types';
 import { Dispatch } from 'redux';
 import useMedia from 'react-media-hook2';
 import { ConnectState } from '@/models/connect';
-import { Battery } from '@/types/Battery';
+import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/models/user';
 
@@ -81,7 +81,6 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
     url,
     affiliate,
   } = selectedBattery;
-
 
   return (
     <Drawer

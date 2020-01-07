@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Photo } from '@/types/photo';
+import { Photo } from '@/types';
 import { ConnectState } from '@/models/connect';
 import { Card, Skeleton, Typography } from 'antd';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ItemView } from '../ItemView';
-import styles from './index.less';
+import styles from '../ItemView/index.less';
 import { ItemName } from '@/types/Item';
 
 class PhotoView extends ItemView<Photo> {

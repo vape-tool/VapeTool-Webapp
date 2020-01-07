@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Result } from 'antd';
 
-const SuccessPayment: React.FC = props => (
+const SuccessPayment: React.FC = () => (
   <Result
     status="success"
     title="Successfully Purchased Vape Tool Pro"

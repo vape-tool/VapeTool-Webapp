@@ -114,7 +114,6 @@ const OhmModel: OhmModelType = {
         lastEdit: undefined,
         latestEdit: undefined,
       },
-      { payload },
     ): OhmModelState {
       const last = state.lastEdit;
       const latest = state.latestEdit;
@@ -186,7 +185,7 @@ const OhmModel: OhmModelType = {
       }
       return state;
     },
-    clear(state, { payload }): OhmModelState {
+    clear(): OhmModelState {
       return {
         voltage: undefined,
         resistance: undefined,

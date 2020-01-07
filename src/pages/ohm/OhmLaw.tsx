@@ -7,12 +7,12 @@ import { FormComponentProps } from 'antd/es/form';
 import Image from 'react-image-webp';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { OhmModelState } from '@/models/ohm';
 
 const guideImage = require('@/assets/ohm_law.webp');
 
-export interface OhmLawProps extends ConnectProps, FormComponentProps {
+export interface OhmLawProps extends FormComponentProps {
   ohm: OhmModelState;
   dispatch: Dispatch;
 }

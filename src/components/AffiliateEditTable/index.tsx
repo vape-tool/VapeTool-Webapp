@@ -6,8 +6,7 @@ import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
-import { Battery } from '@/types/Battery';
-import { Affiliate } from '@/types/affiliate';
+import { Battery, Affiliate } from '@/types';
 import NewAffiliateModal from '@/components/AffiliateEditTable/NewAffiliateModal';
 
 const EditableContext = React.createContext<FormComponentProps<string> | any>(null);
@@ -74,7 +73,8 @@ class EditableTable extends React.Component<EditableTableProps, {}> {
         dataIndex: 'link',
         width: '60%',
         editable: true,
-        render: (text: string, _: Affiliate) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        render: (text: string, affiliate: Affiliate) => (
           <a
             style={{
               textOverflow: 'ellipsis',

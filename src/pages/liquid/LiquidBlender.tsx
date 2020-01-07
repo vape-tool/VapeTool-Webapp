@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 
 import { Dispatch } from 'redux';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { LiquidModelState } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
@@ -14,7 +14,7 @@ import styles from './LiquidBlender.less';
 
 const { Title } = Typography;
 
-export interface LiquidBlenderProps extends ConnectProps {
+export interface LiquidBlenderProps {
   liquid: LiquidModelState;
   dispatch: Dispatch;
 }
