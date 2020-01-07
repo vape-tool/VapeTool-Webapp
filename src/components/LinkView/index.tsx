@@ -5,10 +5,10 @@ import { connect } from 'dva';
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
-import styles from './index.less';
+import styles from '../ItemView/index.less';
 import { ItemView } from '@/components/ItemView';
 import { ItemName } from '@/types/Item';
-import { Link } from '@/types/Link';
+import { Link } from '@/types';
 
 class LinkView extends ItemView<Link> {
   what: ItemName = 'link';

@@ -1,23 +1,19 @@
 import React from 'react';
 import { Affix, Button, List } from 'antd';
 import { connect } from 'dva';
-import { Dispatch } from 'redux';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import styles from '@/pages/user/center/components/UserPhotos/index.less';
+import styles from '@/components/ItemView/index.less';
 import PhotoView from '@/components/PhotoView';
 import PhotoPreviewModal from '@/components/PreviewModal';
 import PostView from '@/components/PostView';
-import { Photo } from '@/types/photo';
+import { Photo, Post, Link } from '@/types';
 import PageLoading from '@/components/PageLoading';
 import LinkView from '@/components/LinkView';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
 
 interface AuthComponentProps extends ConnectProps {
   photos: Array<Photo>;
   posts: Array<Post>;
   links: Array<Link>;
-  dispatch: Dispatch;
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {

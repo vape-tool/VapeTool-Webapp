@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { WireType } from '@vapetool/types';
-import styles from './index.less';
+import styles from '../ItemView/index.less';
 import { ConnectState, UserModelState } from '@/models/connect';
-import { Coil } from '@/types/Coil';
+import { Coil } from '@/types';
 
 @connect(({ user }: ConnectState) => ({
   userCoils: user.userCoils,
@@ -24,10 +24,7 @@ class UserCoils extends Component<Partial<UserModelState>> {
         dataSource={userCoils || []}
         renderItem={item => (
           <List.Item>
-            <Card
-              className={styles.card}
-              hoverable
-            >
+            <Card className={styles.card} hoverable>
               <Card.Meta title={WireType[item.type]} description={<a>{item.description}</a>}/>
               <div className={styles.cardItemContent}>
                 <span>{moment(item.lastTimeModified).fromNow()}</span>

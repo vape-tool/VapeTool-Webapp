@@ -5,7 +5,7 @@ import { UserPermission } from '@vapetool/types';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
-import { Comment } from '@/types/comment';
+import { Comment } from '@/types';
 import { CurrentUser } from '@/models/user';
 
 interface CommentViewProps {

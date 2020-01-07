@@ -2,10 +2,8 @@ import { Subscription } from 'dva';
 import { Reducer } from 'redux';
 import { OnlineStatus } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
-import { Photo } from '@/types/photo';
 import { getPhotoUrl } from '@/services/storage';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
+import { Link, Photo, Post } from '@/types';
 
 export interface CloudModelState {
   photos: Photo[];

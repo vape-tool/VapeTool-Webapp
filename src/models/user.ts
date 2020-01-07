@@ -3,17 +3,19 @@ import { Dispatch, Reducer } from 'redux';
 import { User as FirebaseUser } from 'firebase/app';
 import { routerRedux } from 'dva/router';
 import { getUser, initializeUser, logoutFirebase } from '@/services/user';
-import { getUserCoils, getUserLinks, getUserLiquids, getUserPhotos, getUserPosts } from '@/services/userCenter';
-import { Photo } from '@/types/photo';
+import {
+  getUserCoils,
+  getUserLinks,
+  getUserLiquids,
+  getUserPhotos,
+  getUserPosts,
+} from '@/services/userCenter';
+import { Photo, Post, Link, Coil, Liquid } from '@/types';
 import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
-import { Coil } from '@/types/Coil';
 import { User } from '@vapetool/types';
-import { Liquid } from '@/types/Liquid';
 
-export type UserContent = 'photos' | 'posts' | 'links' | 'coils' | 'liquids'
+export type UserContent = 'photos' | 'posts' | 'links' | 'coils' | 'liquids';
 
 export function dispatchFetchUserItems(dispatch: Dispatch, what: UserContent) {
   dispatch({
@@ -146,7 +148,7 @@ const UserModel: UserModelType = {
           items = yield call(getUserLiquids, uid);
           break;
         default:
-          throw new Error(`Illegal type ${what}`)
+          throw new Error(`Illegal type ${what}`);
       }
 
       yield put({

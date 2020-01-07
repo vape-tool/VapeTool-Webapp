@@ -1,19 +1,21 @@
 import { List } from 'antd';
 import React, { Component } from 'react';
 import { Dispatch } from 'redux';
-import styles from './index.less';
+import styles from '@/components/ItemView/index.less';
 import { UserModelState } from '@/models/connect';
 import { dispatchFetchUserItems, UserContent } from '@/models/user';
 import PageLoading from '@/components/PageLoading';
 
 export interface UserItemsProps extends Partial<UserModelState> {
-  dispatch: Dispatch,
-  loadingItems: boolean | undefined,
+  dispatch: Dispatch;
+  loadingItems: boolean | undefined;
 }
 
 abstract class UserItems<T> extends Component<UserItemsProps> {
   abstract what: UserContent;
+
   abstract items: (props: UserItemsProps) => T[];
+
   abstract renderItem?: (item: T, index: number) => React.ReactNode;
 
   componentDidMount(): void {
@@ -23,7 +25,7 @@ abstract class UserItems<T> extends Component<UserItemsProps> {
   render() {
     const items = this.items(this.props);
     if (!items && this.props.loadingItems) {
-      return <PageLoading/>
+      return <PageLoading/>;
     }
     return (
       <List<T>

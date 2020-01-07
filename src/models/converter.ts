@@ -92,7 +92,7 @@ const ConverterModel: ConverterModelType = {
       };
     },
 
-    clear(state, { _ }): ConverterModelState {
+    clear(state): ConverterModelState {
       return {
         ...state,
         currentTab: 'awg',
