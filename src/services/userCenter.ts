@@ -1,11 +1,7 @@
 import { Photo as FirebasePhoto } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
-import { Photo } from '@/types/photo';
 import { getImageUrl } from '@/services/storage';
-import { Post } from '@/types/Post';
-import { Link } from '@/types/Link';
-import { Coil } from '@/types/Coil';
-import { Liquid } from '@/types/Liquid';
+import { Post, Photo, Link, Coil, Liquid } from '@/types';
 
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
