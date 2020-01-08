@@ -1,5 +1,5 @@
 import { UserContent } from '@/models/user';
-import UserItems, { UserItemsProps } from '@/pages/user/center/components/UserItems';
+import UserItems from '@/pages/user/center/components/UserItems';
 import { Post } from '@/types';
 import React from 'react';
 import PostView from '@/components/PostView';
@@ -13,7 +13,7 @@ import { ConnectState } from '@/models/connect';
 class UserPosts extends UserItems<Post> {
   what: UserContent = 'posts';
 
-  items = (props: UserItemsProps) => props.userPosts || [];
+  items = () => this.props.userPosts || [];
 
   renderItem = (item: Post) => (<PostView item={item}/>);
 }

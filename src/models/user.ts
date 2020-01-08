@@ -131,7 +131,7 @@ const UserModel: UserModelType = {
       }
 
       let items;
-      switch (what) {
+      switch (what as UserContent) {
         case 'photos':
           items = yield call(getUserPhotos, uid);
           break;
@@ -176,9 +176,10 @@ const UserModel: UserModelType = {
       };
     },
     setItems(state, { what, items }): UserModelState {
+      console.log({ what, setItems: items });
       return {
         ...(state as UserModelState),
-        userPhotos: what === 'gears' ? items : state?.userPhotos,
+        userPhotos: what === 'photos' ? items : state?.userPhotos,
         userPosts: what === 'posts' ? items : state?.userPosts,
         userLinks: what === 'links' ? items : state?.userLinks,
         userCoils: what === 'coils' ? items : state?.userCoils,

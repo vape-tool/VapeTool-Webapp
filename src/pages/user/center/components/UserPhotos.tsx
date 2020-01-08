@@ -1,5 +1,5 @@
 import { UserContent } from '@/models/user';
-import UserItems, { UserItemsProps } from '@/pages/user/center/components/UserItems';
+import UserItems from '@/pages/user/center/components/UserItems';
 import { Photo } from '@/types';
 import React from 'react';
 import PhotoView from '@/components/PhotoView';
@@ -13,7 +13,7 @@ import { ConnectState } from '@/models/connect';
 class UserPhotos extends UserItems<Photo> {
   what: UserContent = 'photos';
 
-  items = (props: UserItemsProps) => props.userPhotos || [];
+  items = () => this.props.userPhotos || [];
 
   renderItem = (item: Photo) => (<PhotoView item={item}/>);
 }

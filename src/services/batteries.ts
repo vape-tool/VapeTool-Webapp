@@ -1,5 +1,5 @@
 import { database } from '@/utils/firebase';
-import { Affiliate } from '@/types/affiliate';
+import { Affiliate } from '@/types';
 
 export function setAffiliate(batteryId: string, { name, link }: Affiliate) {
   console.log(`setAffiliate for ${batteryId} name: ${name} : ${link}`);
