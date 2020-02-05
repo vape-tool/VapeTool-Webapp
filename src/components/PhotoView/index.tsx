@@ -39,6 +39,7 @@ class PhotoView extends ItemView<Photo> {
         />
         <this.Actions />
 
+        <br/>
         {displayComments && displayComments.length > 0 && <this.CommentsList />}
         <this.CommentInput />
       </Card>
