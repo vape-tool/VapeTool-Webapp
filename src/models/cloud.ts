@@ -1,9 +1,10 @@
 import { Subscription } from 'dva';
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { OnlineStatus } from '@vapetool/types';
 import { database, DataSnapshot } from '@/utils/firebase';
 import { getPhotoUrl } from '@/services/storage';
 import { Link, Photo, Post } from '@/types';
+import { UserContent, UserModelState } from '@/models/user';
 
 export interface CloudModelState {
   photos: Photo[];
@@ -15,15 +16,22 @@ export interface CloudModelType {
   namespace: string;
   state: CloudModelState;
   reducers: {
-    setPhotos: Reducer<CloudModelState>;
-    setPosts: Reducer<CloudModelState>;
-    setLinks: Reducer<CloudModelState>;
+    setItems: Reducer<CloudModelState>;
   };
   subscriptions: {
     subscribePhotos: Subscription;
     subscribePosts: Subscription;
     subscribeLinks: Subscription;
   };
+}
+
+
+function dispatchSetItems(dispatch: Dispatch, what: UserContent, items: Post[] | Photo[] | Link[]) {
+  dispatch({
+    type: 'setItems',
+    what,
+    items,
+  });
 }
 
 const initialState: CloudModelState = {
@@ -46,23 +54,14 @@ const CloudModel: CloudModelType = {
   // },
 
   reducers: {
-    // TODO merge them together
-    setPosts(state = initialState, { posts }): CloudModelState {
+    setItems(state = initialState, { what, items }): CloudModelState {
+      items.sort((a: Post, b: Post) => b.creationTime - a.creationTime);
+      console.log({ what, setItems: items });
       return {
-        ...(state as CloudModelState),
-        posts: posts.sort((a: Post, b: Post) => b.creationTime - a.creationTime),
-      };
-    },
-    setPhotos(state = initialState, { photos }): CloudModelState {
-      return {
-        ...(state as CloudModelState),
-        photos: photos.sort((a: Photo, b: Photo) => b.creationTime - a.creationTime),
-      };
-    },
-    setLinks(state = initialState, { links }): CloudModelState {
-      return {
-        ...(state as CloudModelState),
-        links: links.sort((a: Link, b: Link) => b.creationTime - a.creationTime),
+        ...(state as UserModelState),
+        photos: what === 'photos' ? items : state?.photos,
+        posts: what === 'posts' ? items : state?.posts,
+        links: what === 'links' ? items : state?.links,
       };
     },
   },
@@ -76,7 +75,7 @@ const CloudModel: CloudModelType = {
         .equalTo(OnlineStatus.ONLINE_PUBLIC)
         .limitToLast(100);
 
-      ref.on('value', (snapshot: DataSnapshot) => {
+      ref.on('value', async (snapshot: DataSnapshot) => {
         console.log('fetched photos');
         const photosPromise: Promise<Photo>[] = new Array<Promise<Photo>>();
         snapshot.forEach(snap => {
@@ -101,14 +100,12 @@ const CloudModel: CloudModelType = {
           photosPromise.push(promise);
         });
 
-        Promise.all(photosPromise)
-          .then(photos => {
-            dispatch({
-              type: 'setPhotos',
-              photos,
-            });
-          })
-          .catch(err => console.error('failed to fetch photosUrls ', err));
+        try {
+          const photos = await Promise.all(photosPromise);
+          dispatchSetItems(dispatch, 'photos', photos)
+        } catch (err) {
+          console.error('failed to fetch photosUrls ', err)
+        }
       });
 
       return () => {
@@ -141,10 +138,7 @@ const CloudModel: CloudModelType = {
           posts.push(postObject);
         });
 
-        dispatch({
-          type: 'setPosts',
-          posts,
-        });
+        dispatchSetItems(dispatch, 'posts', posts);
       });
 
       return () => {
@@ -176,10 +170,7 @@ const CloudModel: CloudModelType = {
           links.push(linkObject);
         });
 
-        dispatch({
-          type: 'setLinks',
-          links,
-        });
+        dispatchSetItems(dispatch, 'links', links);
       });
 
       return () => {
