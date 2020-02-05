@@ -29,8 +29,8 @@ abstract class UserItems<T> extends Component<UserItemsProps> {
     return (
       <List<T>
         className={styles.coverCardList}
-        rowKey="id"
-        grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
+        rowKey="uid"
+        itemLayout="vertical"
         dataSource={items}
         renderItem={this.renderItem}
       />
