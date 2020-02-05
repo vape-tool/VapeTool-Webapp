@@ -19,7 +19,7 @@ import UserLiquids from '@/components/UserLiquids';
 import UserCoils from '@/components/UserCoils';
 
 const { NODE_ENV } = process.env;
-const operationTabList: { key: UserContent, tab: any }[] = [
+const operationTabList: { key: UserContent; tab: any }[] = [
   {
     key: 'photos',
     tab: <span>Photos</span>,
@@ -192,7 +192,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
                   </div>
                   <Divider dashed/>
                   <div className={styles.tags}>
-                    <div className={styles.tagsTitle}>标签</div>
+                    <div className={styles.tagsTitle}>Labels</div>
                     {currentUser.tags &&
                     currentUser.tags
                       .concat(newTags)
