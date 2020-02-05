@@ -3,7 +3,6 @@ import { database, DataSnapshot } from '@/utils/firebase';
 import { getImageUrl } from '@/services/storage';
 import { Post, Photo, Link, Coil, Liquid } from '@/types';
 
-
 export function getUserPhotos(uid: string): Promise<Photo[]> {
   return new Promise<Photo[]>((resolve, reject) => {
     database
@@ -18,7 +17,7 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
           firebasePhotos.push(firebasePhoto);
         });
         const photosPromise = firebasePhotos.map(photo =>
-          getImageUrl('photo', photo.uid).then(url => Object.create({ ...photo, url }) as Photo),
+          getImageUrl('photo', photo.uid).then(url => ({ ...photo, url } as Photo)),
         );
 
         return Promise.all(photosPromise).then(photos => resolve(photos));

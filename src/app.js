@@ -10,7 +10,7 @@ export const dva = {
       persistEnhancer({
         storage,
         whitelist: [
-          'user',
+          // 'user',
           'batteries',
           'coil',
           'converter',

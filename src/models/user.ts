@@ -14,6 +14,7 @@ import { Photo, Post, Link, Coil, Liquid } from '@/types';
 import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
+import moment from 'moment';
 
 export type UserContent = 'photos' | 'posts' | 'links' | 'coils' | 'liquids';
 
@@ -161,10 +162,16 @@ const UserModel: UserModelType = {
 
   reducers: {
     setUser(state, { currentUser }): UserModelState {
+      const tags = [];
+      //TODO test
+      if (moment(currentUser.subscription).isAfter()) {
+        tags.push({ key: 'pro', label: 'Pro' });
+      }
       return {
         ...(state as UserModelState),
         currentUser: {
           ...currentUser,
+          tags,
           name: currentUser.display_name,
         },
       };
