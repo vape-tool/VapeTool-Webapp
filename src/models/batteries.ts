@@ -2,7 +2,7 @@ import { Effect, Subscription } from 'dva';
 import { Reducer } from 'redux';
 
 import { id } from '@vapetool/types';
-import { database, DataSnapshot } from '@/utils/firebase';
+import { batteriesRef, DataSnapshot } from '@/utils/firebase';
 import { getBatteryUrl } from '@/services/storage';
 import { Battery } from '@/types';
 import { ConnectState } from '@/models/connect';
@@ -132,7 +132,7 @@ const BatteriesModel: BatteriesModelType = {
   subscriptions: {
     subscribeBatteries({ dispatch }) {
       console.log('subscribeBatteries');
-      const ref = database.ref('batteries');
+      const ref = batteriesRef;
 
       ref.on('value', (snapshot: DataSnapshot) => {
         console.log('fetched batteries');

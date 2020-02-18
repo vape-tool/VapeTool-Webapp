@@ -1,13 +1,13 @@
 import { User, UserPermission } from '@vapetool/types';
 import firebase from 'firebase';
 import request from '@/utils/request';
-import { auth, database } from '@/utils/firebase';
+import { auth, usersRef } from '@/utils/firebase';
 import { uploadAvatar } from '@/services/storage';
 
 export function getUser(uid: string): Promise<User | null> {
   return new Promise(resolve => {
-    database
-      .ref(`users/${uid}`)
+    usersRef
+      .child(uid)
       .once('value')
       .then(snapshot => {
         const user = snapshot.val();
@@ -29,8 +29,8 @@ export function initializeUser(firebaseUser: firebase.User): Promise<User | null
   if (photoURL) {
     initializeAvatar(photoURL, uid);
   }
-  return database
-    .ref(`users/${uid}`)
+  return usersRef
+    .child(uid)
     .update({
       uid,
       display_name: displayName || 'Anonymous',
@@ -46,8 +46,8 @@ export function updateDisplayName(uid: string, displayName: string): Promise<Use
       console.error('Displayname can not be empty');
       reject(new Error('Displayname can not be empty'));
     }
-    return database
-      .ref(`users/${uid}`)
+    return usersRef
+      .child(uid)
       .update({
         display_name: displayName,
       })
@@ -61,7 +61,7 @@ function initializeAvatar(avatarUrl: string, userId: string) {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', avatarUrl);
   xhr.responseType = 'blob';
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = function () {
     // Only run if the request is complete
     if (xhr.readyState !== 4) return;
 
@@ -73,7 +73,7 @@ function initializeAvatar(avatarUrl: string, userId: string) {
         .catch(e => console.error(e));
     } else {
       // If failed
-      console.error(`Failed to fetch user avatar from 
+      console.error(`Failed to fetch user avatar from
       url: ${avatarUrl} status: ${this.status} statusText: ${this.statusText}`);
     }
   };
