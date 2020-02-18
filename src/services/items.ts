@@ -1,5 +1,5 @@
 import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } from '@vapetool/types';
-import { database, DataSnapshot, ServerValue } from '@/utils/firebase';
+import { database, DataSnapshot, linksRef, photosRef, postsRef, ServerValue } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { uploadPhoto } from '@/services/storage';
 import { ItemName } from '@/types/Item';
@@ -8,8 +8,7 @@ import { ItemName } from '@/types/Item';
 // TODO determine if will be used
 export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
   return new Promise<FirebasePhoto[]>((resolve, reject) => {
-    database
-      .ref('gears')
+    photosRef
       .startAt(from)
       .endAt(to)
       .once('value')
@@ -37,7 +36,7 @@ export async function createPost(title: string, text: string, author: Author): P
     throw new Error('Title can not be empty');
   }
 
-  const newObjectUid = await database.ref('posts').push();
+  const newObjectUid = await postsRef.push();
   const uid = newObjectUid.key;
 
   if (uid == null) {
@@ -55,7 +54,7 @@ export async function createPost(title: string, text: string, author: Author): P
   console.log('uploading post');
   console.dir(newObject);
 
-  await database.ref(`posts/${uid}`).set(newObject);
+  await postsRef.child(uid).set(newObject);
   return uid;
 }
 
@@ -74,7 +73,7 @@ export async function createLink(title: string, url: string, author: Author): Pr
     throw new Error('Invalid url');
   }
 
-  const newObjectUid = await database.ref('links').push();
+  const newObjectUid = await linksRef.push();
   const uid = newObjectUid.key;
 
   if (!uid) {
@@ -92,7 +91,7 @@ export async function createLink(title: string, url: string, author: Author): Pr
   console.log('uploading link');
   console.dir(link);
 
-  await database.ref(`links/${uid}`).set(link);
+  await linksRef.child(uid).set(link);
   return uid;
 }
 
@@ -115,7 +114,7 @@ export async function createPhoto(
   if (!width || !height) {
     throw new Error('Width and height can not be null');
   }
-  const newObjectUid = await database.ref('gears').push();
+  const newObjectUid = await photosRef.push();
   const uid = newObjectUid.key;
 
   if (uid == null) {
@@ -140,10 +139,10 @@ export async function createPhoto(
     // It must be published to storage prior to database because db will trigger
     // update listener before storage is completed
     await uploadPhoto(imageBlob, uid);
-    await database.ref(`gears/${uid}`).set(newObject);
+    await photosRef.child(uid).set(newObject);
     return uid;
   } catch (e) {
-    database.ref(`gears/${uid}`).remove();
+    photosRef.child(uid).remove();
     throw e;
   }
 }
@@ -161,7 +160,7 @@ export function likeLink(itemId: string, userId: string) {
 }
 
 function like(what: ItemName, id: string, userId: string) {
-  return database
+  return database()
     .ref(`${what}-likes`)
     .child(id)
     .child(userId)
@@ -186,7 +185,7 @@ export function reportLink(linkId: string, userId: string): Promise<any> {
 }
 
 function report(what: ItemName, id: string, userId: string): Promise<any> {
-  return database
+  return database()
     .ref(`${what}-reports`)
     .child(id)
     .child(userId)
@@ -206,7 +205,7 @@ export function deleteLink(linkId: string): Promise<any> {
 }
 
 function deleteItem(what: ItemName, id: string): Promise<any> {
-  return database
+  return database()
     .ref(`${what}s`)
     .child(id)
     .remove();
@@ -226,7 +225,7 @@ export function commentLink(id: string, content: string, { uid, name }: CurrentU
 
 function commentItem(what: ItemName, id: string, content: string, { uid, name }: CurrentUser) {
   const comment = new Comment(new Author(uid, name), content, ServerValue.TIMESTAMP);
-  return database
+  return database()
     .ref(`${what}-comments`)
     .child(id)
     .push()
@@ -246,7 +245,7 @@ export function deleteLinkComment(linkId: string, commentId: string) {
 }
 
 function deleteItemComment(what: ItemName, id: string, commentId: string) {
-  return database
+  return database()
     .ref(`${what}-comments`)
     .child(id)
     .child(commentId)

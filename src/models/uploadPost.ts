@@ -58,16 +58,16 @@ const Model: ModelType = {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       // eslint-disable-next-line prefer-const
-      let { title, url }: { title: string; url: string } = yield select((state: ConnectState) => ({
-        title: state.uploadPost.title,
-        url: state.uploadPost.text,
+      let { url, text }: { url: string; text: string } = yield select((state: ConnectState) => ({
+        url: state.uploadPost.title,
+        text: state.uploadPost.text,
       }));
       if (!url.startsWith('http')) {
         url = `https://${url}`;
       }
 
       try {
-        yield call(createLink, title, url, new Author(uid, name));
+        yield call(createLink, text, url, new Author(uid, name));
         message.success('Successfully published link');
         yield put({ type: 'reset' });
         yield put(routerRedux.replace({ pathname: '/cloud' }));

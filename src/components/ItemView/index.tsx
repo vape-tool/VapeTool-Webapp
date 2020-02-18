@@ -58,8 +58,8 @@ export abstract class ItemView<T extends Photo | Post | Link | Coil | Liquid,
   componentDidMount(): void {
     const { item } = this.props;
 
-    this.likesRef = database.ref(`${this.what}-likes`).child(item.uid);
-    this.commentsRef = database.ref(`${this.what}-comments`).child(item.uid);
+    this.likesRef = database().ref(`${this.what}-likes`).child(item.uid);
+    this.commentsRef = database().ref(`${this.what}-comments`).child(item.uid);
 
     this.listenLikes();
     this.listenComments();

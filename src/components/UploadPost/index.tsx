@@ -28,9 +28,7 @@ const UploadPost: React.FC<UploadPostProps> = props => {
       title: e.target.value,
     });
   };
-  const capitalize = (s: string) => {
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  };
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   const onPostClick = () => {
     dispatch({
       type: `uploadPost/submit${capitalize(type)}`,
@@ -40,11 +38,11 @@ const UploadPost: React.FC<UploadPostProps> = props => {
   return (
     <Card>
       <Col>
-        <Input placeholder="Title" onChange={onTitleChange}/>
+        <Input placeholder={type === 'post' ? 'Title' : 'URL'} onChange={onTitleChange}/>
         <br/>
         <br/>
         <Input.TextArea allowClear
-                        placeholder={type === 'post' ? 'Text (optional)' : 'URL'}
+                        placeholder="Text (optional)"
                         onChange={onTextChange}/>
         <Editor editorState={editorState}
                 onChange={setEditorState}/>

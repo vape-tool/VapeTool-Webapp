@@ -1,7 +1,7 @@
 import { Subscription } from 'dva';
 import { Dispatch, Reducer } from 'redux';
 import { OnlineStatus } from '@vapetool/types';
-import { database, DataSnapshot } from '@/utils/firebase';
+import { DataSnapshot, linksRef, photosRef, postsRef } from '@/utils/firebase';
 import { getPhotoUrl } from '@/services/storage';
 import { Link, Photo, Post } from '@/types';
 import { UserContent, UserModelState } from '@/models/user';
@@ -69,11 +69,12 @@ const CloudModel: CloudModelType = {
   subscriptions: {
     subscribePhotos({ dispatch }) {
       console.log('subscribePhotos');
-      const ref = database
-        .ref('gears')
+      const ref = photosRef
         .orderByChild('status')
         .equalTo(OnlineStatus.ONLINE_PUBLIC)
         .limitToLast(100);
+
+      // TODO move to Cloud component, because it get triggered before user is logged in
 
       ref.on('value', async (snapshot: DataSnapshot) => {
         console.log('fetched photos');
@@ -116,8 +117,7 @@ const CloudModel: CloudModelType = {
 
     subscribePosts({ dispatch }) {
       console.log('subscribePosts');
-      const ref = database
-        .ref('posts')
+      const ref = postsRef
         .orderByChild('status')
         .equalTo(OnlineStatus.ONLINE_PUBLIC)
         .limitToLast(100);
@@ -148,8 +148,7 @@ const CloudModel: CloudModelType = {
     },
     subscribeLinks({ dispatch }) {
       console.log('subscribeLinks');
-      const ref = database
-        .ref('links')
+      const ref = linksRef
         .orderByChild('status')
         .equalTo(OnlineStatus.ONLINE_PUBLIC)
         .limitToLast(100);
