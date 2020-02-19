@@ -51,7 +51,7 @@ const BatteriesModel: BatteriesModelType = {
     showNewAffiliateModal: undefined,
   },
   effects: {
-    * setAffiliate({ affiliate }, { call, select }) {
+    *setAffiliate({ affiliate }, { call, select }) {
       console.log('model/setAffiliate');
       console.log(affiliate);
       const selectedBattery = yield select(
@@ -110,12 +110,11 @@ const BatteriesModel: BatteriesModelType = {
     },
     setBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
       const newBatteries = state.batteries.map((it: Battery) => {
-          if (battery === id(it)) {
-            return battery
-          }
-          return it
-        },
-      );
+        if (battery === id(it)) {
+          return battery;
+        }
+        return it;
+      });
       return {
         ...(state as BatteriesModelState),
         batteries: newBatteries,
