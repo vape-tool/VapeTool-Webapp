@@ -1,9 +1,127 @@
 import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } from '@vapetool/types';
-import { database, DataSnapshot, linksRef, photosRef, postsRef, ServerValue } from '@/utils/firebase';
+import { Link as LinkView, Photo as PhotoView, Post as PostView } from '@/types';
+import {
+  database,
+  DataSnapshot,
+  linksRef,
+  photosRef,
+  postsRef,
+  ServerValue,
+} from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
-import { uploadPhoto } from '@/services/storage';
+import { getPhotoUrl, uploadPhoto } from '@/services/storage';
 import { ItemName } from '@/types/Item';
+import { dispatchSetItems } from '@/models/cloud';
+import { Dispatch } from 'redux';
 
+export function subscribePhotos(dispatch: Dispatch) {
+  console.log('subscribePhotos');
+  const ref = photosRef
+    .orderByChild('status')
+    .equalTo(OnlineStatus.ONLINE_PUBLIC)
+    .limitToLast(100);
+
+  ref.on('value', async (snapshot: DataSnapshot) => {
+    console.log('fetched photos');
+    const photosPromise: Promise<PhotoView>[] = new Array<Promise<PhotoView>>();
+    snapshot.forEach(snap => {
+      const photo = snap.val();
+      if (!photo || Object.entries(photo).length === 0 || !photo.author) {
+        console.error(`REMOVE EMPTY PHOTO: ${snap.key}`);
+        return;
+      }
+      const promise: Promise<PhotoView> = getPhotoUrl(snap.key || photo.uid).then((url: string) => {
+        if (photo.creationTime === undefined) {
+          // backwards compatibility
+          photo.creationTime = photo.timestamp;
+          photo.lastTimeModified = photo.timestamp;
+        }
+        const photoObj: PhotoView = {
+          ...photo,
+          url,
+          $type: 'photo',
+        };
+        return photoObj;
+      });
+      photosPromise.push(promise);
+    });
+
+    try {
+      const photos = await Promise.all(photosPromise);
+      dispatchSetItems(dispatch, 'photos', photos);
+    } catch (err) {
+      console.error('failed to fetch photosUrls ', err);
+    }
+  });
+
+  return () => {
+    console.log('unsubscribePhotos triggered');
+    ref.off();
+  };
+}
+
+export function subscribeLinks(dispatch: Dispatch) {
+  const ref = linksRef
+    .orderByChild('status')
+    .equalTo(OnlineStatus.ONLINE_PUBLIC)
+    .limitToLast(100);
+
+  ref.on('value', (snapshot: DataSnapshot) => {
+    console.log('fetched links');
+    const links: LinkView[] = new Array<LinkView>();
+    snapshot.forEach(snap => {
+      const link = snap.val();
+      if (!link || Object.entries(link).length === 0 || !link.author) {
+        console.error(`REMOVE EMPTY LINK: ${snap.key}`);
+        return;
+      }
+      const linkObject: LinkView = {
+        ...link,
+        $type: 'link',
+      };
+      links.push(linkObject);
+    });
+
+    dispatchSetItems(dispatch, 'links', links);
+  });
+
+  return () => {
+    console.log('unsubscribeLinks triggered');
+    ref.off();
+  };
+}
+
+export function subscribePosts(dispatch: Dispatch) {
+  console.log('subscribePosts');
+  const ref = postsRef
+    .orderByChild('status')
+    .equalTo(OnlineStatus.ONLINE_PUBLIC)
+    .limitToLast(100);
+
+  ref.on('value', (snapshot: DataSnapshot) => {
+    console.log('fetched posts');
+    const posts: PostView[] = new Array<PostView>();
+    snapshot.forEach(snap => {
+      const post = snap.val();
+      if (!post || Object.entries(post).length === 0 || !post.author) {
+        console.error(`REMOVE EMPTY POST: ${snap.key}`);
+        return;
+      }
+      const postObject: PostView = {
+        ...post,
+        $type: 'post',
+      };
+      posts.push(postObject);
+    });
+
+    dispatchSetItems(dispatch, 'posts', posts);
+  });
+
+  return () => {
+    console.log('unsubscribePosts triggered');
+    ref.off();
+  };
+}
 
 // TODO determine if will be used
 export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {

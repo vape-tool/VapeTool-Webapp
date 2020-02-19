@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Affix, Button, List } from 'antd';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -9,6 +9,7 @@ import PostView from '@/components/PostView';
 import { Photo, Post, Link } from '@/types';
 import PageLoading from '@/components/PageLoading';
 import LinkView from '@/components/LinkView';
+import { subscribeLinks, subscribePosts, subscribePhotos } from '@/services/items';
 
 interface AuthComponentProps extends ConnectProps {
   photos: Array<Photo>;
@@ -24,13 +25,18 @@ const Cloud: React.FC<AuthComponentProps> = props => {
       path: '/cloud/upload',
     });
 
+  useEffect(() => subscribeLinks(props.dispatch!), []);
+  useEffect(() => subscribePosts(props.dispatch!), []);
+  useEffect(() => subscribePhotos(props.dispatch!), []);
+
   const { photos, posts, links } = props;
 
   if (photos === undefined || posts === undefined || links === undefined) {
     return <PageLoading />;
   }
-  let items = [...photos, ...posts, ...links];
-  items = items.sort((a, b) => Number(b.creationTime) - Number(a.creationTime));
+  const items = [...photos, ...posts, ...links].sort(
+    (a, b) => Number(b.creationTime) - Number(a.creationTime),
+  );
   return (
     <div>
       <List<Photo | Post | Link>

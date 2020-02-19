@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { List } from 'antd';
 import { id } from '@vapetool/types';
@@ -7,14 +7,14 @@ import BatteryView from '@/components/BatteryView';
 import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
 import styles from '@/components/ItemView/index.less';
 import { Battery } from '@/types';
+import { subscribeBatteries } from '@/services/batteries';
 
 interface BatteriesComponentProps extends ConnectProps {
   batteries: Battery[];
 }
 
 const Batteries: React.FC<BatteriesComponentProps> = (props: BatteriesComponentProps) => {
-  console.log('render batteries');
-
+  useEffect(() => subscribeBatteries(props.dispatch!), []);
   const { batteries } = props;
   return (
     <div>

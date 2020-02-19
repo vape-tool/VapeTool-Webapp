@@ -1,12 +1,17 @@
-import { Effect, Subscription } from 'dva';
-import { Reducer } from 'redux';
+import { Effect } from 'dva';
+import { Reducer, Dispatch } from 'redux';
 
 import { id } from '@vapetool/types';
-import { batteriesRef, DataSnapshot } from '@/utils/firebase';
-import { getBatteryUrl } from '@/services/storage';
 import { Battery } from '@/types';
 import { ConnectState } from '@/models/connect';
 import { setAffiliate } from '@/services/batteries';
+
+export function dispatchSetBatteries(dispatch: Dispatch, batteries: Battery[]) {
+  dispatch({
+    type: 'batteries/setBatteries',
+    batteries,
+  });
+}
 
 export interface BatteriesModelState {
   batteries: Battery[];
@@ -32,9 +37,6 @@ export interface BatteriesModelType {
     removeBattery: Reducer<BatteriesModelState>;
     setBattery: Reducer<BatteriesModelState>;
     setBatteries: Reducer<BatteriesModelState>;
-  };
-  subscriptions: {
-    subscribeBatteries: Subscription;
   };
 }
 
@@ -107,8 +109,12 @@ const BatteriesModel: BatteriesModelType = {
       };
     },
     setBattery(state = { batteries: [] }, { battery }): BatteriesModelState {
-      const newBatteries = state.batteries.map((it: Battery) =>
-        (battery === id(it) ? battery : it),
+      const newBatteries = state.batteries.map((it: Battery) => {
+          if (battery === id(it)) {
+            return battery
+          }
+          return it
+        },
       );
       return {
         ...(state as BatteriesModelState),
@@ -125,41 +131,6 @@ const BatteriesModel: BatteriesModelType = {
         ...(state as BatteriesModelState),
         batteries,
         selectedBattery: refreshedSelectedBat,
-      };
-    },
-  },
-
-  subscriptions: {
-    subscribeBatteries({ dispatch }) {
-      console.log('subscribeBatteries');
-      const ref = batteriesRef;
-
-      ref.on('value', (snapshot: DataSnapshot) => {
-        console.log('fetched batteries');
-        const batteriesPromise: Promise<Battery>[] = new Array<Promise<Battery>>();
-        snapshot.forEach(snap => {
-          const promise = getBatteryUrl(snap.key || id(snap.val())).then((url: string) => ({
-            ...snap.val(),
-            url,
-            id: snap.key,
-            affiliate: snap.val().affiliate
-              ? new Map(Object.entries(snap.val().affiliate))
-              : undefined,
-          }));
-          batteriesPromise.push(promise);
-        });
-
-        Promise.all(batteriesPromise).then(batteries => {
-          dispatch({
-            type: 'setBatteries',
-            batteries,
-          });
-        });
-      });
-
-      return () => {
-        console.log('unsubscribeBatteries triggered');
-        ref.off();
       };
     },
   },
