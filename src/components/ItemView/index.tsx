@@ -1,6 +1,6 @@
 import { Icon, Input, List, Menu, Modal } from 'antd';
 import React from 'react';
-import { database, DataSnapshot, Reference } from '@/utils/firebase';
+import { database, DataSnapshot, DatabaseReference } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
 import { Dispatch } from 'redux';
@@ -35,17 +35,20 @@ export interface ItemViewState {
   displayComments?: Comment[];
 }
 
-export abstract class ItemView<T extends Photo | Post | Link | Coil | Liquid,
+export abstract class ItemView<
+  T extends Photo | Post | Link | Coil | Liquid,
   Props extends ItemViewProps<T> = ItemViewProps<T>,
-  State extends ItemViewState = ItemViewState> extends React.Component<Props, State> {
+  State extends ItemViewState = ItemViewState
+> extends React.Component<Props, State> {
   protected inputRef?: any = undefined;
 
-  protected likesRef?: Reference = undefined;
+  protected likesRef?: DatabaseReference = undefined;
 
-  private commentsRef?: Reference = undefined;
+  private commentsRef?: DatabaseReference = undefined;
 
   constructor(props: Readonly<Props>) {
     super(props);
+    // @ts-ignore
     this.state = {
       commentsCount: undefined,
       displayComments: undefined,
@@ -58,8 +61,12 @@ export abstract class ItemView<T extends Photo | Post | Link | Coil | Liquid,
   componentDidMount(): void {
     const { item } = this.props;
 
-    this.likesRef = database().ref(`${this.what}-likes`).child(item.uid);
-    this.commentsRef = database().ref(`${this.what}-comments`).child(item.uid);
+    this.likesRef = database()
+      .ref(`${this.what}-likes`)
+      .child(item.uid);
+    this.commentsRef = database()
+      .ref(`${this.what}-comments`)
+      .child(item.uid);
 
     this.listenLikes();
     this.listenComments();
