@@ -1,42 +1,47 @@
-import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from 'react-three-fibre';
-import { connect } from 'dva';
-import { ConnectState } from '@/models/connect';
-import { Card, Skeleton, Typography } from 'antd';
-import FirebaseImage from '@/components/StorageAvatar';
-import { ItemView, ItemViewProps, ItemViewState } from '../ItemView';
-import styles from './index.less';
-import { ItemName } from '@/types/Item';
-import { Coil } from '@/types';
-import { getCoilUrl } from '@/services/storage';
+import React, { Suspense } from 'react';
+import { Canvas, useFrame, useLoader } from 'react-three-fiber';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { MeshStandardMaterial } from 'three';
+import sampleCoil from '@/assets/sampleCoil.obj';
 
-interface CoilVisualizerState {
-  coilImageUrl: string;
+function Coil() {
+  const material = new MeshStandardMaterial({
+    color: 0xffffff,
+    emissive: 0x444444,
+    roughness: 0.5,
+    metalness: 1.0,
+    refractionRatio: 1.0,
+    envMapIntensity: 1.0,
+  });
+  const coilObj = useLoader(OBJLoader, sampleCoil);
+  coilObj.scale.set(15.0, 15.0, 15.0);
+  // loadedMesh is a group of meshes. For
+  // each mesh set the material, and compute the information
+  // three.js needs for rendering.
+  coilObj.children.forEach(child => {
+    child.material = material;
+    child.geometry.computeFaceNormals();
+    child.geometry.computeVertexNormals();
+  });
+
+  useFrame(() => {
+    coilObj.rotation.x += 0.01;
+    coilObj.rotation.y += 0.01;
+  });
+
+  return <primitive object={coilObj} dispose={null}/>;
 }
 
-function Box(prop) {
-  const mesh = useRef();
-
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-
-  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
-
+function CoilVisualizer() {
   return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
-      onClick={e => setActive(!active)}
-      onPointerOver={e => setHover(true)}
-      onPointerOut={e => setHover(false)}
-    >
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
+    <Canvas>
+      <ambientLight/>
+      <pointLight position={[50, 50, 50]}/>
+      <Suspense fallback={null}>
+        <Coil/>
+      </Suspense>
+    </Canvas>
   );
 }
-
-function CoilVisualizer(props) {}
 
 export default CoilVisualizer;
