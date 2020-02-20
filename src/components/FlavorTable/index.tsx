@@ -21,24 +21,24 @@ interface EditableCellProps {
   index: number;
 }
 
-class EditableCell extends React.Component<EditableCellProps> {
-  getInput = () => {
-    switch (this.props.dataIndex) {
+const EditableCell: React.FC<EditableCellProps> = props => {
+  const getInput = () => {
+    switch (props.dataIndex) {
       case 'price':
-        return <InputNumber min={0} />;
+        return <InputNumber min={0}/>;
       case 'ratio':
-        return <InputNumber max={100} min={0} />;
+        return <InputNumber max={100} min={0}/>;
       case 'percentage':
-        return <InputNumber max={100} min={0} />;
+        return <InputNumber max={100} min={0}/>;
       default:
       case 'manufacturer':
       case 'name':
-        return <Input />;
+        return <Input/>;
     }
   };
 
-  renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const { editing, dataIndex, title, flavor, index, children, ...restProps } = this.props;
+  const renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
+    const { editing, dataIndex, title, flavor, index, children, ...restProps } = props;
     return (
       <td {...restProps}>
         {editing ? (
@@ -51,7 +51,7 @@ class EditableCell extends React.Component<EditableCellProps> {
                 },
               ],
               initialValue: flavor[dataIndex],
-            })(this.getInput())}
+            })(getInput())}
           </Form.Item>
         ) : (
           children
@@ -60,167 +60,159 @@ class EditableCell extends React.Component<EditableCellProps> {
     );
   };
 
-  render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
-  }
-}
+  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
+};
 
 interface EditableTableProps extends FormComponentProps {
   liquid: LiquidModelState;
   dispatch: Dispatch;
 }
 
-class EditableTable extends React.Component<EditableTableProps, {}> {
-  private columns: any[];
+const EditableTable: React.FC<EditableTableProps> = props => {
+  const isEditing = (flavor: Flavor) => flavor.uid === props.liquid.editingFlavor;
 
-  constructor(props: EditableTableProps) {
-    super(props);
-    this.columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        width: '20%',
-        editable: true,
-      },
-      {
-        title: 'Manufacturer',
-        dataIndex: 'manufacturer',
-        width: '17%',
-        editable: true,
-      },
-      {
-        title: 'Percentage [%]',
-        dataIndex: 'percentage',
-        width: '17%',
-        editable: true,
-      },
-      {
-        title: 'Price per 10ml [$]',
-        dataIndex: 'price',
-        width: '17%',
-        editable: true,
-      },
-      {
-        title: 'PG Ratio [%]',
-        dataIndex: 'ratio',
-        width: '17%',
-        editable: true,
-      },
-      {
-        title: 'Action',
-        dataIndex: 'action',
-        render: (text: string, flavor: Flavor) => {
-          const { editingFlavor } = this.props.liquid;
-          const editable = this.isEditing(flavor);
-          return editable ? (
-            <span>
-              <ButtonGroup>
-                <EditableContext.Consumer>
-                  {form => (
-                    <Button
-                      type="primary"
-                      icon="check"
-                      onClick={() => this.save(form, flavor.uid)}
-                    />
-                  )}
-                </EditableContext.Consumer>
-                <Button onClick={this.cancel} icon="close" />
-              </ButtonGroup>
-            </span>
-          ) : (
-            <div>
-              <ButtonGroup>
-                <Button
-                  disabled={editingFlavor !== undefined}
-                  onClick={() => this.edit(flavor.uid)}
-                  icon="edit"
-                />
-                <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(flavor.uid)}>
-                  <Button icon="delete" />
-                </Popconfirm>
-              </ButtonGroup>
-            </div>
-          );
-        },
-      },
-    ];
-  }
-
-  isEditing = (flavor: Flavor) => flavor.uid === this.props.liquid.editingFlavor;
-
-  cancel = () => {
-    this.props.dispatch({
+  const cancel = () => {
+    props.dispatch({
       type: 'liquid/editFlavor',
       payload: undefined,
     });
   };
 
-  remove = (uid: string) => {
-    this.props.dispatch({
+  const remove = (uid: string) => {
+    props.dispatch({
       type: 'liquid/removeFlavor',
       payload: uid,
     });
   };
 
-  save(form: WrappedFormUtils<string>, uid: string) {
+  const save = (form: WrappedFormUtils<string>, uid: string) => {
     form.validateFields((error: any, row: any) => {
       if (error) {
         return;
       }
-      this.props.dispatch({
+      props.dispatch({
         type: 'liquid/setFlavor',
         payload: { uid, row },
       });
-      this.props.dispatch({
+      props.dispatch({
         type: 'liquid/editFlavor',
         payload: undefined,
       });
     });
   }
 
-  edit(uid: string) {
-    this.props.dispatch({
+  const edit = (uid: string) => {
+    props.dispatch({
       type: 'liquid/editFlavor',
       payload: uid,
     });
-  }
+  };
 
-  render() {
-    const components = {
-      body: {
-        cell: EditableCell,
+  const components = {
+    body: {
+      cell: EditableCell,
+    },
+  };
+
+  const columnsSchema: any[] = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '20%',
+      editable: true,
+    },
+    {
+      title: 'Manufacturer',
+      dataIndex: 'manufacturer',
+      width: '17%',
+      editable: true,
+    },
+    {
+      title: 'Percentage [%]',
+      dataIndex: 'percentage',
+      width: '17%',
+      editable: true,
+    },
+    {
+      title: 'Price per 10ml [$]',
+      dataIndex: 'price',
+      width: '17%',
+      editable: true,
+    },
+    {
+      title: 'PG Ratio [%]',
+      dataIndex: 'ratio',
+      width: '17%',
+      editable: true,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (text: string, flavor: Flavor) => {
+        const { editingFlavor } = props.liquid;
+        const editable = isEditing(flavor);
+        return editable ? (
+          <span>
+              <ButtonGroup>
+                <EditableContext.Consumer>
+                  {form => (
+                    <Button
+                      type="primary"
+                      icon="check"
+                      onClick={() => save(form, flavor.uid)}
+                    />
+                  )}
+                </EditableContext.Consumer>
+                <Button onClick={cancel} icon="close"/>
+              </ButtonGroup>
+            </span>
+        ) : (
+          <div>
+            <ButtonGroup>
+              <Button
+                disabled={editingFlavor !== undefined}
+                onClick={() => edit(flavor.uid)}
+                icon="edit"
+              />
+              <Popconfirm title="Sure to remove?" onConfirm={() => remove(flavor.uid)}>
+                <Button icon="delete"/>
+              </Popconfirm>
+            </ButtonGroup>
+          </div>
+        );
       },
+    },
+  ];
+
+
+  const columns = columnsSchema.map(col => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (flavor: Flavor) => ({
+        flavor,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(flavor),
+      }),
     };
+  });
 
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: (flavor: Flavor) => ({
-          flavor,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(flavor),
-        }),
-      };
-    });
-
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.props.liquid.currentLiquid.flavors}
-          columns={columns}
-          rowKey={flavor => flavor.uid}
-          rowClassName={() => 'editable-row'}
-          pagination={false}
-        />
-      </EditableContext.Provider>
-    );
-  }
+  return (
+    <EditableContext.Provider value={props.form}>
+      <Table
+        components={components}
+        bordered
+        dataSource={props.liquid.currentLiquid.flavors}
+        columns={columns}
+        rowKey={flavor => flavor.uid}
+        rowClassName={() => 'editable-row'}
+        pagination={false}
+      />
+    </EditableContext.Provider>
+  );
 }
 
 const FlavorTable = Form.create()(EditableTable);

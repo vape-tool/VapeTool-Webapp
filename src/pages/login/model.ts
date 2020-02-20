@@ -1,10 +1,16 @@
-import { AnyAction, Reducer } from 'redux';
+import { AnyAction, Dispatch, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { User } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
 import { setAuthority } from './utils/utils';
 import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
+
+export function dispatchSuccessLogin(dispatch: Dispatch) {
+  dispatch({
+    type: 'userLogin/successLogin',
+  });
+}
 
 export interface StateType {
   status?: 'ok' | 'error';
@@ -43,16 +49,14 @@ const Model: ModelType = {
         // It should never happen
         throw new Error('Success login with null firebaseUser');
       }
-      console.log(`Successfully logged in ${firebaseUser.uid}`);
       const callUser = call(getUser, firebaseUser.uid);
       let user: User | null = yield callUser as User;
       if (user == null) {
-        console.log('user not yet saved to database, saving now');
+        // user not yet saved to database, saving now and redirecting to wizard page
         user = yield call(initializeUser, firebaseUser);
-        console.log(user);
         yield put(routerRedux.replace({ pathname: '/user/wizard' }));
       } else {
-        console.log(`User is already created in db ${user}`);
+        // user already initialized and saved on cloud
         yield put({ type: 'global/redirectBack' });
       }
       const currentUser = {

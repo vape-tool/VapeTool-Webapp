@@ -5,7 +5,17 @@ import { formatMessage } from 'umi-plugin-react/locale';
 
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
-import { LiquidModelState } from '@/models/liquid';
+import {
+  LiquidModelState,
+  dispatchShowNewFlavorModal,
+  dispatchSetTargetRatio,
+  dispatchSetTargetStrength,
+  dispatchSetAmount,
+  dispatchSetThinner,
+  dispatchSetBaseRatio,
+  dispatchSetBaseStrength,
+  dispatchCalculateResults,
+} from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
 import { unitFormatter, unitParser } from '@/utils/utils';
@@ -45,66 +55,33 @@ const resultColumns = [
     dataIndex: 'price',
   },
 ];
+const LiquidBlender: React.FC<LiquidBlenderProps> =
+  ({ dispatch, liquid: { currentLiquid, results } }) => {
+    const onBaseStrengthChange = (value: number | undefined) =>
+      dispatchSetBaseStrength(dispatch, value);
 
-class LiquidBlender extends React.Component<LiquidBlenderProps> {
-  onBaseStrengthChange = (value: number | undefined) =>
-    value &&
-    this.props.dispatch({
-      type: 'liquid/setBaseStrength',
-      payload: value,
-    });
+    const onBaseRatioChange = (value: any) =>
+      value && typeof value === 'number' &&
+      dispatchSetBaseRatio(dispatch, 100 - value);
 
-  onBaseRatioChange = (value: any) =>
-    value &&
-    typeof value === 'number' &&
-    this.props.dispatch({
-      type: 'liquid/setBaseRatio',
-      payload: 100 - value,
-    });
+    const onThinnerChange = (value: number | undefined) =>
+      dispatchSetThinner(dispatch, value);
 
-  onThinnerChange = (value: number | undefined) =>
-    value &&
-    this.props.dispatch({
-      type: 'liquid/setThinner',
-      payload: value,
-    });
+    const onAmountChange = (value: number | undefined) =>
+      dispatchSetAmount(dispatch, value);
 
-  onAmountChange = (value: number | undefined) =>
-    value &&
-    this.props.dispatch({
-      type: 'liquid/setAmount',
-      payload: value,
-    });
+    const onTargetStrengthChange = (value: number | undefined) =>
+      dispatchSetTargetStrength(dispatch, value);
 
-  onTargetStrengthChange = (value: number | undefined) =>
-    value &&
-    this.props.dispatch({
-      type: 'liquid/setTargetStrength',
-      payload: value,
-    });
+    const onTargetRatioChange = (value: any) =>
+      value && typeof value === 'number' &&
+      dispatchSetTargetRatio(dispatch!, 100 - value);
 
-  onTargetRatioChange = (value: any) =>
-    value &&
-    typeof value === 'number' &&
-    this.props.dispatch({
-      type: 'liquid/setTargetRatio',
-      payload: 100 - value,
-    });
+    const showNewFlavorModal = () => dispatchShowNewFlavorModal(dispatch);
 
-  showNewFlavorModal = () =>
-    this.props.dispatch({
-      type: 'liquid/showNewFlavorModal',
-    });
+    const onCalculateClick = () => dispatchCalculateResults(dispatch);
 
-  onCalculateClick = () =>
-    this.props.dispatch({
-      type: 'liquid/calculateResults',
-    });
 
-  render() {
-    const {
-      liquid: { currentLiquid, results },
-    } = this.props;
     const responsivenessProps = { xs: 24, xl: 8 };
     const responsivenessCollections = { xs: 24, xl: 16 };
 
@@ -124,14 +101,14 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                     formatter={unitFormatter(0, 'mg/ml')}
                     parser={unitParser('mg/ml')}
                     value={currentLiquid.baseStrength}
-                    onChange={this.onBaseStrengthChange}
+                    onChange={onBaseStrengthChange}
                   />
                 </Col>
               </Row>
 
               <Title level={4}>Base Ratio</Title>
               <VgPgRatioView
-                onRatioChange={this.onBaseRatioChange}
+                onRatioChange={onBaseRatioChange}
                 ratio={currentLiquid.baseRatio}
               />
               <Title level={4}>Thinner</Title>
@@ -141,19 +118,19 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                 formatter={unitFormatter(1, '%')}
                 parser={unitParser('%')}
                 value={currentLiquid.thinner}
-                onChange={this.onThinnerChange}
+                onChange={onThinnerChange}
               />
             </Card>
           </Col>
           <Col {...responsivenessCollections}>
             <Card title={<Title level={1}>Flavors</Title>}>
-              <FlavorTable />
+              <FlavorTable/>
               <Button
                 type="dashed"
                 icon="plus"
                 size="large"
                 style={{ width: '100%' }}
-                onClick={this.showNewFlavorModal}
+                onClick={showNewFlavorModal}
               >
                 Add Flavor
               </Button>
@@ -170,7 +147,7 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                     formatter={unitFormatter(0, 'ml')}
                     parser={unitParser('ml')}
                     value={currentLiquid.amount}
-                    onChange={this.onAmountChange}
+                    onChange={onAmountChange}
                   />
                 </Col>
                 <Col xs={16} xl={14}>
@@ -181,13 +158,13 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                     formatter={unitFormatter(0, 'mg/ml')}
                     parser={unitParser('mg/ml')}
                     value={currentLiquid.targetStrength}
-                    onChange={this.onTargetStrengthChange}
+                    onChange={onTargetStrengthChange}
                   />
                 </Col>
               </Row>
               <Title level={4}>Target Ratio</Title>
               <VgPgRatioView
-                onRatioChange={this.onTargetRatioChange}
+                onRatioChange={onTargetRatioChange}
                 ratio={currentLiquid.targetRatio}
               />
             </Card>
@@ -202,7 +179,7 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                     icon="calculator"
                     shape="round"
                     size="large"
-                    onClick={this.onCalculateClick}
+                    onClick={onCalculateClick}
                   >
                     Calculate
                   </Button>
@@ -216,24 +193,23 @@ class LiquidBlender extends React.Component<LiquidBlenderProps> {
                 dataSource={
                   results
                     ? results.map(result => ({
-                        name: result.name,
-                        percentage: `${result.percentage.toFixed(1)}%`,
-                        ml: `${result.ml.toFixed(1)} ml`,
-                        drips: result.drips.toFixed(0),
-                        price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
-                        weight: `${result.weight.toFixed(3)} g`,
-                      }))
+                      name: result.name,
+                      percentage: `${result.percentage.toFixed(1)}%`,
+                      ml: `${result.ml.toFixed(1)} ml`,
+                      drips: result.drips.toFixed(0),
+                      price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
+                      weight: `${result.weight.toFixed(3)} g`,
+                    }))
                     : []
                 }
               />
             </Card>
           </Col>
         </Row>
-        <NewFlavorModal />
+        <NewFlavorModal/>
       </div>
-    );
-  }
-}
+    )
+  };
 
 export default connect(({ liquid }: ConnectState) => ({
   liquid,
