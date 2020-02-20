@@ -1,9 +1,101 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { Effect } from 'dva';
 import { Flavor, Liquid, Result } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateResults } from '@/services/liquid';
 import { ConnectState } from '@/models/connect';
+
+/**
+ * show modal to all new flavor
+ * @param dispatch - Dispatcher
+ */
+export function dispatchShowNewFlavorModal(dispatch: Dispatch) {
+  dispatch({
+    type: 'liquid/showNewFlavorModal',
+  });
+}
+
+/**
+ * dispatch new target ratio PG.
+ * @param dispatch - Dispatcher
+ * @param ratio - value in range from 0 to 100
+ */
+export function dispatchSetTargetRatio(dispatch: Dispatch, ratio: number) {
+  dispatch({
+    type: 'liquid/setTargetRatio',
+    ratio,
+  });
+}
+
+/**
+ * dispatch new target liquid strength mg/ml
+ * @param dispatch - Dispatcher
+ * @param strength - positive number in mg/ml unit
+ */
+export function dispatchSetTargetStrength(dispatch: Dispatch, strength: number | undefined) {
+  dispatch({
+    type: 'liquid/setTargetStrength',
+    strength,
+  });
+}
+
+/**
+ * dispatch new target amount ml
+ * @param dispatch - Dispatcher
+ * @param amount - positive number ml unit
+ */
+export function dispatchSetAmount(dispatch: Dispatch, amount: number | undefined) {
+  dispatch({
+    type: 'liquid/setAmount',
+    amount,
+  });
+}
+
+/**
+ * dispatch new thinner %
+ * @param dispatch - Dispatcher
+ * @param thinner - positive number in percentage unit
+ */
+export function dispatchSetThinner(dispatch: Dispatch, thinner: number | undefined) {
+  dispatch({
+    type: 'liquid/setThinner',
+    thinner,
+  });
+}
+
+/**
+ * dispatch new base ratio PG.
+ * @param dispatch - Dispatcher
+ * @param ratio - value in range from 0 to 100
+ */
+export function dispatchSetBaseRatio(dispatch: Dispatch, ratio: number) {
+  dispatch({
+    type: 'liquid/setBaseRatio',
+    ratio,
+  });
+}
+
+/**
+ * dispatch new base strength mg/ml
+ * @param dispatch - Dispatcher
+ * @param strength - positive number in mg/ml unit
+ */
+export function dispatchSetBaseStrength(dispatch: Dispatch, strength: number | undefined) {
+  dispatch({
+    type: 'liquid/setBaseStrength',
+    strength,
+  });
+}
+
+/**
+ * dispatch calculate results for specified liquid
+ * @param dispatch - Dispatcher
+ */
+export function dispatchCalculateResults(dispatch: Dispatch) {
+  dispatch({
+    type: 'liquid/calculateResults',
+  });
+}
 
 export interface LiquidModelState {
   currentLiquid: Liquid;
@@ -46,7 +138,7 @@ const LiquidModel: LiquidModelType = {
     showNewFlavorModal: false,
   },
   effects: {
-    *calculateResults(_, { select, call, put, cancel }) {
+    * calculateResults(_, { select, call, put, cancel }) {
       try {
         const currentLiquid = yield select((state: ConnectState) => state.liquid.currentLiquid);
 
@@ -69,13 +161,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { strength },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          baseStrength: payload,
+          baseStrength: strength,
         },
       };
     },
@@ -83,13 +175,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { ratio },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          baseRatio: payload,
+          baseRatio: ratio,
         },
       };
     },
@@ -97,13 +189,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { payload: thinner },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          thinner: payload,
+          thinner,
         },
       };
     },
@@ -111,13 +203,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { amount },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          amount: payload,
+          amount,
         },
       };
     },
@@ -125,13 +217,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { strength },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          targetStrength: payload,
+          targetStrength: strength,
         },
       };
     },
@@ -139,13 +231,13 @@ const LiquidModel: LiquidModelType = {
       state = {
         currentLiquid: new Liquid(),
       },
-      { payload },
+      { ratio },
     ): LiquidModelState {
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          targetRatio: payload,
+          targetRatio: ratio,
         },
       };
     },

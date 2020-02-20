@@ -1,59 +1,45 @@
-import React from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { Redirect } from 'umi';
 import { stringify } from 'querystring';
 import { User as FirebaseUser } from 'firebase/app';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import PageLoading from '@/components/PageLoading';
 import { getCurrentUser } from '@/utils/firebase';
 
-interface SecurityLayoutProps extends ConnectProps {
-  firebaseUser?: FirebaseUser;
+interface SecurityLayoutProps {
+  firebaseUser: FirebaseUser;
 }
 
-export interface LayoutState {
-  isReady: boolean;
-  firebaseUser: FirebaseUser | null;
-}
+const SecurityLayout: React.FC<SecurityLayoutProps> = props => {
+  const [isReady, setReady] = useState(false);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
 
-class SecurityLayout extends React.Component<SecurityLayoutProps, LayoutState> {
-  state: LayoutState = {
-    isReady: false,
-    firebaseUser: null,
-  };
-
-  componentDidMount() {
-    this.checkIfUserAlreadyLoggedIn();
-  }
-
-  checkIfUserAlreadyLoggedIn = async () => {
-    const firebaseUser = await getCurrentUser();
-    this.setState({
-      isReady: true,
-      firebaseUser,
+  const fetchCurrentUser = () => {
+    getCurrentUser().then(currentUser => {
+      setReady(true);
+      setFirebaseUser(currentUser);
     });
   };
 
-  render() {
-    const { isReady, firebaseUser } = this.state;
-    const { children } = this.props;
-    // You can replace it to your authentication rule (such as check token exists)
-    // 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）
+  useEffect(() => fetchCurrentUser(), [firebaseUser]);
 
-    console.log(`isLogin: ${firebaseUser != null || this.props.firebaseUser}`);
-    console.log('currentUser');
-    console.log(firebaseUser);
-    const queryString = stringify({ redirect: window.location.href });
+  // You can replace it to your authentication rule (such as check token exists)
+  // 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）
 
-    if (!isReady) {
-      return <PageLoading />;
-    }
-    if (!firebaseUser && !this.props.firebaseUser) {
-      return <Redirect to={`/login?${queryString}`} />;
-    }
-    return children;
+  console.log(`isLogin: ${firebaseUser != null || props.firebaseUser}`);
+  console.log('currentUser');
+  console.log(firebaseUser);
+  const queryString = stringify({ redirect: window.location.href });
+
+  if (!isReady) {
+    return <PageLoading/>;
   }
-}
+  if (!firebaseUser && !props.firebaseUser) {
+    return <Redirect to={`/login?${queryString}`}/>;
+  }
+  return props.children as ReactElement;
+};
 
 export default connect(({ user }: ConnectState) => ({
   firebaseUser: user.firebaseUser,

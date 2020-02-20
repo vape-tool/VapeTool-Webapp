@@ -21,9 +21,9 @@ interface EditableCellProps {
   index: number;
 }
 
-class EditableCell extends React.Component<EditableCellProps> {
-  renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const { editing, dataIndex, title, affiliate, index, children, ...restProps } = this.props;
+const EditableCell: React.FC<EditableCellProps> = props => {
+  const renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
+    const { editing, dataIndex, title, affiliate, index, children, ...restProps } = props;
     return (
       <td {...restProps}>
         {editing ? (
@@ -36,7 +36,7 @@ class EditableCell extends React.Component<EditableCellProps> {
                 },
               ],
               initialValue: affiliate[dataIndex],
-            })(<Input />)}
+            })(<Input/>)}
           </Form.Item>
         ) : (
           children
@@ -45,10 +45,8 @@ class EditableCell extends React.Component<EditableCellProps> {
     );
   };
 
-  render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
-  }
-}
+  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
+};
 
 interface EditableTableProps extends FormComponentProps {
   selectedBattery: Battery;
@@ -56,165 +54,154 @@ interface EditableTableProps extends FormComponentProps {
   dispatch: Dispatch;
 }
 
-class EditableTable extends React.Component<EditableTableProps, {}> {
-  private columns: any[];
+const EditableTable: React.FC<EditableTableProps> = props => {
+  const isEditing = (affiliate: Affiliate) => affiliate.name === props.editingAffiliate;
 
-  constructor(props: EditableTableProps) {
-    super(props);
-    this.columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        width: '10%',
-        editable: true,
-      },
-      {
-        title: 'Link',
-        dataIndex: 'link',
-        width: '60%',
-        editable: true,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        render: (text: string, affiliate: Affiliate) => (
-          <a
-            style={{
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              display: 'inherit',
-            }}
-            href={text}
-          >
-            {text.substring(0, 30)}
-          </a>
-        ),
-      },
-      {
-        title: 'Action',
-        dataIndex: 'action',
-        render: (text: string, affiliate: Affiliate) => {
-          const editable = this.isEditing(affiliate);
-
-          return editable ? (
-            <span>
-              <ButtonGroup>
-                <EditableContext.Consumer>
-                  {form => <Button type="primary" icon="check" onClick={() => this.save(form)} />}
-                </EditableContext.Consumer>
-                <Button onClick={this.cancel} icon="close" />
-              </ButtonGroup>
-            </span>
-          ) : (
-            <div>
-              <ButtonGroup>
-                <Button onClick={() => this.edit(affiliate.name)} icon="edit" />
-                <Popconfirm title="Sure to remove?" onConfirm={() => this.remove(affiliate.name)}>
-                  <Button icon="delete" />
-                </Popconfirm>
-              </ButtonGroup>
-            </div>
-          );
-        },
-      },
-    ];
-  }
-
-  isEditing = (affiliate: Affiliate) => affiliate.name === this.props.editingAffiliate;
-
-  cancel = () => {
-    this.props.dispatch({
+  const cancel = () => {
+    props.dispatch({
       type: 'batteries/editAffiliate',
       name: undefined,
     });
   };
 
-  remove = (name: string) => {
-    this.props.dispatch({
+  const remove = (name: string) => {
+    props.dispatch({
       type: 'batteries/setAffiliate',
       affiliate: { name, link: null },
     });
   };
 
-  showNewAffiliateModal = () => {
-    console.log('setAffiliate');
-    this.props.dispatch({
+  const showNewAffiliateModal = () => {
+    props.dispatch({
       type: 'batteries/showNewAffiliateModal',
     });
   };
 
-  edit(name: string) {
-    this.props.dispatch({
+  const edit = (name: string) => {
+    props.dispatch({
       type: 'batteries/editAffiliate',
       name,
     });
-  }
+  };
 
-  save(form: WrappedFormUtils<string>) {
+  const save = (form: WrappedFormUtils<string>) => {
     form.validateFields((error: any, row: any) => {
       if (error) {
         return;
       }
-      this.props.dispatch({
+      props.dispatch({
         type: 'batteries/setAffiliate',
         affiliate: { ...row },
       });
-      this.cancel();
+      cancel();
     });
-  }
+  };
 
-  render() {
-    const components = {
-      body: {
-        cell: EditableCell,
-      },
-    };
-
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: (affiliate: Affiliate) => ({
-          affiliate,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(affiliate),
-        }),
-      };
-    });
-    console.log(this.props.selectedBattery.affiliate);
-
-    return (
-      <div>
-        <EditableContext.Provider value={this.props.form}>
-          <Table
-            components={components}
-            bordered
-            dataSource={Array.from(this.props.selectedBattery.affiliate || []).map(([key, value]) =>
-              Object.create({
-                name: key,
-                link: value,
-              }),
-            )}
-            columns={columns}
-            rowKey={affiliate => affiliate.name}
-            rowClassName={() => 'editable-row'}
-            pagination={false}
-          />
-        </EditableContext.Provider>
-        <Button
-          icon="plus"
-          type="dashed"
-          style={{ width: '100%' }}
-          onClick={this.showNewAffiliateModal}
+  const components = {
+    body: {
+      cell: EditableCell,
+    },
+  };
+  const columnsSchema: any[] = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '10%',
+      editable: true,
+    },
+    {
+      title: 'Link',
+      dataIndex: 'link',
+      width: '60%',
+      editable: true,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      render: (text: string, affiliate: Affiliate) => (
+        <a
+          style={{
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            display: 'inherit',
+          }}
+          href={text}
         >
-          Add
-        </Button>
-        <NewAffiliateModal />
-      </div>
-    );
-  }
-}
+          {text.substring(0, 30)}
+        </a>
+      ),
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (text: string, affiliate: Affiliate) => {
+        const editable = isEditing(affiliate);
+
+        return editable ? (
+          <span>
+              <ButtonGroup>
+                <EditableContext.Consumer>
+                  {form => <Button type="primary" icon="check" onClick={() => save(form)}/>}
+                </EditableContext.Consumer>
+                <Button onClick={cancel} icon="close"/>
+              </ButtonGroup>
+            </span>
+        ) : (
+          <div>
+            <ButtonGroup>
+              <Button onClick={() => edit(affiliate.name)} icon="edit"/>
+              <Popconfirm title="Sure to remove?" onConfirm={() => remove(affiliate.name)}>
+                <Button icon="delete"/>
+              </Popconfirm>
+            </ButtonGroup>
+          </div>
+        );
+      },
+    },
+  ];
+  const columns = columnsSchema.map(col => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (affiliate: Affiliate) => ({
+        affiliate,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(affiliate),
+      }),
+    };
+  });
+
+  return (
+    <div>
+      <EditableContext.Provider value={props.form}>
+        <Table
+          components={components}
+          bordered
+          dataSource={Array.from(props.selectedBattery.affiliate || []).map(([key, value]) =>
+            Object.create({
+              name: key,
+              link: value,
+            }),
+          )}
+          columns={columns}
+          rowKey={affiliate => affiliate.name}
+          rowClassName={() => 'editable-row'}
+          pagination={false}
+        />
+      </EditableContext.Provider>
+      <Button
+        icon="plus"
+        type="dashed"
+        style={{ width: '100%' }}
+        onClick={showNewAffiliateModal}
+      >
+        Add
+      </Button>
+      <NewAffiliateModal/>
+    </div>
+  );
+};
 
 const AffiliateEditTable = Form.create()(EditableTable);
 

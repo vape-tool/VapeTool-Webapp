@@ -8,6 +8,7 @@ import { ConnectState } from '@/models/connect';
 import PageLoading from '@/components/PageLoading';
 import { getPageFragment } from '@/utils/utils';
 import { auth } from '@/utils/firebase';
+import { dispatchSuccessLogin } from '@/pages/login/model';
 
 const LoginSuccess: React.FC<{
   firebaseUser: FirebaseUser;
@@ -50,9 +51,7 @@ const LoginSuccess: React.FC<{
   }
 
   if (props.firebaseUser) {
-    props.dispatch({
-      type: 'userLogin/successLogin',
-    });
+    dispatchSuccessLogin(props.dispatch);
   }
   return <PageLoading />;
 };

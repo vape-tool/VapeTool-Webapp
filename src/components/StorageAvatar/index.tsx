@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar } from 'antd';
 import { getImageUrl, ImageType } from '@/services/storage';
 
@@ -12,37 +12,27 @@ interface FirebaseImageProps {
   alt?: string;
 }
 
-interface FirebaseImageState {
-  src?: string;
-}
-
-class FirebaseImage extends React.Component<FirebaseImageProps, FirebaseImageState> {
-  state: FirebaseImageState = {
-    src: undefined,
-  };
-
-  componentDidMount(): void {
-    const { type, id } = this.props;
+const FirebaseImage: React.FC<FirebaseImageProps> = (props: FirebaseImageProps) => {
+  const { type, style, size, shape, className, alt, id } = props;
+  const [src, setSrc] = useState<string | undefined>(undefined);
+  useEffect(() => {
     getImageUrl(type, id)
-      .then(src => this.setState({ src }))
-      .catch(() => {});
-  }
+      .then(imageUrl => setSrc(imageUrl))
+      .catch(() => {
+      });
+  }, [id, type]);
 
-  render() {
-    const { type, style, size, shape, className, alt } = this.props;
-    const { src } = this.state;
-    return (
-      <Avatar
-        style={style}
-        icon="user"
-        alt={alt || type}
-        src={src}
-        size={size}
-        shape={shape}
-        className={className}
-      />
-    );
-  }
-}
+  return (
+    <Avatar
+      style={style}
+      icon="user"
+      alt={alt || type}
+      src={src}
+      size={size}
+      shape={shape}
+      className={className}
+    />
+  );
+};
 
 export default FirebaseImage;
