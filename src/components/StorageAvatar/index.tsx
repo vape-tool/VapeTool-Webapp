@@ -18,8 +18,7 @@ const FirebaseImage: React.FC<FirebaseImageProps> = (props: FirebaseImageProps) 
   useEffect(() => {
     getImageUrl(type, id)
       .then(imageUrl => setSrc(imageUrl))
-      .catch(() => {
-      });
+      .catch(() => {});
   }, [id, type]);
 
   return (

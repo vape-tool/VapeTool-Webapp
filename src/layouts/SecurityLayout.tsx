@@ -33,10 +33,10 @@ const SecurityLayout: React.FC<SecurityLayoutProps> = props => {
   const queryString = stringify({ redirect: window.location.href });
 
   if (!isReady) {
-    return <PageLoading/>;
+    return <PageLoading />;
   }
   if (!firebaseUser && !props.firebaseUser) {
-    return <Redirect to={`/login?${queryString}`}/>;
+    return <Redirect to={`/login?${queryString}`} />;
   }
   return props.children as ReactElement;
 };

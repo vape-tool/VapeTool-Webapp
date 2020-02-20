@@ -25,15 +25,19 @@ interface ImageChooserState {
 const ImageChooser: React.FC<ImageChooserProps> = (props: ImageChooserProps) => {
   const [state, setState] = useState<ImageChooserState>();
 
-  const onResizeImage =
-    (imageUrl: string, imageBlob: Blob | File, width: number, height: number) => {
-      setState({
-        imageUrl,
-        imageBlob,
-        width,
-        height,
-      });
-    };
+  const onResizeImage = (
+    imageUrl: string,
+    imageBlob: Blob | File,
+    width: number,
+    height: number,
+  ) => {
+    setState({
+      imageUrl,
+      imageBlob,
+      width,
+      height,
+    });
+  };
 
   const onImageChoose = () => {
     if (state) {
@@ -68,6 +72,5 @@ const ImageChooser: React.FC<ImageChooserProps> = (props: ImageChooserProps) => 
     </Modal>
   );
 };
-
 
 export default ImageChooser;

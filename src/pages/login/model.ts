@@ -43,7 +43,7 @@ const Model: ModelType = {
 
   effects: {
     // TODO try to unify with fetchCurrent
-    * successLogin(_, { put, call }) {
+    *successLogin(_, { put, call }) {
       const firebaseUser = auth.currentUser;
       if (!firebaseUser) {
         // It should never happen

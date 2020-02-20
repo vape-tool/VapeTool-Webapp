@@ -36,7 +36,7 @@ const EditableCell: React.FC<EditableCellProps> = props => {
                 },
               ],
               initialValue: affiliate[dataIndex],
-            })(<Input/>)}
+            })(<Input />)}
           </Form.Item>
         ) : (
           children
@@ -137,19 +137,19 @@ const EditableTable: React.FC<EditableTableProps> = props => {
 
         return editable ? (
           <span>
-              <ButtonGroup>
-                <EditableContext.Consumer>
-                  {form => <Button type="primary" icon="check" onClick={() => save(form)}/>}
-                </EditableContext.Consumer>
-                <Button onClick={cancel} icon="close"/>
-              </ButtonGroup>
-            </span>
+            <ButtonGroup>
+              <EditableContext.Consumer>
+                {form => <Button type="primary" icon="check" onClick={() => save(form)} />}
+              </EditableContext.Consumer>
+              <Button onClick={cancel} icon="close" />
+            </ButtonGroup>
+          </span>
         ) : (
           <div>
             <ButtonGroup>
-              <Button onClick={() => edit(affiliate.name)} icon="edit"/>
+              <Button onClick={() => edit(affiliate.name)} icon="edit" />
               <Popconfirm title="Sure to remove?" onConfirm={() => remove(affiliate.name)}>
-                <Button icon="delete"/>
+                <Button icon="delete" />
               </Popconfirm>
             </ButtonGroup>
           </div>
@@ -190,15 +190,10 @@ const EditableTable: React.FC<EditableTableProps> = props => {
           pagination={false}
         />
       </EditableContext.Provider>
-      <Button
-        icon="plus"
-        type="dashed"
-        style={{ width: '100%' }}
-        onClick={showNewAffiliateModal}
-      >
+      <Button icon="plus" type="dashed" style={{ width: '100%' }} onClick={showNewAffiliateModal}>
         Add
       </Button>
-      <NewAffiliateModal/>
+      <NewAffiliateModal />
     </div>
   );
 };
