@@ -25,15 +25,15 @@ const EditableCell: React.FC<EditableCellProps> = props => {
   const getInput = () => {
     switch (props.dataIndex) {
       case 'price':
-        return <InputNumber min={0}/>;
+        return <InputNumber min={0} />;
       case 'ratio':
-        return <InputNumber max={100} min={0}/>;
+        return <InputNumber max={100} min={0} />;
       case 'percentage':
-        return <InputNumber max={100} min={0}/>;
+        return <InputNumber max={100} min={0} />;
       default:
       case 'manufacturer':
       case 'name':
-        return <Input/>;
+        return <Input />;
     }
   };
 
@@ -99,7 +99,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
         payload: undefined,
       });
     });
-  }
+  };
 
   const edit = (uid: string) => {
     props.dispatch({
@@ -153,19 +153,15 @@ const EditableTable: React.FC<EditableTableProps> = props => {
         const editable = isEditing(flavor);
         return editable ? (
           <span>
-              <ButtonGroup>
-                <EditableContext.Consumer>
-                  {form => (
-                    <Button
-                      type="primary"
-                      icon="check"
-                      onClick={() => save(form, flavor.uid)}
-                    />
-                  )}
-                </EditableContext.Consumer>
-                <Button onClick={cancel} icon="close"/>
-              </ButtonGroup>
-            </span>
+            <ButtonGroup>
+              <EditableContext.Consumer>
+                {form => (
+                  <Button type="primary" icon="check" onClick={() => save(form, flavor.uid)} />
+                )}
+              </EditableContext.Consumer>
+              <Button onClick={cancel} icon="close" />
+            </ButtonGroup>
+          </span>
         ) : (
           <div>
             <ButtonGroup>
@@ -175,7 +171,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
                 icon="edit"
               />
               <Popconfirm title="Sure to remove?" onConfirm={() => remove(flavor.uid)}>
-                <Button icon="delete"/>
+                <Button icon="delete" />
               </Popconfirm>
             </ButtonGroup>
           </div>
@@ -183,7 +179,6 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       },
     },
   ];
-
 
   const columns = columnsSchema.map(col => {
     if (!col.editable) {
@@ -213,7 +208,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       />
     </EditableContext.Provider>
   );
-}
+};
 
 const FlavorTable = Form.create()(EditableTable);
 

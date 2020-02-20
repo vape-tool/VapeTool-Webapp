@@ -34,7 +34,7 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
   useEffect(() => fetchCurrentUser(), [firebaseUser]);
 
   if (!isReady) {
-    return <PageLoading/>;
+    return <PageLoading />;
   }
   if (firebaseUser && props.dispatch) {
     dispatchSuccessLogin(props.dispatch);
@@ -63,17 +63,17 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
     <>
       <Helmet>
         <title>{title}</title>
-        <meta name="description" content={title}/>
+        <meta name="description" content={title} />
       </Helmet>
       <div className={styles.container}>
         <div className={styles.lang}>
-          <SelectLang/>
+          <SelectLang />
         </div>
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
               <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo}/>
+                <img alt="logo" className={styles.logo} src={logo} />
                 <span className={styles.title}>Vape Tool</span>
               </Link>
             </div>
@@ -92,7 +92,7 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
             },
             {
               key: 'github',
-              title: <Icon type="github"/>,
+              title: <Icon type="github" />,
               href: 'https://github.com/vape-tool/VapeTool-Webapp',
               blankTarget: true,
             },

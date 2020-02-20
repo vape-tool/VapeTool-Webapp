@@ -138,7 +138,7 @@ const LiquidModel: LiquidModelType = {
     showNewFlavorModal: false,
   },
   effects: {
-    * calculateResults(_, { select, call, put, cancel }) {
+    *calculateResults(_, { select, call, put, cancel }) {
       try {
         const currentLiquid = yield select((state: ConnectState) => state.liquid.currentLiquid);
 
