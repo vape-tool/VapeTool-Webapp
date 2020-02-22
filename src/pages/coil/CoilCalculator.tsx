@@ -126,7 +126,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             min={0.0}
             step={0.1}
             formatter={unitFormatter(1, 'mm')}
-            parser={unitParser('mm')}
+            parser={unitParser(1, 'mm')}
             defaultValue={coil.innerDiameter}
             value={coil.innerDiameter}
             onChange={onInnerDiameterChange}
@@ -140,7 +140,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             min={0.0}
             step={1}
             formatter={unitFormatter(0, 'mm')}
-            parser={unitParser('mm')}
+            parser={unitParser(0, 'mm')}
             value={coil.legsLength}
             onChange={onLegsLengthChange}
           />
@@ -153,7 +153,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
                 min={0.0}
                 step={0.05}
                 formatter={unitFormatter(3, 'Ω')}
-                parser={unitParser('Ω')}
+                parser={unitParser(3, 'Ω')}
                 value={coil.resistance}
                 onChange={onResistanceChange}
               />

@@ -6,15 +6,15 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import {
-  LiquidModelState,
-  dispatchShowNewFlavorModal,
-  dispatchSetTargetRatio,
-  dispatchSetTargetStrength,
+  dispatchCalculateResults,
   dispatchSetAmount,
-  dispatchSetThinner,
   dispatchSetBaseRatio,
   dispatchSetBaseStrength,
-  dispatchCalculateResults,
+  dispatchSetTargetRatio,
+  dispatchSetTargetStrength,
+  dispatchSetThinner,
+  dispatchShowNewFlavorModal,
+  LiquidModelState,
 } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
@@ -96,7 +96,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   min={0.0}
                   step={1}
                   formatter={unitFormatter(0, 'mg/ml')}
-                  parser={unitParser('mg/ml')}
+                  parser={unitParser(0, 'mg/ml')}
                   value={currentLiquid.baseStrength}
                   onChange={onBaseStrengthChange}
                 />
@@ -110,7 +110,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               min={0.0}
               step={1}
               formatter={unitFormatter(1, '%')}
-              parser={unitParser('%')}
+              parser={unitParser(1, '%')}
               value={currentLiquid.thinner}
               onChange={onThinnerChange}
             />
@@ -139,7 +139,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   min={0.0}
                   step={1}
                   formatter={unitFormatter(0, 'ml')}
-                  parser={unitParser('ml')}
+                  parser={unitParser(0, 'ml')}
                   value={currentLiquid.amount}
                   onChange={onAmountChange}
                 />
@@ -150,7 +150,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   min={0.0}
                   step={1}
                   formatter={unitFormatter(0, 'mg/ml')}
-                  parser={unitParser('mg/ml')}
+                  parser={unitParser(0, 'mg/ml')}
                   value={currentLiquid.targetStrength}
                   onChange={onTargetStrengthChange}
                 />
