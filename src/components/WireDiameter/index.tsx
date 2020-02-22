@@ -67,7 +67,7 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
         step={0.1}
         value={wire.mm}
         formatter={unitFormatter(1, 'mm')}
-        parser={unitParser('mm')}
+        parser={unitParser(1, 'mm')}
         onChange={onMmChange}
       />
     </Row>
@@ -80,7 +80,7 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
           step={0.1}
           value={wire.width}
           formatter={unitFormatter(1, 'mm')}
-          parser={unitParser('mm')}
+          parser={unitParser(1, 'mm')}
           onChange={onWidthChange}
         />
       </div>
@@ -92,7 +92,7 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
           step={0.1}
           value={wire.height}
           formatter={unitFormatter(1, 'mm')}
-          parser={unitParser('mm')}
+          parser={unitParser(1, 'mm')}
           onChange={onHeightChange}
         />
       </div>

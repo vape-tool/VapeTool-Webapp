@@ -40,7 +40,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
           max={100}
           step={5}
           formatter={unitFormatter(0, '%')}
-          parser={unitParser('%')}
+          parser={unitParser(0, '%')}
           style={{ marginLeft: 8 }}
           value={100 - ratio}
           onChange={onRatioChange}
@@ -59,7 +59,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
           step={5}
           style={{ marginLeft: 8 }}
           formatter={unitFormatter(0, '%')}
-          parser={unitParser('%')}
+          parser={unitParser(0, '%')}
           value={ratio}
           onChange={(value: number | undefined) => value && onRatioChange(100 - value)}
         />

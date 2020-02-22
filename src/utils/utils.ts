@@ -47,6 +47,24 @@ export function unitFormatter(
     `${value ? Number(value).toFixed(decimals) : value}${unit ? ` ${unit}` : ''}`;
 }
 
-export function unitParser(unit: string): (displayValue: string | undefined) => number | string {
-  return (displayValue: string | undefined) => (displayValue ? displayValue.replace(unit, '') : '');
+export function unitParser(
+  decimals: number,
+  unit: string,
+): (displayValue: string | undefined) => number | string {
+  return (displayValue: string | undefined) => {
+    if (!displayValue) {
+      return '';
+    }
+
+    const parsed = displayValue
+      .replace(unit, '') // remove unit
+      .replace(/[^\d.]/g, ''); // remove anything except digits and dots
+
+    if (parsed === '') {
+      return 0;
+    }
+
+    const value = Number(parsed);
+    return Number.isNaN(value) ? 0 : value.toFixed(decimals);
+  };
 }
