@@ -44,24 +44,31 @@ export function unitFormatter(
   unit?: string,
 ): (value: number | string | undefined) => string {
   return (value: number | string | undefined) =>
-    `${value ? Number(value).toFixed(decimals) : value}${unit ? ` ${unit}` : ''}`;
+    value && value !== ''
+      ? `${Number(value).toFixed(decimals)}${unit ? ` ${unit}` : ''}`
+      : '';
 }
 
 export function unitParser(
   decimals: number,
   unit: string,
+  negativeAllowed?: boolean,
 ): (displayValue: string | undefined) => number | string {
   return (displayValue: string | undefined) => {
     if (!displayValue) {
       return '';
     }
 
-    const parsed = displayValue
+    let parsed = displayValue
       .replace(unit, '') // remove unit
-      .replace(/[^\d.]/g, ''); // remove anything except digits and dots
+      .replace(/[^\d.-]/g, ''); // remove anything except digits and dots
+
+    if (!negativeAllowed) {
+      parsed = parsed.replace('-', ''); // remove minuses
+    }
 
     if (parsed === '') {
-      return 0;
+      return '';
     }
 
     const value = Number(parsed);
