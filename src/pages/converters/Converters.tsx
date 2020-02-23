@@ -1,64 +1,33 @@
 import React from 'react';
-import { Card } from 'antd';
 import { connect } from 'dva';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import { ConverterModelState } from '@/models/converter';
-import AwgTab from '@/pages/converters/AwgTab';
-import InchTab from '@/pages/converters/InchTab';
-import TempTab from '@/pages/converters/TempTab';
+import AwgConverter from '@/pages/converters/AwgConverter';
+import InchConverter from '@/pages/converters/InchConverter';
+import TempConverter from '@/pages/converters/TempConverter';
+import { Col, Row } from 'antd';
 
 export interface ConverterComponentProps {
   converter: ConverterModelState;
   dispatch: Dispatch;
 }
 
-const tabList = [
-  {
-    key: 'awg',
-    tab: 'AWG',
-  },
-  {
-    key: 'inch',
-    tab: 'Inch',
-  },
-  {
-    key: 'temp',
-    tab: 'Temperature',
-  },
-];
+const Converters: React.FC<ConverterComponentProps> = () => (
+  <Row gutter={16}>
+    <Col span={8}>
+      <AwgConverter />
+    </Col>
 
-const Converters: React.FC<ConverterComponentProps> = props => {
-  const { converter, dispatch } = props;
+    <Col span={8}>
+      <InchConverter />
+    </Col>
 
-  const onTabChange = (key: string) =>
-    dispatch({
-      type: 'converter/setTab',
-      payload: key,
-    });
-
-  const contentList = {
-    awg: <AwgTab />,
-    inch: <InchTab />,
-    temp: <TempTab />,
-  };
-
-  return (
-    <PageHeaderWrapper>
-      <Card
-        style={{ width: '100%' }}
-        tabList={tabList}
-        activeTabKey={converter.currentTab}
-        onTabChange={key => {
-          onTabChange(key);
-        }}
-      >
-        {contentList[converter.currentTab]}
-      </Card>
-    </PageHeaderWrapper>
-  );
-};
+    <Col span={8}>
+      <TempConverter />
+    </Col>
+  </Row>
+);
 
 export default connect(({ converter }: ConnectState) => ({
   converter,
