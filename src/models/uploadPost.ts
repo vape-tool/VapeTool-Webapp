@@ -1,4 +1,4 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { message } from 'antd';
 import { Author } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
@@ -6,27 +6,55 @@ import { Effect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { createLink, createPost } from '@/services/items';
 
+export const UPLOAD_POST = 'uploadPost';
+export const SUBMIT_POST = 'submitPost';
+export const SUBMIT_LINK = 'submitLink';
+export const SET_TITLE = 'setTitle';
+export const SET_TEXT = 'setText';
+export const RESET = 'reset';
+
+export function dispatchSetText(dispatch: Dispatch, text: string) {
+  dispatch({
+    type: `${UPLOAD_POST}/${SET_TEXT}`,
+    text,
+  });
+}
+
+export function dispatchSetTitle(dispatch: Dispatch, title: string) {
+  dispatch({
+    type: `${UPLOAD_POST}/${SET_TITLE}`,
+    title,
+  });
+}
+
+export function dispatchSubmit(dispatch: Dispatch, what: string) {
+  dispatch({
+    type: `${UPLOAD_POST}/${what}`,
+  });
+}
+
 export interface UploadPostState {
   title?: string;
   text?: string;
 }
 
+// TODO consider merging with uploadPhoto
 interface ModelType {
   namespace: string;
   state: UploadPostState;
   effects: {
-    submitPost: Effect;
-    submitLink: Effect;
+    [SUBMIT_POST]: Effect;
+    [SUBMIT_LINK]: Effect;
   };
   reducers: {
-    setTitle: Reducer<UploadPostState>;
-    setText: Reducer<UploadPostState>;
-    reset: Reducer<UploadPostState>;
+    [SET_TITLE]: Reducer<UploadPostState>;
+    [SET_TEXT]: Reducer<UploadPostState>;
+    [RESET]: Reducer<UploadPostState>;
   };
 }
 
 const Model: ModelType = {
-  namespace: 'uploadPost',
+  namespace: UPLOAD_POST,
 
   state: {
     title: undefined,

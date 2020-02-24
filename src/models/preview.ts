@@ -1,12 +1,8 @@
-import { Photo, Post, Link, Liquid, Coil } from '@/types'
+import { Photo, Post, Link, Liquid, Coil } from '@/types';
 import { Dispatch, Reducer } from 'redux';
-import {
-  Photo as FirebasePhoto,
-  Post as FirebasePost,
-  Link as FirebaseLink,
-  Coil as FirebaseCoil,
-  Liquid as FirebaseLiquid,
-} from '@vapetool/types';
+
+export const PREVIEW = 'preview';
+export const SELECT_ITEM = 'selectItem';
 
 export interface PreviewModelState {
   selectedItem?: Photo | Post | Link | Coil | Liquid;
@@ -14,11 +10,10 @@ export interface PreviewModelState {
 
 export function dispatchSelectItem(
   dispatch: Dispatch,
-  item: Photo | FirebasePhoto | Post | FirebasePost | Link | FirebaseLink | Coil | FirebaseCoil
-    | Liquid | FirebaseLiquid | undefined,
+  item: Photo | Post | Link | Coil | Liquid | undefined,
 ) {
   dispatch({
-    type: 'preview/selectItem',
+    type: `${PREVIEW}/${SELECT_ITEM}`,
     item,
   });
 }
@@ -27,12 +22,12 @@ export interface PreviewModelType {
   namespace: string;
   state: PreviewModelState;
   reducers: {
-    selectItem: Reducer<PreviewModelState>;
+    [SELECT_ITEM]: Reducer<PreviewModelState>;
   };
 }
 
 const PreviewModel: PreviewModelType = {
-  namespace: 'preview',
+  namespace: PREVIEW,
   state: {
     selectedItem: undefined,
   },

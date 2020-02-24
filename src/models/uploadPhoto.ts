@@ -1,4 +1,4 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { Effect } from 'dva';
 import ReactCrop from 'react-image-crop';
 import { Author } from '@vapetool/types';
@@ -6,6 +6,18 @@ import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/items';
+
+export const UPLOAD_PHOTO = 'uploadPhoto';
+export const SET_SRC = 'setSrc';
+export const SET_CROP = 'setCrop';
+export const SET_CROPPED_IMAGE = 'setCroppedImage';
+export const RESET = 'reset';
+export const SET_DESCRIPTION = 'setDescription';
+export const SHOW_PHOTO_CHOOSER = 'showPhotoChooser';
+export const HIDE_PHOTO_CHOOSER = 'hidePhotoChooser';
+export const SUBMIT = 'submit';
+
+export const submitPhoto = (dispatch: Dispatch) => dispatch({ type: `${UPLOAD_PHOTO}/${SUBMIT}` });
 
 export interface UploadPhotoState {
   src?: string;
@@ -26,18 +38,19 @@ export interface ModelType {
     submit: Effect;
   };
   reducers: {
-    setSrc: Reducer<UploadPhotoState>;
-    setCrop: Reducer<UploadPhotoState>;
-    setCroppedImage: Reducer<UploadPhotoState>;
-    reset: Reducer<UploadPhotoState>;
-    setDescription: Reducer<UploadPhotoState>;
-    showPhotoChooser: Reducer<UploadPhotoState>;
-    hidePhotoChooser: Reducer<UploadPhotoState>;
+    [SET_SRC]: Reducer<UploadPhotoState>;
+    [SET_CROP]: Reducer<UploadPhotoState>;
+    [SET_CROPPED_IMAGE]: Reducer<UploadPhotoState>;
+    [RESET]: Reducer<UploadPhotoState>;
+    [SET_DESCRIPTION]: Reducer<UploadPhotoState>;
+    [SHOW_PHOTO_CHOOSER]: Reducer<UploadPhotoState>;
+    [HIDE_PHOTO_CHOOSER]: Reducer<UploadPhotoState>;
   };
 }
 
+// TODO consider merging with uploadPost
 const Model: ModelType = {
-  namespace: 'uploadPhoto',
+  namespace: UPLOAD_PHOTO,
 
   state: {
     src: undefined,
@@ -50,7 +63,7 @@ const Model: ModelType = {
   },
 
   effects: {
-    * submit(_, { put, call, select }) {
+    *submit(_, { put, call, select }) {
       const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
 
       const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>

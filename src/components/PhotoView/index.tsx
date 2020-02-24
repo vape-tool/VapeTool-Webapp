@@ -7,9 +7,10 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { ItemView } from '../ItemView';
 import styles from '../ItemView/index.less';
 import { ItemName } from '@/types/Item';
+import { ImageType } from '@/services/storage';
 
 class PhotoView extends ItemView<Photo> {
-  what: ItemName = 'gear';
+  what: ItemName = ItemName.PHOTO;
 
   render() {
     const { item } = this.props;
@@ -34,12 +35,12 @@ class PhotoView extends ItemView<Photo> {
         }
       >
         <Card.Meta
-          avatar={<FirebaseImage type="user" id={item.author.uid} />}
+          avatar={<FirebaseImage type={ImageType.USER} id={item.author.uid} />}
           description={<Typography.Text>{item.description}</Typography.Text>}
         />
         <this.Actions />
 
-        <br/>
+        <br />
         {displayComments && displayComments.length > 0 && <this.CommentsList />}
         <this.CommentInput />
       </Card>

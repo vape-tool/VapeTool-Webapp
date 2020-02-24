@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
+import { Tab, changeTab } from '@/models/upload';
 
 interface UploadProps {
   currentTab: string;
@@ -13,12 +14,7 @@ interface UploadProps {
 
 const Upload: React.FC<UploadProps> = props => {
   const { dispatch, currentTab } = props;
-  const onTabChange = (tab: string) => {
-    dispatch({
-      type: 'upload/setTab',
-      tab,
-    });
-  };
+  const onTabChange = changeTab(dispatch);
 
   return (
     <Row type="flex">
@@ -32,7 +28,7 @@ const Upload: React.FC<UploadProps> = props => {
                 Image
               </span>
             }
-            key="photo"
+            key={Tab.PHOTO}
           >
             <UploadPhoto />
           </Tabs.TabPane>
@@ -43,7 +39,7 @@ const Upload: React.FC<UploadProps> = props => {
                 Post
               </span>
             }
-            key="post"
+            key={Tab.POST}
           >
             <UploadPost type="post" />
           </Tabs.TabPane>
@@ -54,7 +50,7 @@ const Upload: React.FC<UploadProps> = props => {
                 Link
               </span>
             }
-            key="link"
+            key={Tab.LINK}
           >
             <UploadPost type="link" />
           </Tabs.TabPane>

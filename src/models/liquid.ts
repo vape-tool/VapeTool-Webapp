@@ -5,13 +5,40 @@ import { message } from 'antd';
 import { calculateResults } from '@/services/liquid';
 import { ConnectState } from '@/models/connect';
 
+export const LIQUID = 'liquid';
+export const SHOW_NEW_FLAVOR_MODAL = 'showNewFlavorModal';
+export const HIDE_NEW_FLAVOR_MODAL = 'hideNewFlavorModal';
+export const SET_TARGET_RATIO = 'setTargetRatio';
+export const SET_TARGET_STRENGTH = 'setTargetStrength';
+export const SET_AMOUNT = 'setAmount';
+export const SET_THINNER = 'setThinner';
+export const SET_BASE_RATIO = 'setBaseRatio';
+export const SET_BASE_STRENGTH = 'setBaseStrength';
+export const CALCULATE_RESULTS = 'calculateResults';
+export const SET_LIQUID = 'setLiquid';
+export const SET_RESULTS = 'setResults';
+export const ADD_FLAVOR = 'addFlavor';
+export const REMOVE_FLAVOR = 'removeFlavor';
+export const EDIT_FLAVOR = 'editFlavor';
+export const SET_FLAVOR = 'setFlavor';
+
 /**
  * show modal to all new flavor
  * @param dispatch - Dispatcher
  */
 export function dispatchShowNewFlavorModal(dispatch: Dispatch) {
   dispatch({
-    type: 'liquid/showNewFlavorModal',
+    type: `${LIQUID}/${SHOW_NEW_FLAVOR_MODAL}`,
+  });
+}
+
+/**
+ * hide modal to all new flavor
+ * @param dispatch - Dispatcher
+ */
+export function dispatchHideNewFlavorModal(dispatch: Dispatch) {
+  dispatch({
+    type: `${LIQUID}/${HIDE_NEW_FLAVOR_MODAL}`,
   });
 }
 
@@ -22,7 +49,7 @@ export function dispatchShowNewFlavorModal(dispatch: Dispatch) {
  */
 export function dispatchSetTargetRatio(dispatch: Dispatch, ratio: number) {
   dispatch({
-    type: 'liquid/setTargetRatio',
+    type: `${LIQUID}/${SET_TARGET_RATIO}`,
     ratio,
   });
 }
@@ -34,7 +61,7 @@ export function dispatchSetTargetRatio(dispatch: Dispatch, ratio: number) {
  */
 export function dispatchSetTargetStrength(dispatch: Dispatch, strength: number | undefined) {
   dispatch({
-    type: 'liquid/setTargetStrength',
+    type: `${LIQUID}/${SET_TARGET_STRENGTH}`,
     strength,
   });
 }
@@ -46,7 +73,7 @@ export function dispatchSetTargetStrength(dispatch: Dispatch, strength: number |
  */
 export function dispatchSetAmount(dispatch: Dispatch, amount: number | undefined) {
   dispatch({
-    type: 'liquid/setAmount',
+    type: `${LIQUID}/${SET_AMOUNT}`,
     amount,
   });
 }
@@ -58,7 +85,7 @@ export function dispatchSetAmount(dispatch: Dispatch, amount: number | undefined
  */
 export function dispatchSetThinner(dispatch: Dispatch, thinner: number | undefined) {
   dispatch({
-    type: 'liquid/setThinner',
+    type: `${LIQUID}/${SET_THINNER}`,
     thinner,
   });
 }
@@ -70,7 +97,7 @@ export function dispatchSetThinner(dispatch: Dispatch, thinner: number | undefin
  */
 export function dispatchSetBaseRatio(dispatch: Dispatch, ratio: number) {
   dispatch({
-    type: 'liquid/setBaseRatio',
+    type: `${LIQUID}/${SET_BASE_RATIO}`,
     ratio,
   });
 }
@@ -82,7 +109,7 @@ export function dispatchSetBaseRatio(dispatch: Dispatch, ratio: number) {
  */
 export function dispatchSetBaseStrength(dispatch: Dispatch, strength: number | undefined) {
   dispatch({
-    type: 'liquid/setBaseStrength',
+    type: `${LIQUID}/${SET_BASE_STRENGTH}`,
     strength,
   });
 }
@@ -93,7 +120,19 @@ export function dispatchSetBaseStrength(dispatch: Dispatch, strength: number | u
  */
 export function dispatchCalculateResults(dispatch: Dispatch) {
   dispatch({
-    type: 'liquid/calculateResults',
+    type: `${LIQUID}/${CALCULATE_RESULTS}`,
+  });
+}
+
+/**
+ * add flavor to flavor collection
+ * @param dispatch - Dispatcher
+ * @param flavor - new flavor
+ */
+export function dispatchAddFlavor(dispatch: Dispatch, flavor: Flavor) {
+  dispatch({
+    type: `${LIQUID}/${ADD_FLAVOR}`,
+    payload: flavor,
   });
 }
 
@@ -108,30 +147,30 @@ export interface LiquidModelType {
   namespace: string;
   state: LiquidModelState;
   reducers: {
-    setBaseStrength: Reducer<LiquidModelState>;
-    setBaseRatio: Reducer<LiquidModelState>;
-    setThinner: Reducer<LiquidModelState>;
-    setAmount: Reducer<LiquidModelState>;
-    setTargetStrength: Reducer<LiquidModelState>;
-    setTargetRatio: Reducer<LiquidModelState>;
+    [SET_BASE_STRENGTH]: Reducer<LiquidModelState>;
+    [SET_BASE_RATIO]: Reducer<LiquidModelState>;
+    [SET_THINNER]: Reducer<LiquidModelState>;
+    [SET_AMOUNT]: Reducer<LiquidModelState>;
+    [SET_TARGET_STRENGTH]: Reducer<LiquidModelState>;
+    [SET_TARGET_RATIO]: Reducer<LiquidModelState>;
 
-    setLiquid: Reducer<LiquidModelState>;
-    setResults: Reducer<LiquidModelState>;
+    [SET_LIQUID]: Reducer<LiquidModelState>;
+    [SET_RESULTS]: Reducer<LiquidModelState>;
 
-    showNewFlavorModal: Reducer<LiquidModelState>;
-    hideNewFlavorModal: Reducer<LiquidModelState>;
-    addFlavor: Reducer<LiquidModelState>;
-    editFlavor: Reducer<LiquidModelState>;
-    setFlavor: Reducer<LiquidModelState>;
-    removeFlavor: Reducer<LiquidModelState>;
+    [SHOW_NEW_FLAVOR_MODAL]: Reducer<LiquidModelState>;
+    [HIDE_NEW_FLAVOR_MODAL]: Reducer<LiquidModelState>;
+    [ADD_FLAVOR]: Reducer<LiquidModelState>;
+    [EDIT_FLAVOR]: Reducer<LiquidModelState>;
+    [SET_FLAVOR]: Reducer<LiquidModelState>;
+    [REMOVE_FLAVOR]: Reducer<LiquidModelState>;
   };
   effects: {
-    calculateResults: Effect;
+    [CALCULATE_RESULTS]: Effect;
   };
 }
 
 const LiquidModel: LiquidModelType = {
-  namespace: 'liquid',
+  namespace: LIQUID,
   state: {
     currentLiquid: new Liquid(),
     results: [],
@@ -147,7 +186,7 @@ const LiquidModel: LiquidModelType = {
           cancel();
         } else if (response instanceof Array) {
           yield put({
-            type: 'setResults',
+            type: SET_RESULTS,
             payload: response,
           });
         }

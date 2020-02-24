@@ -8,11 +8,12 @@ import {
   postsRef,
   ServerValue,
 } from '@/utils/firebase';
-import { CurrentUser } from '@/models/user';
+import { CloudContent, CurrentUser } from '@/models/user';
 import { getPhotoUrl, uploadPhoto } from '@/services/storage';
-import { ItemName } from '@/types/Item';
 import { dispatchSetItems } from '@/models/cloud';
 import { Dispatch } from 'redux';
+
+type FirebaseContent = 'gear' | 'post' | 'link';
 
 export function subscribePhotos(dispatch: Dispatch) {
   console.log('subscribePhotos');
@@ -48,7 +49,7 @@ export function subscribePhotos(dispatch: Dispatch) {
 
     try {
       const photos = await Promise.all(photosPromise);
-      dispatchSetItems(dispatch, 'photos', photos);
+      dispatchSetItems(dispatch, CloudContent.PHOTOS, photos);
     } catch (err) {
       console.error('failed to fetch photosUrls ', err);
     }
@@ -82,7 +83,7 @@ export function subscribeLinks(dispatch: Dispatch) {
       links.push(linkObject);
     });
 
-    dispatchSetItems(dispatch, 'links', links);
+    dispatchSetItems(dispatch, CloudContent.LINKS, links);
   });
 
   return () => {
@@ -114,7 +115,7 @@ export function subscribePosts(dispatch: Dispatch) {
       posts.push(postObject);
     });
 
-    dispatchSetItems(dispatch, 'posts', posts);
+    dispatchSetItems(dispatch, CloudContent.POSTS, posts);
   });
 
   return () => {
@@ -277,7 +278,7 @@ export function likeLink(itemId: string, userId: string) {
   return like('link', itemId, userId);
 }
 
-function like(what: ItemName, id: string, userId: string) {
+function like(what: FirebaseContent, id: string, userId: string) {
   return database()
     .ref(`${what}-likes`)
     .child(id)
@@ -302,7 +303,7 @@ export function reportLink(linkId: string, userId: string): Promise<any> {
   return report('link', linkId, userId);
 }
 
-function report(what: ItemName, id: string, userId: string): Promise<any> {
+function report(what: FirebaseContent, id: string, userId: string): Promise<any> {
   return database()
     .ref(`${what}-reports`)
     .child(id)
@@ -322,7 +323,7 @@ export function deleteLink(linkId: string): Promise<any> {
   return deleteItem('link', linkId);
 }
 
-function deleteItem(what: ItemName, id: string): Promise<any> {
+function deleteItem(what: FirebaseContent, id: string): Promise<any> {
   return database()
     .ref(`${what}s`)
     .child(id)
@@ -341,7 +342,12 @@ export function commentLink(id: string, content: string, { uid, name }: CurrentU
   return commentItem('link', id, content, { uid, name } as CurrentUser);
 }
 
-function commentItem(what: ItemName, id: string, content: string, { uid, name }: CurrentUser) {
+function commentItem(
+  what: FirebaseContent,
+  id: string,
+  content: string,
+  { uid, name }: CurrentUser,
+) {
   const comment = new Comment(new Author(uid, name), content, ServerValue.TIMESTAMP);
   return database()
     .ref(`${what}-comments`)
@@ -362,7 +368,7 @@ export function deleteLinkComment(linkId: string, commentId: string) {
   return deleteItemComment('link', linkId, commentId);
 }
 
-function deleteItemComment(what: ItemName, id: string, commentId: string) {
+function deleteItemComment(what: FirebaseContent, id: string, commentId: string) {
   return database()
     .ref(`${what}-comments`)
     .child(id)

@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import styles from '@/components/ItemView/index.less';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
+import { dispatchSelectBattery } from '@/models/batteries';
 
 interface BatteryViewProps extends ConnectProps {
   battery: Battery;
@@ -12,12 +13,7 @@ interface BatteryViewProps extends ConnectProps {
 }
 
 const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispatch }) => {
-  const onCardClick = () =>
-    dispatch &&
-    dispatch({
-      type: 'batteries/selectBattery',
-      battery,
-    });
+  const onCardClick = () => dispatchSelectBattery(dispatch!, battery);
 
   return (
     <List.Item style={{ height, width }}>

@@ -1,4 +1,4 @@
-import { UserContent } from '@/models/user';
+import { CloudContent } from '@/models/user';
 import UserItems, { UserItemsProps } from '@/pages/user/center/components/UserItems';
 import React from 'react';
 import { Coil } from '@/types';
@@ -11,11 +11,11 @@ import CoilView from '@/components/CoilView';
   loadingItems: loading.effects['user/fetchItems'],
 }))
 class UserPosts extends UserItems<Coil> {
-  what: UserContent = 'coils';
+  what: CloudContent = 'coils';
 
   items = (props: UserItemsProps) => props.userCoils || [];
 
-  renderItem = (item: Coil) => <CoilView item={item}/>;
+  renderItem = (item: Coil) => <CoilView item={item} />;
 }
 
 export default UserPosts;

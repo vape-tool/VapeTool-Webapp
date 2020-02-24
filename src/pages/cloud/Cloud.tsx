@@ -10,6 +10,7 @@ import { Photo, Post, Link } from '@/types';
 import PageLoading from '@/components/PageLoading';
 import LinkView from '@/components/LinkView';
 import { subscribeLinks, subscribePosts, subscribePhotos } from '@/services/items';
+import { redirectBack } from '@/models/global';
 
 interface AuthComponentProps extends ConnectProps {
   photos: Array<Photo>;
@@ -18,12 +19,7 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const onUploadPhotoClicked = () =>
-    props.dispatch &&
-    props.dispatch({
-      type: 'global/redirectTo',
-      path: '/cloud/upload',
-    });
+  const onUploadPhotoClicked = () => props.dispatch && redirectBack(props.dispatch);
 
   useEffect(() => subscribeLinks(props.dispatch!), []);
   useEffect(() => subscribePosts(props.dispatch!), []);

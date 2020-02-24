@@ -21,6 +21,13 @@ import {
 import { Dispatch } from 'redux';
 import { ItemName } from '@/types/Item';
 
+export const OPERATION = 'operation';
+export const LIKE = 'like';
+export const COMMENT = 'comment';
+export const DELETE_COMMENT = 'deleteComment';
+export const DELETE = 'delete';
+export const REPORT = 'report';
+
 export interface OperationsModelState {}
 
 export interface OperationsModelType {
@@ -37,7 +44,7 @@ export interface OperationsModelType {
 
 export function dispatchLike(dispatch: Dispatch, what: ItemName, itemId: string) {
   dispatch({
-    type: 'operation/like',
+    type: `${OPERATION}/${LIKE}`,
     what,
     itemId,
   });
@@ -50,7 +57,7 @@ export function dispatchComment(
   itemId: string,
 ) {
   dispatch({
-    type: 'operation/comment',
+    type: `${OPERATION}/${COMMENT}`,
     what,
     comment,
     itemId,
@@ -64,7 +71,7 @@ export function dispatchDeleteComment(
   itemId: string,
 ) {
   dispatch({
-    type: 'operation/deleteComment',
+    type: `${OPERATION}/${DELETE_COMMENT}`,
     what,
     commentId,
     itemId,
@@ -73,7 +80,7 @@ export function dispatchDeleteComment(
 
 export function dispatchDelete(dispatch: Dispatch, what: ItemName, itemId: string) {
   dispatch({
-    type: 'operation/delete',
+    type: `${OPERATION}/${DELETE}`,
     what,
     itemId,
   });
@@ -81,14 +88,14 @@ export function dispatchDelete(dispatch: Dispatch, what: ItemName, itemId: strin
 
 export function dispatchReport(dispatch: Dispatch, what: ItemName, itemId: string) {
   dispatch({
-    type: 'operation/report',
+    type: `${OPERATION}/${REPORT}`,
     what,
     itemId,
   });
 }
 
 const OperationModel: OperationsModelType = {
-  namespace: 'operation',
+  namespace: OPERATION,
   state: {},
   effects: {
     *like({ itemId, what }, { select, call }) {
@@ -100,15 +107,14 @@ const OperationModel: OperationsModelType = {
         return;
       }
       try {
-        switch (what) {
-          case 'photo':
-          case 'gear':
+        switch (what as ItemName) {
+          case ItemName.PHOTO:
             yield call(likePhoto, itemId, userId);
             break;
-          case 'link':
+          case ItemName.LINK:
             yield call(likeLink, itemId, userId);
             break;
-          case 'post':
+          case ItemName.POST:
             yield call(likePost, itemId, userId);
             break;
           default:
@@ -120,15 +126,14 @@ const OperationModel: OperationsModelType = {
     },
     *delete({ itemId, what }, { call }) {
       try {
-        switch (what) {
-          case 'photo':
-          case 'gear':
+        switch (what as ItemName) {
+          case ItemName.PHOTO:
             yield call(deletePhoto, itemId);
             break;
-          case 'link':
+          case ItemName.LINK:
             yield call(deleteLink, itemId);
             break;
-          case 'post':
+          case ItemName.POST:
             yield call(deletePost, itemId);
             break;
           default:
@@ -148,15 +153,14 @@ const OperationModel: OperationsModelType = {
         return;
       }
       try {
-        switch (what) {
-          case 'photo':
-          case 'gear':
+        switch (what as ItemName) {
+          case ItemName.PHOTO:
             yield call(reportPhoto, itemId, userId);
             break;
-          case 'link':
+          case ItemName.LINK:
             yield call(reportLink, itemId, userId);
             break;
-          case 'post':
+          case ItemName.POST:
             yield call(reportPost, itemId, userId);
             break;
           default:
@@ -174,14 +178,13 @@ const OperationModel: OperationsModelType = {
       }
       try {
         switch (what) {
-          case 'photo':
-          case 'gear':
+          case ItemName.PHOTO:
             yield call(commentPhoto, itemId, comment, user);
             break;
-          case 'link':
+          case ItemName.LINK:
             yield call(commentLink, itemId, comment, user);
             break;
-          case 'post':
+          case ItemName.POST:
             yield call(commentPost, itemId, comment, user);
             break;
           default:
@@ -196,14 +199,13 @@ const OperationModel: OperationsModelType = {
     *deleteComment({ itemId, commentId, what }, { call }) {
       try {
         switch (what) {
-          case 'photo':
-          case 'gear':
+          case ItemName.PHOTO:
             yield call(deletePhotoComment, itemId, commentId);
             break;
-          case 'link':
+          case ItemName.LINK:
             yield call(deleteLinkComment, itemId, commentId);
             break;
-          case 'post':
+          case ItemName.POST:
             yield call(deletePostComment, itemId, commentId);
             break;
           default:

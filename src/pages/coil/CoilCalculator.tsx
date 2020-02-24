@@ -6,6 +6,16 @@ import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
+import {
+  SET_INNER_DIAMETER,
+  SET_SETUP,
+  COIL,
+  SET_LEGS_LENGTH,
+  SET_RESISTANCE,
+  SET_WRAPS,
+  CALCULATE_FOR_RESISTANCE,
+  CALCULATE_FOR_WRAPS,
+} from '@/models/coil';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -26,7 +36,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     key &&
     dispatch &&
     dispatch({
-      type: 'coil/setSetup',
+      type: `${COIL}/${SET_SETUP}`,
       payload: Number(key),
     });
 
@@ -34,7 +44,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     value &&
     dispatch &&
     dispatch({
-      type: 'coil/setInnerDiameter',
+      type: `${COIL}/${SET_INNER_DIAMETER}`,
       payload: value,
     });
 
@@ -42,7 +52,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     value &&
     dispatch &&
     dispatch({
-      type: 'coil/setLegsLength',
+      type: `${COIL}/${SET_LEGS_LENGTH}`,
       payload: value,
     });
 
@@ -52,7 +62,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       value &&
       dispatch &&
       dispatch({
-        type: 'coil/setResistance',
+        type: `${COIL}/${SET_RESISTANCE}`,
         payload: value,
       })
     );
@@ -64,7 +74,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       value &&
       dispatch &&
       dispatch({
-        type: 'coil/setWraps',
+        type: `${COIL}/${SET_WRAPS}`,
         payload: value,
       })
     );
@@ -73,13 +83,13 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const calculate = (): void => {
     if (lastEdit === 'wraps') {
       dispatch({
-        type: 'coil/calculateForResistance',
+        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
         coil,
       });
     } else {
       // default
       dispatch({
-        type: 'coil/calculateForWraps',
+        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
         coil,
       });
     }

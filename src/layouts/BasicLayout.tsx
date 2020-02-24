@@ -22,6 +22,8 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+import { dispatchFetchCurrentUser } from '@/models/user';
+import { dispatchChangeLayoutCollapsed } from '@/models/global';
 
 const noMatch = (
   <Result
@@ -110,11 +112,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
    */
 
   useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-    }
+    dispatchFetchCurrentUser(dispatch);
   }, []);
 
   /**
@@ -122,10 +120,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
    */
   const handleMenuCollapse = (payload: boolean): void => {
     if (dispatch) {
-      dispatch({
-        type: 'global/changeLayoutCollapsed',
-        payload,
-      });
+      dispatchChangeLayoutCollapsed(dispatch, payload);
     }
   };
 

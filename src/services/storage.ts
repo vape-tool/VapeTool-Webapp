@@ -6,43 +6,45 @@ import {
   usersStorageRef,
 } from '@/utils/firebase';
 
-export type ImageType = 'user' | 'gear' | 'photo' | 'coil' | 'battery';
+export enum ImageType {
+  USER = 'user',
+  PHOTO = 'gear',
+  COIL = 'coil',
+  BATTERY = 'battery',
+}
 
 export function getBatteryUrl(uid: string): Promise<string> {
-  return getImageUrl('battery', uid);
+  return getImageUrl(ImageType.BATTERY, uid);
 }
 
 export function getPhotoUrl(uid: string): Promise<string> {
-  return getImageUrl('photo', uid);
+  return getImageUrl(ImageType.PHOTO, uid);
 }
 
 export function getAvatarUrl(uid: string): Promise<string> {
-  return getImageUrl('user', uid);
+  return getImageUrl(ImageType.USER, uid);
 }
 
 export function getCoilUrl(uid: string): Promise<string> {
-  return getImageUrl('coil', uid);
+  return getImageUrl(ImageType.COIL, uid);
 }
 
 export function getImageUrl(type: ImageType, uid: string): Promise<string> {
   switch (type) {
-    case 'photo':
+    case ImageType.PHOTO:
       return getDownloadUrl(photosStorageRef, uid);
-    case 'coil':
+    case ImageType.COIL:
       return getDownloadUrl(coilsStorageRef, uid);
-    case 'user':
+    case ImageType.USER:
       return getDownloadUrl(usersStorageRef, uid);
-    case 'battery':
+    case ImageType.BATTERY:
       return getDownloadUrl(batteriesStorageRef, uid);
     default:
       throw Error('Unsupported type');
   }
 }
 
-function getDownloadUrl(
-  storageRef: StorageReference,
-  uid: string,
-): Promise<string> {
+function getDownloadUrl(storageRef: StorageReference, uid: string): Promise<string> {
   return new Promise((resolve, reject) => {
     storageRef
       .child(`${uid}.jpg`)

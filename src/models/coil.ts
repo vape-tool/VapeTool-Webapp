@@ -1,9 +1,61 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { Effect } from 'dva';
 import { Coil, Properties, Wire, wireGenerator, WireStyle } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateForResistance, calculateForWraps, calculateProperties } from '@/services/coil';
 import { ConnectState } from '@/models/connect';
+
+export const COIL = 'coil';
+export const SET_SETUP = 'setSetup';
+export const SET_INNER_DIAMETER = 'setInnerDiameter';
+export const SET_COIL = 'setCoil';
+export const SET_LEGS_LENGTH = 'setLegsLength';
+export const SET_RESISTANCE = 'setResistance';
+export const SET_WRAPS = 'setWraps';
+export const SET_PROPERTIES = 'setProperties';
+export const SET_TYPE = 'setType';
+export const SET_WIRE = 'setWire';
+export const DELETE_WIRE = 'deleteWire';
+export const ADD_WIRE = 'addWire';
+
+export const CALCULATE_FOR_RESISTANCE = 'calculateForResistance';
+export const CALCULATE_FOR_WRAPS = 'calculateForWraps';
+export const CALCULATE_PROPERTIES = 'calculateProperties';
+
+export function dispatchSetCoilType(dispatch: Dispatch, wireType: string, paths: Path[]) {
+  dispatch({
+    type: `${COIL}/${SET_TYPE}`,
+    payload: { type: wireType, paths },
+  });
+}
+
+export function dispatchSetInnerDiameter(dispatch: Dispatch, innerDiameter: number) {
+  dispatch({
+    type: `${COIL}/${SET_INNER_DIAMETER}`,
+    payload: innerDiameter,
+  });
+}
+
+export function dispatchAddWire(dispatch: Dispatch, path: Path[], wire: Wire) {
+  dispatch({
+    type: `${COIL}/${ADD_WIRE}`,
+    payload: { paths: path, wire },
+  });
+}
+
+export function dispatchDeleteWire(dispatch: Dispatch, paths: Path[]) {
+  dispatch({
+    type: `${COIL}/${DELETE_WIRE}`,
+    paths,
+  });
+}
+
+export function dispatchSetWire(dispatch: Dispatch, paths: Path[], wire: Wire) {
+  dispatch({
+    type: `${COIL}/${DELETE_WIRE}`,
+    payload: { paths, wire },
+  });
+}
 
 export interface Path {
   style: WireStyle;
@@ -20,22 +72,22 @@ export interface CoilModelType {
   namespace: string;
   state: CoilModelState;
   reducers: {
-    setSetup: Reducer<CoilModelState>;
-    setInnerDiameter: Reducer<CoilModelState>;
-    setCoil: Reducer<CoilModelState>;
-    setLegsLength: Reducer<CoilModelState>;
-    setResistance: Reducer<CoilModelState>;
-    setWraps: Reducer<CoilModelState>;
-    setProperties: Reducer<CoilModelState>;
-    setType: Reducer<CoilModelState>;
-    setWire: Reducer<CoilModelState>;
-    deleteWire: Reducer<CoilModelState>;
-    addWire: Reducer<CoilModelState>;
+    [SET_SETUP]: Reducer<CoilModelState>;
+    [SET_INNER_DIAMETER]: Reducer<CoilModelState>;
+    [SET_COIL]: Reducer<CoilModelState>;
+    [SET_LEGS_LENGTH]: Reducer<CoilModelState>;
+    [SET_RESISTANCE]: Reducer<CoilModelState>;
+    [SET_WRAPS]: Reducer<CoilModelState>;
+    [SET_PROPERTIES]: Reducer<CoilModelState>;
+    [SET_TYPE]: Reducer<CoilModelState>;
+    [SET_WIRE]: Reducer<CoilModelState>;
+    [DELETE_WIRE]: Reducer<CoilModelState>;
+    [ADD_WIRE]: Reducer<CoilModelState>;
   };
   effects: {
-    calculateForResistance: Effect;
-    calculateForWraps: Effect;
-    calculateProperties: Effect;
+    [CALCULATE_FOR_RESISTANCE]: Effect;
+    [CALCULATE_FOR_WRAPS]: Effect;
+    [CALCULATE_PROPERTIES]: Effect;
   };
 }
 
@@ -45,7 +97,7 @@ const initialState: CoilModelState = {
 };
 
 const CoilModel: CoilModelType = {
-  namespace: 'coil',
+  namespace: COIL,
   state: initialState,
   effects: {
     *calculateForResistance({ coil }, { call, put, cancel }) {
@@ -55,10 +107,10 @@ const CoilModel: CoilModelType = {
           cancel();
         } else if (response instanceof Object) {
           yield put({
-            type: 'setCoil',
+            type: SET_COIL,
             payload: response,
           });
-          yield put({ type: 'calculateProperties', coil });
+          yield put({ type: CALCULATE_PROPERTIES, coil });
         }
       } catch (e) {
         message.error(e.message);
@@ -71,10 +123,10 @@ const CoilModel: CoilModelType = {
           cancel();
         } else if (response instanceof Object) {
           yield put({
-            type: 'setCoil',
+            type: SET_COIL,
             payload: response,
           });
-          yield put({ type: 'calculateProperties', coil });
+          yield put({ type: CALCULATE_PROPERTIES, coil });
         }
       } catch (e) {
         message.error(e.message);
@@ -88,8 +140,8 @@ const CoilModel: CoilModelType = {
           cancel();
         } else if (response instanceof Object) {
           yield put({
-            type: 'setProperties',
-            properties: response,
+            type: SET_PROPERTIES,
+            payload: response,
           });
         }
       } catch (e) {
@@ -152,10 +204,10 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setProperties(state = initialState, { properties }) {
+    setProperties(state = initialState, { payload }) {
       return {
         ...state,
-        properties,
+        properties: payload,
       };
     },
     setType(state = initialState, { payload: { paths, type } }) {

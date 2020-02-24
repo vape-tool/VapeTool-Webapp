@@ -1,9 +1,51 @@
 import { Effect } from 'dva';
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { message } from 'antd';
 import { getUser, updateDisplayName } from '@/services/user';
 import { ConnectState } from '@/models/connect';
 import { uploadAvatar } from '@/services/storage';
+import { GLOBAL, REDIRECT_BACK } from './global';
+import { SET_USER, USER } from '@/models/user';
+
+export const USER_WIZARD = 'userWizard';
+export const UPDATE_USER = 'updateUser';
+export const SET_DISPLAY_NAME = 'setDisplayName';
+export const SET_NEW_AVATAR = 'setNewAvatar';
+export const SHOW_NEW_AVATAR_CHOOSER = 'showNewAvatarChooser';
+export const HIDE_NEW_AVATAR_CHOOSER = 'hideNewAvatarChooser';
+
+export function dispatchUpdateUser(dispatch: Dispatch) {
+  dispatch({
+    type: `${USER_WIZARD}/${UPDATE_USER}`,
+  });
+}
+
+export function showNewAvatarChooser(dispatch: Dispatch) {
+  dispatch({
+    type: `${USER_WIZARD}/${SHOW_NEW_AVATAR_CHOOSER}`,
+  });
+}
+
+export function hideNewAvatarChooser(dispatch: Dispatch) {
+  dispatch({
+    type: `${USER_WIZARD}/${HIDE_NEW_AVATAR_CHOOSER}`,
+  });
+}
+
+export function dispatchNewDisplayName(dispatch: Dispatch, displayName: string) {
+  dispatch({
+    type: `${USER_WIZARD}/${SET_DISPLAY_NAME}`,
+    displayName,
+  });
+}
+
+export function dispatchNewAvatar(dispatch: Dispatch, imageUrl: string, imageBlob: Blob | File) {
+  dispatch({
+    type: `${USER_WIZARD}/${SET_NEW_AVATAR}`,
+    imageUrl,
+    imageBlob,
+  });
+}
 
 export interface UserWizardState {
   displayName?: string;
@@ -17,18 +59,18 @@ export interface ModelType {
   namespace: string;
   state: UserWizardState;
   effects: {
-    updateUser: Effect;
+    [UPDATE_USER]: Effect;
   };
   reducers: {
-    setDisplayName: Reducer<UserWizardState>;
-    setNewAvatar: Reducer<UserWizardState>;
-    showNewAvatarChooser: Reducer<UserWizardState>;
-    hideNewAvatarChooser: Reducer<UserWizardState>;
+    [SET_DISPLAY_NAME]: Reducer<UserWizardState>;
+    [SET_NEW_AVATAR]: Reducer<UserWizardState>;
+    [SHOW_NEW_AVATAR_CHOOSER]: Reducer<UserWizardState>;
+    [HIDE_NEW_AVATAR_CHOOSER]: Reducer<UserWizardState>;
   };
 }
 
 const UserWizardModel: ModelType = {
-  namespace: 'userWizard',
+  namespace: USER_WIZARD,
 
   state: {},
 
@@ -71,10 +113,10 @@ const UserWizardModel: ModelType = {
       }
 
       yield put({
-        type: 'user/setUser',
+        type: `${USER}/${SET_USER}`,
         currentUser: yield call(getUser, currentUser.uid),
       });
-      yield put({ type: 'global/redirectBack' });
+      yield put({ type: `${GLOBAL}/${REDIRECT_BACK}` });
     },
   },
   reducers: {

@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { Flavor } from '@vapetool/types';
 import { ConnectState } from '@/models/connect';
 import { Dispatch } from 'redux';
+import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
 
 interface NewFlavorModalProps extends FormComponentProps {
   showNewFlavorModal: boolean;
@@ -23,21 +24,12 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
 
       console.log('Received values of form: ', values);
       form.resetFields();
-      dispatch({
-        type: 'liquid/addFlavor',
-        payload: new Flavor({ name, manufacturer, percentage, price, ratio }),
-      });
-      dispatch({
-        type: 'liquid/hideNewFlavorModal',
-      });
+      dispatchAddFlavor(dispatch, new Flavor({ name, manufacturer, percentage, price, ratio }));
+      dispatchHideNewFlavorModal(dispatch);
     });
   };
 
-  const onCancel = () => {
-    dispatch({
-      type: 'liquid/hideNewFlavorModal',
-    });
-  };
+  const onCancel = () => dispatchHideNewFlavorModal(dispatch);
 
   const formItemLayout = {
     labelCol: {

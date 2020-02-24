@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Card, Col, Icon, Row, Select, Typography } from 'antd';
 import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
 import { getResistancePerMeter } from '@/utils/math';
-import { Path } from '@/models/coil';
+import { dispatchDeleteWire, dispatchSetWire, Path } from '@/models/coil';
 import WireDiameter from '@/components/WireDiameter';
 import RoundIcon from '@/assets/RoundIcon';
 import DiameterIcon from '@/assets/DiameterIcon';
@@ -52,21 +52,11 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = (): void => {
-  };
-  const onDeleteClick = () => {
-    dispatch({
-      type: 'coil/deleteWire',
-      paths: path,
-    });
-  };
+  const handleMaterialChange = (): void => {};
+  const onDeleteClick = () => dispatchDeleteWire(dispatch, path);
   const onChangeKindClick = () => {
     wire.kind = wire.kind === WireKind.ROUND ? WireKind.RIBBON : WireKind.ROUND;
-
-    dispatch({
-      type: 'coil/setWire',
-      payload: { paths: path, wire },
-    });
+    dispatchSetWire(dispatch, path, wire);
   };
 
   return (

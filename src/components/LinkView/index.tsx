@@ -9,9 +9,10 @@ import styles from '../ItemView/index.less';
 import { ItemView } from '@/components/ItemView';
 import { ItemName } from '@/types/Item';
 import { Link } from '@/types';
+import { ImageType } from '@/services/storage';
 
 class LinkView extends ItemView<Link> {
-  what: ItemName = 'link';
+  what: ItemName = ItemName.LINK;
 
   render() {
     const { item } = this.props;
@@ -20,7 +21,7 @@ class LinkView extends ItemView<Link> {
     return (
       <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
-          avatar={<FirebaseImage type="user" id={item.author.uid} />}
+          avatar={<FirebaseImage type={ImageType.USER} id={item.author.uid} />}
           title={
             <span onClick={this.onSelectItem}>
               <Typography.Text>{item.title}</Typography.Text>

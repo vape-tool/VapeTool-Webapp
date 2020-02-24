@@ -19,11 +19,11 @@ const prodDb = prodApp.database();
 const prodStorage = prodApp.storage();
 
 export function database(): firebase.database.Database {
-  return devDb
+  return devDb;
 }
 
 export function storage(): firebase.storage.Storage {
-  return devStorage
+  return devStorage;
 }
 
 export const batteriesRef = prodDb.ref('batteries');
@@ -31,11 +31,19 @@ export const postsRef = database().ref('posts');
 export const linksRef = database().ref('links');
 export const photosRef = database().ref('gears');
 export const usersRef = database().ref('users');
+export const coilsRef = database().ref('coils');
+export const liquidsRef = database().ref('liquids');
 
 export const batteriesStorageRef = prodStorage.ref('batteries').child('images');
-export const usersStorageRef = storage().ref('users').child('images');
-export const coilsStorageRef = storage().ref('coils').child('images');
-export const photosStorageRef = storage().ref('gears').child('images');
+export const usersStorageRef = storage()
+  .ref('users')
+  .child('images');
+export const coilsStorageRef = storage()
+  .ref('coils')
+  .child('images');
+export const photosStorageRef = storage()
+  .ref('gears')
+  .child('images');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import ServerValue = firebase.database.ServerValue;
@@ -43,6 +51,7 @@ export import ServerValue = firebase.database.ServerValue;
 export import DataSnapshot = firebase.database.DataSnapshot;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import DatabaseReference = firebase.database.Reference;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import StorageReference = firebase.storage.Reference;
 
 let userLoaded: boolean = false;

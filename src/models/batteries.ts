@@ -6,10 +6,35 @@ import { Battery } from '@/types';
 import { ConnectState } from '@/models/connect';
 import { setAffiliate } from '@/services/batteries';
 
+export const BATTERIES = 'batteries';
+export const SET_BATTERIES = 'setBatteries';
+export const SHOW_NEW_AFFILIATE_MODAL = 'showNewAffiliateModal';
+export const HIDE_NEW_AFFILIATE_MODAL = 'hideNewAffiliateModal';
+export const EDIT_AFFILIATE = 'editAffiliate';
+export const TOGGLE_EDIT_BATTERY = 'toggleEditBattery';
+export const SELECT_BATTERY = 'selectBattery';
+export const ADD_BATTERY = 'addBattery';
+export const REMOVE_BATTERY = 'removeBattery';
+export const SET_BATTERY = 'setBattery';
+export const SET_AFFILIATE = 'setAffiliate';
+
 export function dispatchSetBatteries(dispatch: Dispatch, batteries: Battery[]) {
   dispatch({
-    type: 'batteries/setBatteries',
+    type: `${BATTERIES}/${SET_BATTERIES}`,
     batteries,
+  });
+}
+
+export function dispatchSelectBattery(dispatch: Dispatch, battery?: Battery) {
+  dispatch({
+    type: `${BATTERIES}/${SELECT_BATTERY}`,
+    battery,
+  });
+}
+
+export function dispatchToggleEditBattery(dispatch: Dispatch) {
+  dispatch({
+    type: `${BATTERIES}/${TOGGLE_EDIT_BATTERY}`,
   });
 }
 
@@ -25,23 +50,23 @@ export interface BatteriesModelType {
   namespace: string;
   state: BatteriesModelState;
   effects: {
-    setAffiliate: Effect;
+    [SET_AFFILIATE]: Effect;
   };
   reducers: {
-    showNewAffiliateModal: Reducer<BatteriesModelState>;
-    hideNewAffiliateModal: Reducer<BatteriesModelState>;
-    editAffiliate: Reducer<BatteriesModelState>;
-    toggleEditBattery: Reducer<BatteriesModelState>;
-    selectBattery: Reducer<BatteriesModelState>;
-    addBattery: Reducer<BatteriesModelState>;
-    removeBattery: Reducer<BatteriesModelState>;
-    setBattery: Reducer<BatteriesModelState>;
-    setBatteries: Reducer<BatteriesModelState>;
+    [SHOW_NEW_AFFILIATE_MODAL]: Reducer<BatteriesModelState>;
+    [HIDE_NEW_AFFILIATE_MODAL]: Reducer<BatteriesModelState>;
+    [EDIT_AFFILIATE]: Reducer<BatteriesModelState>;
+    [TOGGLE_EDIT_BATTERY]: Reducer<BatteriesModelState>;
+    [SELECT_BATTERY]: Reducer<BatteriesModelState>;
+    [ADD_BATTERY]: Reducer<BatteriesModelState>;
+    [REMOVE_BATTERY]: Reducer<BatteriesModelState>;
+    [SET_BATTERY]: Reducer<BatteriesModelState>;
+    [SET_BATTERIES]: Reducer<BatteriesModelState>;
   };
 }
 
 const BatteriesModel: BatteriesModelType = {
-  namespace: 'batteries',
+  namespace: BATTERIES,
 
   state: {
     batteries: [],
