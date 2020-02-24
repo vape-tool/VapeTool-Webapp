@@ -17,11 +17,11 @@ const SUBSCRIPTION = 'SUBSCRIPTION';
 
 const paypalCodes = {
   // first PRODUCTION, second DEVELOPMENT
-  [LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
-  [SUBSCRIPTION]: ['PAJTMA62ZSBRW', 'WABX9M3L32NJS'],
+  [LIFETIME]: [ 'UBCLCJ384D2D4', '3FAV75HYMXJ5N' ],
+  [SUBSCRIPTION]: [ 'PAJTMA62ZSBRW', 'WABX9M3L32NJS' ],
 };
 
-const coinbaseCodes = ['5e8d6403-71dc-4988-8b06-f21d8d296cb3', '5e8d6403-71dc-4988-8b06-f21d8d296cb3'];
+const coinbaseCodes = [ '5e8d6403-71dc-4988-8b06-f21d8d296cb3', '5e8d6403-71dc-4988-8b06-f21d8d296cb3' ];
 
 const Payment: React.FC = () => {
 
@@ -43,8 +43,8 @@ const Payment: React.FC = () => {
   };
 
   return (
-    <Row gutter={16} type="flex" justify="center">
-      <Col span={12} lg={8}>
+    <Row gutter={[ 16, 16 ]} type="flex" justify="center">
+      <Col md={12} style={{ maxWidth: 550 }}>
         <Card className={styles.paymentCard}>
           <Typography.Title>Vape Tool Pro</Typography.Title>
           <Typography.Title level={4}>Choose you plan:</Typography.Title>
@@ -67,27 +67,27 @@ const Payment: React.FC = () => {
           {step > 0 && (
             <>
               <Typography.Title level={4} style={{ marginTop: 24 }}>Choose you payment method:</Typography.Title>
-              <Row type="flex" justify="space-between" gutter={12} style={{ marginBottom: 24 }}>
-                <Col md={8}>
+              <Row type="flex" justify="center" gutter={[ 12, 12 ]} style={{ marginBottom: 24 }}>
+                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <div className={`${styles.paymentMethod} ${styles.disabled}`}>
                     <span className={styles.methodName}>Credit Card</span>
                     <span className={styles.poweredBy}>powered by</span>
                     <img src={stripeLogo} alt="Stripe" />
                   </div>
                 </Col>
-                <Col md={8}>
+                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <a
                     target="_blank"
                     rel="noreferrer noopener"
                     href={getPaypalHref()}
                   >
                     <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
-                      <img src={paypalLogo} className={styles.paypalLogo} title="Pay with PayPal" alt="PayPal"/>
+                      <img src={paypalLogo} className={styles.paypalLogo} title="Pay with PayPal" alt="PayPal" />
                       <span className={styles.methodName}>checkout</span>
                     </div>
                   </a>
                 </Col>
-                <Col md={8}>
+                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <a
                     target="_blank"
                     rel="noreferrer noopener"
@@ -114,7 +114,7 @@ const Payment: React.FC = () => {
         </Card>
       </Col>
 
-      <Col md={12} lg={8}>
+      <Col md={12} style={{ maxWidth: 530 }}>
         <Card className={styles.benefitsCard}>
           <Typography.Title>Vape Tool Pro Benefits</Typography.Title>
           <ul>

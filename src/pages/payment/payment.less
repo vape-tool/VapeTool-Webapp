@@ -2,12 +2,16 @@
 
 @fontFamily: 'PingFang SC', Arial, 'Hiragino Sans GB', 'Microsoft Yahei', 'Microsoft Sans Serif', sans-serif;
 
-.benefitsCard {
+.benefitsCard, .paymentCard {
   padding: 16px;
-  color: @text-color-dark;
   font-family: @fontFamily;
-  background: @primary-color;
   border-radius: 2px;
+}
+
+.benefitsCard {
+  color: @text-color-dark;
+  background: @primary-color;
+  border: 1px @primary-color solid;
 
   h1 {
     color: @text-color-inverse;
@@ -23,11 +27,8 @@
 }
 
 .paymentCard {
-  padding: 16px;
-  font-family: @fontFamily;
   background: #fefefe;
   border: 1px @primary-color solid;
-  border-radius: 2px;
 
   h1 {
     color: @primary-color;
