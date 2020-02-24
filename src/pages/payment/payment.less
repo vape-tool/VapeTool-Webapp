@@ -1,0 +1,133 @@
+@import '~antd/es/style/themes/default.less';
+
+@fontFamily: 'PingFang SC', Arial, 'Hiragino Sans GB', 'Microsoft Yahei', 'Microsoft Sans Serif', sans-serif;
+
+.benefitsCard {
+  padding: 16px;
+  color: @text-color-dark;
+  font-family: @fontFamily;
+  background: @primary-color;
+  border-radius: 2px;
+
+  h1 {
+    color: @text-color-inverse;
+  }
+
+  ul {
+    list-style-type: initial;
+    li {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+  }
+}
+
+.paymentCard {
+  padding: 16px;
+  font-family: @fontFamily;
+  background: #fefefe;
+  border: 1px @primary-color solid;
+  border-radius: 2px;
+
+  h1 {
+    color: @primary-color;
+  }
+
+  .paymentOption {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 20px;
+
+    &:hover .radioText, &.active .radioText {
+      margin-left: 15px;
+      color: @text-color;
+    }
+
+    .radioText {
+      display: inline-block;
+      margin-left: 0;
+      color: @text-color-secondary;
+      vertical-align: middle;
+      transition: margin 700ms, color 700ms;
+
+      & > div {
+        margin-top: 4px;
+      }
+    }
+  }
+
+  button {
+    margin: 24px 0 8px;
+  }
+
+  .accepted {
+    padding: 0 8px;
+    color: @text-color-secondary;
+    font-size: 12px;
+  }
+
+  .return {
+    color: @primary-color;
+    font-size: 13px;
+
+    i {
+      margin-right: 8px;
+    }
+  }
+
+  .paymentMethod {
+    height: 92px;
+    padding: 12px;
+    color: @text-color;
+    text-align: center;
+    border: 1px @primary-color solid;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: color 300ms, background 700ms;
+
+    &.disabled {
+      background: @btn-disable-bg;
+      border-color: @btn-disable-border;
+      cursor: inherit;
+    }
+
+    &:hover:not(.disabled) {
+      color: @text-color-inverse;
+      background: @primary-color;
+
+      &.paypalMethod {
+        color: @text-color;
+        background: rgb(255, 196, 57);
+      }
+
+      .poweredBy {
+        color: @text-color-dark;
+      }
+    }
+
+    .methodName {
+      display: block;
+      font-weight: 800;
+    }
+
+    .poweredBy {
+      display: block;
+      color: @text-color-secondary;
+      font-size: 10px;
+      transition: color 300ms;
+    }
+
+    & > img {
+      max-width: 100px;
+      max-height: 30px;
+
+      &.paypalLogo {
+        max-height: 50px;
+        margin-top: 8px;
+      }
+    }
+  }
+}
