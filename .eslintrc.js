@@ -6,5 +6,5 @@ module.exports = {
   },
   rules: {
     'no-mixed-operators': 0,
-  }
+  },
 };
