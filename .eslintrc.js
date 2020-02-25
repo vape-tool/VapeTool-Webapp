@@ -6,5 +6,7 @@ module.exports = {
   },
   rules: {
     'no-mixed-operators': 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/label-has-associated-control": 0,
   },
 };

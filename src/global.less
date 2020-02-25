@@ -34,7 +34,22 @@ ol {
   list-style: none;
 }
 
+label {
+  display: inline-block;
+  font-size: 12px;
+  text-align: left;
+
+  & > div {
+    display: block!important;
+    margin-top: 4px!important;
+  }
+}
+
 @media (max-width: @screen-xs) {
+  .ant-card-body {
+    padding: 8px!important;
+  }
+
   .ant-table {
     width: 100%;
     overflow-x: auto;

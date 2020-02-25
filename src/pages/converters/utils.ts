@@ -1,8 +1,9 @@
-import { CONVERTER } from '@/models/converter';
+export const nanToUndefined = (str: string | number): number | undefined => {
+  if (str === "" || str === undefined || str === null) {
+    return undefined;
+  }
 
-export const onChangeValue = (dispatch: any, type: string) => (value?: number) => {
-  dispatch({
-    type: `${CONVERTER}/${type}`,
-    payload: value,
-  });
+  const value = Number(str);
+
+  return Number.isNaN(value) || !Number.isFinite(value) ? undefined : value;
 };

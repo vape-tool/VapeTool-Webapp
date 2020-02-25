@@ -1,5 +1,6 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { awgToMm, mmToAwg } from '@/utils/math';
+import { nanToUndefined } from '@/pages/converters/utils';
 
 export const CONVERTER = 'converter';
 
@@ -15,6 +16,13 @@ export const SET_INCH_IN_INCH_TO_MM = 'setInchInInchToMm';
 export const SET_MM_IN_INCH_TO_MM = 'setMmInInchToMm';
 export const SET_CELSIUS_IN_TEMPERATURE = 'setCelsiusInTemperature';
 export const SET_FAHRENHEIT_IN_TEMPERATURE = 'setFahrenheitInTemperature';
+
+export const dispatchChangeValue = (dispatch: Dispatch, type: string) => (value?: number) => {
+  dispatch({
+    type: `${CONVERTER}/${type}`,
+    payload: value,
+  });
+};
 
 export interface ConverterModelState {
   [AWG_TO_MM]: {
@@ -61,28 +69,33 @@ const ConverterModel: ConverterModelType = {
     [TEMPERATURE]: {},
   },
   reducers: {
-    setAwgInAwgToMm(state, { payload: awg }): ConverterModelState {
+    setAwgInAwgToMm(state, { payload: awgStr }): ConverterModelState {
+      const awg = nanToUndefined(awgStr);
+
       return {
         ...(state as ConverterModelState),
         [AWG_TO_MM]: {
           awg,
-          mm: awg ? awgToMm(awg) : undefined,
+          mm: awg !== undefined ? awgToMm(awg) : undefined,
         },
       };
     },
-    setMmInAwgToMm(state, { payload: mm }): ConverterModelState {
+    setMmInAwgToMm(state, { payload: mmStr }): ConverterModelState {
+      const mm = nanToUndefined(mmStr);
+
       return {
         ...(state as ConverterModelState),
         [AWG_TO_MM]: {
-          awg: mm ? mmToAwg(mm) : undefined,
+          awg: mm !== undefined ? mmToAwg(mm) : undefined,
           mm,
         },
       };
     },
 
-    setNominatorInInchToMm(state, { payload: nominator }): ConverterModelState {
+    setNominatorInInchToMm(state, { payload: nominatorStr }): ConverterModelState {
+      const nominator = nanToUndefined(nominatorStr);
       const denominator = state && state[INCH_TO_MM].denominator;
-      const inch = nominator && denominator && denominator !== 0
+      const inch = nominator && denominator
         ? nominator / denominator
         : undefined;
 
@@ -92,13 +105,14 @@ const ConverterModel: ConverterModelType = {
           nominator,
           denominator,
           inch,
-          mm: inch ? inch / INCHES_TO_MM_FACTOR : undefined,
+          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
         },
       };
     },
-    setDenominatorInInchToMm(state, { payload: denominator }): ConverterModelState {
+    setDenominatorInInchToMm(state, { payload: denominatorStr }): ConverterModelState {
+      const denominator = nanToUndefined(denominatorStr);
       const nominator = state && state[INCH_TO_MM].nominator;
-      const inch = nominator && denominator && denominator !== 0
+      const inch = nominator && denominator
         ? nominator / denominator
         : undefined;
 
@@ -108,48 +122,56 @@ const ConverterModel: ConverterModelType = {
           nominator,
           denominator,
           inch,
-          mm: inch ? inch / INCHES_TO_MM_FACTOR : undefined,
+          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
         },
       };
     },
-    setInchInInchToMm(state, { payload: inch }): ConverterModelState {
+    setInchInInchToMm(state, { payload: inchStr }): ConverterModelState {
+      const inch = nanToUndefined(inchStr);
+
       return {
         ...(state as ConverterModelState),
         [INCH_TO_MM]: {
           nominator: undefined,
           denominator: undefined,
           inch,
-          mm: inch ? inch / INCHES_TO_MM_FACTOR : undefined,
+          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
         },
       };
     },
-    setMmInInchToMm(state, { payload: mm }): ConverterModelState {
+    setMmInInchToMm(state, { payload: mmStr }): ConverterModelState {
+      const mm = nanToUndefined(mmStr);
+
       return {
         ...(state as ConverterModelState),
         [INCH_TO_MM]: {
           nominator: undefined,
           denominator: undefined,
-          inch: mm ? mm * INCHES_TO_MM_FACTOR : undefined,
+          inch: mm !== undefined ? mm * INCHES_TO_MM_FACTOR : undefined,
           mm,
         },
       };
     },
 
-    setCelsiusInTemperature(state, { payload: celsius }): ConverterModelState {
+    setCelsiusInTemperature(state, { payload: celsiusStr }): ConverterModelState {
+      const celsius = nanToUndefined(celsiusStr);
+
       return {
         ...(state as ConverterModelState),
         [TEMPERATURE]: {
           celsius,
-          fahrenheit: celsius ? celsius * (9.0 / 5.0) + 32.0 : undefined,
+          fahrenheit: celsius !== undefined ? celsius * (9.0 / 5.0) + 32.0 : undefined,
         },
       };
     },
-    setFahrenheitInTemperature(state, { payload: fahrenheit }): ConverterModelState {
+    setFahrenheitInTemperature(state, { payload: fahrenheitStr }): ConverterModelState {
+      const fahrenheit = nanToUndefined(fahrenheitStr);
+
       return {
         ...(state as ConverterModelState),
         [TEMPERATURE]: {
           fahrenheit,
-          celsius: fahrenheit ? (fahrenheit - 32.0) * (5.0 / 9.0) : undefined,
+          celsius: fahrenheit !== undefined ? (fahrenheit - 32.0) * (5.0 / 9.0) : undefined,
         },
       };
     },
