@@ -3,9 +3,14 @@
 @fontFamily: 'PingFang SC', Arial, 'Hiragino Sans GB', 'Microsoft Yahei', 'Microsoft Sans Serif', sans-serif;
 
 .benefitsCard, .paymentCard {
-  padding: 16px;
   font-family: @fontFamily;
   border-radius: 2px;
+
+  @media (max-width: @screen-lg) {
+    & > div {
+      padding: 12px;
+    }
+  }
 }
 
 .benefitsCard {
@@ -36,14 +41,14 @@
 
   .paymentOption {
     display: block;
-    margin-bottom: 10px;
-    padding: 10px 0;
+    margin-bottom: 8px;
+    padding: 8px 0;
     font-weight: 800;
     font-size: 20px;
     line-height: 20px;
 
     &:hover .radioText, &.active .radioText {
-      margin-left: 15px;
+      margin-left: 16px;
       color: @text-color;
     }
 

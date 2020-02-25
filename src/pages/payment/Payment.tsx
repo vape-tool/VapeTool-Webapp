@@ -44,8 +44,25 @@ const Payment: React.FC = () => {
 
   return (
     <Row gutter={[ 16, 16 ]} type="flex" justify="center">
-      <Col md={12} style={{ maxWidth: 550 }}>
-        <Card className={styles.paymentCard}>
+      <Col xs={24} md={12} style={{ maxWidth: 505 }}>
+        <Card className={styles.benefitsCard} style={{ minHeight: 500 }}>
+          <Typography.Title>Vape Tool Pro Benefits</Typography.Title>
+          <ul>
+            <li>Access to <b>15</b> coil types calculator</li>
+            <li>Sweet Spot Finder</li>
+            <li>Advanced Coil specs</li>
+            <li>Batteries charts</li>
+            <li>Min battery resistance</li>
+            <li>Wires length</li>
+            <li>Visualize coils</li>
+            <li>Ad-free</li>
+            <li>Support project development</li>
+          </ul>
+        </Card>
+      </Col>
+
+      <Col xs={24} md={12} style={{ maxWidth: 505 }}>
+        <Card className={styles.paymentCard} style={{ minHeight: 500 }}>
           <Typography.Title>Vape Tool Pro</Typography.Title>
           <Typography.Title level={4}>Choose you plan:</Typography.Title>
           <Radio.Group onChange={onChange} value={type}>
@@ -58,7 +75,7 @@ const Payment: React.FC = () => {
             <Radio value={SUBSCRIPTION} className={`${styles.paymentOption} ${type === SUBSCRIPTION ? styles.active : ''}`}>
               <div className={styles.radioText}>
                 <Tag color="blue">Cheapest</Tag>
-                <div>Monthly @ $0.99/month</div>
+                <div>Monthly @ $0.99</div>
               </div>
             </Radio>
           </Radio.Group>
@@ -111,23 +128,6 @@ const Payment: React.FC = () => {
             <Icon type="check-circle" theme="filled" />
             Your purchase is fully refundable within 14 days.
           </Typography.Paragraph>
-        </Card>
-      </Col>
-
-      <Col md={12} style={{ maxWidth: 530 }}>
-        <Card className={styles.benefitsCard}>
-          <Typography.Title>Vape Tool Pro Benefits</Typography.Title>
-          <ul>
-            <li>Access to <b>15</b> coil types calculator</li>
-            <li>Sweet Spot Finder</li>
-            <li>Advanced Coil specs</li>
-            <li>Batteries charts</li>
-            <li>Min battery resistance</li>
-            <li>Wires length</li>
-            <li>Visualize coils</li>
-            <li>Ad-free</li>
-            <li>Support project development</li>
-          </ul>
         </Card>
       </Col>
     </Row>
