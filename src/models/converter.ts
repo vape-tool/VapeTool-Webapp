@@ -28,17 +28,17 @@ export interface ConverterModelState {
   [AWG_TO_MM]: {
     awg?: number;
     mm?: number;
-  },
+  };
   [INCH_TO_MM]: {
     nominator?: number;
     denominator?: number;
     inch?: number;
     mm?: number;
-  },
+  };
   [TEMPERATURE]: {
     celsius?: number;
     fahrenheit?: number;
-  },
+  };
   lastEdit?: undefined | 'voltage' | 'resistance' | 'current' | 'power';
   latestEdit?: undefined | 'voltage' | 'resistance' | 'current' | 'power';
 }
@@ -95,9 +95,7 @@ const ConverterModel: ConverterModelType = {
     setNominatorInInchToMm(state, { payload: nominatorStr }): ConverterModelState {
       const nominator = nanToUndefined(nominatorStr);
       const denominator = state && state[INCH_TO_MM].denominator;
-      const inch = nominator && denominator
-        ? nominator / denominator
-        : undefined;
+      const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
         ...(state as ConverterModelState),
@@ -112,9 +110,7 @@ const ConverterModel: ConverterModelType = {
     setDenominatorInInchToMm(state, { payload: denominatorStr }): ConverterModelState {
       const denominator = nanToUndefined(denominatorStr);
       const nominator = state && state[INCH_TO_MM].nominator;
-      const inch = nominator && denominator
-        ? nominator / denominator
-        : undefined;
+      const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
         ...(state as ConverterModelState),
