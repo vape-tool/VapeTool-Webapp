@@ -17,16 +17,18 @@ const SUBSCRIPTION = 'SUBSCRIPTION';
 
 const paypalCodes = {
   // first PRODUCTION, second DEVELOPMENT
-  [LIFETIME]: [ 'UBCLCJ384D2D4', '3FAV75HYMXJ5N' ],
-  [SUBSCRIPTION]: [ 'PAJTMA62ZSBRW', 'WABX9M3L32NJS' ],
+  [LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
+  [SUBSCRIPTION]: ['PAJTMA62ZSBRW', 'WABX9M3L32NJS'],
 };
 
-const coinbaseCodes = [ '5e8d6403-71dc-4988-8b06-f21d8d296cb3', '5e8d6403-71dc-4988-8b06-f21d8d296cb3' ];
+const coinbaseCodes = [
+  '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
+  '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
+];
 
 const Payment: React.FC = () => {
-
-  const [ type, setType ] = React.useState(LIFETIME);
-  const [ step, setStep ] = React.useState(0);
+  const [type, setType] = React.useState(LIFETIME);
+  const [step, setStep] = React.useState(0);
 
   const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || LIFETIME);
 
@@ -43,12 +45,14 @@ const Payment: React.FC = () => {
   };
 
   return (
-    <Row gutter={[ 16, 16 ]} type="flex" justify="center">
+    <Row gutter={[16, 16]} type="flex" justify="center">
       <Col xs={24} md={12} style={{ maxWidth: 505 }}>
         <Card className={styles.benefitsCard} style={{ minHeight: 500 }}>
           <Typography.Title>Vape Tool Pro Benefits</Typography.Title>
           <ul>
-            <li>Access to <b>15</b> coil types calculator</li>
+            <li>
+              Access to <b>15</b> coil types calculator
+            </li>
             <li>Sweet Spot Finder</li>
             <li>Advanced Coil specs</li>
             <li>Batteries charts</li>
@@ -66,25 +70,35 @@ const Payment: React.FC = () => {
           <Typography.Title>Vape Tool Pro</Typography.Title>
           <Typography.Title level={4}>Choose you plan:</Typography.Title>
           <Radio.Group onChange={onChange} value={type}>
-            <Radio value={LIFETIME} className={`${styles.paymentOption} ${type === LIFETIME ? styles.active : ''}`}>
+            <Radio
+              value={LIFETIME}
+              className={`${styles.paymentOption} ${type === LIFETIME ? styles.active : ''}`}
+            >
               <div className={styles.radioText}>
                 <Tag color="green">Best option</Tag>
                 <div>Lifetime @ $4.99</div>
               </div>
             </Radio>
-            <Radio value={SUBSCRIPTION} className={`${styles.paymentOption} ${type === SUBSCRIPTION ? styles.active : ''}`}>
+            <Radio
+              value={SUBSCRIPTION}
+              className={`${styles.paymentOption} ${type === SUBSCRIPTION ? styles.active : ''}`}
+            >
               <div className={styles.radioText}>
                 <Tag color="blue">Cheapest</Tag>
                 <div>Monthly @ $0.99</div>
               </div>
             </Radio>
           </Radio.Group>
-          <Button type="primary" onClick={() => setStep(1)} disabled={step > 0} block>Continue</Button>
+          <Button type="primary" onClick={() => setStep(1)} disabled={step > 0} block>
+            Continue
+          </Button>
 
           {step > 0 && (
             <>
-              <Typography.Title level={4} style={{ marginTop: 24 }}>Choose you payment method:</Typography.Title>
-              <Row type="flex" justify="center" gutter={[ 12, 12 ]} style={{ marginBottom: 24 }}>
+              <Typography.Title level={4} style={{ marginTop: 24 }}>
+                Choose you payment method:
+              </Typography.Title>
+              <Row type="flex" justify="center" gutter={[12, 12]} style={{ marginBottom: 24 }}>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <div className={`${styles.paymentMethod} ${styles.disabled}`}>
                     <span className={styles.methodName}>Credit Card</span>
@@ -93,23 +107,20 @@ const Payment: React.FC = () => {
                   </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
-                  <a
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    href={getPaypalHref()}
-                  >
+                  <a target="_blank" rel="noreferrer noopener" href={getPaypalHref()}>
                     <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
-                      <img src={paypalLogo} className={styles.paypalLogo} title="Pay with PayPal" alt="PayPal" />
+                      <img
+                        src={paypalLogo}
+                        className={styles.paypalLogo}
+                        title="Pay with PayPal"
+                        alt="PayPal"
+                      />
                       <span className={styles.methodName}>checkout</span>
                     </div>
                   </a>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
-                  <a
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    href={getCoinbaseHref()}
-                  >
+                  <a target="_blank" rel="noreferrer noopener" href={getCoinbaseHref()}>
                     <div className={styles.paymentMethod}>
                       <span className={styles.methodName}>Cryptocurrencies</span>
                       <span className={styles.poweredBy}>powered by</span>
