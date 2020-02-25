@@ -1,5 +1,19 @@
+@import '~antd/es/style/themes/default.less';
+
 .input {
-  width: 120px;
+  width: 100px;
+}
+
+.labeledInput {
+  display: inline-block;
+
+  label {
+    display: block;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    font-size: 12px;
+    text-align: left;
+  }
 }
 
 .nominator, .denominator {
@@ -33,4 +47,36 @@
   position: absolute;
   top: 68px;
   left: 80px;
+}
+
+.inchesInput {
+  padding-top: 20px;
+}
+
+.swapSign {
+  padding-top: 20px;
+  font-size: 40px;
+}
+
+.equalSign {
+  margin-top: 40px;
+  font-size: 40px;
+  transform: rotate(90deg);
+}
+
+@media (min-width: @screen-lg) and (max-width: @screen-xl) {
+  .swapSign {
+    margin: 20px 0;
+    padding: 0;
+    transform: rotate(90deg);
+  }
+
+  .equalSign {
+    margin: 20px 0;
+    transform: none;
+  }
+
+  .inchesInput {
+    padding-top: 0;
+  }
 }
