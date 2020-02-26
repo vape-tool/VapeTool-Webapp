@@ -52,7 +52,7 @@ const GlobalModel: GlobalModelType = {
   },
 
   effects: {
-    * redirectBack(_, { put }) {
+    *redirectBack(_, { put }) {
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };
@@ -72,7 +72,7 @@ const GlobalModel: GlobalModelType = {
       console.log(`isAbout to redirect to ${redirect || '/'}`);
       yield put(routerRedux.replace(redirect || '/'));
     },
-    * redirectToWithFootprint({ path }, { put }) {
+    *redirectToWithFootprint({ path }, { put }) {
       console.log(`redirect to ${path}`);
       yield put(
         routerRedux.replace({

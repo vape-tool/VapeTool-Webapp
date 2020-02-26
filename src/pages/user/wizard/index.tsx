@@ -45,7 +45,12 @@ const UserWizard: React.FC<{
                 <div>
                   {newAvatarUrl && <img alt="avatar" src={newAvatarUrl} width={200} />}
                   {!newAvatarUrl && (
-                    <FirebaseImage type={ImageType.USER} id={currentUser.uid} size={200} shape="square"/>
+                    <FirebaseImage
+                      type={ImageType.USER}
+                      id={currentUser.uid}
+                      size={200}
+                      shape="square"
+                    />
                   )}
                 </div>
               </div>

@@ -32,11 +32,11 @@ const UploadPost: React.FC<UploadPostProps> = props => {
   return (
     <Card>
       <Col>
-        <Input placeholder={type === 'post' ? 'Title' : 'URL'} onChange={onTitleChange}/>
-        <br/>
-        <br/>
-        <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange}/>
-        <Editor editorState={editorState} onChange={setEditorState}/>
+        <Input placeholder={type === 'post' ? 'Title' : 'URL'} onChange={onTitleChange} />
+        <br />
+        <br />
+        <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange} />
+        <Editor editorState={editorState} onChange={setEditorState} />
         <Button type="primary" onClick={onPostClick}>
           Post
         </Button>

@@ -25,7 +25,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
       dispatchLogout(props.dispatch);
       return;
     }
-    redirectTo(`/user/${key}`)
+    redirectTo(`/user/${key}`);
   };
 
   const { menu } = props;
@@ -43,21 +43,21 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
         <span className={styles.name}>{currentUser.name}</span>
       </span>
     ) : (
-      <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }}/>
+      <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
     );
   }
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
         <Menu.Item key="center">
-          <Icon type="user"/>
-          <FormattedMessage id="menu.account.center" defaultMessage="account center"/>
+          <Icon type="user" />
+          <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
       )}
-      {menu && <Menu.Divider/>}
+      {menu && <Menu.Divider />}
       <Menu.Item key="logout">
-        <Icon type="logout"/>
-        <FormattedMessage id="menu.account.logout" defaultMessage="logout"/>
+        <Icon type="logout" />
+        <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
       </Menu.Item>
     </Menu>
   );
@@ -76,7 +76,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
       </span>
     </HeaderDropdown>
   ) : (
-    <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }}/>
+    <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
   );
 };
 

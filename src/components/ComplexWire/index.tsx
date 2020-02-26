@@ -87,8 +87,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
     key && dispatchSetCoilType(dispatch, WireType[key], path);
   const onPitchChange = (value: number | undefined) =>
     value && dispatchSetInnerDiameter(dispatch, value);
-  const onAddWireClick = () =>
-    dispatchAddWire(dispatch, path, wireGenerator.normalWire());
+  const onAddWireClick = () => dispatchAddWire(dispatch, path, wireGenerator.normalWire());
 
   const imageSize = 35;
 
@@ -104,7 +103,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         {types.map(type => (
           <Option key={type.name} value={type.name.replace(/_/g, ' ')}>
             <div>
-              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src}/>
+              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
               {type.name.replace(/_/g, ' ')}
             </div>
           </Option>
@@ -127,9 +126,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         const childPath = path.slice();
         childPath.push({ style: WireStyle.CORE, index });
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire}/>
+          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire} />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
         );
       })}
 
@@ -142,9 +141,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         childPath.push({ style: WireStyle.OUTER, index });
 
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch}/>
+          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch} />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
         );
       })}
     </Card>

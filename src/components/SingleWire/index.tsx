@@ -66,7 +66,7 @@ const SingleWire: React.FC<WireComponentProps> = props => {
       type="inner"
       title={
         <Row>
-          {wire.style === WireStyle.CORE ? <CoreIcon/> : <OuterIcon/>}
+          {wire.style === WireStyle.CORE ? <CoreIcon /> : <OuterIcon />}
           {WireStyle[wire.style]}
         </Row>
       }
@@ -74,13 +74,13 @@ const SingleWire: React.FC<WireComponentProps> = props => {
         <Row type="flex" gutter={8}>
           <Col>
             {wire.kind === WireKind.ROUND ? (
-              <RoundIcon onClick={onChangeKindClick}/>
+              <RoundIcon onClick={onChangeKindClick} />
             ) : (
-              <Icon onClick={onChangeKindClick} type="minus"/>
+              <Icon onClick={onChangeKindClick} type="minus" />
             )}
           </Col>
           <Col>
-            <Icon onClick={onDeleteClick} type="close"/>
+            <Icon onClick={onDeleteClick} type="close" />
           </Col>
         </Row>
       }
@@ -102,11 +102,11 @@ const SingleWire: React.FC<WireComponentProps> = props => {
       <Button>{getResistancePerMeter(wire).toFixed(2)} [Ω/m]</Button>
 
       <Typography.Title level={4}>
-        <DiameterIcon style={{ color: 'primary' }}/>
+        <DiameterIcon style={{ color: 'primary' }} />
         Diameter of wire
       </Typography.Title>
-      <WireDiameter path={path} dispatch={dispatch} wire={wire}/>
-      <br/>
+      <WireDiameter path={path} dispatch={dispatch} wire={wire} />
+      <br />
       <Typography.Text disabled={!wire.totalLength}>
         {wire.totalLength
           ? `Wire length: ${wire.totalLength.toFixed(1)}cm`
