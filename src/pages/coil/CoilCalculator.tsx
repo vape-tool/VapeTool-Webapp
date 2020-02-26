@@ -6,6 +6,7 @@ import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
+import CoilVisualizer from '@/components/CoilVisualizer';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -160,20 +161,23 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             </div>
             <div>
               <Title level={4}>Wraps per coil</Title>
-              <InputNumber min={0} step={1} value={coil.wraps} onChange={onWrapsChange} />
+              <InputNumber min={0} step={1} value={coil.wraps} onChange={onWrapsChange}/>
             </div>
           </Row>
-          <br />
-          <br />
+          <br/>
+          <br/>
           <Col xs={24}>
             <Button type="primary" icon="calculator" size="large" onClick={calculate}>
               Calculate
             </Button>
           </Col>
-          <br />
-          <br />
+          <br/>
+          <br/>
           {coilProperties}
         </Col>
+      </Row>
+      <Row>
+        <CoilVisualizer/>
       </Row>
     </Card>
   );
