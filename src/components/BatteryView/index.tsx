@@ -13,7 +13,7 @@ interface BatteryViewProps extends ConnectProps {
 }
 
 const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispatch }) => {
-  const onCardClick = () => dispatchSelectBattery(dispatch!, battery);
+  const onCardClick = () => dispatchSelectBattery(dispatch, battery);
 
   return (
     <List.Item style={{ height, width }}>

@@ -2,8 +2,7 @@ import React from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
-import { Dispatch } from 'redux';
-import { ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
 import {
@@ -20,11 +19,10 @@ import {
 const { Option } = Select;
 const { Title } = Typography;
 
-export interface CoilCalculatorProps {
+export interface CoilCalculatorProps extends ConnectProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;
-  dispatch: Dispatch;
 }
 
 let lastEdit: 'wraps' | 'resistance' | undefined;
@@ -34,7 +32,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const onSetupChange = ({ key }: any) =>
     key &&
-    dispatch &&
     dispatch({
       type: `${COIL}/${SET_SETUP}`,
       payload: Number(key),
@@ -42,7 +39,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const onInnerDiameterChange = (value: number | undefined) =>
     value &&
-    dispatch &&
     dispatch({
       type: `${COIL}/${SET_INNER_DIAMETER}`,
       payload: value,
@@ -50,7 +46,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const onLegsLengthChange = (value: number | undefined) =>
     value &&
-    dispatch &&
     dispatch({
       type: `${COIL}/${SET_LEGS_LENGTH}`,
       payload: value,
@@ -60,7 +55,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     lastEdit = 'resistance';
     return (
       value &&
-      dispatch &&
       dispatch({
         type: `${COIL}/${SET_RESISTANCE}`,
         payload: value,
@@ -72,7 +66,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     lastEdit = 'wraps';
     return (
       value &&
-      dispatch &&
       dispatch({
         type: `${COIL}/${SET_WRAPS}`,
         payload: value,

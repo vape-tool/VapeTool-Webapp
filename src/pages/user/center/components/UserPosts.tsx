@@ -11,7 +11,7 @@ import { ConnectState } from '@/models/connect';
   loadingItems: loading.effects['user/fetchItems'],
 }))
 class UserPosts extends UserItems<Post> {
-  what: CloudContent = 'posts';
+  what: CloudContent = CloudContent.POSTS;
 
   items = () => this.props.userPosts || [];
 

@@ -19,7 +19,7 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const onUploadPhotoClicked = () => props.dispatch && redirectBack(props.dispatch);
+  const onUploadPhotoClicked = () => redirectBack(props.dispatch);
 
   useEffect(() => subscribeLinks(props.dispatch!), []);
   useEffect(() => subscribePosts(props.dispatch!), []);

@@ -24,7 +24,7 @@ import UserPosts from './components/UserPosts';
 import UserLinks from './components/UserLinks';
 import UserLiquids from '@/components/UserLiquids';
 import UserCoils from '@/components/UserCoils';
-import { redirectTo } from '@/models/global';
+import { redirectToWithFootprint } from '@/models/global';
 import { ImageType } from '@/services/storage';
 
 const { NODE_ENV } = process.env;
@@ -159,7 +159,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
     return null;
   };
 
-  onEditProfileClick = () => redirectTo(this.props.dispatch, '/user/wizard');
+  onEditProfileClick = () => redirectToWithFootprint(this.props.dispatch, '/user/wizard');
 
   render() {
     const { newTags, inputVisible, inputValue, tabKey } = this.state;

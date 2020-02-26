@@ -4,22 +4,27 @@ import { Effect, Subscription } from 'dva';
 import { getPageQuery } from '@/utils/utils';
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
+import router from 'umi/router';
 
 export const GLOBAL = 'global';
 export const REDIRECT_BACK = 'redirectBack';
-export const REDIRECT_TO = 'redirectTo';
+export const REDIRECT_TO_WITH_FOOTPRINT = 'redirectToWithFootprint';
 export const CHANGE_LAYOUT_COLLAPSED = 'changeLayoutCollapsed';
 
 export function redirectBack(dispatch: Dispatch) {
-  dispatch({ type: REDIRECT_BACK });
+  dispatch({ type: `${GLOBAL}/${REDIRECT_BACK}` });
 }
 
-export function redirectTo(dispatch: Dispatch, path: string) {
-  dispatch({ type: REDIRECT_TO, path });
+export function redirectToWithFootprint(dispatch: Dispatch, path: string) {
+  dispatch({ type: `${GLOBAL}/${REDIRECT_TO_WITH_FOOTPRINT}`, path });
+}
+
+export function redirectTo(path: string) {
+  router.push(path);
 }
 
 export function dispatchChangeLayoutCollapsed(dispatch: Dispatch, payload: boolean) {
-  dispatch({ type: REDIRECT_BACK, payload });
+  dispatch({ type: `${GLOBAL}/${REDIRECT_BACK}`, payload });
 }
 
 export interface GlobalModelState {
@@ -31,7 +36,7 @@ export interface GlobalModelType {
   state: GlobalModelState;
   effects: {
     [REDIRECT_BACK]: Effect;
-    [REDIRECT_TO]: Effect;
+    [REDIRECT_TO_WITH_FOOTPRINT]: Effect;
   };
   reducers: {
     [CHANGE_LAYOUT_COLLAPSED]: Reducer<GlobalModelState>;
@@ -47,7 +52,7 @@ const GlobalModel: GlobalModelType = {
   },
 
   effects: {
-    *redirectBack(_, { put }) {
+    * redirectBack(_, { put }) {
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params as { redirect: string };
@@ -67,7 +72,8 @@ const GlobalModel: GlobalModelType = {
       console.log(`isAbout to redirect to ${redirect || '/'}`);
       yield put(routerRedux.replace(redirect || '/'));
     },
-    *redirectTo({ path }, { put }) {
+    * redirectToWithFootprint({ path }, { put }) {
+      console.log(`redirect to ${path}`);
       yield put(
         routerRedux.replace({
           pathname: path,

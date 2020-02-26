@@ -1,4 +1,4 @@
-import { Button, Card, Input, Spin, Row, Col } from 'antd';
+import { Button, Card, Col, Input, Row, Spin } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import ButtonGroup from 'antd/es/button/button-group';
@@ -16,6 +16,7 @@ import {
   showNewAvatarChooser,
 } from '@/models/userWizard';
 import { redirectBack } from '@/models/global';
+import { ImageType } from '@/services/storage';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;
@@ -44,7 +45,7 @@ const UserWizard: React.FC<{
                 <div>
                   {newAvatarUrl && <img alt="avatar" src={newAvatarUrl} width={200} />}
                   {!newAvatarUrl && (
-                    <FirebaseImage type="user" id={currentUser.uid} size={200} shape="square" />
+                    <FirebaseImage type={ImageType.USER} id={currentUser.uid} size={200} shape="square"/>
                   )}
                 </div>
               </div>

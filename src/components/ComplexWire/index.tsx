@@ -3,7 +3,6 @@ import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
 import Image from 'react-image-webp';
-import { Dispatch } from 'redux';
 import SingleWire from '@/components/SingleWire';
 import {
   dispatchAddWire,
@@ -11,15 +10,15 @@ import {
   dispatchSetInnerDiameter,
   Path,
 } from '@/models/coil';
+import { ConnectProps } from '@/models/connect';
 
 const { Option } = Select;
 
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint global-require: 0 react/no-array-index-key: 0 */
 
-export interface WireComponentProps {
+export interface WireComponentProps extends ConnectProps {
   complexWire: Coil | Wire;
-  dispatch: Dispatch;
   path: Path[];
 }
 
@@ -88,9 +87,8 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
     key && dispatchSetCoilType(dispatch, WireType[key], path);
   const onPitchChange = (value: number | undefined) =>
     value && dispatchSetInnerDiameter(dispatch, value);
-  const onAddWireClick = () => {
+  const onAddWireClick = () =>
     dispatchAddWire(dispatch, path, wireGenerator.normalWire());
-  };
 
   const imageSize = 35;
 
@@ -106,7 +104,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         {types.map(type => (
           <Option key={type.name} value={type.name.replace(/_/g, ' ')}>
             <div>
-              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
+              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src}/>
               {type.name.replace(/_/g, ' ')}
             </div>
           </Option>
@@ -129,9 +127,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         const childPath = path.slice();
         childPath.push({ style: WireStyle.CORE, index });
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire} />
+          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire}/>
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
         );
       })}
 
@@ -144,9 +142,9 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         childPath.push({ style: WireStyle.OUTER, index });
 
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch} />
+          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch}/>
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch}/>
         );
       })}
     </Card>
