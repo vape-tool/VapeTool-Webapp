@@ -3,4 +3,11 @@ import Post from '@/types/Post';
 import Photo from '@/types/Photo';
 
 export type Item = Photo | Post | Link;
-export type ItemName = 'gear' | 'post' | 'link';
+
+export enum ItemName {
+  PHOTO = 'photo',
+  POST = 'post',
+  LINK = 'link',
+  COIL = 'coil',
+  LIQUID = 'liquid',
+}

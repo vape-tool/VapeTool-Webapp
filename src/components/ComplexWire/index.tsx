@@ -3,18 +3,22 @@ import { Button, Card, InputNumber, Select, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
 import Image from 'react-image-webp';
-import { Dispatch } from 'redux';
 import SingleWire from '@/components/SingleWire';
-import { Path } from '@/models/coil';
+import {
+  dispatchAddWire,
+  dispatchSetCoilType,
+  dispatchSetInnerDiameter,
+  Path,
+} from '@/models/coil';
+import { ConnectProps } from '@/models/connect';
 
 const { Option } = Select;
 
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint global-require: 0 react/no-array-index-key: 0 */
 
-export interface WireComponentProps {
+export interface WireComponentProps extends ConnectProps {
   complexWire: Coil | Wire;
-  dispatch: Dispatch;
   path: Path[];
 }
 
@@ -80,28 +84,10 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
   const { complexWire, dispatch, path } = props;
 
   const handleTypeChange = ({ key }: any) =>
-    key &&
-    dispatch &&
-    dispatch({
-      type: 'coil/setType',
-      payload: {
-        type: WireType[key],
-        paths: path,
-      },
-    });
+    key && dispatchSetCoilType(dispatch, WireType[key], path);
   const onPitchChange = (value: number | undefined) =>
-    value &&
-    dispatch &&
-    dispatch({
-      type: 'coil/setInnerDiameter',
-      payload: value,
-    });
-  const onAddWireClick = () => {
-    dispatch({
-      type: 'coil/addWire',
-      payload: { paths: path, wire: wireGenerator.normalWire() },
-    });
-  };
+    value && dispatchSetInnerDiameter(dispatch, value);
+  const onAddWireClick = () => dispatchAddWire(dispatch, path, wireGenerator.normalWire());
 
   const imageSize = 35;
 

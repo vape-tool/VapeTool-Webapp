@@ -15,13 +15,39 @@ import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
 import moment from 'moment';
+import { GLOBAL, REDIRECT_BACK } from '@/models/global';
 
-export type UserContent = 'photos' | 'posts' | 'links' | 'coils' | 'liquids';
+export enum CloudContent {
+  PHOTOS = 'photos',
+  POSTS = 'posts',
+  LINKS = 'links',
+  COILS = 'coils',
+  LIQUIDS = 'liquids',
+}
+export const USER = 'user';
+export const FETCH_ITEMS = 'fetchItems';
+export const LOGOUT = 'logout';
+export const FETCH_CURRENT = 'fetchCurrent';
+export const SET_USER = 'setUser';
+export const SET_ITEMS = 'setItems';
+export const SET_FIREBASE_USER = 'setFirebaseUser';
+export const CLEAR_USER_STATE = 'clearUserState';
 
-export function dispatchFetchUserItems(dispatch: Dispatch, what: UserContent) {
+export function dispatchFetchUserItems(dispatch: Dispatch, what: CloudContent) {
   dispatch({
-    type: 'user/fetchItems',
+    type: `${USER}/${FETCH_ITEMS}`,
     what,
+  });
+}
+export function dispatchFetchCurrentUser(dispatch: Dispatch) {
+  dispatch({
+    type: `${USER}/${FETCH_CURRENT}`,
+  });
+}
+
+export function dispatchLogout(dispatch: Dispatch) {
+  dispatch({
+    type: `${USER}/${LOGOUT}`,
   });
 }
 
@@ -51,15 +77,15 @@ export interface UserModelType {
   namespace: string;
   state: UserModelState;
   effects: {
-    fetchCurrent: Effect;
-    logout: Effect;
-    fetchItems: Effect;
+    [FETCH_CURRENT]: Effect;
+    [LOGOUT]: Effect;
+    [FETCH_ITEMS]: Effect;
   };
   reducers: {
-    setUser: Reducer<UserModelState>;
-    setItems: Reducer<UserModelState>;
-    setFirebaseUser: Reducer<UserModelState>;
-    clearUserState: Reducer<UserModelState>;
+    [SET_USER]: Reducer<UserModelState>;
+    [SET_ITEMS]: Reducer<UserModelState>;
+    [SET_FIREBASE_USER]: Reducer<UserModelState>;
+    [CLEAR_USER_STATE]: Reducer<UserModelState>;
   };
   subscriptions: {
     firebaseUser: Subscription;
@@ -67,7 +93,7 @@ export interface UserModelType {
 }
 
 const UserModel: UserModelType = {
-  namespace: 'user',
+  namespace: USER,
 
   state: {
     currentUser: undefined,
@@ -77,7 +103,7 @@ const UserModel: UserModelType = {
 
   effects: {
     // TODO try to unify with successfullyLogin
-    * fetchCurrent(_, { put, call, select }) {
+    *fetchCurrent(_, { put, call, select }) {
       const currentUser = yield select((state: ConnectState) => state.user.currentUser);
       if (currentUser) {
         return;
@@ -104,23 +130,23 @@ const UserModel: UserModelType = {
         display_name: user!.display_name || firebaseUser.displayName,
       };
       yield put({
-        type: 'setUser',
+        type: SET_USER,
         currentUser: newCurrentUser,
       });
     },
-    * logout(_, { call, put }) {
+    *logout(_, { call, put }) {
       yield call(logoutFirebase);
       yield put({
-        type: 'setUser',
+        type: SET_USER,
         currentUser: undefined,
       });
 
       yield put({
-        type: 'global/redirectTo',
+        type: `${GLOBAL}/${REDIRECT_BACK}`,
         path: '/login',
       });
     },
-    * fetchItems({ what }, { put, call, select }) {
+    *fetchItems({ what }, { put, call, select }) {
       const uid = yield select((state: ConnectState) => {
         if (state.user.currentUser) {
           return state.user.currentUser.uid;
@@ -132,20 +158,20 @@ const UserModel: UserModelType = {
       }
 
       let items;
-      switch (what as UserContent) {
-        case 'photos':
+      switch (what as CloudContent) {
+        case CloudContent.PHOTOS:
           items = yield call(getUserPhotos, uid);
           break;
-        case 'posts':
+        case CloudContent.POSTS:
           items = yield call(getUserPosts, uid);
           break;
-        case 'links':
+        case CloudContent.LINKS:
           items = yield call(getUserLinks, uid);
           break;
-        case 'coils':
+        case CloudContent.COILS:
           items = yield call(getUserCoils, uid);
           break;
-        case 'liquids':
+        case CloudContent.LIQUIDS:
           items = yield call(getUserLiquids, uid);
           break;
         default:
@@ -153,7 +179,7 @@ const UserModel: UserModelType = {
       }
 
       yield put({
-        type: 'setItems',
+        type: SET_ITEMS,
         what,
         items: Array.isArray(items) ? items : [],
       });
@@ -163,7 +189,7 @@ const UserModel: UserModelType = {
   reducers: {
     setUser(state, { currentUser }): UserModelState {
       const tags = [];
-      //TODO test
+      // TODO test
       if (moment(currentUser.subscription).isAfter()) {
         tags.push({ key: 'pro', label: 'Pro' });
       }
@@ -186,11 +212,11 @@ const UserModel: UserModelType = {
       console.log({ what, setItems: items });
       return {
         ...(state as UserModelState),
-        userPhotos: what === 'photos' ? items : state?.userPhotos,
-        userPosts: what === 'posts' ? items : state?.userPosts,
-        userLinks: what === 'links' ? items : state?.userLinks,
-        userCoils: what === 'coils' ? items : state?.userCoils,
-        userLiquids: what === 'liquids' ? items : state?.userLiquids,
+        userPhotos: what === CloudContent.PHOTOS ? items : state?.userPhotos,
+        userPosts: what === CloudContent.POSTS ? items : state?.userPosts,
+        userLinks: what === CloudContent.LINKS ? items : state?.userLinks,
+        userCoils: what === CloudContent.COILS ? items : state?.userCoils,
+        userLiquids: what === CloudContent.LIQUIDS ? items : state?.userLiquids,
       };
     },
     clearUserState(): UserModelState {
@@ -203,9 +229,9 @@ const UserModel: UserModelType = {
       return auth.onAuthStateChanged((firebaseUser: FirebaseUser | null) => {
         console.log(`onAuthStateChanged ${firebaseUser != null}`);
         if (!firebaseUser) {
-          dispatch({ type: 'clearUserState' });
+          dispatch({ type: CLEAR_USER_STATE });
         } else {
-          dispatch({ type: 'setFirebaseUser', firebaseUser });
+          dispatch({ type: SET_FIREBASE_USER, firebaseUser });
         }
       });
     },

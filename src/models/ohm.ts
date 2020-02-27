@@ -1,4 +1,30 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
+
+export const OHM = 'ohm';
+export const SET_VOLTAGE = 'setVoltage';
+export const SET_RESISTANCE = 'setResistance';
+export const SET_CURRENT = 'setCurrent';
+export const SET_POWER = 'setPower';
+export const CALCULATE = 'calculate';
+export const CLEAR = 'clear';
+
+export const onChange = (dispatch: Dispatch, action: string) => (value?: number) => {
+  dispatch({
+    type: `${OHM}/${action}`,
+    payload: value,
+  });
+};
+
+export const clear = (dispatch: Dispatch) => {
+  dispatch({
+    type: `${OHM}/${CLEAR}`,
+  });
+};
+export const calculate = (dispatch: Dispatch) => {
+  dispatch({
+    type: `${OHM}/${CALCULATE}`,
+  });
+};
 
 export interface OhmModelState {
   voltage?: number;
@@ -13,17 +39,17 @@ export interface OhmModelType {
   namespace: string;
   state: OhmModelState;
   reducers: {
-    setVoltage: Reducer<OhmModelState>;
-    setResistance: Reducer<OhmModelState>;
-    setCurrent: Reducer<OhmModelState>;
-    setPower: Reducer<OhmModelState>;
-    calculate: Reducer<OhmModelState>;
-    clear: Reducer<OhmModelState>;
+    [SET_VOLTAGE]: Reducer<OhmModelState>;
+    [SET_RESISTANCE]: Reducer<OhmModelState>;
+    [SET_CURRENT]: Reducer<OhmModelState>;
+    [SET_POWER]: Reducer<OhmModelState>;
+    [CALCULATE]: Reducer<OhmModelState>;
+    [CLEAR]: Reducer<OhmModelState>;
   };
 }
 
 const OhmModel: OhmModelType = {
-  namespace: 'ohm',
+  namespace: OHM,
   state: {
     voltage: undefined,
     resistance: undefined,

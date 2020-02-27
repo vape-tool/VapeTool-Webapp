@@ -2,19 +2,27 @@ import React from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
-import { Dispatch } from 'redux';
-import { ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
+import {
+  SET_INNER_DIAMETER,
+  SET_SETUP,
+  COIL,
+  SET_LEGS_LENGTH,
+  SET_RESISTANCE,
+  SET_WRAPS,
+  CALCULATE_FOR_RESISTANCE,
+  CALCULATE_FOR_WRAPS,
+} from '@/models/coil';
 
 const { Option } = Select;
 const { Title } = Typography;
 
-export interface CoilCalculatorProps {
+export interface CoilCalculatorProps extends ConnectProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;
-  dispatch: Dispatch;
 }
 
 let lastEdit: 'wraps' | 'resistance' | undefined;
@@ -24,25 +32,22 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const onSetupChange = ({ key }: any) =>
     key &&
-    dispatch &&
     dispatch({
-      type: 'coil/setSetup',
+      type: `${COIL}/${SET_SETUP}`,
       payload: Number(key),
     });
 
   const onInnerDiameterChange = (value: number | undefined) =>
     value &&
-    dispatch &&
     dispatch({
-      type: 'coil/setInnerDiameter',
+      type: `${COIL}/${SET_INNER_DIAMETER}`,
       payload: value,
     });
 
   const onLegsLengthChange = (value: number | undefined) =>
     value &&
-    dispatch &&
     dispatch({
-      type: 'coil/setLegsLength',
+      type: `${COIL}/${SET_LEGS_LENGTH}`,
       payload: value,
     });
 
@@ -50,9 +55,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     lastEdit = 'resistance';
     return (
       value &&
-      dispatch &&
       dispatch({
-        type: 'coil/setResistance',
+        type: `${COIL}/${SET_RESISTANCE}`,
         payload: value,
       })
     );
@@ -62,9 +66,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     lastEdit = 'wraps';
     return (
       value &&
-      dispatch &&
       dispatch({
-        type: 'coil/setWraps',
+        type: `${COIL}/${SET_WRAPS}`,
         payload: value,
       })
     );
@@ -73,13 +76,13 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const calculate = (): void => {
     if (lastEdit === 'wraps') {
       dispatch({
-        type: 'coil/calculateForResistance',
+        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
         coil,
       });
     } else {
       // default
       dispatch({
-        type: 'coil/calculateForWraps',
+        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
         coil,
       });
     }

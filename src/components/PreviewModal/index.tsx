@@ -8,6 +8,7 @@ import { Photo, Link, Post } from '@/types';
 import PhotoView from '@/components/PhotoView';
 import PostView from '../PostView';
 import LinkView from '../LinkView';
+import { dispatchSelectItem } from '@/models/preview';
 
 interface PhotoPreviewModalProps {
   dispatch: Dispatch;
@@ -18,12 +19,7 @@ interface PhotoPreviewModalProps {
 const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewModalProps) => {
   const { dispatch, selectedItem } = props;
   console.log(`selected ${selectedItem}`);
-  const onCancel = () => {
-    dispatch({
-      type: 'preview/selectItem',
-      item: undefined,
-    });
-  };
+  const onCancel = () => dispatchSelectItem(dispatch, undefined);
   if (!selectedItem) {
     return <div></div>;
   }

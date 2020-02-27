@@ -1,4 +1,4 @@
-import { UserContent } from '@/models/user';
+import { CloudContent } from '@/models/user';
 import UserItems from '@/pages/user/center/components/UserItems';
 import React from 'react';
 import { Link } from '@/types';
@@ -11,11 +11,11 @@ import { ConnectState } from '@/models/connect';
   loadingItems: loading.effects['user/fetchItems'],
 }))
 class UserPosts extends UserItems<Link> {
-  what: UserContent = 'links';
+  what: CloudContent = CloudContent.LINKS;
 
   items = () => this.props.userLinks || [];
 
-  renderItem = (item: Link) => (<LinkView item={item}/>);
+  renderItem = (item: Link) => <LinkView item={item} />;
 }
 
 export default UserPosts;

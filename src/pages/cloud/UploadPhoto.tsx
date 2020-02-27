@@ -3,7 +3,16 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { Button, Col, Icon, Input, Row } from 'antd';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import { UploadPhotoState } from '@/models/uploadPhoto';
+import {
+  UploadPhotoState,
+  submitPhoto,
+  SUBMIT,
+  UPLOAD_PHOTO,
+  HIDE_PHOTO_CHOOSER,
+  SHOW_PHOTO_CHOOSER,
+  SET_CROPPED_IMAGE,
+  SET_DESCRIPTION,
+} from '@/models/uploadPhoto';
 import ImageChooser from '@/components/ImageChoser';
 
 interface UploadPhotoProps {
@@ -14,27 +23,28 @@ interface UploadPhotoProps {
 }
 
 const UploadPhoto: React.FC<UploadPhotoProps> = props => {
-  const { croppedImageUrl, description, showPhotoChooser, cancelled } = props.uploadPhoto;
-  const { dispatch } = props;
-  const postPhoto = () => dispatch({ type: 'uploadPhoto/submit' });
+  const { dispatch, uploadPhoto } = props;
+  const { croppedImageUrl, description, showPhotoChooser, cancelled } = uploadPhoto;
+
+  const postPhoto = () => submitPhoto(dispatch);
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
-      type: 'uploadPhoto/setDescription',
+      type: `${UPLOAD_PHOTO}/${SET_DESCRIPTION}`,
       description: e.target.value,
     });
   };
 
   const onPhotoChoose = (url: string, blob: Blob | File, width: number, height: number) => {
     dispatch({
-      type: 'uploadPhoto/setCroppedImage',
+      type: `${UPLOAD_PHOTO}/${SET_CROPPED_IMAGE}`,
       url,
       blob,
       width,
       height,
     });
   };
-  const showNewPhotoChooser = () => dispatch({ type: 'uploadPhoto/showPhotoChooser' });
-  const hideNewPhotoChooser = () => dispatch({ type: 'uploadPhoto/hidePhotoChooser' });
+  const showNewPhotoChooser = () => dispatch({ type: `${UPLOAD_PHOTO}/${SHOW_PHOTO_CHOOSER}` });
+  const hideNewPhotoChooser = () => dispatch({ type: `${UPLOAD_PHOTO}/${HIDE_PHOTO_CHOOSER}` });
 
   return (
     <div className="App">
@@ -132,6 +142,6 @@ export default connect(
     };
   }) => ({
     uploadPhoto,
-    submitting: loading.effects['userLogin/successLogin'],
+    submitting: loading.effects[`${UPLOAD_PHOTO}/${SUBMIT}`],
   }),
 )(UploadPhoto);

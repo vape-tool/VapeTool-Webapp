@@ -2,7 +2,8 @@ import { Form, Input, Modal } from 'antd';
 import * as React from 'react';
 import { FormComponentProps } from 'antd/es/form';
 import { connect } from 'dva';
-import { ConnectState, Dispatch } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
+import { Dispatch } from 'redux';
 
 interface NewAffiliateModalProps extends FormComponentProps {
   showNewAffiliateModal: boolean;

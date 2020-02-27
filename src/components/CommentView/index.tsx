@@ -7,6 +7,7 @@ import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Comment } from '@/types';
 import { CurrentUser } from '@/models/user';
+import { ImageType } from '@/services/storage';
 
 interface CommentViewProps {
   user: CurrentUser;
@@ -43,7 +44,7 @@ const CommentView: React.FC<CommentViewProps> = props => {
     <div
       style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignContent: 'stretch' }}
     >
-      <FirebaseImage type="user" id={author.uid} size="small" style={{ flexShrink: 0 }} />
+      <FirebaseImage type={ImageType.USER} size="small" style={{ flexShrink: 0 }} id={author.uid} />
       <Typography.Text strong style={{ marginLeft: 8, flexShrink: 0 }}>
         {author.displayName}
       </Typography.Text>

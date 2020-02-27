@@ -1,4 +1,4 @@
-import { Button, Card, Input, Spin, Row, Col } from 'antd';
+import { Button, Card, Col, Input, Row, Spin } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import ButtonGroup from 'antd/es/button/button-group';
@@ -8,6 +8,15 @@ import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import FirebaseImage from '@/components/StorageAvatar';
 import ImageChooser from '@/components/ImageChoser';
+import {
+  dispatchNewAvatar,
+  dispatchNewDisplayName,
+  dispatchUpdateUser,
+  hideNewAvatarChooser,
+  showNewAvatarChooser,
+} from '@/models/userWizard';
+import { redirectBack } from '@/models/global';
+import { ImageType } from '@/services/storage';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;
@@ -17,14 +26,10 @@ const UserWizard: React.FC<{
   dispatch: Dispatch;
 }> = props => {
   const { displayName, currentUser, dispatch, newAvatarUrl, showAvatarChooser } = props;
-  const onSave = () => dispatch({ type: 'userWizard/updateUser' });
-  const onCancel = () => dispatch({ type: 'global/redirectBack' });
-  const showNewAvatarChooser = () => dispatch({ type: 'userWizard/showNewAvatarChooser' });
-  const hideNewAvatarChooser = () => dispatch({ type: 'userWizard/hideNewAvatarChooser' });
   const onDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    dispatch({ type: 'userWizard/setDisplayName', displayName: e.target.value });
+    dispatchNewDisplayName(dispatch, e.target.value);
   const onNewAvatarChoose = (imageUrl: string, imageBlob: Blob | File) =>
-    dispatch({ type: 'userWizard/setNewAvatar', imageUrl, imageBlob });
+    dispatchNewAvatar(dispatch, imageUrl, imageBlob);
 
   if (!currentUser) {
     return <Spin />;
@@ -36,11 +41,16 @@ const UserWizard: React.FC<{
         <Col xs={24} md={16} lg={14} xl={10}>
           <Card style={{ maxWidth: 500 }} title="Setup user">
             <div className={styles.avatarHolder}>
-              <div onClick={showNewAvatarChooser}>
+              <div onClick={() => showNewAvatarChooser(dispatch)}>
                 <div>
                   {newAvatarUrl && <img alt="avatar" src={newAvatarUrl} width={200} />}
                   {!newAvatarUrl && (
-                    <FirebaseImage type="user" id={currentUser.uid} size={200} shape="square" />
+                    <FirebaseImage
+                      type={ImageType.USER}
+                      id={currentUser.uid}
+                      size={200}
+                      shape="square"
+                    />
                   )}
                 </div>
               </div>
@@ -67,8 +77,8 @@ const UserWizard: React.FC<{
             </div>
             <div style={{ textAlign: 'right' }}>
               <ButtonGroup>
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button icon="save" type="primary" onClick={onSave}>
+                <Button onClick={() => redirectBack(dispatch)}>Cancel</Button>
+                <Button icon="save" type="primary" onClick={() => dispatchUpdateUser(dispatch)}>
                   Save
                 </Button>
               </ButtonGroup>
@@ -80,7 +90,7 @@ const UserWizard: React.FC<{
       <ImageChooser
         uploadHintText="Upload avatar photo. Make sure that the photo doesn't brake the rules."
         visible={showAvatarChooser}
-        onCancel={hideNewAvatarChooser}
+        onCancel={() => hideNewAvatarChooser(dispatch)}
         onImageChoose={onNewAvatarChoose}
         maxSize={256}
       />

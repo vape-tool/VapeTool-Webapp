@@ -5,6 +5,8 @@ import { routerRedux } from 'dva/router';
 import { setAuthority } from './utils/utils';
 import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
+import { GLOBAL, REDIRECT_BACK } from '@/models/global';
+import { SET_USER, USER } from '@/models/user';
 
 export function dispatchSuccessLogin(dispatch: Dispatch) {
   dispatch({
@@ -57,7 +59,7 @@ const Model: ModelType = {
         yield put(routerRedux.replace({ pathname: '/user/wizard' }));
       } else {
         // user already initialized and saved on cloud
-        yield put({ type: 'global/redirectBack' });
+        yield put({ type: `${GLOBAL}/${REDIRECT_BACK}` });
       }
       const currentUser = {
         ...user,
@@ -65,7 +67,7 @@ const Model: ModelType = {
         display_name: user!.display_name || firebaseUser.displayName,
       };
       yield put({
-        type: 'user/setUser',
+        type: `${USER}/${SET_USER}`,
         currentUser,
       });
     },

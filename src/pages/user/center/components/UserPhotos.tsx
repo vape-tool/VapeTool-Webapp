@@ -1,4 +1,4 @@
-import { UserContent } from '@/models/user';
+import { CloudContent } from '@/models/user';
 import UserItems from '@/pages/user/center/components/UserItems';
 import { Photo } from '@/types';
 import React from 'react';
@@ -11,11 +11,11 @@ import { ConnectState } from '@/models/connect';
   loadingItems: loading.effects['user/fetchItems'],
 }))
 class UserPhotos extends UserItems<Photo> {
-  what: UserContent = 'photos';
+  what: CloudContent = CloudContent.PHOTOS;
 
   items = () => this.props.userPhotos || [];
 
-  renderItem = (item: Photo) => (<PhotoView item={item}/>);
+  renderItem = (item: Photo) => <PhotoView item={item} />;
 }
 
 export default UserPhotos;

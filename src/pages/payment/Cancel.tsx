@@ -2,14 +2,10 @@ import React from 'react';
 import { Button, Result } from 'antd';
 import { connect } from 'dva';
 import { ConnectProps } from '@/models/connect';
+import { redirectToWithFootprint } from '@/models/global';
 
 const CancelPayment: React.FC<ConnectProps> = (props: ConnectProps) => {
-  const onBuyAgainClick = () =>
-    props.dispatch &&
-    props.dispatch({
-      type: 'global/redirectTo',
-      path: '/payment',
-    });
+  const onBuyAgainClick = () => redirectToWithFootprint(props.dispatch!, '/payment');
 
   return (
     <Result

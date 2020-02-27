@@ -1,12 +1,18 @@
 import { Photo as FirebasePhoto } from '@vapetool/types';
-import { database, DataSnapshot } from '@/utils/firebase';
-import { getImageUrl } from '@/services/storage';
+import {
+  coilsRef,
+  DataSnapshot,
+  linksRef,
+  liquidsRef,
+  photosRef,
+  postsRef,
+} from '@/utils/firebase';
+import { getImageUrl, ImageType } from '@/services/storage';
 import { Post, Photo, Link, Coil, Liquid } from '@/types';
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
   return new Promise<Photo[]>((resolve, reject) => {
-    database
-      .ref('gears')
+    photosRef
       .orderByChild('author/uid')
       .equalTo(uid)
       .once('value')
@@ -17,7 +23,7 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
           firebasePhotos.push(firebasePhoto);
         });
         const photosPromise = firebasePhotos.map(photo =>
-          getImageUrl('photo', photo.uid).then(url => ({ ...photo, url } as Photo)),
+          getImageUrl(ImageType.PHOTO, photo.uid).then(url => ({ ...photo, url } as Photo)),
         );
 
         return Promise.all(photosPromise).then(photos => resolve(photos));
@@ -30,8 +36,7 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
 }
 
 export async function getUserPosts(uid: string): Promise<Post[]> {
-  const snapshots = await database
-    .ref('posts')
+  const snapshots = await postsRef
     .orderByChild('author/uid')
     .equalTo(uid)
     .once('value');
@@ -46,8 +51,7 @@ export async function getUserPosts(uid: string): Promise<Post[]> {
 }
 
 export async function getUserLinks(uid: string): Promise<Link[]> {
-  const snapshots = await database
-    .ref('links')
+  const snapshots = await linksRef
     .orderByChild('author/uid')
     .equalTo(uid)
     .once('value');
@@ -62,8 +66,7 @@ export async function getUserLinks(uid: string): Promise<Link[]> {
 }
 
 export async function getUserCoils(uid: string): Promise<Coil[]> {
-  const snapshots = await database
-    .ref('coils')
+  const snapshots = await coilsRef
     .orderByChild('author/uid')
     .equalTo(uid)
     .once('value');
@@ -78,8 +81,7 @@ export async function getUserCoils(uid: string): Promise<Coil[]> {
 }
 
 export async function getUserLiquids(uid: string): Promise<Liquid[]> {
-  const snapshots = await database
-    .ref('liquids')
+  const snapshots = await liquidsRef
     .orderByChild('author/uid')
     .equalTo(uid)
     .once('value');

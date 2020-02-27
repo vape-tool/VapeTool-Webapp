@@ -1,48 +1,54 @@
-import { Reducer } from 'redux';
+import { Dispatch, Reducer } from 'redux';
 import { Effect, Subscription } from 'dva';
 
-import { NoticeIconData } from '@/components/NoticeIcon';
-import { queryNotices } from '@/services/user';
-import { ConnectState } from './connect.d';
 import { getPageQuery } from '@/utils/utils';
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
+import router from 'umi/router';
 
-export interface NoticeItem extends NoticeIconData {
-  id: string;
-  type: string;
-  status: string;
+export const GLOBAL = 'global';
+export const REDIRECT_BACK = 'redirectBack';
+export const REDIRECT_TO_WITH_FOOTPRINT = 'redirectToWithFootprint';
+export const CHANGE_LAYOUT_COLLAPSED = 'changeLayoutCollapsed';
+
+export function redirectBack(dispatch: Dispatch) {
+  dispatch({ type: `${GLOBAL}/${REDIRECT_BACK}` });
+}
+
+export function redirectToWithFootprint(dispatch: Dispatch, path: string) {
+  dispatch({ type: `${GLOBAL}/${REDIRECT_TO_WITH_FOOTPRINT}`, path });
+}
+
+export function redirectTo(path: string) {
+  router.push(path);
+}
+
+export function dispatchChangeLayoutCollapsed(dispatch: Dispatch, payload: boolean) {
+  dispatch({ type: `${GLOBAL}/${REDIRECT_BACK}`, payload });
 }
 
 export interface GlobalModelState {
   collapsed: boolean;
-  notices: NoticeItem[];
 }
 
 export interface GlobalModelType {
-  namespace: 'global';
+  namespace: string;
   state: GlobalModelState;
   effects: {
-    redirectBack: Effect;
-    redirectTo: Effect;
-    fetchNotices: Effect;
-    clearNotices: Effect;
-    changeNoticeReadState: Effect;
+    [REDIRECT_BACK]: Effect;
+    [REDIRECT_TO_WITH_FOOTPRINT]: Effect;
   };
   reducers: {
-    changeLayoutCollapsed: Reducer<GlobalModelState>;
-    saveNotices: Reducer<GlobalModelState>;
-    saveClearedNotices: Reducer<GlobalModelState>;
+    [CHANGE_LAYOUT_COLLAPSED]: Reducer<GlobalModelState>;
   };
   subscriptions: { setup: Subscription };
 }
 
 const GlobalModel: GlobalModelType = {
-  namespace: 'global',
+  namespace: GLOBAL,
 
   state: {
     collapsed: false,
-    notices: [],
   },
 
   effects: {
@@ -66,7 +72,8 @@ const GlobalModel: GlobalModelType = {
       console.log(`isAbout to redirect to ${redirect || '/'}`);
       yield put(routerRedux.replace(redirect || '/'));
     },
-    *redirectTo({ path }, { put }) {
+    *redirectToWithFootprint({ path }, { put }) {
+      console.log(`redirect to ${path}`);
       yield put(
         routerRedux.replace({
           pathname: path,
@@ -76,85 +83,13 @@ const GlobalModel: GlobalModelType = {
         }),
       );
     },
-    *fetchNotices(_, { call, put, select }) {
-      const data = yield call(queryNotices);
-      yield put({
-        type: 'saveNotices',
-        payload: data,
-      });
-      const unreadCount: number = yield select(
-        (state: ConnectState) => state.global.notices.filter(item => !item.read).length,
-      );
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: {
-          totalCount: data.length,
-          unreadCount,
-        },
-      });
-    },
-    *clearNotices({ payload }, { put, select }) {
-      yield put({
-        type: 'saveClearedNotices',
-        payload,
-      });
-      const count: number = yield select((state: ConnectState) => state.global.notices.length);
-      const unreadCount: number = yield select(
-        (state: ConnectState) => state.global.notices.filter(item => !item.read).length,
-      );
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: {
-          totalCount: count,
-          unreadCount,
-        },
-      });
-    },
-    *changeNoticeReadState({ payload }, { put, select }) {
-      const notices: NoticeItem[] = yield select((state: ConnectState) =>
-        state.global.notices.map(item => {
-          const notice = { ...item };
-          if (notice.id === payload) {
-            notice.read = true;
-          }
-          return notice;
-        }),
-      );
-
-      yield put({
-        type: 'saveNotices',
-        payload: notices,
-      });
-
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: {
-          totalCount: notices.length,
-          unreadCount: notices.filter(item => !item.read).length,
-        },
-      });
-    },
   },
 
   reducers: {
-    changeLayoutCollapsed(state = { notices: [], collapsed: true }, { payload }): GlobalModelState {
+    changeLayoutCollapsed(state = { collapsed: true }, { payload }): GlobalModelState {
       return {
         ...state,
         collapsed: payload,
-      };
-    },
-    saveNotices(state, { payload }): GlobalModelState {
-      return {
-        collapsed: false,
-        ...state,
-        notices: payload,
-      };
-    },
-    saveClearedNotices(state = { notices: [], collapsed: true }, { payload }): GlobalModelState {
-      return {
-        collapsed: false,
-        ...state,
-        notices: state.notices.filter((item): boolean => item.type !== payload),
       };
     },
   },
