@@ -13,6 +13,7 @@ import {
 } from '@/models/converter';
 
 import styles from './converters.less';
+import { unitFormatter } from '@/utils/utils';
 
 const InchConverter: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
@@ -34,6 +35,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
               max={10}
               step={1}
               precision={0}
+              formatter={unitFormatter(0)}
               value={nominator}
               onChange={onChangeNominator}
               className={styles.nominator}
@@ -47,6 +49,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
               max={100}
               step={1}
               precision={0}
+              formatter={unitFormatter(0)}
               value={denominator}
               onChange={onChangeDenominator}
               className={styles.denominator}
@@ -67,6 +70,8 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
               max={100000}
               step={0.01}
               value={inch}
+              precision={2}
+              formatter={unitFormatter(2)}
               onChange={onChangeInch}
               placeholder="inches"
               className={styles.input}
@@ -87,6 +92,8 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
               max={100000}
               step={0.01}
               value={mm}
+              precision={3}
+              formatter={unitFormatter(3)}
               onChange={onChangeMm}
               placeholder="mm"
               className={styles.input}

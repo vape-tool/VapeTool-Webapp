@@ -43,10 +43,17 @@ export function unitFormatter(
   decimals: number,
   unit?: string,
 ): (value: number | string | undefined) => string {
-  return (value: number | string | undefined) =>
-    value && value !== ''
-      ? `${Number(value).toFixed(decimals)}${unit ? ` ${unit}` : ''}`
+  return (value: number | string | undefined) => {
+    if (!value || value === '') {
+      return '';
+    }
+
+    const number = Number(value);
+
+    return !Number.isNaN(number) && Number.isFinite(number)
+      ? `${number.toFixed(decimals)}${unit ? ` ${unit}` : ''}`
       : '';
+  };
 }
 
 export function unitParser(
