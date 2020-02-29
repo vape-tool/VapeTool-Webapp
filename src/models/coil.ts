@@ -52,7 +52,7 @@ export function dispatchDeleteWire(dispatch: Dispatch, paths: Path[]) {
 
 export function dispatchSetWire(dispatch: Dispatch, paths: Path[], wire: Wire) {
   dispatch({
-    type: `${COIL}/${DELETE_WIRE}`,
+    type: `${COIL}/${SET_WIRE}`,
     payload: { paths, wire },
   });
 }
