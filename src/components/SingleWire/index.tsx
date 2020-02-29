@@ -52,7 +52,7 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = ({key: materialId}: {key: string}): void => {
+  const handleMaterialChange = ({ key: materialId }: { key: string }): void => {
     const material = materials.find(({ id }) => id === materialId);
     if (material !== undefined) {
       wire.material = material;
