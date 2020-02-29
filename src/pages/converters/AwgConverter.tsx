@@ -6,7 +6,6 @@ import { ConnectState } from '@/models/connect';
 import { AWG_TO_MM, dispatchChangeValue, SET_AWG_IN_AWG_TO_MM, SET_MM_IN_AWG_TO_MM } from '@/models/converter';
 
 import styles from './converters.less';
-import { unitFormatter } from '@/utils/utils';
 
 const AwgConverter: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
@@ -27,7 +26,6 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
               max={100}
               value={awg}
               precision={0}
-              formatter={unitFormatter(0)}
               onChange={onChangeAwg}
               placeholder="AWG"
               className={styles.input}
@@ -49,7 +47,6 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
               step={0.01}
               value={mm}
               precision={3}
-              formatter={unitFormatter(3)}
               onChange={onChangeMm}
               placeholder="mm"
               className={styles.input}
