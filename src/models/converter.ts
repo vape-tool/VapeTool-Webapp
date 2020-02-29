@@ -94,7 +94,8 @@ const ConverterModel: ConverterModelType = {
 
     setNominatorInInchToMm(state, { payload: nominatorStr }): ConverterModelState {
       const nominator = nanToUndefined(nominatorStr);
-      const denominator = state && state[INCH_TO_MM].denominator ? Number(state[INCH_TO_MM].denominator) : undefined;
+      const denominator =
+        state && state[INCH_TO_MM].denominator ? Number(state[INCH_TO_MM].denominator) : undefined;
       const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
@@ -109,7 +110,8 @@ const ConverterModel: ConverterModelType = {
     },
     setDenominatorInInchToMm(state, { payload: denominatorStr }): ConverterModelState {
       const denominator = nanToUndefined(denominatorStr);
-      const nominator = state && state[INCH_TO_MM].nominator ? Number(state[INCH_TO_MM].nominator) : undefined;
+      const nominator =
+        state && state[INCH_TO_MM].nominator ? Number(state[INCH_TO_MM].nominator) : undefined;
       const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
@@ -167,7 +169,11 @@ const ConverterModel: ConverterModelType = {
         ...(state as ConverterModelState),
         [TEMPERATURE]: {
           fahrenheit,
-          celsius: safeConvert(([_fahrenheit]) => fahrenheitToCelsius(_fahrenheit), [fahrenheit], 2),
+          celsius: safeConvert(
+            ([_fahrenheit]) => fahrenheitToCelsius(_fahrenheit),
+            [fahrenheit],
+            2,
+          ),
         },
       };
     },
