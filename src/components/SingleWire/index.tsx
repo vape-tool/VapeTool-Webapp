@@ -52,8 +52,12 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = (): void => {
-    // TODO apply material change
+  const handleMaterialChange = ({key: materialId}: {key: string}): void => {
+    const material = materials.find(({ id }) => id === materialId);
+    if (material !== undefined) {
+      wire.material = material;
+      dispatchSetWire(dispatch, path, wire);
+    }
   };
   const onDeleteClick = () => dispatchDeleteWire(dispatch, path);
   const onChangeKindClick = () => {
