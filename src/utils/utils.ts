@@ -82,3 +82,27 @@ export function unitParser(
     return Number.isNaN(value) ? 0 : value.toFixed(decimals);
   };
 }
+
+export const nanToUndefined = (str: string | number): number | undefined => {
+  if (str === '' || str === undefined || str === null) {
+    return undefined;
+  }
+
+  const value = Number(str);
+
+  return Number.isNaN(value) || !Number.isFinite(value) ? undefined : value;
+};
+
+export const identity = ([a]: any[]) => a;
+
+export const safeConvert = (func: (params: number[]) => number, params: Array<number | undefined>, precision = 0): number | undefined => {
+  if (params.some(param => param === undefined)) {
+    return undefined;
+  }
+
+  const safeParams = params as number[];
+
+  const value = Number(func(safeParams).toFixed(precision));
+
+  return nanToUndefined(value);
+};

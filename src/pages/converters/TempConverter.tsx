@@ -6,7 +6,6 @@ import { ConnectState } from '@/models/connect';
 import { dispatchChangeValue, SET_CELSIUS_IN_TEMPERATURE, SET_FAHRENHEIT_IN_TEMPERATURE, TEMPERATURE } from '@/models/converter';
 
 import styles from './converters.less';
-import { unitFormatter } from '@/utils/utils';
 
 const TempConverter: React.FC<ConverterComponentProps> = props => {
   const { converter, dispatch } = props;
@@ -27,7 +26,6 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               step={0.5}
               value={celsius}
               precision={2}
-              formatter={unitFormatter(2)}
               onChange={onChangeCelsius}
               placeholder="Celsius"
               className={styles.input}
@@ -47,7 +45,6 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               step={1}
               value={fahrenheit}
               precision={1}
-              formatter={unitFormatter(1)}
               onChange={onChangeFahrenheit}
               placeholder="Fahrenheit"
               className={styles.input}

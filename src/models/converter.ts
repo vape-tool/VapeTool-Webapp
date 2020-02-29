@@ -1,6 +1,6 @@
 import { Dispatch, Reducer } from 'redux';
-import { awgToMm, mmToAwg } from '@/utils/math';
-import { nanToUndefined } from '@/pages/converters/utils';
+import { awgToMm, celsiusToFahrenheit, fahrenheitToCelsius, mmToAwg } from '@/utils/math';
+import { identity, nanToUndefined, safeConvert } from '@/utils/utils';
 
 export const CONVERTER = 'converter';
 
@@ -76,7 +76,7 @@ const ConverterModel: ConverterModelType = {
         ...(state as ConverterModelState),
         [AWG_TO_MM]: {
           awg,
-          mm: awg !== undefined ? awgToMm(awg) : undefined,
+          mm: safeConvert(([_awg]) => awgToMm(_awg), [awg], 3),
         },
       };
     },
@@ -86,7 +86,7 @@ const ConverterModel: ConverterModelType = {
       return {
         ...(state as ConverterModelState),
         [AWG_TO_MM]: {
-          awg: mm !== undefined ? mmToAwg(mm) : undefined,
+          awg: safeConvert(([_mm]) => mmToAwg(_mm), [mm]),
           mm,
         },
       };
@@ -94,7 +94,7 @@ const ConverterModel: ConverterModelType = {
 
     setNominatorInInchToMm(state, { payload: nominatorStr }): ConverterModelState {
       const nominator = nanToUndefined(nominatorStr);
-      const denominator = state && state[INCH_TO_MM].denominator;
+      const denominator = state && state[INCH_TO_MM].denominator ? Number(state[INCH_TO_MM].denominator) : undefined;
       const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
@@ -102,14 +102,14 @@ const ConverterModel: ConverterModelType = {
         [INCH_TO_MM]: {
           nominator,
           denominator,
-          inch,
-          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
+          inch: safeConvert(identity, [inch], 4),
+          mm: safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [inch], 3),
         },
       };
     },
     setDenominatorInInchToMm(state, { payload: denominatorStr }): ConverterModelState {
       const denominator = nanToUndefined(denominatorStr);
-      const nominator = state && state[INCH_TO_MM].nominator;
+      const nominator = state && state[INCH_TO_MM].nominator ? Number(state[INCH_TO_MM].nominator) : undefined;
       const inch = nominator && denominator ? nominator / denominator : undefined;
 
       return {
@@ -117,8 +117,8 @@ const ConverterModel: ConverterModelType = {
         [INCH_TO_MM]: {
           nominator,
           denominator,
-          inch,
-          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
+          inch: safeConvert(identity, [inch], 4),
+          mm: safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [inch], 3),
         },
       };
     },
@@ -131,7 +131,7 @@ const ConverterModel: ConverterModelType = {
           nominator: undefined,
           denominator: undefined,
           inch,
-          mm: inch !== undefined ? inch / INCHES_TO_MM_FACTOR : undefined,
+          mm: safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [inch], 3),
         },
       };
     },
@@ -143,7 +143,7 @@ const ConverterModel: ConverterModelType = {
         [INCH_TO_MM]: {
           nominator: undefined,
           denominator: undefined,
-          inch: mm !== undefined ? mm * INCHES_TO_MM_FACTOR : undefined,
+          inch: safeConvert(([_mm]) => _mm * INCHES_TO_MM_FACTOR, [mm], 4),
           mm,
         },
       };
@@ -156,7 +156,7 @@ const ConverterModel: ConverterModelType = {
         ...(state as ConverterModelState),
         [TEMPERATURE]: {
           celsius,
-          fahrenheit: celsius !== undefined ? celsius * (9.0 / 5.0) + 32.0 : undefined,
+          fahrenheit: safeConvert(([_celsius]) => celsiusToFahrenheit(_celsius), [celsius], 1),
         },
       };
     },
@@ -167,7 +167,7 @@ const ConverterModel: ConverterModelType = {
         ...(state as ConverterModelState),
         [TEMPERATURE]: {
           fahrenheit,
-          celsius: fahrenheit !== undefined ? (fahrenheit - 32.0) * (5.0 / 9.0) : undefined,
+          celsius: safeConvert(([_fahrenheit]) => fahrenheitToCelsius(_fahrenheit), [fahrenheit], 2),
         },
       };
     },
