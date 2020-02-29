@@ -95,7 +95,11 @@ export const nanToUndefined = (str: string | number): number | undefined => {
 
 export const identity = ([a]: any[]) => a;
 
-export const safeConvert = (func: (params: number[]) => number, params: Array<number | undefined>, precision = 0): number | undefined => {
+export const safeConvert = (
+  func: (params: number[]) => number,
+  params: Array<number | undefined>,
+  precision = 0,
+): number | undefined => {
   if (params.some(param => param === undefined)) {
     return undefined;
   }
