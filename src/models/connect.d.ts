@@ -15,6 +15,7 @@ import { UserWizardState } from '@/models/userWizard';
 import { UploadState } from '@/models/upload';
 import { UploadPostState } from '@/models/uploadPost';
 import { PreviewModelState } from '@/models/preview';
+import { UserProfileModelState } from '@/models/userProfile';
 
 export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
 
@@ -26,6 +27,7 @@ export interface Loading {
     menu?: boolean;
     setting?: boolean;
     user?: boolean;
+    userProfile?: boolean;
     coil?: boolean;
     liquid?: boolean;
     cloud?: boolean;
@@ -43,6 +45,7 @@ export interface ConnectState {
   loading: Loading;
   settings: SettingModelState;
   user: UserModelState;
+  userProfile: UserProfileModelState;
   coil: CoilModelState;
   liquid: LiquidModelState;
   cloud: CloudModelState;

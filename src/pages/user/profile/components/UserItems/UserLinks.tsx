@@ -1,14 +1,14 @@
-import { CloudContent } from '@/models/user';
-import UserItems from '@/pages/user/center/components/UserItems';
+import UserItems from '@/pages/user/profile/components/UserItems/index';
 import React from 'react';
 import { Link } from '@/types';
 import LinkView from '@/components/LinkView';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
+import { CloudContent, FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 
-@connect(({ user, loading }: ConnectState) => ({
-  userLinks: user.userLinks,
-  loadingItems: loading.effects['user/fetchItems'],
+@connect(({ userProfile, loading }: ConnectState) => ({
+  userLinks: userProfile.userLinks,
+  loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
 }))
 class UserPosts extends UserItems<Link> {
   what: CloudContent = CloudContent.LINKS;

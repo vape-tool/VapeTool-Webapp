@@ -1,6 +1,7 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
+import { Link } from 'umi';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
 import styles from './index.less';
@@ -19,7 +20,11 @@ class PostView extends ItemView<Post> {
     return (
       <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
-          avatar={<FirebaseImage type={ImageType.USER} id={item.author.uid} />}
+          avatar={
+            <Link to={`/user/profile/${item.author.uid}`}>
+              <FirebaseImage type={ImageType.USER} id={item.author.uid} />
+            </Link>
+          }
           title={
             <span onClick={this.onSelectItem}>
               <Typography.Text>{item.title}</Typography.Text>

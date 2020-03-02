@@ -1,6 +1,7 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
+import { Link } from 'umi';
 // @ts-ignore
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
@@ -8,10 +9,10 @@ import { ConnectState } from '@/models/connect';
 import styles from '../ItemView/index.less';
 import { ItemView } from '@/components/ItemView';
 import { ItemName } from '@/types/Item';
-import { Link } from '@/types';
+import { Link as LinkType } from '@/types';
 import { ImageType } from '@/services/storage';
 
-class LinkView extends ItemView<Link> {
+class LinkView extends ItemView<LinkType> {
   what: ItemName = ItemName.LINK;
 
   render() {
@@ -21,7 +22,11 @@ class LinkView extends ItemView<Link> {
     return (
       <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
-          avatar={<FirebaseImage type={ImageType.USER} id={item.author.uid} />}
+          avatar={
+            <Link to={`/user/profile/${item.author.uid}`}>
+              <FirebaseImage type={ImageType.USER} id={item.author.uid} />
+            </Link>
+          }
           title={
             <span onClick={this.onSelectItem}>
               <Typography.Text>{item.title}</Typography.Text>

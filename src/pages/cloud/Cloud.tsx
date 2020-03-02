@@ -50,7 +50,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
           if (item.$type === 'link') {
             return <LinkView displayCommentsLength={3} item={item} />;
           }
-          return <div></div>;
+          return <div />;
         }}
       />
       <PhotoPreviewModal />
