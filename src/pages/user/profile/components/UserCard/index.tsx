@@ -18,11 +18,11 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({
-                                             userProfile: profile,
-                                             isLoading,
-                                             isCurrentUser,
-                                             currentUser,
-                                           }) => {
+  userProfile: profile,
+  isLoading,
+  isCurrentUser,
+  currentUser,
+}) => {
   const userTags = profile?.tags || [];
 
   if (isLoading) {
