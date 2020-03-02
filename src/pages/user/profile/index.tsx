@@ -11,13 +11,7 @@ import UserPosts from './components/UserItems/UserPosts';
 import UserLinks from './components/UserItems/UserLinks';
 import UserLiquids from './components/UserItems/UserLiquids';
 import UserCoils from './components/UserItems/UserCoils';
-import {
-  CloudContent,
-  dispatchFetchUserProfile,
-  FETCH_USER_PROFILE,
-  USER_PROFILE,
-  UserProfile,
-} from '@/models/userProfile';
+import { CloudContent, dispatchFetchUserProfile, FETCH_USER_PROFILE, USER_PROFILE, UserProfile } from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
 import styles from './styles.less';
 
@@ -45,6 +39,10 @@ const Profile: React.FC<UserProfileProps> = props => {
   }, [userId]);
 
   const renderContentByTabKey = () => {
+    if (isLoading) {
+      return <div />
+    }
+
     switch (tabKey) {
       case CloudContent.PHOTOS:
         return <UserPhotos />;
