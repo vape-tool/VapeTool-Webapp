@@ -30,6 +30,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
           <div className={styles.fraction}>
             <InputNumber
               size="large"
+              type="number"
               min={1}
               max={10}
               step={1}
@@ -43,6 +44,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
 
             <InputNumber
               size="large"
+              type="number"
               min={1}
               max={100}
               step={1}
@@ -63,6 +65,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
             [inch]
             <InputNumber
               size="large"
+              type="number"
               min={0}
               max={100000}
               step={0.01}
@@ -84,6 +87,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
             [mm]
             <InputNumber
               size="large"
+              type="number"
               min={0}
               max={100000}
               step={0.01}

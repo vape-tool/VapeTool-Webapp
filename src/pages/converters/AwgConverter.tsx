@@ -22,6 +22,7 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
             AWG
             <InputNumber
               size="large"
+              type="number"
               min={0}
               max={100}
               value={awg}
@@ -42,6 +43,7 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
             [mm]
             <InputNumber
               size="large"
+              type="number"
               min={0}
               max={100000}
               step={0.01}
