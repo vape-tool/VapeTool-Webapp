@@ -6,14 +6,14 @@
 
 import ProLayout, {
   BasicLayoutProps as ProLayoutProps,
+  DefaultFooter,
   MenuDataItem,
   Settings,
-  DefaultFooter,
 } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import { Icon, Result, Button } from 'antd';
+import { Button, Icon, Result } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 
 import { Dispatch } from 'redux';
@@ -24,6 +24,7 @@ import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import { dispatchFetchCurrentUser } from '@/models/user';
 import { dispatchChangeLayoutCollapsed } from '@/models/global';
+import { getUserLoginUrl } from '@/places/user.places';
 
 const noMatch = (
   <Result
@@ -32,7 +33,7 @@ const noMatch = (
     subTitle="Sorry, you are not authorized to access this page."
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <Link to={getUserLoginUrl()}>Go Login</Link>
       </Button>
     }
   />
@@ -101,7 +102,7 @@ const footerRender: BasicLayoutProps['footerRender'] = () => (
         padding: '0px 24px 24px',
         textAlign: 'center',
       }}
-    ></div>
+    />
   </>
 );
 

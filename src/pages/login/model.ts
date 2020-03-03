@@ -7,6 +7,7 @@ import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
 import { GLOBAL, REDIRECT_BACK } from '@/models/global';
 import { SET_USER, USER } from '@/models/user';
+import { getCurrentUserEditProfileUrl } from '@/places/user.places';
 
 export function dispatchSuccessLogin(dispatch: Dispatch) {
   dispatch({
@@ -56,7 +57,7 @@ const Model: ModelType = {
       if (user == null) {
         // user not yet saved to database, saving now and redirecting to wizard page
         user = yield call(initializeUser, firebaseUser);
-        yield put(routerRedux.replace({ pathname: '/user/wizard' }));
+        yield put(routerRedux.replace({ pathname: getCurrentUserEditProfileUrl() }));
       } else {
         // user already initialized and saved on cloud
         yield put({ type: `${GLOBAL}/${REDIRECT_BACK}` });

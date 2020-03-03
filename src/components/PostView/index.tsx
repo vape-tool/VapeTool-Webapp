@@ -9,6 +9,7 @@ import { ItemView } from '@/components/ItemView';
 import { Post } from '@/types';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
+import { getUserProfileUrl } from '@/places/user.places';
 
 class PostView extends ItemView<Post> {
   what: ItemName = ItemName.POST;
@@ -21,7 +22,7 @@ class PostView extends ItemView<Post> {
       <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
           avatar={
-            <Link to={`/user/profile/${item.author.uid}`}>
+            <Link to={getUserProfileUrl(item.author.uid)}>
               <FirebaseImage type={ImageType.USER} id={item.author.uid} />
             </Link>
           }

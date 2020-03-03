@@ -7,8 +7,7 @@ import { Avatar, Button, Card, Col, Divider, Icon, Row } from 'antd';
 import { Link } from 'umi';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import styles from './styles.less';
-
-const { NODE_ENV } = process.env;
+import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
 
 interface UserCardProps {
   isCurrentUser: boolean;
@@ -35,12 +34,6 @@ const UserCard: React.FC<UserCardProps> = ({
     );
   }
 
-  const cancelSubscriptionUrl = `https://www.${
-    NODE_ENV === 'development' ? 'sandbox.' : ''
-  }paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=${
-    NODE_ENV === 'production' ? 'ETUSF9JPSL3E8' : '62E6JFJB7ENUC'
-  }`;
-
   return (
     <Card bordered={false} className={styles.card}>
       <div className={styles.avatarHolder}>
@@ -66,7 +59,7 @@ const UserCard: React.FC<UserCardProps> = ({
 
             <Divider className={styles.divider} dashed />
 
-            <UserTags isCurrentUser={isCurrentUser} userTags={userTags} />
+            <UserTags userTags={userTags} />
 
             <Divider className={styles.divider} dashed />
 
@@ -83,7 +76,7 @@ const UserCard: React.FC<UserCardProps> = ({
           </Col>
           {isCurrentUser && (
             <Col xs={24} lg={8} className={styles.buttons}>
-              <Link to="/user/wizard">
+              <Link to={getCurrentUserEditProfileUrl()}>
                 <Button type="default" shape="round" size="small" block>
                   <Icon type="edit" />
                   Edit profile
@@ -96,7 +89,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 size="small"
                 block
                 target="_blank"
-                href={cancelSubscriptionUrl}
+                href={getCancelSubscriptionUrl()}
               >
                 Cancel subscription
               </Button>

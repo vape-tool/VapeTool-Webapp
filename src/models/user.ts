@@ -8,6 +8,7 @@ import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
 import moment from 'moment';
 import { GLOBAL, REDIRECT_BACK } from '@/models/global';
+import { getCurrentUserEditProfileUrl } from '@/places/user.places';
 
 export const USER = 'user';
 export const LOGOUT = 'logout';
@@ -88,7 +89,7 @@ const UserModel: UserModelType = {
       if (user == null) {
         console.log('user not yet saved to database, saving now');
         user = yield call(initializeUser, firebaseUser);
-        yield put(routerRedux.replace({ pathname: '/user/wizard' }));
+        yield put(routerRedux.replace({ pathname: getCurrentUserEditProfileUrl() }));
         console.log(user);
       } else {
         console.log(`User is already created in db ${user}`);

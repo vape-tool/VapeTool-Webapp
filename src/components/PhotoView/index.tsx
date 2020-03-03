@@ -9,6 +9,7 @@ import styles from '../ItemView/index.less';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
 import { Link } from 'umi';
+import { getUserProfileUrl } from '@/places/user.places';
 
 class PhotoView extends ItemView<Photo> {
   what: ItemName = ItemName.PHOTO;
@@ -36,7 +37,7 @@ class PhotoView extends ItemView<Photo> {
       >
         <Card.Meta
           avatar={
-            <Link to={`/user/profile/${item.author.uid}`}>
+            <Link to={getUserProfileUrl(item.author.uid)}>
               <FirebaseImage type={ImageType.USER} id={item.author.uid} />
             </Link>
           }

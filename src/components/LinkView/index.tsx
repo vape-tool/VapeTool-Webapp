@@ -11,6 +11,7 @@ import { ItemView } from '@/components/ItemView';
 import { ItemName } from '@/types/Item';
 import { Link as LinkType } from '@/types';
 import { ImageType } from '@/services/storage';
+import { getUserProfileUrl } from '@/places/user.places';
 
 class LinkView extends ItemView<LinkType> {
   what: ItemName = ItemName.LINK;
@@ -23,7 +24,7 @@ class LinkView extends ItemView<LinkType> {
       <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
         <Card.Meta
           avatar={
-            <Link to={`/user/profile/${item.author.uid}`}>
+            <Link to={getUserProfileUrl(item.author.uid)}>
               <FirebaseImage type={ImageType.USER} id={item.author.uid} />
             </Link>
           }

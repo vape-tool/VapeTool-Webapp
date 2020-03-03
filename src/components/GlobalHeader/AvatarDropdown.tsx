@@ -11,6 +11,7 @@ import styles from './index.less';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { redirectTo } from '@/models/global';
+import { getCurrentUserProfileUrl } from '@/places/user.places';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
   currentUser?: CurrentUser;
@@ -21,11 +22,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
   const onMenuClick = (event: ClickParam) => {
     const { key } = event;
 
-    if (key === 'logout') {
-      dispatchLogout(props.dispatch);
-      return;
+    switch (key) {
+      case 'logout':
+        dispatchLogout(props.dispatch);
+        return;
+      case 'profile':
+        redirectTo(getCurrentUserProfileUrl());
+        return;
+      default:
+        console.error('Invalid dropdown menu item');
     }
-    redirectTo(`/user/${key}`);
   };
 
   const { menu } = props;
@@ -49,7 +55,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
-        <Menu.Item key="center">
+        <Menu.Item key="profile">
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>

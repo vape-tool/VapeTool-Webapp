@@ -11,7 +11,13 @@ import UserPosts from './components/UserItems/UserPosts';
 import UserLinks from './components/UserItems/UserLinks';
 import UserLiquids from './components/UserItems/UserLiquids';
 import UserCoils from './components/UserItems/UserCoils';
-import { CloudContent, dispatchFetchUserProfile, FETCH_USER_PROFILE, USER_PROFILE, UserProfile } from '@/models/userProfile';
+import {
+  CloudContent,
+  dispatchFetchUserProfile,
+  FETCH_USER_PROFILE,
+  USER_PROFILE,
+  UserProfile,
+} from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
 import styles from './styles.less';
 
@@ -24,11 +30,18 @@ interface UserProfileProps extends RouteChildrenProps {
 }
 
 const Profile: React.FC<UserProfileProps> = props => {
-  const { dispatch, currentUser, userProfile: profile, profileLoading, match } = props;
+  const {
+    dispatch,
+    currentUser,
+    currentUserLoading,
+    userProfile: profile,
+    profileLoading,
+    match,
+  } = props;
   const [tabKey, setTabKey] = useState(CloudContent.PHOTOS);
   let userId = match?.params['id'];
   const isCurrentUser = userId === undefined;
-  const isLoading = profileLoading !== false || !profile;
+  const isLoading = currentUserLoading !== false || profileLoading !== false || !profile;
 
   if (isCurrentUser) {
     userId = currentUser?.uid;
@@ -40,7 +53,7 @@ const Profile: React.FC<UserProfileProps> = props => {
 
   const renderContentByTabKey = () => {
     if (isLoading) {
-      return <div />
+      return <div />;
     }
 
     switch (tabKey) {
@@ -140,5 +153,4 @@ export default connect(({ loading, user, userProfile }: ConnectState) => ({
   currentUserLoading: loading.effects[`${USER}/${FETCH_CURRENT}`],
   userProfile: userProfile.userProfile,
   profileLoading: loading.effects[`${USER_PROFILE}/${FETCH_USER_PROFILE}`],
-  firebaseUser: user.firebaseUser,
 }))(Profile);

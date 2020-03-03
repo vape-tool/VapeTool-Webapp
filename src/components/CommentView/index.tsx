@@ -8,6 +8,8 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { Comment } from '@/types';
 import { CurrentUser } from '@/models/user';
 import { ImageType } from '@/services/storage';
+import { getUserProfileUrl } from '@/places/user.places';
+import { Link } from 'umi';
 
 interface CommentViewProps {
   user: CurrentUser;
@@ -44,10 +46,17 @@ const CommentView: React.FC<CommentViewProps> = props => {
     <div
       style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignContent: 'stretch' }}
     >
-      <FirebaseImage type={ImageType.USER} size="small" style={{ flexShrink: 0 }} id={author.uid} />
-      <Typography.Text strong style={{ marginLeft: 8, flexShrink: 0 }}>
-        {author.displayName}
-      </Typography.Text>
+      <Link to={getUserProfileUrl(author.uid)}>
+        <FirebaseImage
+          type={ImageType.USER}
+          size="small"
+          style={{ flexShrink: 0 }}
+          id={author.uid}
+        />
+        <Typography.Text strong style={{ marginLeft: 8, flexShrink: 0 }}>
+          {author.displayName}
+        </Typography.Text>
+      </Link>
       <span style={{ marginLeft: 8, flexGrow: 1, alignSelf: 'flex-start', textAlign: 'start' }}>
         {content}
       </span>
