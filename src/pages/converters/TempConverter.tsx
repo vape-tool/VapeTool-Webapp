@@ -22,6 +22,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
             Celsius [°C]
             <InputNumber
               size="large"
+              type="number"
               min={-273.15}
               step={0.5}
               value={celsius}
@@ -42,6 +43,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
             Fahrenheit [°F]
             <InputNumber
               size="large"
+              type="number"
               step={1}
               value={fahrenheit}
               precision={1}
