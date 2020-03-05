@@ -1,7 +1,7 @@
 import { Card, List, Typography } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
-import styles from '@/components/ItemView/index.less';
+import styles from '@/components/ItemView/styles.less';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
 import { dispatchSelectBattery } from '@/models/batteries';

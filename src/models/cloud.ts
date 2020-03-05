@@ -1,6 +1,7 @@
 import { Dispatch, Reducer } from 'redux';
 import { Link, Photo, Post } from '@/types';
-import { CloudContent, UserModelState } from '@/models/user';
+import { UserModelState } from '@/models/user';
+import { CloudContent } from '@/models/userProfile';
 
 export const CLOUD = 'cloud';
 export const SET_ITEMS = 'setItems';

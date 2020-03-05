@@ -4,6 +4,7 @@ import { RouterTypes } from 'umi';
 import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
+import { UserProfileModelState } from './userProfile';
 import { CoilModelState } from './coil';
 import { CloudModelState } from './cloud';
 import { LiquidModelState } from './liquid';
@@ -25,6 +26,7 @@ export interface Loading {
     menu?: boolean;
     setting?: boolean;
     user?: boolean;
+    userProfile?: boolean;
     coil?: boolean;
     liquid?: boolean;
     cloud?: boolean;
@@ -43,6 +45,7 @@ export interface ConnectState {
   userLogin: UserLoginModelState;
   settings: SettingModelState;
   user: UserModelState;
+  userProfile: UserProfileModelState;
   coil: CoilModelState;
   liquid: LiquidModelState;
   cloud: CloudModelState;

@@ -8,10 +8,11 @@ import {
   postsRef,
   ServerValue,
 } from '@/utils/firebase';
-import { CloudContent, CurrentUser } from '@/models/user';
+import { CurrentUser } from '@/models/user';
 import { getPhotoUrl, uploadPhoto } from '@/services/storage';
 import { dispatchSetItems } from '@/models/cloud';
 import { Dispatch } from 'redux';
+import { CloudContent } from '@/models/userProfile';
 
 type FirebaseContent = 'gear' | 'post' | 'link';
 

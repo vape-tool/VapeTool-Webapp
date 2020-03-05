@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { Affix, Button, List } from 'antd';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import styles from '@/components/ItemView/index.less';
-import PhotoView from '@/components/PhotoView';
+import styles from '@/components/ItemView/styles.less';
+import { PhotoView } from '@/components/ItemView';
 import PhotoPreviewModal from '@/components/PreviewModal';
-import PostView from '@/components/PostView';
-import { Photo, Post, Link } from '@/types';
+import PostView from '@/components/ItemView/PostView';
+import { Link, Photo, Post } from '@/types';
 import PageLoading from '@/components/PageLoading';
-import LinkView from '@/components/LinkView';
-import { subscribeLinks, subscribePosts, subscribePhotos } from '@/services/items';
+import LinkView from '@/components/ItemView/LinkView';
+import { subscribeLinks, subscribePhotos, subscribePosts } from '@/services/items';
 import { redirectToWithFootprint } from '@/models/global';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -38,6 +38,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
     <div>
       <List<Photo | Post | Link>
         className={styles.coverCardList}
+        style={{ maxWidth: 614, margin: '0 auto' }}
         rowKey="uid"
         itemLayout="vertical"
         dataSource={items}

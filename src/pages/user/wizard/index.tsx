@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'dva';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
-import styles from '@/pages/user/center/Center.less';
+import styles from '@/pages/user/profile/styles.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import FirebaseImage from '@/components/StorageAvatar';

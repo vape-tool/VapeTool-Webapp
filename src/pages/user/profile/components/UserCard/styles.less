@@ -1,0 +1,112 @@
+@import '~antd/es/style/themes/default.less';
+
+.card {
+  position: relative;
+  margin-left: 75px;
+  border: 1px solid #e8e8e8;
+
+  @media (max-width: @screen-lg) {
+    margin-top: 75px;
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+.divider {
+  margin: 12px 0;
+}
+
+.avatarHolder {
+  position: absolute;
+  top: calc(50% - 75px);
+  left: -75px;
+
+  @media (max-width: @screen-lg) {
+    top: -75px;
+    left: calc(50% - 75px);
+  }
+
+  img {
+    border: 2px @background-color-base solid;
+    border-radius: 50%;
+  }
+}
+
+.content {
+  margin-left: 75px;
+
+  @media (max-width: @screen-lg) {
+    margin-top: 60px;
+    margin-left: 0;
+  }
+
+  .buttons {
+    padding-left: 12px;
+    text-align: center;
+
+    & > a {
+      display: block;
+      width: 152px;
+      margin: 0 auto 12px;
+    }
+
+    @media (max-width: @screen-lg) {
+      & {
+        padding-top: 12px;
+        padding-left: 0;
+      }
+
+      & > a {
+        display: inline-block;
+        margin: 0 12px;
+      }
+    }
+  }
+}
+
+h4.name {
+  display: inline-block;
+  box-sizing: inherit;
+  margin-bottom: 4px;
+  color: @heading-color;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.tagsTitle {
+  margin-right: 8px;
+
+  @media (max-width: @screen-lg) {
+    & {
+      display: block;
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.infos {
+  display: flex;
+
+  @media (max-width: @screen-lg) {
+    & {
+      justify-content: center;
+    }
+  }
+
+  .infoGroup {
+    flex: 0 0 100px;
+    padding: 4px 12px;
+
+    .value {
+      font-weight: bold;
+      font-size: 30px;
+    }
+
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+  }
+}

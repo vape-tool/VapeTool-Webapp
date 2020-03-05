@@ -19,8 +19,10 @@ export function getResistancePerMeterRibbon(
   return resistivity / (0.92 * width * height);
 }
 
-export const mmToAwg = (mm: number): number => Math.log(92.0 ** 36 / (mm / 0.127) ** 39) / Math.log(92.0);
+export const mmToAwg = (mm: number): number =>
+  Math.log(92.0 ** 36 / (mm / 0.127) ** 39) / Math.log(92.0);
 export const awgToMm = (awg: number): number => 0.127 * 92.0 ** ((36.0 - awg) / 39.0);
 
-export const celsiusToFahrenheit = (celsius: number): number => celsius * 9.0 / 5.0 + 32.0;
-export const fahrenheitToCelsius = (fahrenheit: number): number => (fahrenheit - 32.0) * 5.0 / 9.0;
+export const celsiusToFahrenheit = (celsius: number): number => (celsius * 9.0) / 5.0 + 32.0;
+export const fahrenheitToCelsius = (fahrenheit: number): number =>
+  ((fahrenheit - 32.0) * 5.0) / 9.0;

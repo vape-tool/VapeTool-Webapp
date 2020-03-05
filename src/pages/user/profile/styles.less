@@ -1,0 +1,128 @@
+@import '~antd/es/style/themes/default.less';
+
+@icon-size: 54px;
+@svg-size: 20px;
+@control-width: @icon-size + 100px;
+
+.itemsAndControl {
+  display: flex;
+  align-items: stretch;
+  margin-top: 24px;
+  margin-left: -75px - 24px;
+
+  @media (max-width: @screen-xl) {
+    & {
+      margin-left: 0;
+    }
+  }
+}
+
+.itemsPanel {
+  flex: 1 1 calc(100% - @control-width);
+  padding-left: 12px;
+
+  @media (max-width: @screen-lg) {
+    & {
+      width: calc(100% - @icon-size);
+    }
+  }
+}
+
+.controlContainer {
+  position: relative;
+  flex: 0 0 @control-width;
+  padding-right: 12px;
+
+  @media (max-width: @screen-lg) {
+    & {
+      flex-basis: @icon-size;
+    }
+  }
+}
+
+.controlPanel {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 88px;
+  width: 150px;
+  overflow: hidden;
+  border: 1px solid #e8e8e8;
+  border-radius: 2px;
+
+  @media (max-width: @screen-xl) {
+    & {
+      width: @icon-size;
+    }
+
+    .label {
+      display: none !important;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      height: @icon-size;
+      padding: 0;
+      cursor: pointer;
+
+      .label {
+        background: @component-background;
+        border-bottom: 1px @background-color-base solid;
+      }
+
+      &:last-child .icon,
+      &:last-child .label {
+        border-bottom-color: transparent;
+      }
+
+      .icon {
+        border-bottom: 1px @primary-7 solid;
+      }
+
+      &:hover,
+      &.active {
+        .label {
+          background: @background-color-light;
+        }
+
+        .icon {
+          background: @primary-8;
+        }
+      }
+    }
+  }
+
+  .icon {
+    display: block;
+    float: left;
+    width: @icon-size;
+    height: @icon-size + 1px;
+    padding-top: (@icon-size - @svg-size) / 2;
+    color: @text-color-inverse;
+    text-align: center;
+    background: @primary-color;
+
+    svg,
+    img {
+      width: @svg-size;
+      height: @svg-size;
+    }
+
+    img {
+      vertical-align: top;
+    }
+  }
+
+  .label {
+    display: block;
+    float: left;
+    width: calc(100% - @icon-size);
+    padding-left: 12px;
+    line-height: @icon-size;
+    text-transform: uppercase;
+  }
+}

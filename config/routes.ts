@@ -1,4 +1,4 @@
-import {IRoute} from 'umi-types';
+import { IRoute } from 'umi-types';
 
 const routes: IRoute[] = [
   {
@@ -130,8 +130,16 @@ const routes: IRoute[] = [
               {
                 name: 'center',
                 icon: 'user',
-                path: '/user/center',
-                component: './user/center',
+                path: '/user/profile',
+                component: './user/profile',
+                exact: true,
+              },
+              {
+                hideInMenu: true,
+                name: 'profile',
+                icon: 'user',
+                path: '/user/profile/:id',
+                component: './user/profile',
               },
               {
                 component: './404',

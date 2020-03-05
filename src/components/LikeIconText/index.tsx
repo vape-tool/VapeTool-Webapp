@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '@/components/ItemView/index.less';
+import styles from '@/components/ItemView/styles.less';
 import { LikeFilled, LikeOutlined } from '@ant-design/icons';
 
 export const LikeIconText = ({

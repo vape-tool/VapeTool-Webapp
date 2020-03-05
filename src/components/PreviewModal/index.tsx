@@ -3,10 +3,10 @@ import * as React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
+import PhotoView from '@/components/ItemView/PhotoView';
+import PostView from '../ItemView/PostView';
+import LinkView from '../ItemView/LinkView';
 import { Item } from '@/types';
-import PhotoView from '@/components/PhotoView';
-import PostView from '../PostView';
-import LinkView from '../LinkView';
 import { dispatchSelectItem } from '@/models/preview';
 
 interface PhotoPreviewModalProps extends ConnectProps {

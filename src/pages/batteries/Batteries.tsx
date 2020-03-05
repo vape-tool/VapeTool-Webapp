@@ -5,7 +5,7 @@ import { id } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import BatteryView from '@/components/BatteryView';
 import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
-import styles from '@/components/ItemView/index.less';
+import styles from '@/components/ItemView/styles.less';
 import { Battery } from '@/types';
 import { subscribeBatteries } from '@/services/batteries';
 
