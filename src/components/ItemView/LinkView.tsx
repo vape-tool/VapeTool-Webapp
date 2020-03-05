@@ -6,12 +6,12 @@ import { Link } from 'umi';
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
-import styles from '../ItemView/index.less';
-import { ItemView } from '@/components/ItemView';
+import { ItemView } from './ItemView';
 import { ItemName } from '@/types/Item';
 import { Link as LinkType } from '@/types';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
+import styles from './styles.less';
 
 class LinkView extends ItemView<LinkType> {
   what: ItemName = ItemName.LINK;
@@ -21,7 +21,7 @@ class LinkView extends ItemView<LinkType> {
     const { displayComments } = this.state;
 
     return (
-      <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
+      <Card className={styles.card} hoverable>
         <Card.Meta
           avatar={
             <Link to={getUserProfileUrl(item.author.uid)}>

@@ -1,6 +1,6 @@
 import { Icon } from 'antd';
 import React from 'react';
-import styles from '@/components/ItemView/index.less';
+import styles from '@/components/ItemView/styles.less';
 
 export const LikeIconText = ({
   type,

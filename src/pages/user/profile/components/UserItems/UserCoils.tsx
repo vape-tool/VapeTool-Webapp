@@ -3,7 +3,7 @@ import React from 'react';
 import { Coil } from '@/types';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import CoilView from '@/components/CoilView';
+import CoilView from '@/components/ItemView/CoilView';
 import { CloudContent, FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 
 @connect(({ userProfile, loading }: ConnectState) => ({

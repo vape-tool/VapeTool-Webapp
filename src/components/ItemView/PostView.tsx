@@ -4,12 +4,12 @@ import { connect } from 'dva';
 import { Link } from 'umi';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
-import styles from './index.less';
-import { ItemView } from '@/components/ItemView';
+import { ItemView } from './ItemView';
 import { Post } from '@/types';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
+import styles from './styles.less';
 
 class PostView extends ItemView<Post> {
   what: ItemName = ItemName.POST;
@@ -19,7 +19,7 @@ class PostView extends ItemView<Post> {
     const { displayComments } = this.state;
 
     return (
-      <Card style={{ maxWidth: 614, margin: 'auto' }} className={styles.card} hoverable>
+      <Card className={styles.card} hoverable>
         <Card.Meta
           avatar={
             <Link to={getUserProfileUrl(item.author.uid)}>

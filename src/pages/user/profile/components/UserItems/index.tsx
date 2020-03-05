@@ -1,6 +1,6 @@
 import { List } from 'antd';
 import React, { Component } from 'react';
-import styles from '@/components/ItemView/index.less';
+import styles from '@/components/ItemView/styles.less';
 import { ConnectProps } from '@/models/connect';
 import PageLoading from '@/components/PageLoading';
 import { CloudContent, dispatchFetchUserItems, UserProfileModelState } from '@/models/userProfile';

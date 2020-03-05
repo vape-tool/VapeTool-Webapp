@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'dva';
+import { Link } from 'umi';
+import { Card, Skeleton, Typography } from 'antd';
 import { Photo } from '@/types';
 import { ConnectState } from '@/models/connect';
-import { Card, Skeleton, Typography } from 'antd';
 import FirebaseImage from '@/components/StorageAvatar';
-import { ItemView } from '../ItemView';
-import styles from '../ItemView/index.less';
+import { ItemView } from './ItemView';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
-import { Link } from 'umi';
 import { getUserProfileUrl } from '@/places/user.places';
+import styles from './styles.less';
 
 class PhotoView extends ItemView<Photo> {
   what: ItemName = ItemName.PHOTO;
@@ -20,7 +20,6 @@ class PhotoView extends ItemView<Photo> {
 
     return (
       <Card
-        style={{ maxWidth: 614, margin: 'auto' }}
         className={styles.card}
         cover={
           item.url ? (

@@ -1,7 +1,7 @@
 import UserItems from '@/pages/user/profile/components/UserItems/index';
 import { Post } from '@/types';
 import React from 'react';
-import PostView from '@/components/PostView';
+import PostView from '@/components/ItemView/PostView';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { CloudContent, FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';

@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { Liquid } from '@/types';
-import LiquidView from '@/components/LiquidView';
+import LiquidView from '@/components/ItemView/LiquidView';
 import { CloudContent, FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 
 @connect(({ userProfile, loading }: ConnectState) => ({

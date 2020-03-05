@@ -2,7 +2,7 @@ import { Card, List } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from '../ItemView/index.less';
+import styles from '../ItemView/styles.less';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { Liquid } from '@/types';
 
@@ -23,7 +23,7 @@ class UserLiquids extends Component<Partial<UserModelState>> {
         renderItem={item => (
           <List.Item>
             <Card className={styles.card} hoverable>
-              <Card.Meta title={item.name} description={item.description}/>
+              <Card.Meta title={item.name} description={item.description} />
               <div className={styles.cardItemContent}>
                 <span>{moment(item.lastTimeModified).fromNow()}</span>
               </div>

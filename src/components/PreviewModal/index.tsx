@@ -4,10 +4,10 @@ import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
-import { Photo, Link, Post } from '@/types';
-import PhotoView from '@/components/PhotoView';
-import PostView from '../PostView';
-import LinkView from '../LinkView';
+import { Link, Photo, Post } from '@/types';
+import PhotoView from '@/components/ItemView/PhotoView';
+import PostView from '../ItemView/PostView';
+import LinkView from '../ItemView/LinkView';
 import { dispatchSelectItem } from '@/models/preview';
 
 interface PhotoPreviewModalProps {
@@ -21,7 +21,7 @@ const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewM
   console.log(`selected ${selectedItem}`);
   const onCancel = () => dispatchSelectItem(dispatch, undefined);
   if (!selectedItem) {
-    return <div></div>;
+    return <div/>;
   }
   let content;
   if (selectedItem.$type === 'photo') {

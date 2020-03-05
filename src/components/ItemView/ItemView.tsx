@@ -1,24 +1,18 @@
 import { Icon, Input, List, Menu, Modal } from 'antd';
 import React from 'react';
-import { database, DataSnapshot, DatabaseReference } from '@/utils/firebase';
+import { database, DatabaseReference, DataSnapshot } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
 import { Dispatch } from 'redux';
 import { ItemName } from '@/types/Item';
-import {
-  dispatchComment,
-  dispatchLike,
-  dispatchReport,
-  dispatchDelete,
-  dispatchDeleteComment,
-} from '@/models/operations';
-import CommentView from '@/components/CommentView';
+import { dispatchComment, dispatchDelete, dispatchDeleteComment, dispatchLike, dispatchReport } from '@/models/operations';
+import CommentView from '@/components/ItemView/CommentView';
 import { LikeIconText } from '@/components/LikeIconText';
 import { CommentIconText } from '@/components/CommentIconText';
 import moment from 'moment';
 import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
-import { Liquid, Coil, Post, Link, Photo, Comment } from '@/types';
+import { Coil, Comment, Link, Liquid, Photo, Post } from '@/types';
 
 export interface ItemViewProps<T> {
   item: T;
