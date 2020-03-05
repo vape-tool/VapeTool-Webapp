@@ -1,6 +1,6 @@
 import { CurrentUser } from '@/models/user';
 import { UserProfile } from '@/models/userProfile';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
@@ -9,6 +9,7 @@ import { Link } from 'umi';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
 import styles from './styles.less';
+import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 
 interface UserCardProps {
   isCurrentUser: boolean;
@@ -23,7 +24,13 @@ const UserCard: React.FC<UserCardProps> = ({
   isCurrentUser,
   currentUser,
 }) => {
+  const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
+  const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
   const userTags = profile?.tags || [];
+  useEffect(() => {
+    getUserTotalContentCount(profile.uid).then(contentCount => setUserContentCount(contentCount));
+    getUserTotalLikesCount(profile.uid).then(likesCount => setUserLikesCount(likesCount));
+  }, [profile]);
 
   if (isLoading) {
     return (
@@ -66,12 +73,12 @@ const UserCard: React.FC<UserCardProps> = ({
 
             <div className={styles.infos}>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>451</span>
-                <span className={styles.label}>photos</span>
+                <span className={styles.value}>{userContentCount || ''}</span>
+                <span className={styles.label}>posts</span>
               </div>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>123</span>
-                <span className={styles.label}>coils</span>
+                <span className={styles.value}>{userLikesCount || ''}</span>
+                <span className={styles.label}>likes</span>
               </div>
             </div>
           </Col>
