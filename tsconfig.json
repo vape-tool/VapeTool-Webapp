@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true,
+    "allowUmdGlobalAccess": true,
     "noUnusedLocals": true,
     "allowJs": true,
     "skipLibCheck": true,

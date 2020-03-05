@@ -20,6 +20,7 @@ import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
 import { unitFormatter, unitParser } from '@/utils/utils';
 import VgPgRatioView from '@/components/VgPgRatioView';
+import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
 
 const { Title } = Typography;
@@ -84,10 +85,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
 
   return (
     <div>
-      <Row type="flex" style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
+      <Row style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
         <Col {...responsivenessProps}>
           <Card title={<Title level={1}>Base</Title>} style={{ height: '100%' }}>
-            <Row type="flex">
+            <Row>
               <Col xs={24}>
                 <Title level={4}>Nicotine strength</Title>
               </Col>
@@ -121,7 +122,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             <FlavorTable />
             <Button
               type="dashed"
-              icon="plus"
+              icon={<PlusOutlined />}
               size="large"
               style={{ width: '100%' }}
               onClick={showNewFlavorModal}
@@ -132,7 +133,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
         </Col>
         <Col {...responsivenessProps}>
           <Card title={<Title level={1}>Target</Title>} style={{ height: '100%' }}>
-            <Row type="flex" justify="space-between">
+            <Row justify="space-between">
               <Col xs={8} xl={10}>
                 <Title level={4}>Amount</Title>
                 <InputNumber
@@ -167,7 +168,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               <Affix offsetBottom={50}>
                 <Button
                   type="primary"
-                  icon="calculator"
+                  icon={<CalculatorOutlined />}
                   shape="round"
                   size="large"
                   onClick={onCalculateClick}

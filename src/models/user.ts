@@ -15,7 +15,7 @@ import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
 import moment from 'moment';
-import { GLOBAL, REDIRECT_BACK } from '@/models/global';
+import { redirectReplace } from '@/models/global';
 
 export enum CloudContent {
   PHOTOS = 'photos',
@@ -137,14 +137,11 @@ const UserModel: UserModelType = {
     *logout(_, { call, put }) {
       yield call(logoutFirebase);
       yield put({
-        type: SET_USER,
+        type: `${USER}/${SET_USER}`,
         currentUser: undefined,
       });
 
-      yield put({
-        type: `${GLOBAL}/${REDIRECT_BACK}`,
-        path: '/login',
-      });
+      redirectReplace('/login');
     },
     *fetchItems({ what }, { put, call, select }) {
       const uid = yield select((state: ConnectState) => {

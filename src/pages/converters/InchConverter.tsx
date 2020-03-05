@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Col, Icon, InputNumber, Row } from 'antd';
+import { Card, Col, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
+import { LineOutlined, PauseOutlined, SwapOutlined } from '@ant-design/icons';
 import {
   dispatchChangeValue,
   INCH_TO_MM,
@@ -25,7 +26,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
 
   return (
     <Card title="Convert inches to mm">
-      <Row type="flex" justify="space-between">
+      <Row justify="space-between">
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <div className={styles.fraction}>
             <InputNumber
@@ -40,7 +41,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
               className={styles.nominator}
             />
 
-            <Icon type="line" className={styles.line} />
+            <LineOutlined className={styles.line} />
 
             <InputNumber
               size="large"
@@ -57,7 +58,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
         </Col>
 
         <Col xs={4} lg={24} xl={4} style={{ textAlign: 'center' }}>
-          <Icon type="pause" className={styles.equalSign} />
+          <PauseOutlined className={styles.equalSign} />
         </Col>
 
         <Col xs={10} lg={24} xl={10} className={styles.inchesInput} style={{ textAlign: 'center' }}>
@@ -79,7 +80,7 @@ const InchConverter: React.FC<ConverterComponentProps> = props => {
         </Col>
 
         <Col xs={24} style={{ textAlign: 'center', paddingTop: 40 }}>
-          <Icon type="swap" style={{ fontSize: 40, transform: 'rotate(90deg)' }} />
+          <SwapOutlined style={{ fontSize: 40, transform: 'rotate(90deg)' }} />
         </Col>
 
         <Col xs={24} style={{ textAlign: 'center', paddingTop: 40 }}>

@@ -2,13 +2,45 @@ import { Photo as FirebasePhoto } from '@vapetool/types';
 import {
   coilsRef,
   DataSnapshot,
+  likesRef,
   linksRef,
   liquidsRef,
   photosRef,
   postsRef,
 } from '@/utils/firebase';
 import { getImageUrl, ImageType } from '@/services/storage';
-import { Post, Photo, Link, Coil, Liquid } from '@/types';
+import { Coil, ItemName, Link, Liquid, Photo, Post } from '@/types';
+
+export async function getUserPhotosCount(uid: string): Promise<number> {
+  const snapshots = await photosRef
+    .orderByChild('author/uid')
+    .equalTo(uid)
+    .once('value');
+  return snapshots.numChildren();
+}
+
+// TODO test
+export async function getUserPhotosLikesCount(userUid: string): Promise<number> {
+  const snapshots = await photosRef
+    .orderByChild('author/uid')
+    .equalTo(userUid)
+    .once('value');
+
+  const promises = Array<Promise<number>>();
+  snapshots.forEach(snapshot => {
+    const photo = snapshot.val() as FirebasePhoto;
+    const { uid } = photo;
+    const photoLikesPromise = likesRef(ItemName.PHOTO)
+      .child(uid)
+      .once('value')
+      .then(snaps => snaps.numChildren());
+    promises.push(photoLikesPromise);
+  });
+
+  const allPromises = await Promise.all(promises);
+  // TODO test
+  return allPromises.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+}
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
   return new Promise<Photo[]>((resolve, reject) => {

@@ -1,15 +1,13 @@
-import { Button, Card, Col, Divider, Icon, Input, Row, Tag } from 'antd';
+import { Button, Card, Col, Divider, Input, Row, Tag } from 'antd';
 import React, { PureComponent } from 'react';
-
-import { Dispatch } from 'redux';
 import { GridContent } from '@ant-design/pro-layout';
-import { RouteChildrenProps } from 'react-router';
 import { connect } from 'dva';
 import { User as FirebaseUser } from 'firebase/app';
 import { Redirect } from 'umi';
+import { PlusOutlined } from '@ant-design/icons';
 import UserPhotos from './components/UserPhotos';
 import styles from './Center.less';
-import { ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import {
   CloudContent,
   CurrentUser,
@@ -22,8 +20,8 @@ import { TagType } from '@/pages/user/center/data';
 import FirebaseImage from '@/components/StorageAvatar';
 import UserPosts from './components/UserPosts';
 import UserLinks from './components/UserLinks';
-import UserLiquids from '@/components/UserLiquids';
-import UserCoils from '@/components/UserCoils';
+import UserLiquids from './components/UserLiquids';
+import UserCoils from './components/UserCoils';
 import { redirectToWithFootprint } from '@/models/global';
 import { ImageType } from '@/services/storage';
 
@@ -51,11 +49,10 @@ const operationTabList: { key: CloudContent; tab: any }[] = [
   },
 ];
 
-interface CenterProps extends RouteChildrenProps {
-  dispatch: Dispatch<any>;
-  currentUser: CurrentUser;
-  firebaseUser: FirebaseUser;
-  currentUserLoading: boolean;
+interface CenterProps extends ConnectProps {
+  currentUser?: CurrentUser;
+  firebaseUser?: FirebaseUser;
+  currentUserLoading?: boolean;
 }
 
 interface CenterState {
@@ -102,7 +99,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatchFetchCurrentUser(dispatch);
+    if (dispatch) dispatchFetchCurrentUser(dispatch);
   }
 
   onTabChange = (key: string) => {
@@ -141,25 +138,26 @@ class Center extends PureComponent<CenterProps, CenterState> {
   };
 
   renderChildrenByTabKey = (tabKey: CenterState['tabKey']) => {
-    if (tabKey === 'photos') {
-      return <UserPhotos />;
+    if (tabKey === CloudContent.PHOTOS) {
+      return <UserPhotos dispatch={this.props.dispatch} />;
     }
-    if (tabKey === 'posts') {
-      return <UserPosts />;
+    if (tabKey === CloudContent.POSTS) {
+      return <UserPosts dispatch={this.props.dispatch} />;
     }
-    if (tabKey === 'links') {
-      return <UserLinks />;
+    if (tabKey === CloudContent.LINKS) {
+      return <UserLinks dispatch={this.props.dispatch} />;
     }
-    if (tabKey === 'coils') {
-      return <UserCoils />;
+    if (tabKey === CloudContent.COILS) {
+      return <UserCoils dispatch={this.props.dispatch} />;
     }
-    if (tabKey === 'liquids') {
-      return <UserLiquids />;
+    if (tabKey === CloudContent.LIQUIDS) {
+      return <UserLiquids dispatch={this.props.dispatch} />;
     }
     return null;
   };
 
-  onEditProfileClick = () => redirectToWithFootprint(this.props.dispatch, '/user/wizard');
+  onEditProfileClick = () =>
+    this.props.dispatch && redirectToWithFootprint(this.props.dispatch, '/user/wizard');
 
   render() {
     const { newTags, inputVisible, inputValue, tabKey } = this.state;
@@ -170,6 +168,10 @@ class Center extends PureComponent<CenterProps, CenterState> {
     if (!firebaseUser) {
       console.log('firebaseUser is null so redirect');
       return <Redirect to="/login" />;
+    }
+
+    if (!currentUser) {
+      return null;
     }
     return (
       <GridContent>
@@ -217,7 +219,7 @@ class Center extends PureComponent<CenterProps, CenterState> {
                         onClick={this.showInput}
                         style={{ background: '#fff', borderStyle: 'dashed' }}
                       >
-                        <Icon type="plus" />
+                        <PlusOutlined />
                       </Tag>
                     )}
                   </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar } from 'antd';
 import { getImageUrl, ImageType } from '@/services/storage';
+import { UserOutlined } from '@ant-design/icons';
 
 interface FirebaseImageProps {
   type: ImageType;
@@ -16,15 +17,13 @@ const FirebaseImage: React.FC<FirebaseImageProps> = (props: FirebaseImageProps) 
   const { type, style, size, shape, className, alt, id } = props;
   const [src, setSrc] = useState<string | undefined>(undefined);
   useEffect(() => {
-    getImageUrl(type, id)
-      .then(imageUrl => setSrc(imageUrl))
-      .catch(() => {});
+    getImageUrl(type, id).then(imageUrl => setSrc(imageUrl));
   }, [id, type]);
 
   return (
     <Avatar
       style={style}
-      icon="user"
+      icon={<UserOutlined />}
       alt={alt || type}
       src={src}
       size={size}

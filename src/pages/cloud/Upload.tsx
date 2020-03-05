@@ -1,4 +1,4 @@
-import { Col, Icon, Row, Tabs } from 'antd';
+import { Col, Row, Tabs } from 'antd';
 import React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
@@ -6,6 +6,7 @@ import { ConnectState } from '@/models/connect';
 import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
 import { Tab, changeTab } from '@/models/upload';
+import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
 
 interface UploadProps {
   currentTab: string;
@@ -17,14 +18,14 @@ const Upload: React.FC<UploadProps> = props => {
   const onTabChange = changeTab(dispatch);
 
   return (
-    <Row type="flex">
+    <Row>
       <Col xs={0} md={4} lg={6} xl={8} />
       <Col xs={24} md={16} lg={14} xl={10}>
         <Tabs onChange={onTabChange} type="card" activeKey={currentTab}>
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="picture" />
+                <PictureOutlined />
                 Image
               </span>
             }
@@ -35,7 +36,7 @@ const Upload: React.FC<UploadProps> = props => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="form" />
+                <FormOutlined />
                 Post
               </span>
             }
@@ -46,7 +47,7 @@ const Upload: React.FC<UploadProps> = props => {
           <Tabs.TabPane
             tab={
               <span>
-                <Icon type="link" />
+                <LinkOutlined />
                 Link
               </span>
             }

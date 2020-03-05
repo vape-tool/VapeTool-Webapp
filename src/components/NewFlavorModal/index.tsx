@@ -1,32 +1,26 @@
-import { Form, Input, InputNumber, Modal } from 'antd';
+import { Form, Input, InputNumber, Modal, message } from 'antd';
 import * as React from 'react';
-import { FormComponentProps } from 'antd/es/form';
 import { connect } from 'dva';
 import { Flavor } from '@vapetool/types';
-import { ConnectState } from '@/models/connect';
-import { Dispatch } from 'redux';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
 
-interface NewFlavorModalProps extends FormComponentProps {
-  showNewFlavorModal: boolean;
-  dispatch: Dispatch;
+interface NewFlavorModalProps extends ConnectProps {
+  showNewFlavorModal?: boolean;
 }
 
 const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
-  const { showNewFlavorModal, form, dispatch } = props;
-  const { getFieldDecorator } = form;
-  const onCreate = () => {
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-      const { name, manufacturer, percentage, price, ratio } = values;
+  const { showNewFlavorModal, dispatch } = props;
+  const [form] = Form.useForm();
+  const onFinish = (values: any) => {
+    const { name, manufacturer, percentage, price, ratio } = values;
+    form.resetFields();
+    dispatchAddFlavor(dispatch, new Flavor({ name, manufacturer, percentage, price, ratio }));
+    dispatchHideNewFlavorModal(dispatch);
+  };
 
-      console.log('Received values of form: ', values);
-      form.resetFields();
-      dispatchAddFlavor(dispatch, new Flavor({ name, manufacturer, percentage, price, ratio }));
-      dispatchHideNewFlavorModal(dispatch);
-    });
+  const onFinishFailed = (e: any) => {
+    message.error(e.message);
   };
 
   const onCancel = () => dispatchHideNewFlavorModal(dispatch);
@@ -48,38 +42,50 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
       title="Add new flavor"
       okText="Add"
       onCancel={onCancel}
-      onOk={onCreate}
+      onOk={() => form.submit()}
     >
-      <Form layout="horizontal" {...formItemLayout}>
-        <Form.Item label="Name">
-          {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please input the flavor name!' }],
-          })(<Input />)}
+      <Form
+        name="newFlavorModal"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        layout="horizontal"
+        {...formItemLayout}
+        form={form}
+        component={false}
+        initialValues={{ ratio: 100 }}
+      >
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[{ required: true, message: 'Please input the flavor name!' }]}
+        >
+          <Input />
         </Form.Item>
-        <Form.Item label="Manufacturer">
-          {getFieldDecorator('manufacturer')(<Input type="textarea" />)}
+        <Form.Item name="manufacturer" label="Manufacturer">
+          <Input type="textarea" />
         </Form.Item>
-        <Form.Item label="Percentage">
-          {getFieldDecorator('percentage', {
-            rules: [{ required: true, message: 'Please input the flavor percentage!' }],
-          })(<InputNumber min={0} max={100} step={1} />)}
+        <Form.Item
+          name="percentage"
+          label="Percentage"
+          rules={[{ required: true, message: 'Please input the flavor percentage!' }]}
+        >
+          <InputNumber min={0} max={100} step={1} />
         </Form.Item>
-        <Form.Item label="Price per 10ml">
-          {getFieldDecorator('price')(<InputNumber min={0} step={0.1} />)}
+        <Form.Item name="price" label="Price per 10ml">
+          <InputNumber min={0} step={0.1} />
         </Form.Item>
-        <Form.Item label="PG Ratio">
-          {getFieldDecorator('ratio', {
-            initialValue: 100,
-            rules: [{ required: true, message: 'Please input the flavor ratio!' }],
-          })(<InputNumber min={0} max={100} step={10} />)}
+        <Form.Item
+          name="ratio"
+          label="PG Ratio"
+          rules={[{ required: true, message: 'Please input the flavor ratio!' }]}
+        >
+          <InputNumber min={0} max={100} step={10} />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-const form = Form.create<NewFlavorModalProps>({ name: 'new_flavor_modal' })(NewFlavorModal);
-
 export default connect(({ liquid: { showNewFlavorModal } }: ConnectState) => ({
   showNewFlavorModal,
-}))(form);
+}))(NewFlavorModal);

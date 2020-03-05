@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { Dispatch } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
 import { GlobalModelState } from './global';
@@ -8,15 +8,14 @@ import { CoilModelState } from './coil';
 import { CloudModelState } from './cloud';
 import { LiquidModelState } from './liquid';
 import { OhmModelState } from './ohm';
-import { BatteriesModelState } from '@/models/batteries';
-import { ConverterModelState } from '@/models/converter';
-import { UploadPhotoState } from '@/models/uploadPhoto';
-import { UserWizardState } from '@/models/userWizard';
-import { UploadState } from '@/models/upload';
-import { UploadPostState } from '@/models/uploadPost';
-import { PreviewModelState } from '@/models/preview';
-
-export { GlobalModelState, SettingModelState, UserModelState, CoilModelState };
+import { BatteriesModelState } from './batteries';
+import { ConverterModelState } from './converter';
+import { UploadPhotoState } from './uploadPhoto';
+import { UserWizardState } from './userWizard';
+import { UploadState } from './upload';
+import { UploadPostState } from './uploadPost';
+import { PreviewModelState } from './preview';
+import { UserLoginModelState } from '@/pages/login/model';
 
 export interface Loading {
   global: boolean;
@@ -41,6 +40,7 @@ export interface Loading {
 export interface ConnectState {
   global: GlobalModelState;
   loading: Loading;
+  userLogin: UserLoginModelState;
   settings: SettingModelState;
   user: UserModelState;
   coil: CoilModelState;
@@ -65,5 +65,5 @@ export interface Route extends MenuDataItem {
  * @type T: Params matched in dynamic routing
  */
 export interface ConnectProps<T = {}> extends Partial<RouterTypes<Route, T>> {
-  dispatch<K = any>(action: AnyAction): K;
+  dispatch: Dispatch;
 }

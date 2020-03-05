@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Card, Col, Icon, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, Row, Select, Typography } from 'antd';
 import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
 import { getResistancePerMeter } from '@/utils/math';
 import { dispatchDeleteWire, dispatchSetWire, Path } from '@/models/coil';
@@ -9,6 +9,7 @@ import DiameterIcon from '@/assets/DiameterIcon';
 import CoreIcon from '@/assets/CoreIcon';
 import OuterIcon from '@/assets/OuterIcon';
 import { Dispatch } from 'redux';
+import { MinusOutlined, CloseOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -52,7 +53,7 @@ const materials: Material[] = [
 const SingleWire: React.FC<WireComponentProps> = props => {
   const { wire, path, dispatch } = props;
 
-  const handleMaterialChange = ({ key: materialId }: { key: string }): void => {
+  const handleMaterialChange = (materialId: string): void => {
     const material = materials.find(({ id }) => id === materialId);
     if (material !== undefined) {
       wire.material = material;
@@ -75,25 +76,23 @@ const SingleWire: React.FC<WireComponentProps> = props => {
         </Row>
       }
       extra={
-        <Row type="flex" gutter={8}>
+        <Row gutter={8}>
           <Col>
             {wire.kind === WireKind.ROUND ? (
               <RoundIcon onClick={onChangeKindClick} />
             ) : (
-              <Icon onClick={onChangeKindClick} type="minus" />
+              <MinusOutlined onClick={onChangeKindClick} />
             )}
           </Col>
           <Col>
-            <Icon onClick={onDeleteClick} type="close" />
+            <CloseOutlined onClick={onDeleteClick} />
           </Col>
         </Row>
       }
       style={{ width: '100%', maxWidth: 400 }}
     >
       <Select
-        size="default"
-        labelInValue
-        defaultValue={{ key: wire.material.id }}
+        defaultValue={wire.material.id}
         style={{ width: '100%', maxWidth: 220 }}
         onChange={handleMaterialChange}
       >

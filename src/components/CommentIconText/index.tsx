@@ -1,17 +1,9 @@
-import { Icon } from 'antd';
 import React from 'react';
+import { MessageOutlined } from '@ant-design/icons';
 
-export const CommentIconText = ({
-  type,
-  text,
-  onClick,
-}: {
-  type: string;
-  text: string;
-  onClick: any;
-}) => (
+export const CommentIconText = ({ text, onClick }: { text: string; onClick: any }) => (
   <span onClick={onClick}>
-    <Icon type={type} style={{ marginRight: 8 }} />
+    <MessageOutlined style={{ marginRight: 8 }} />
     {text}
   </span>
 );

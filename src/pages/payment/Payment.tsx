@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Button, Card, Col, Icon, Radio, Row, Tag, Typography } from 'antd';
+import { Button, Card, Col, Radio, Row, Tag, Typography } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import styles from './payment.less';
+import { CheckCircleFilled } from '@ant-design/icons';
 
 const stripeLogo = require('@/assets/stripe.png');
 const paypalLogo = require('@/assets/paypal.png');
@@ -45,7 +46,7 @@ const Payment: React.FC = () => {
   };
 
   return (
-    <Row gutter={[16, 16]} type="flex" justify="center">
+    <Row gutter={[16, 16]} justify="center">
       <Col xs={24} md={12} style={{ maxWidth: 505 }}>
         <Card className={styles.benefitsCard} style={{ minHeight: 500 }}>
           <Typography.Title>Vape Tool Pro Benefits</Typography.Title>
@@ -98,7 +99,7 @@ const Payment: React.FC = () => {
               <Typography.Title level={4} style={{ marginTop: 24 }}>
                 Choose you payment method:
               </Typography.Title>
-              <Row type="flex" justify="center" gutter={[12, 12]} style={{ marginBottom: 24 }}>
+              <Row justify="center" gutter={[12, 12]} style={{ marginBottom: 24 }}>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <div className={`${styles.paymentMethod} ${styles.disabled}`}>
                     <span className={styles.methodName}>Credit Card</span>
@@ -136,7 +137,7 @@ const Payment: React.FC = () => {
             Credit cards (powered by Stripe), PayPal, and all major cryptocurrencies accepted.
           </Typography.Paragraph>
           <Typography.Paragraph className={styles.return} strong>
-            <Icon type="check-circle" theme="filled" />
+            <CheckCircleFilled />
             Your purchase is fully refundable within 14 days.
           </Typography.Paragraph>
         </Card>

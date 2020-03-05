@@ -1,25 +1,22 @@
-import { Icon } from 'antd';
 import React from 'react';
 import styles from '@/components/ItemView/index.less';
+import { LikeFilled, LikeOutlined } from '@ant-design/icons';
 
 export const LikeIconText = ({
-  type,
   text,
   onClick,
   likedByMe,
 }: {
-  type: string;
   text: string;
   onClick: any;
   likedByMe?: boolean;
 }) => (
   <span onClick={onClick}>
-    <Icon
-      type={type}
-      theme={likedByMe ? 'filled' : 'outlined'}
-      className={likedByMe ? styles.liked : ''}
-      style={{ marginRight: 8 }}
-    />
+    {likedByMe ? (
+      <LikeFilled className={likedByMe ? styles.liked : ''} style={{ marginRight: 8 }} />
+    ) : (
+      <LikeOutlined className={likedByMe ? styles.liked : ''} style={{ marginRight: 8 }} />
+    )}
     {text}
   </span>
 );

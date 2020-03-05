@@ -15,6 +15,7 @@ import {
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
 } from '@/models/coil';
+import { CalculatorOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -74,47 +75,52 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   };
 
   const calculate = (): void => {
-    if (lastEdit === 'wraps') {
-      dispatch({
-        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
-        coil,
-      });
-    } else {
-      // default
-      dispatch({
-        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
-        coil,
-      });
+    if (dispatch) {
+      if (lastEdit === 'wraps') {
+        dispatch({
+          type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
+          coil,
+        });
+      } else {
+        // default
+        dispatch({
+          type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
+          coil,
+        });
+      }
     }
   };
 
   const descriptionItem = (title: string, property: string, unit: string) => (
-    <Descriptions.Item label={title}>
+    <Descriptions.Item key={property} label={title}>
       {properties ? `${Number(properties[property]).toFixed(2)} ${unit}` : 'Calculation required'}
     </Descriptions.Item>
   );
+
+  // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
+  // {{descriptionItem('Total height', 'totalHeight', 'mm')}} //TODO fix it
   const coilProperties = (
     <Col xs={24}>
       <Descriptions title="Properties" layout="horizontal" column={1}>
-        <Descriptions.Item label="Based on voltage">{baseVoltage} V</Descriptions.Item>
+        <Descriptions.Item key="voltage" label="Based on voltage">
+          {baseVoltage} V
+        </Descriptions.Item>
         {descriptionItem('Current', 'current', 'A')}
         {descriptionItem('Power', 'power', 'W')}
         {descriptionItem('Heat', 'heat', 'mW/cm^2')}
         {descriptionItem('Surface', 'surface', 'cm^2')}
         {descriptionItem('Total length', 'totalLength', 'mm')}
-        {/* {descriptionItem('Total width', 'totalWidth', 'mm')} */} //TODO fix it
-        {/* {descriptionItem('Total height', 'totalHeight', 'mm')} */} //TODO fix it
       </Descriptions>
     </Col>
   );
   const coilSetup = (
     <Card style={{ height: '100%' }}>
-      <Row type="flex">
+      <Row>
         <Col xs={24}>
           <Title level={4}>Setup</Title>
         </Col>
         <Col xs={24}>
-          <Select labelInValue defaultValue={{ key: `${coil.setup}` }} onChange={onSetupChange}>
+          <Select defaultValue={`${coil.setup}`} onChange={onSetupChange}>
             <Option value="1">Single Coil (1)</Option>
             <Option value="2">Dual Coil (2)</Option>
             <Option value="3">Triple Coil (3)</Option>
@@ -149,7 +155,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           />
         </Col>
         <Col xs={24}>
-          <Row type="flex">
+          <Row>
             <div style={{ marginRight: 32 }}>
               <Title level={4}>Resistance</Title>
               <InputNumber
@@ -169,7 +175,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           <br />
           <br />
           <Col xs={24}>
-            <Button type="primary" icon="calculator" size="large" onClick={calculate}>
+            <Button type="primary" icon={<CalculatorOutlined />} size="large" onClick={calculate}>
               Calculate
             </Button>
           </Col>
@@ -188,7 +194,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   return (
     <div>
-      <Row type="flex" style={{ alignItems: 'stretch' }} justify="center">
+      <Row style={{ alignItems: 'stretch' }} justify="center">
         <Col xs={{ span: 24, order: 2 }} xl={{ span: 8, order: 1 }}>
           {coilSetup}
         </Col>

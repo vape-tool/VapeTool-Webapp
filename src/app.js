@@ -37,5 +37,5 @@ export const dva = {
     ],
   },
   // eslint-disable-next-line global-require
-  plugins: [process.env.APP_TYPE === 'build' ? {} : require('dva-logger')()],
+  plugins: [REACT_APP_ENV === 'dev' ? require('dva-logger')() : {}],
 };

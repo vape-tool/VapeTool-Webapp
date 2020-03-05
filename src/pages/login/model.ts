@@ -14,7 +14,7 @@ export function dispatchSuccessLogin(dispatch: Dispatch) {
   });
 }
 
-export interface StateType {
+export interface UserLoginModelState {
   status?: 'ok' | 'error';
   type?: string;
   currentAuthority?: 'user' | 'guest' | 'admin';
@@ -22,21 +22,21 @@ export interface StateType {
 
 export type Effect = (
   action: AnyAction,
-  effects: EffectsCommandMap & { select: <T>(func: (state: StateType) => T) => T },
+  effects: EffectsCommandMap & { select: <T>(func: (state: UserLoginModelState) => T) => T },
 ) => void;
 
-export interface ModelType {
+export interface UserLoginModelType {
   namespace: string;
-  state: StateType;
+  state: UserLoginModelState;
   effects: {
     successLogin: Effect;
   };
   reducers: {
-    changeLoginStatus: Reducer<StateType>;
+    changeLoginStatus: Reducer<UserLoginModelState>;
   };
 }
 
-const Model: ModelType = {
+const Model: UserLoginModelType = {
   namespace: 'userLogin',
 
   state: {

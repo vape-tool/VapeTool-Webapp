@@ -16,10 +16,12 @@ jobs:
     steps:
       - checkout: self
         clean: false
-      - script: yarn install
+      - script: yarn
         displayName: install
       - script: npm run lint
         displayName: lint
+      - script: npm run tsc
+        displayName: tsc
       - script: npm run build
         env:
           PROGRESS: none
@@ -34,7 +36,7 @@ jobs:
       options: '-u root'
 
     steps:
-      - script: yarn install
+      - script: yarn
         displayName: install
       - script: npm run test:all
         env:
@@ -44,15 +46,17 @@ jobs:
 
   - job: Windows
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'win1803'
     steps:
       - task: NodeTool@0
         inputs:
           versionSpec: '11.x'
-      - script: yarn install
+      - script: yarn
         displayName: install
       - script: npm run lint
         displayName: lint
+      - script: npm run tsc
+        displayName: tsc
       - script: npm run test:all
         env:
           PROGRESS: none
@@ -65,15 +69,17 @@ jobs:
 
   - job: MacOS
     pool:
-      vmImage: 'macOS-10.13'
+      vmImage: 'macOS-latest'
     steps:
       - task: NodeTool@0
         inputs:
           versionSpec: '11.x'
-      - script: yarn install
+      - script: yarn
         displayName: install
       - script: npm run lint
         displayName: lint
+      - script: npm run tsc
+        displayName: tsc
       - script: npm run
         env:
           PROGRESS: none
