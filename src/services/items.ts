@@ -1,5 +1,5 @@
 import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } from '@vapetool/types';
-import { Link as LinkView, Photo as PhotoView, Post as PostView } from '@/types';
+import { ItemName, Link as LinkView, Photo as PhotoView, Post as PostView } from '@/types';
 import {
   database,
   DataSnapshot,
@@ -12,7 +12,6 @@ import { CurrentUser } from '@/models/user';
 import { getPhotoUrl, uploadPhoto } from '@/services/storage';
 import { dispatchSetItems } from '@/models/cloud';
 import { Dispatch } from 'redux';
-import { CloudContent } from '@/models/userProfile';
 
 type FirebaseContent = 'gear' | 'post' | 'link';
 
@@ -48,7 +47,7 @@ export function subscribePhotos(dispatch: Dispatch) {
 
     try {
       const photos = await Promise.all(photosPromise);
-      dispatchSetItems(dispatch, CloudContent.PHOTOS, photos);
+      dispatchSetItems(dispatch, ItemName.PHOTO, photos);
     } catch (err) {
       console.error('failed to fetch photosUrls ', err);
     }
@@ -80,7 +79,7 @@ export function subscribeLinks(dispatch: Dispatch) {
       links.push(linkObject);
     });
 
-    dispatchSetItems(dispatch, CloudContent.LINKS, links);
+    dispatchSetItems(dispatch, ItemName.LINK, links);
   });
 
   return () => {
@@ -109,7 +108,7 @@ export function subscribePosts(dispatch: Dispatch) {
       posts.push(postObject);
     });
 
-    dispatchSetItems(dispatch, CloudContent.POSTS, posts);
+    dispatchSetItems(dispatch, ItemName.POST, posts);
   });
 
   return () => {

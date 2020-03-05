@@ -3,7 +3,7 @@ import { Dispatch, Reducer } from 'redux';
 import { User } from '@vapetool/types';
 import { getUser } from '@/services/user';
 import { routerRedux } from 'dva/router';
-import { Coil, Link, Liquid, Photo, Post } from '@/types';
+import { Coil, ItemName, Link, Liquid, Photo, Post } from '@/types';
 import { ConnectState } from '@/models/connect';
 import {
   getUserCoils,
@@ -14,21 +14,13 @@ import {
 } from '@/services/userCenter';
 import moment from 'moment';
 
-export enum CloudContent {
-  PHOTOS = 'photos',
-  POSTS = 'posts',
-  LINKS = 'links',
-  COILS = 'coils',
-  LIQUIDS = 'liquids',
-}
-
 export const USER_PROFILE = 'userProfile';
 export const SET_USER_PROFILE = 'setUserProfile';
 export const FETCH_USER_PROFILE = 'fetchUserProfile';
 export const FETCH_ITEMS = 'fetchItems';
 export const SET_ITEMS = 'setItems';
 
-export function dispatchFetchUserItems(dispatch: Dispatch, what: CloudContent) {
+export function dispatchFetchUserItems(dispatch: Dispatch, what: ItemName) {
   dispatch({
     type: `${USER_PROFILE}/${FETCH_ITEMS}`,
     what,
@@ -99,20 +91,20 @@ const UserProfileModel: UserProfileModelType = {
       }
 
       let items;
-      switch (what as CloudContent) {
-        case CloudContent.PHOTOS:
+      switch (what as ItemName) {
+        case ItemName.PHOTO:
           items = yield call(getUserPhotos, uid);
           break;
-        case CloudContent.POSTS:
+        case ItemName.POST:
           items = yield call(getUserPosts, uid);
           break;
-        case CloudContent.LINKS:
+        case ItemName.LINK:
           items = yield call(getUserLinks, uid);
           break;
-        case CloudContent.COILS:
+        case ItemName.COIL:
           items = yield call(getUserCoils, uid);
           break;
-        case CloudContent.LIQUIDS:
+        case ItemName.LIQUID:
           items = yield call(getUserLiquids, uid);
           break;
         default:
@@ -148,11 +140,11 @@ const UserProfileModel: UserProfileModelType = {
     [SET_ITEMS](state, { what, items }): UserProfileModelState {
       return {
         ...state,
-        userPhotos: what === CloudContent.PHOTOS ? items : state?.userPhotos,
-        userPosts: what === CloudContent.POSTS ? items : state?.userPosts,
-        userLinks: what === CloudContent.LINKS ? items : state?.userLinks,
-        userCoils: what === CloudContent.COILS ? items : state?.userCoils,
-        userLiquids: what === CloudContent.LIQUIDS ? items : state?.userLiquids,
+        userPhotos: what === ItemName.PHOTO ? items : state?.userPhotos,
+        userPosts: what === ItemName.POST ? items : state?.userPosts,
+        userLinks: what === ItemName.LINK ? items : state?.userLinks,
+        userCoils: what === ItemName.COIL ? items : state?.userCoils,
+        userLiquids: what === ItemName.LIQUID ? items : state?.userLiquids,
       };
     },
   },
