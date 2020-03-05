@@ -1,74 +1,65 @@
-import React from 'react';
-import { Button, Form, Input, Popconfirm, Table } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, message, Popconfirm, Table } from 'antd';
 import { connect } from 'dva';
-import { FormComponentProps } from 'antd/es/form';
-import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
-import { Dispatch } from 'redux';
-import { ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery, Affiliate } from '@/types';
 import NewAffiliateModal from '@/components/AffiliateEditTable/NewAffiliateModal';
-
-const EditableContext = React.createContext<FormComponentProps<string> | any>(null);
+import { dispatchSetAffiliate } from '@/models/batteries';
+import {
+  PlusOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 
 type Column = 'name' | 'link';
 
 interface EditableCellProps {
   editing: boolean;
   dataIndex: Column;
-  title: string;
+  title: React.ReactNode;
   affiliate: Affiliate;
+  record: Affiliate;
   index: number;
+  children: React.ReactNode;
 }
 
 const EditableCell: React.FC<EditableCellProps> = props => {
-  const renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const { editing, dataIndex, title, affiliate, index, children, ...restProps } = props;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: affiliate[dataIndex],
-            })(<Input />)}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
+  const { editing, dataIndex, title, affiliate, index, children, ...restProps } = props;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          style={{ margin: 0 }}
+          name={dataIndex}
+          rules={[{ required: true, message: `Please Input ${title}!` }]}
+        >
+          <Input defaultValue={affiliate[dataIndex]} />
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
 };
 
-interface EditableTableProps extends FormComponentProps {
-  selectedBattery: Battery;
-  editingAffiliate: string;
-  dispatch: Dispatch;
+interface EditableTableProps extends ConnectProps {
+  selectedBattery?: Battery;
 }
 
 const EditableTable: React.FC<EditableTableProps> = props => {
-  const isEditing = (affiliate: Affiliate) => affiliate.name === props.editingAffiliate;
+  const [form] = Form.useForm();
+  const [editingKey, setEditingKey] = useState<string>('');
+  const isEditing = (affiliate: Affiliate) => affiliate.name === editingKey;
 
   const cancel = () => {
-    props.dispatch({
-      type: 'batteries/editAffiliate',
-      name: undefined,
-    });
+    setEditingKey('');
   };
 
   const remove = (name: string) => {
-    props.dispatch({
-      type: 'batteries/setAffiliate',
-      affiliate: { name, link: null },
-    });
+    dispatchSetAffiliate(props.dispatch, { name, link: null });
   };
 
   const showNewAffiliateModal = () => {
@@ -77,24 +68,19 @@ const EditableTable: React.FC<EditableTableProps> = props => {
     });
   };
 
-  const edit = (name: string) => {
-    props.dispatch({
-      type: 'batteries/editAffiliate',
-      name,
-    });
+  const edit = (record: any) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.key);
   };
 
-  const save = (form: WrappedFormUtils<string>) => {
-    form.validateFields((error: any, row: any) => {
-      if (error) {
-        return;
-      }
-      props.dispatch({
-        type: 'batteries/setAffiliate',
-        affiliate: { ...row },
-      });
+  const save = async () => {
+    try {
+      const row = await form.validateFields();
+      dispatchSetAffiliate(props.dispatch, { ...row } as { name: string; link: string | null });
       cancel();
-    });
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const components = {
@@ -138,18 +124,16 @@ const EditableTable: React.FC<EditableTableProps> = props => {
         return editable ? (
           <span>
             <ButtonGroup>
-              <EditableContext.Consumer>
-                {form => <Button type="primary" icon="check" onClick={() => save(form)} />}
-              </EditableContext.Consumer>
-              <Button onClick={cancel} icon="close" />
+              <Button type="primary" icon={<CheckOutlined />} onClick={save} />
+              <Button onClick={cancel} icon={<CloseOutlined />} />
             </ButtonGroup>
           </span>
         ) : (
           <div>
             <ButtonGroup>
-              <Button onClick={() => edit(affiliate.name)} icon="edit" />
+              <Button onClick={() => edit(affiliate.name)} icon={<EditOutlined />} />
               <Popconfirm title="Sure to remove?" onConfirm={() => remove(affiliate.name)}>
-                <Button icon="delete" />
+                <Button icon={<DeleteOutlined />} />
               </Popconfirm>
             </ButtonGroup>
           </div>
@@ -157,13 +141,14 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       },
     },
   ];
-  const columns = columnsSchema.map(col => {
+  const mergedColumns = columnsSchema.map(col => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
       onCell: (affiliate: Affiliate) => ({
+        record: affiliate,
         affiliate,
         dataIndex: col.dataIndex,
         title: col.title,
@@ -174,23 +159,28 @@ const EditableTable: React.FC<EditableTableProps> = props => {
 
   return (
     <div>
-      <EditableContext.Provider value={props.form}>
+      <Form form={form} component={false}>
         <Table
           components={components}
           bordered
-          dataSource={Array.from(props.selectedBattery.affiliate || []).map(([key, value]) =>
+          dataSource={Array.from(props.selectedBattery?.affiliate || []).map(([key, value]) =>
             Object.create({
               name: key,
               link: value,
             }),
           )}
-          columns={columns}
+          columns={mergedColumns}
           rowKey={affiliate => affiliate.name}
           rowClassName={() => 'editable-row'}
           pagination={false}
         />
-      </EditableContext.Provider>
-      <Button icon="plus" type="dashed" style={{ width: '100%' }} onClick={showNewAffiliateModal}>
+      </Form>
+      <Button
+        icon={<PlusOutlined />}
+        type="dashed"
+        style={{ width: '100%' }}
+        onClick={showNewAffiliateModal}
+      >
         Add
       </Button>
       <NewAffiliateModal />
@@ -198,9 +188,6 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   );
 };
 
-const AffiliateEditTable = Form.create()(EditableTable);
-
 export default connect(({ batteries }: ConnectState) => ({
   selectedBattery: batteries.selectedBattery,
-  editingAffiliate: batteries.editingAffiliate,
-}))(AffiliateEditTable);
+}))(EditableTable);

@@ -5,8 +5,7 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
 import styles from './index.less';
 import { ItemView } from '@/components/ItemView';
-import { Post } from '@/types';
-import { ItemName } from '@/types/Item';
+import { Post, ItemName } from '@/types';
 import { ImageType } from '@/services/storage';
 
 class PostView extends ItemView<Post> {

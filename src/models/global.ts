@@ -23,8 +23,12 @@ export function redirectTo(path: string) {
   router.push(path);
 }
 
+export function redirectReplace(path: string) {
+  router.replace(path);
+}
+
 export function dispatchChangeLayoutCollapsed(dispatch: Dispatch, payload: boolean) {
-  dispatch({ type: `${GLOBAL}/${REDIRECT_BACK}`, payload });
+  dispatch({ type: `${GLOBAL}/${CHANGE_LAYOUT_COLLAPSED}`, payload });
 }
 
 export interface GlobalModelState {

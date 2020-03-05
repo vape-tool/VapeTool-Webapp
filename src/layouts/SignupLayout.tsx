@@ -1,6 +1,6 @@
 import { DefaultFooter, getMenuData, getPageTitle, MenuDataItem } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
-import Link from 'umi/link';
+import { Link } from 'umi';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -8,7 +8,7 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { User as FirebaseUser } from 'firebase';
-import { Icon } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 import { getCurrentUser } from '@/utils/firebase';
@@ -16,8 +16,10 @@ import PageLoading from '../components/PageLoading';
 import { dispatchSuccessLogin } from '@/pages/login/model';
 
 export interface SignupLayoutProps extends ConnectProps {
-  breadcrumbNameMap: { [path: string]: MenuDataItem };
-  firebaseUser: FirebaseUser;
+  breadcrumbNameMap: {
+    [path: string]: MenuDataItem;
+  };
+  firebaseUser?: FirebaseUser;
 }
 
 const SignupLayout: React.FC<SignupLayoutProps> = props => {
@@ -92,7 +94,7 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
             },
             {
               key: 'github',
-              title: <Icon type="github" />,
+              title: <GithubOutlined />,
               href: 'https://github.com/vape-tool/VapeTool-Webapp',
               blankTarget: true,
             },

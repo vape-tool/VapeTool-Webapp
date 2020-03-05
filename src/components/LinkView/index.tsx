@@ -7,8 +7,7 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
 import styles from '../ItemView/index.less';
 import { ItemView } from '@/components/ItemView';
-import { ItemName } from '@/types/Item';
-import { Link } from '@/types';
+import { Link, ItemName } from '@/types';
 import { ImageType } from '@/services/storage';
 
 class LinkView extends ItemView<Link> {

@@ -1,7 +1,6 @@
 import React from 'react';
 import 'react-image-crop/dist/ReactCrop.css';
-import { Button, Col, Icon, Input, Row } from 'antd';
-import { Dispatch } from 'redux';
+import { Button, Col, Input, Row } from 'antd';
 import { connect } from 'dva';
 import {
   UploadPhotoState,
@@ -14,12 +13,13 @@ import {
   SET_DESCRIPTION,
 } from '@/models/uploadPhoto';
 import ImageChooser from '@/components/ImageChoser';
+import { PlusOutlined } from '@ant-design/icons';
+import { ConnectProps, ConnectState } from '@/models/connect';
 
-interface UploadPhotoProps {
-  dispatch: Dispatch;
+interface UploadPhotoProps extends ConnectProps {
   uploadPhoto: UploadPhotoState;
   showPhotoChooser: boolean;
-  submitting: boolean;
+  submitting?: boolean;
 }
 
 const UploadPhoto: React.FC<UploadPhotoProps> = props => {
@@ -94,7 +94,7 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
               verticalAlign: 'middle',
             }}
           >
-            <Icon type="plus" style={{ color: '#999' }} />
+            <PlusOutlined style={{ color: '#999' }} />
             <div className="ant-upload-text" style={{ color: '#666' }}>
               Click to upload photo
             </div>
@@ -129,19 +129,7 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
   );
 };
 
-export default connect(
-  ({
-    uploadPhoto,
-    loading,
-  }: {
-    uploadPhoto: UploadPhotoState;
-    loading: {
-      effects: {
-        [key: string]: string;
-      };
-    };
-  }) => ({
-    uploadPhoto,
-    submitting: loading.effects[`${UPLOAD_PHOTO}/${SUBMIT}`],
-  }),
-)(UploadPhoto);
+export default connect(({ uploadPhoto, loading }: ConnectState) => ({
+  uploadPhoto,
+  submitting: loading.effects[`${UPLOAD_PHOTO}/${SUBMIT}`],
+}))(UploadPhoto);

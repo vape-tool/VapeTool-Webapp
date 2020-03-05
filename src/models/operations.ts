@@ -19,7 +19,7 @@ import {
   reportPost,
 } from '@/services/items';
 import { Dispatch } from 'redux';
-import { ItemName } from '@/types/Item';
+import { ItemName } from '@/types';
 
 export const OPERATION = 'operation';
 export const LIKE = 'like';

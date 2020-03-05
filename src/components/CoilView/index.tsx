@@ -5,8 +5,7 @@ import { Card, Skeleton, Typography } from 'antd';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ItemView, ItemViewProps, ItemViewState } from '../ItemView';
 import styles from './index.less';
-import { ItemName } from '@/types/Item';
-import { Coil } from '@/types';
+import { ItemName, Coil } from '@/types';
 import { getCoilUrl, ImageType } from '@/services/storage';
 
 interface CoilViewState extends ItemViewState {

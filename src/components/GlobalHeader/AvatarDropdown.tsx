@@ -1,6 +1,7 @@
-import { Icon, Menu, Spin } from 'antd';
+import { Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect } from 'dva';
 
@@ -50,13 +51,13 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
         <Menu.Item key="center">
-          <Icon type="user" />
+          <UserOutlined />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
       )}
       {menu && <Menu.Divider />}
       <Menu.Item key="logout">
-        <Icon type="logout" />
+        <LogoutOutlined />
         <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
       </Menu.Item>
     </Menu>
@@ -76,7 +77,13 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
       </span>
     </HeaderDropdown>
   ) : (
-    <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+    <Spin
+      size="small"
+      style={{
+        marginLeft: 8,
+        marginRight: 8,
+      }}
+    />
   );
 };
 

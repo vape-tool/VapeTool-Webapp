@@ -1,9 +1,15 @@
 import React from 'react';
-import { Card, Col, Icon, InputNumber, Row } from 'antd';
+import { Card, Col, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
-import { dispatchChangeValue, SET_CELSIUS_IN_TEMPERATURE, SET_FAHRENHEIT_IN_TEMPERATURE, TEMPERATURE } from '@/models/converter';
+import { SwapOutlined } from '@ant-design/icons';
+import {
+  dispatchChangeValue,
+  SET_CELSIUS_IN_TEMPERATURE,
+  SET_FAHRENHEIT_IN_TEMPERATURE,
+  TEMPERATURE,
+} from '@/models/converter';
 
 import styles from './converters.less';
 
@@ -16,7 +22,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
 
   return (
     <Card title="Convert Celsius to Fahrenheit">
-      <Row type="flex" justify="space-between">
+      <Row justify="space-between">
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
             Celsius [°C]
@@ -35,7 +41,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
         </Col>
 
         <Col xs={4} lg={24} xl={4} style={{ textAlign: 'center' }}>
-          <Icon type="swap" className={styles.swapSign} />
+          <SwapOutlined className={styles.swapSign} />
         </Col>
 
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>

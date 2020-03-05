@@ -10,7 +10,8 @@ import { Photo, Post, Link } from '@/types';
 import PageLoading from '@/components/PageLoading';
 import LinkView from '@/components/LinkView';
 import { subscribeLinks, subscribePosts, subscribePhotos } from '@/services/items';
-import { redirectBack } from '@/models/global';
+import { redirectToWithFootprint } from '@/models/global';
+import { PlusOutlined } from '@ant-design/icons';
 
 interface AuthComponentProps extends ConnectProps {
   photos: Array<Photo>;
@@ -19,7 +20,7 @@ interface AuthComponentProps extends ConnectProps {
 }
 
 const Cloud: React.FC<AuthComponentProps> = props => {
-  const onUploadPhotoClicked = () => redirectBack(props.dispatch);
+  const onUploadPhotoClicked = () => redirectToWithFootprint(props.dispatch, '/cloud/upload');
 
   useEffect(() => subscribeLinks(props.dispatch!), []);
   useEffect(() => subscribePosts(props.dispatch!), []);
@@ -50,14 +51,14 @@ const Cloud: React.FC<AuthComponentProps> = props => {
           if (item.$type === 'link') {
             return <LinkView displayCommentsLength={3} item={item} />;
           }
-          return <div></div>;
+          return <div />;
         }}
       />
       <PhotoPreviewModal />
       <Affix offsetBottom={30}>
         <Button
           type="primary"
-          icon="plus"
+          icon={<PlusOutlined />}
           shape="circle"
           size="large"
           onClick={onUploadPhotoClicked}

@@ -6,7 +6,7 @@ import { unitFormatter, unitParser } from '@/utils/utils';
 const { Text } = Typography;
 
 interface VgPgRatioProps {
-  onRatioChange: any;
+  onRatioChange: (value: any) => void;
   ratio: number;
 }
 
@@ -30,7 +30,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
   };
 
   return (
-    <Row type="flex" justify="space-between">
+    <Row justify="space-between">
       <Col {...responsivenessRatioVg}>
         <Tooltip title={formatMessage({ id: 'liquid.vg' })}>
           <Text>VG</Text>

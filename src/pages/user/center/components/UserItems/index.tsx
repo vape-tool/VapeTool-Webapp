@@ -1,15 +1,15 @@
 import { List } from 'antd';
 import React, { Component } from 'react';
 import styles from '@/components/ItemView/index.less';
-import { ConnectProps, UserModelState } from '@/models/connect';
-import { dispatchFetchUserItems, CloudContent } from '@/models/user';
+import { ConnectProps } from '@/models/connect';
+import { dispatchFetchUserItems, CloudContent, UserModelState } from '@/models/user';
 import PageLoading from '@/components/PageLoading';
 
 export interface UserItemsProps extends Partial<UserModelState>, ConnectProps {
   loadingItems?: boolean;
 }
 
-abstract class UserItems<T> extends Component<UserItemsProps> {
+abstract class UserItems<T, P extends UserItemsProps> extends Component<P> {
   abstract what: CloudContent;
 
   abstract items: () => T[];
@@ -23,7 +23,6 @@ abstract class UserItems<T> extends Component<UserItemsProps> {
 
   render() {
     const items = this.items();
-    console.log({ render: items });
     if (!items && this.props.loadingItems) {
       return <PageLoading />;
     }
