@@ -1,6 +1,7 @@
 import { Photo as FirebasePhoto } from '@vapetool/types';
 import {
   coilsRef,
+  DatabaseReference,
   DataSnapshot,
   likesRef,
   linksRef,
@@ -11,35 +12,54 @@ import {
 import { getImageUrl, ImageType } from '@/services/storage';
 import { Coil, ItemName, Link, Liquid, Photo, Post } from '@/types';
 
-export async function getUserPhotosCount(uid: string): Promise<number> {
-  const snapshots = await photosRef
-    .orderByChild('author/uid')
-    .equalTo(uid)
-    .once('value');
-  return snapshots.numChildren();
+export async function getUserTotalContentCount(userId: string): Promise<number> {
+  const promises = [linksRef, postsRef, photosRef].map(async ref => {
+    const snapshots = await ref
+      .orderByChild('author/uid')
+      .equalTo(userId)
+      .once('value');
+    return snapshots.numChildren();
+  });
+  const counts = await Promise.all(promises);
+  return counts.reduce((prevVal, currentVal) => prevVal + currentVal, 0);
 }
 
-// TODO test
-export async function getUserPhotosLikesCount(userUid: string): Promise<number> {
-  const snapshots = await photosRef
+export async function getUserTotalLikesCount(userUid: string): Promise<number> {
+  const promises = [
+    { ref: photosRef, contentLikesRef: likesRef(ItemName.PHOTO) },
+    { ref: postsRef, contentLikesRef: likesRef(ItemName.POST) },
+    { ref: linksRef, contentLikesRef: likesRef(ItemName.LINK) },
+  ].map(({ ref, contentLikesRef }) => getLikesCountForContentType(userUid, ref, contentLikesRef));
+
+  const counts = await Promise.all(promises);
+  return counts.reduce((prevVal, currentVal) => prevVal + currentVal, 0);
+}
+
+async function getLikesCountForContentType(
+  userUid: string,
+  ref: DatabaseReference,
+  contentLikesRef: DatabaseReference,
+) {
+  const snapshots = await ref
     .orderByChild('author/uid')
     .equalTo(userUid)
     .once('value');
 
   const promises = Array<Promise<number>>();
   snapshots.forEach(snapshot => {
-    const photo = snapshot.val() as FirebasePhoto;
-    const { uid } = photo;
-    const photoLikesPromise = likesRef(ItemName.PHOTO)
+    const uid = snapshot.key;
+    if (!uid) {
+      return;
+    }
+    const photoLikesPromise = contentLikesRef
       .child(uid)
       .once('value')
       .then(snaps => snaps.numChildren());
     promises.push(photoLikesPromise);
   });
 
-  const allPromises = await Promise.all(promises);
-  // TODO test
-  return allPromises.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+  const counts = await Promise.all(promises);
+  return counts.reduce((prevVal, currentVal) => prevVal + currentVal, 0);
 }
 
 export function getUserPhotos(uid: string): Promise<Photo[]> {
