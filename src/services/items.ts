@@ -17,14 +17,12 @@ import { CloudContent } from '@/models/userProfile';
 type FirebaseContent = 'gear' | 'post' | 'link';
 
 export function subscribePhotos(dispatch: Dispatch) {
-  console.log('subscribePhotos');
   const ref = photosRef
     .orderByChild('status')
     .equalTo(OnlineStatus.ONLINE_PUBLIC)
     .limitToLast(100);
 
   ref.on('value', async (snapshot: DataSnapshot) => {
-    console.log('fetched photos');
     const photosPromise: Promise<PhotoView>[] = new Array<Promise<PhotoView>>();
     snapshot.forEach(snap => {
       const photo = snap.val();
@@ -57,7 +55,6 @@ export function subscribePhotos(dispatch: Dispatch) {
   });
 
   return () => {
-    console.log('unsubscribePhotos triggered');
     ref.off();
   };
 }
@@ -69,7 +66,6 @@ export function subscribeLinks(dispatch: Dispatch) {
     .limitToLast(100);
 
   ref.on('value', (snapshot: DataSnapshot) => {
-    console.log('fetched links');
     const links: LinkView[] = new Array<LinkView>();
     snapshot.forEach(snap => {
       const link = snap.val();
@@ -88,20 +84,17 @@ export function subscribeLinks(dispatch: Dispatch) {
   });
 
   return () => {
-    console.log('unsubscribeLinks triggered');
     ref.off();
   };
 }
 
 export function subscribePosts(dispatch: Dispatch) {
-  console.log('subscribePosts');
   const ref = postsRef
     .orderByChild('status')
     .equalTo(OnlineStatus.ONLINE_PUBLIC)
     .limitToLast(100);
 
   ref.on('value', (snapshot: DataSnapshot) => {
-    console.log('fetched posts');
     const posts: PostView[] = new Array<PostView>();
     snapshot.forEach(snap => {
       const post = snap.val();
@@ -120,7 +113,6 @@ export function subscribePosts(dispatch: Dispatch) {
   });
 
   return () => {
-    console.log('unsubscribePosts triggered');
     ref.off();
   };
 }
@@ -171,8 +163,6 @@ export async function createPost(title: string, text: string, author: Author): P
     creationTime: ServerValue.TIMESTAMP,
     lastTimeModified: ServerValue.TIMESTAMP,
   };
-  console.log('uploading post');
-  console.dir(newObject);
 
   await postsRef.child(uid).set(newObject);
   return uid;
@@ -208,8 +198,6 @@ export async function createLink(title: string, url: string, author: Author): Pr
     lastTimeModified: ServerValue.TIMESTAMP,
     status: OnlineStatus.ONLINE_PUBLIC,
   };
-  console.log('uploading link');
-  console.dir(link);
 
   await linksRef.child(uid).set(link);
   return uid;
@@ -253,8 +241,6 @@ export async function createPhoto(
       height,
       reports: 0,
     };
-    console.log('uploading cloud');
-    console.dir(newObject);
 
     // It must be published to storage prior to database because db will trigger
     // update listener before storage is completed

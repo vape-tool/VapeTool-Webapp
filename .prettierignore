@@ -13,8 +13,9 @@ docker
 Dockerfile*
 .gitignore
 .prettierignore
-.history
 LICENSE
 .eslintcache
 *.lock
 yarn-error.log
+.history
+CNAME

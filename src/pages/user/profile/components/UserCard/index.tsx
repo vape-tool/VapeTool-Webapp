@@ -3,11 +3,12 @@ import { UserProfile } from '@/models/userProfile';
 import React from 'react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
-import { Avatar, Button, Card, Col, Divider, Icon, Row } from 'antd';
+import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import { Link } from 'umi';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
-import styles from './styles.less';
 import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
+import styles from './styles.less';
 
 interface UserCardProps {
   isCurrentUser: boolean;
@@ -78,7 +79,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <Col xs={24} lg={8} className={styles.buttons}>
               <Link to={getCurrentUserEditProfileUrl()}>
                 <Button type="default" shape="round" size="small" block>
-                  <Icon type="edit" />
+                  <EditOutlined />
                   Edit profile
                 </Button>
               </Link>

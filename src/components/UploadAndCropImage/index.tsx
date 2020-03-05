@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { Button, Icon, message } from 'antd';
+import { Button, message } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/es/upload/interface';
+import { InboxOutlined } from '@ant-design/icons';
 
 interface CropAndUploadImageProps {
   maxSize?: number;
@@ -200,7 +201,7 @@ class UploadAndCropImage extends React.PureComponent<
             beforeUpload={beforeUpload}
           >
             <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
+              <InboxOutlined />
             </p>
             <p className="ant-upload-text">Click or drag file to this area to upload</p>
             <p className="ant-upload-hint">

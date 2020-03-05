@@ -7,8 +7,8 @@ import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
 import moment from 'moment';
-import { GLOBAL, REDIRECT_BACK } from '@/models/global';
 import { getCurrentUserEditProfileUrl } from '@/places/user.places';
+import { redirectReplace } from '@/models/global';
 
 export const USER = 'user';
 export const LOGOUT = 'logout';
@@ -107,14 +107,11 @@ const UserModel: UserModelType = {
     *logout(_, { call, put }) {
       yield call(logoutFirebase);
       yield put({
-        type: SET_USER,
+        type: `${USER}/${SET_USER}`,
         currentUser: undefined,
       });
 
-      yield put({
-        type: `${GLOBAL}/${REDIRECT_BACK}`,
-        path: '/login',
-      });
+      redirectReplace('/login');
     },
   },
 

@@ -136,6 +136,19 @@ export function dispatchAddFlavor(dispatch: Dispatch, flavor: Flavor) {
   });
 }
 
+/**
+ * set flavor in flavor collection
+ * @param dispatch - Dispatcher
+ * @param uid - flavor uid
+ * @param row - row values of updated flavor
+ */
+export function dispatchSetFlavor(dispatch: Dispatch, uid: string, row: any) {
+  dispatch({
+    type: `${LIQUID}/${SET_FLAVOR}`,
+    payload: { uid, row },
+  });
+}
+
 export interface LiquidModelState {
   currentLiquid: Liquid;
   results?: Result[];
@@ -186,7 +199,7 @@ const LiquidModel: LiquidModelType = {
           cancel();
         } else if (response instanceof Array) {
           yield put({
-            type: SET_RESULTS,
+            type: `${LIQUID}/${SET_RESULTS}`,
             payload: response,
           });
         }
@@ -327,12 +340,11 @@ const LiquidModel: LiquidModelType = {
       },
       { payload },
     ): LiquidModelState {
-      state.currentLiquid.flavors.push(payload);
       return {
         ...state,
         currentLiquid: {
           ...state.currentLiquid,
-          flavors: state.currentLiquid.flavors,
+          flavors: [...state.currentLiquid.flavors, payload],
         },
       };
     },

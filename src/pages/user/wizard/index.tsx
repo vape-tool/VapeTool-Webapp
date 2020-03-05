@@ -17,12 +17,13 @@ import {
 } from '@/models/userWizard';
 import { redirectBack } from '@/models/global';
 import { ImageType } from '@/services/storage';
+import { SaveOutlined } from '@ant-design/icons';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;
   displayName?: string;
   newAvatarUrl?: string;
-  showAvatarChooser: boolean;
+  showAvatarChooser?: boolean;
   dispatch: Dispatch;
 }> = props => {
   const { displayName, currentUser, dispatch, newAvatarUrl, showAvatarChooser } = props;
@@ -36,7 +37,7 @@ const UserWizard: React.FC<{
   }
   return (
     <div>
-      <Row type="flex">
+      <Row>
         <Col xs={0} md={4} lg={6} xl={8} />
         <Col xs={24} md={16} lg={14} xl={10}>
           <Card style={{ maxWidth: 500 }} title="Setup user">
@@ -78,7 +79,11 @@ const UserWizard: React.FC<{
             <div style={{ textAlign: 'right' }}>
               <ButtonGroup>
                 <Button onClick={() => redirectBack(dispatch)}>Cancel</Button>
-                <Button icon="save" type="primary" onClick={() => dispatchUpdateUser(dispatch)}>
+                <Button
+                  icon={<SaveOutlined />}
+                  type="primary"
+                  onClick={() => dispatchUpdateUser(dispatch)}
+                >
                   Save
                 </Button>
               </ButtonGroup>
@@ -89,7 +94,7 @@ const UserWizard: React.FC<{
       </Row>
       <ImageChooser
         uploadHintText="Upload avatar photo. Make sure that the photo doesn't brake the rules."
-        visible={showAvatarChooser}
+        visible={showAvatarChooser || false}
         onCancel={() => hideNewAvatarChooser(dispatch)}
         onImageChoose={onNewAvatarChoose}
         maxSize={256}

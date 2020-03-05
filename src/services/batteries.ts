@@ -6,11 +6,9 @@ import { Dispatch } from 'redux';
 import { dispatchSetBatteries } from '@/models/batteries';
 
 export function subscribeBatteries(dispatch: Dispatch) {
-  console.log('subscribeBatteries');
   const ref = batteriesRef;
 
   ref.on('value', (snapshot: DataSnapshot) => {
-    console.log('fetched batteries');
     const batteriesPromise: Promise<Battery>[] = new Array<Promise<Battery>>();
     snapshot.forEach(snap => {
       const promise = getBatteryUrl(snap.key || id(snap.val())).then((url: string) => ({
@@ -28,13 +26,11 @@ export function subscribeBatteries(dispatch: Dispatch) {
   });
 
   return () => {
-    console.log('unsubscribeBatteries triggered');
     ref.off();
   };
 }
 
 export function setAffiliate(batteryId: string, { name, link }: Affiliate) {
-  console.log(`setAffiliate for ${batteryId} name: ${name} : ${link}`);
   return batteriesRef
     .child(batteryId)
     .child('affiliate')

@@ -1,6 +1,5 @@
 import { notification } from 'antd';
 import React, { Component } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
@@ -8,39 +7,28 @@ import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { routerRedux } from 'dva/router';
-import { StateType } from './model';
+import { UserLoginModelState } from './model';
 import styles from './style.less';
 import { auth } from '@/utils/firebase';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
+import { ConnectProps, ConnectState } from '@/models/connect';
 
-interface LoginProps {
-  dispatch: Dispatch<any>;
-  userLogin: StateType;
-  submitting: boolean;
+interface LoginProps extends ConnectProps {
+  userLogin?: UserLoginModelState;
+  submitting?: boolean;
 }
 
-@connect(
-  ({
-    userLogin,
-    loading,
-  }: {
-    userLogin: StateType;
-    loading: {
-      effects: {
-        [key: string]: string;
-      };
-    };
-  }) => ({
-    userLogin,
-    submitting: loading.effects['userLogin/successLogin'],
-  }),
-)
+@connect(({ userLogin, loading }: ConnectState) => ({
+  userLogin,
+  submitting: loading.effects['userLogin/successLogin'],
+}))
 class Login extends Component<LoginProps> {
   // eslint-disable-next-line react/sort-comp
   signInSuccessWithAuthResult = (): boolean => {
     notification.info({ message: 'User logged in' });
-    this.props.dispatch(routerRedux.replace({ pathname: '/login/success' }));
+    if (this.props.dispatch)
+      this.props.dispatch(routerRedux.replace({ pathname: '/login/success' }));
     return false;
   };
 

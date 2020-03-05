@@ -1,7 +1,8 @@
-import { Col, Icon, Row } from 'antd';
+import { Col, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Dispatch } from 'redux';
 import { GridContent } from '@ant-design/pro-layout';
+import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
 import { RouteChildrenProps } from 'react-router';
 import { connect } from 'dva';
 import UserPhotos from './components/UserItems/UserPhotos';
@@ -11,7 +12,13 @@ import UserPosts from './components/UserItems/UserPosts';
 import UserLinks from './components/UserItems/UserLinks';
 import UserLiquids from './components/UserItems/UserLiquids';
 import UserCoils from './components/UserItems/UserCoils';
-import { CloudContent, dispatchFetchUserProfile, FETCH_USER_PROFILE, USER_PROFILE, UserProfile } from '@/models/userProfile';
+import {
+  CloudContent,
+  dispatchFetchUserProfile,
+  FETCH_USER_PROFILE,
+  USER_PROFILE,
+  UserProfile,
+} from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
 import styles from './styles.less';
 
@@ -90,21 +97,21 @@ const Profile: React.FC<UserProfileProps> = props => {
                     onClick={() => setTabKey(CloudContent.PHOTOS)}
                     className={`${activeClass(CloudContent.PHOTOS)}`}
                   >
-                    <Icon type="camera" className={styles.icon} />
+                    <CameraOutlined className={styles.icon} />
                     <span className={styles.label}>Photos</span>
                   </li>
                   <li
                     onClick={() => setTabKey(CloudContent.POSTS)}
                     className={`${activeClass(CloudContent.POSTS)}`}
                   >
-                    <Icon type="message" className={styles.icon} />
+                    <MessageOutlined className={styles.icon} />
                     <span className={styles.label}>Posts</span>
                   </li>
                   <li
                     onClick={() => setTabKey(CloudContent.LINKS)}
                     className={`${activeClass(CloudContent.LINKS)}`}
                   >
-                    <Icon type="link" className={styles.icon} />
+                    <LinkOutlined className={styles.icon} />
                     <span className={styles.label}>Links</span>
                   </li>
                   <li

@@ -95,8 +95,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
     <Card type={path.length === 0 ? undefined : 'inner'}>
       <Select
         size="large"
-        labelInValue
-        defaultValue={{ key: WireType[WireType.NORMAL] }}
+        defaultValue={WireType[WireType.NORMAL]}
         style={{ width: 220 }}
         onChange={handleTypeChange}
       >

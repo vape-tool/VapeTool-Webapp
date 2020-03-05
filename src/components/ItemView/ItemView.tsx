@@ -1,10 +1,9 @@
-import { Icon, Input, List, Menu, Modal } from 'antd';
+import { Input, List, Menu, Modal } from 'antd';
 import React from 'react';
-import { database, DatabaseReference, DataSnapshot } from '@/utils/firebase';
+import { DataSnapshot, DatabaseReference, likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
 import { Dispatch } from 'redux';
-import { ItemName } from '@/types/Item';
 import {
   dispatchComment,
   dispatchDelete,
@@ -18,7 +17,8 @@ import { CommentIconText } from '@/components/CommentIconText';
 import moment from 'moment';
 import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
-import { Coil, Comment, Link, Liquid, Photo, Post } from '@/types';
+import { Liquid, Coil, Post, Link, Photo, Comment, ItemName } from '@/types';
+import { DeleteOutlined, FlagOutlined, MoreOutlined } from '@ant-design/icons';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -35,6 +35,7 @@ export interface ItemViewState {
   displayComments?: Comment[];
 }
 
+// TODO refactor to functional component
 export abstract class ItemView<
   T extends Photo | Post | Link | Coil | Liquid,
   Props extends ItemViewProps<T> = ItemViewProps<T>,
@@ -60,13 +61,8 @@ export abstract class ItemView<
 
   componentDidMount(): void {
     const { item } = this.props;
-
-    this.likesRef = database()
-      .ref(`${this.what}-likes`)
-      .child(item.uid);
-    this.commentsRef = database()
-      .ref(`${this.what}-comments`)
-      .child(item.uid);
+    this.likesRef = likesRef(this.what).child(item.uid);
+    this.commentsRef = commentsRef(this.what).child(item.uid);
 
     this.listenLikes();
     this.listenComments();
@@ -117,7 +113,7 @@ export abstract class ItemView<
           onClick={this.onReportClick}
           disabled={!this.props.user || this.props.user.uid === this.props.item.author.uid}
         >
-          <Icon type="flag" />
+          <FlagOutlined />
           Report
         </Menu.Item>
         <Menu.Item
@@ -129,7 +125,7 @@ export abstract class ItemView<
               this.props.user.permission < UserPermission.ONLINE_MODERATOR)
           }
         >
-          <Icon type="delete" />
+          <DeleteOutlined />
           Delete
         </Menu.Item>
       </Menu>
@@ -140,20 +136,18 @@ export abstract class ItemView<
         actions={[
           <LikeIconText
             onClick={this.onLikeClick}
-            type="like-o"
             text={`${this.state.likesCount || 0}`}
             key="list-vertical-like-o"
             likedByMe={this.state.likedByMe}
           />,
           <CommentIconText
             onClick={this.onCommentClick}
-            type="message"
             text={`${this.state.commentsCount || 0}`}
             key="list-vertical-message"
           />,
           <span>{moment(this.props.item.creationTime).fromNow()}</span>,
           <Dropdown overlay={optionsMenu}>
-            <Icon type="more" />
+            <MoreOutlined />
           </Dropdown>,
         ]}
       />

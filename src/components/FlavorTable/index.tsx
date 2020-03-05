@@ -1,15 +1,11 @@
-import React from 'react';
-import { Button, Form, Input, InputNumber, Popconfirm, Table } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, InputNumber, message, Popconfirm, Table } from 'antd';
 import { Flavor } from '@vapetool/types';
 import { connect } from 'dva';
-import { FormComponentProps } from 'antd/es/form';
-import { WrappedFormUtils } from 'antd/es/form/Form';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectState } from '@/models/connect';
-import { LiquidModelState } from '@/models/liquid';
-import { Dispatch } from 'redux';
-
-const EditableContext = React.createContext<FormComponentProps<string> | any>(null);
+import { ConnectProps, ConnectState } from '@/models/connect';
+import { LiquidModelState, dispatchSetFlavor } from '@/models/liquid';
+import { DeleteOutlined, EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
 
@@ -19,93 +15,83 @@ interface EditableCellProps {
   title: string;
   flavor: Flavor;
   index: number;
+  children: React.ReactNode;
 }
 
 const EditableCell: React.FC<EditableCellProps> = props => {
-  const getInput = () => {
+  const getInput = (initialValue?: any) => {
     switch (props.dataIndex) {
       case 'price':
-        return <InputNumber min={0} />;
+        return <InputNumber min={0} defaultValue={initialValue} />;
       case 'ratio':
-        return <InputNumber max={100} min={0} />;
+        return <InputNumber max={100} min={0} defaultValue={initialValue} />;
       case 'percentage':
-        return <InputNumber max={100} min={0} />;
+        return <InputNumber max={100} min={0} defaultValue={initialValue} />;
       default:
       case 'manufacturer':
       case 'name':
-        return <Input />;
+        return <Input defaultValue={initialValue} />;
     }
   };
 
-  const renderCell = ({ getFieldDecorator }: WrappedFormUtils<string>) => {
-    const { editing, dataIndex, title, flavor, index, children, ...restProps } = props;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: flavor[dataIndex],
-            })(getInput())}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
+  const { editing, dataIndex, title, flavor, index, children, ...restProps } = props;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {getInput(flavor[dataIndex])}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
 };
 
-interface EditableTableProps extends FormComponentProps {
+interface EditableTableProps extends ConnectProps {
   liquid: LiquidModelState;
-  dispatch: Dispatch;
 }
 
 const EditableTable: React.FC<EditableTableProps> = props => {
-  const isEditing = (flavor: Flavor) => flavor.uid === props.liquid.editingFlavor;
+  const { liquid, dispatch } = props;
+  const [form] = Form.useForm();
+  const [editingFlavor, setEditingFlavor] = useState('');
+  const isEditing = (flavor: Flavor) => flavor.uid === editingFlavor;
 
-  const cancel = () => {
-    props.dispatch({
-      type: 'liquid/editFlavor',
-      payload: undefined,
-    });
+  const cancel = () => setEditingFlavor('');
+
+  const edit = (flavor: Flavor) => {
+    form.setFieldsValue({ ...flavor });
+    setEditingFlavor(flavor.uid);
   };
 
   const remove = (uid: string) => {
-    props.dispatch({
+    if (editingFlavor === uid) {
+      cancel();
+    }
+    dispatch({
       type: 'liquid/removeFlavor',
       payload: uid,
     });
   };
 
-  const save = (form: WrappedFormUtils<string>, uid: string) => {
-    form.validateFields((error: any, row: any) => {
-      if (error) {
-        return;
-      }
-      props.dispatch({
-        type: 'liquid/setFlavor',
-        payload: { uid, row },
-      });
-      props.dispatch({
-        type: 'liquid/editFlavor',
-        payload: undefined,
-      });
-    });
-  };
-
-  const edit = (uid: string) => {
-    props.dispatch({
-      type: 'liquid/editFlavor',
-      payload: uid,
-    });
+  const save = async (uid: string) => {
+    try {
+      const row = await form.validateFields();
+      dispatchSetFlavor(dispatch, uid, row);
+      cancel();
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const components = {
@@ -114,7 +100,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
     },
   };
 
-  const columnsSchema: any[] = [
+  const columns: any[] = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -149,29 +135,24 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       title: 'Action',
       dataIndex: 'action',
       render: (text: string, flavor: Flavor) => {
-        const { editingFlavor } = props.liquid;
         const editable = isEditing(flavor);
         return editable ? (
           <span>
             <ButtonGroup>
-              <EditableContext.Consumer>
-                {form => (
-                  <Button type="primary" icon="check" onClick={() => save(form, flavor.uid)} />
-                )}
-              </EditableContext.Consumer>
-              <Button onClick={cancel} icon="close" />
+              <Button type="primary" icon={<CheckOutlined />} onClick={() => save(flavor.uid)} />
+              <Button onClick={cancel} icon={<CloseOutlined />} />
             </ButtonGroup>
           </span>
         ) : (
           <div>
             <ButtonGroup>
               <Button
-                disabled={editingFlavor !== undefined}
-                onClick={() => edit(flavor.uid)}
-                icon="edit"
+                disabled={editingFlavor !== ''}
+                onClick={() => edit(flavor)}
+                icon={<EditOutlined />}
               />
               <Popconfirm title="Sure to remove?" onConfirm={() => remove(flavor.uid)}>
-                <Button icon="delete" />
+                <Button icon={<DeleteOutlined />} />
               </Popconfirm>
             </ButtonGroup>
           </div>
@@ -180,7 +161,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
     },
   ];
 
-  const columns = columnsSchema.map(col => {
+  const mergedColumns = columns.map(col => {
     if (!col.editable) {
       return col;
     }
@@ -196,22 +177,20 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   });
 
   return (
-    <EditableContext.Provider value={props.form}>
+    <Form form={form} component={false}>
       <Table
         components={components}
         bordered
-        dataSource={props.liquid.currentLiquid.flavors}
-        columns={columns}
+        dataSource={liquid.currentLiquid.flavors}
+        columns={mergedColumns}
         rowKey={flavor => flavor.uid}
-        rowClassName={() => 'editable-row'}
+        rowClassName="editable-row"
         pagination={false}
       />
-    </EditableContext.Provider>
+    </Form>
   );
 };
 
-const FlavorTable = Form.create()(EditableTable);
-
 export default connect(({ liquid }: ConnectState) => ({
   liquid,
-}))(FlavorTable);
+}))(EditableTable);

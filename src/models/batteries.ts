@@ -18,6 +18,16 @@ export const REMOVE_BATTERY = 'removeBattery';
 export const SET_BATTERY = 'setBattery';
 export const SET_AFFILIATE = 'setAffiliate';
 
+export function dispatchSetAffiliate(
+  dispatch: Dispatch,
+  affiliate: { name: string; link: string | null },
+) {
+  dispatch({
+    type: `${BATTERIES}/${SET_AFFILIATE}`,
+    affiliate,
+  });
+}
+
 export function dispatchSetBatteries(dispatch: Dispatch, batteries: Battery[]) {
   dispatch({
     type: `${BATTERIES}/${SET_BATTERIES}`,
@@ -42,7 +52,6 @@ export interface BatteriesModelState {
   batteries: Battery[];
   selectedBattery?: Battery;
   editBattery?: boolean;
-  editingAffiliate?: string;
   showNewAffiliateModal?: boolean;
 }
 
@@ -55,7 +64,6 @@ export interface BatteriesModelType {
   reducers: {
     [SHOW_NEW_AFFILIATE_MODAL]: Reducer<BatteriesModelState>;
     [HIDE_NEW_AFFILIATE_MODAL]: Reducer<BatteriesModelState>;
-    [EDIT_AFFILIATE]: Reducer<BatteriesModelState>;
     [TOGGLE_EDIT_BATTERY]: Reducer<BatteriesModelState>;
     [SELECT_BATTERY]: Reducer<BatteriesModelState>;
     [ADD_BATTERY]: Reducer<BatteriesModelState>;
@@ -72,17 +80,13 @@ const BatteriesModel: BatteriesModelType = {
     batteries: [],
     selectedBattery: undefined,
     editBattery: false,
-    editingAffiliate: undefined,
     showNewAffiliateModal: undefined,
   },
   effects: {
     *setAffiliate({ affiliate }, { call, select }) {
-      console.log('model/setAffiliate');
-      console.log(affiliate);
       const selectedBattery = yield select(
         (state: ConnectState) => state.batteries.selectedBattery,
       );
-      console.log(`model/selected battery: ${selectedBattery}`);
       if (!selectedBattery) throw Error('can not set affiliate on undefined battery');
 
       yield call(setAffiliate, selectedBattery.id, affiliate);
@@ -99,12 +103,6 @@ const BatteriesModel: BatteriesModelType = {
       return {
         ...(state as BatteriesModelState),
         showNewAffiliateModal: true,
-      };
-    },
-    editAffiliate(state = { batteries: [] }, { name }): BatteriesModelState {
-      return {
-        ...(state as BatteriesModelState),
-        editingAffiliate: name,
       };
     },
     toggleEditBattery(state = { batteries: [] }): BatteriesModelState {

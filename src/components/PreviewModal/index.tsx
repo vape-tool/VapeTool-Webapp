@@ -1,19 +1,17 @@
 import { Modal } from 'antd';
 import * as React from 'react';
 import { connect } from 'dva';
-import { Dispatch } from 'redux';
-import { ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
-import { Link, Photo, Post } from '@/types';
 import PhotoView from '@/components/ItemView/PhotoView';
 import PostView from '../ItemView/PostView';
 import LinkView from '../ItemView/LinkView';
+import { Item } from '@/types';
 import { dispatchSelectItem } from '@/models/preview';
 
-interface PhotoPreviewModalProps {
-  dispatch: Dispatch;
+interface PhotoPreviewModalProps extends ConnectProps {
   user?: CurrentUser;
-  selectedItem?: Photo | Post | Link;
+  selectedItem?: Item;
 }
 
 const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewModalProps) => {

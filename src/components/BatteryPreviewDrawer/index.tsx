@@ -57,7 +57,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
   useMedia({ query: { maxWidth: 500 }, onChange: setCollapsed });
 
   if (!selectedBattery) {
-    return <div></div>;
+    return <div />;
   }
   const {
     brand,
@@ -154,7 +154,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
         )}
       </Row>
 
-      <Row type="flex" gutter={32}>
+      <Row gutter={32}>
         {reviewUrl && (
           <Col xs="auto">
             <a

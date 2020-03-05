@@ -1,8 +1,8 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Col, Form, Icon, InputNumber, Row } from 'antd';
+import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
-import { FormComponentProps } from 'antd/es/form';
+import { LockOutlined } from '@ant-design/icons';
 // @ts-ignore
 import Image from 'react-image-webp';
 import ButtonGroup from 'antd/es/button/button-group';
@@ -21,11 +21,12 @@ import {
 
 const guideImage = require('@/assets/ohm_law.webp');
 
-export interface OhmLawProps extends FormComponentProps {
+export interface OhmLawProps {
   ohm: OhmModelState;
   dispatch: Dispatch;
 }
 
+// TODO check if not needed adjust to new Form API
 const OhmLaw: React.FC<OhmLawProps> = props => {
   const { dispatch, ohm } = props;
   const { voltage, resistance, current, power, lastEdit, latestEdit } = ohm;
@@ -68,9 +69,9 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
   return (
     <PageHeaderWrapper>
       <Card>
-        <Row type="flex" justify="center" gutter={32}>
-          <Col xs={20} sm={18} md={12}>
-            <Form {...formItemLayout} onSubmit={handleCalculate}>
+        <Row justify="center" gutter={32}>
+          <Col xs={24} sm={20} md={14}>
+            <Form {...formItemLayout} onSubmitCapture={handleCalculate}>
               <Form.Item label="Voltage">
                 <InputNumber
                   value={voltage}
@@ -82,7 +83,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onVoltageChange}
                   placeholder="Volts [V]"
                 />
-                {lastEdits.includes('voltage') && <Icon type="lock" />}
+                {lastEdits.includes('voltage') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Resistance">
                 <InputNumber
@@ -95,7 +96,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onResistanceChange}
                   placeholder="Ohms [Ω]"
                 />
-                {lastEdits.includes('resistance') && <Icon type="lock" />}
+                {lastEdits.includes('resistance') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Current">
                 <InputNumber
@@ -108,7 +109,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onCurrentChange}
                   placeholder="Amps [A]"
                 />
-                {lastEdits.includes('current') && <Icon type="lock" />}
+                {lastEdits.includes('current') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Power">
                 <InputNumber
@@ -121,7 +122,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onPowerChange}
                   placeholder="Wats [W]"
                 />
-                {lastEdits.includes('power') && <Icon type="lock" />}
+                {lastEdits.includes('power') && <LockOutlined />}
               </Form.Item>
               <Form.Item {...tailFormItemLayout}>
                 <ButtonGroup>
@@ -135,7 +136,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
               </Form.Item>
             </Form>
           </Col>
-          <Col xs={18} sm={16} md={10} lg={8}>
+          <Col xs={18} sm={14} md={8} lg={8}>
             <Image webp={guideImage} style={{ width: '100%' }} />
           </Col>
         </Row>
@@ -144,8 +145,6 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
   );
 };
 
-const OhmLawForm = Form.create<OhmLawProps>({ name: 'ohm_law' })(OhmLaw);
-
 export default connect(({ ohm }: ConnectState) => ({
   ohm,
-}))(OhmLawForm);
+}))(OhmLaw);
