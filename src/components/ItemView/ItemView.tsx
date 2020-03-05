@@ -5,7 +5,13 @@ import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
 import { Dispatch } from 'redux';
 import { ItemName } from '@/types/Item';
-import { dispatchComment, dispatchDelete, dispatchDeleteComment, dispatchLike, dispatchReport } from '@/models/operations';
+import {
+  dispatchComment,
+  dispatchDelete,
+  dispatchDeleteComment,
+  dispatchLike,
+  dispatchReport,
+} from '@/models/operations';
 import CommentView from '@/components/ItemView/CommentView';
 import { LikeIconText } from '@/components/LikeIconText';
 import { CommentIconText } from '@/components/CommentIconText';

@@ -21,7 +21,7 @@ const ItemPreviewModal: React.FC<PhotoPreviewModalProps> = (props: PhotoPreviewM
   console.log(`selected ${selectedItem}`);
   const onCancel = () => dispatchSelectItem(dispatch, undefined);
   if (!selectedItem) {
-    return <div/>;
+    return <div />;
   }
   let content;
   if (selectedItem.$type === 'photo') {
