@@ -13,7 +13,6 @@ import UserLinks from './components/UserItems/UserLinks';
 import UserLiquids from './components/UserItems/UserLiquids';
 import UserCoils from './components/UserItems/UserCoils';
 import {
-  CloudContent,
   dispatchFetchUserProfile,
   FETCH_USER_PROFILE,
   USER_PROFILE,
@@ -21,13 +20,14 @@ import {
 } from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
 import styles from './styles.less';
+import { ItemName } from '@/types';
 
 interface UserProfileProps extends RouteChildrenProps {
-  dispatch: Dispatch<any>;
-  currentUser: CurrentUser;
-  currentUserLoading: boolean;
-  userProfile: UserProfile;
-  profileLoading: boolean;
+  dispatch: Dispatch;
+  currentUser?: CurrentUser;
+  currentUserLoading?: boolean;
+  userProfile?: UserProfile;
+  profileLoading?: boolean;
 }
 
 const Profile: React.FC<UserProfileProps> = props => {
@@ -39,7 +39,7 @@ const Profile: React.FC<UserProfileProps> = props => {
     profileLoading,
     match,
   } = props;
-  const [tabKey, setTabKey] = useState(CloudContent.PHOTOS);
+  const [tabKey, setTabKey] = useState(ItemName.PHOTO);
   let userId = match?.params['id'];
   const isCurrentUser = (currentUser && userId === currentUser.uid) || userId === undefined;
   const isLoading = currentUserLoading !== false || profileLoading !== false || !profile;
@@ -58,26 +58,26 @@ const Profile: React.FC<UserProfileProps> = props => {
     }
 
     switch (tabKey) {
-      case CloudContent.PHOTOS:
+      case ItemName.PHOTO:
         return <UserPhotos />;
-      case CloudContent.POSTS:
+      case ItemName.POST:
         return <UserPosts />;
-      case CloudContent.LINKS:
+      case ItemName.LINK:
         return <UserLinks />;
-      case CloudContent.COILS:
+      case ItemName.COIL:
         return <UserCoils />;
-      case CloudContent.LIQUIDS:
+      case ItemName.LIQUID:
         return <UserLiquids />;
       default:
-        throw new Error(`Unknown CloudContent tab: ${tabKey}`);
+        throw new Error(`Unknown tab: ${tabKey}`);
     }
   };
 
-  const activeClass = (type: CloudContent): string => (tabKey === type ? styles.active : '');
+  const activeClass = (type: ItemName): string => (tabKey === type ? styles.active : '');
 
   return (
     <GridContent>
-      <Row type="flex" justify="space-around">
+      <Row justify="space-around">
         <Col xs={24} md={24} xl={20} xxl={11}>
           <UserCard
             isCurrentUser={isCurrentUser}
@@ -87,36 +87,36 @@ const Profile: React.FC<UserProfileProps> = props => {
           />
         </Col>
       </Row>
-      <Row type="flex" justify="space-around">
+      <Row justify="space-around">
         <Col xs={24} md={24} xl={20} xxl={11}>
           <div className={styles.itemsAndControl}>
             <div className={styles.controlContainer}>
               <div className={styles.controlPanel}>
                 <ul>
                   <li
-                    onClick={() => setTabKey(CloudContent.PHOTOS)}
-                    className={`${activeClass(CloudContent.PHOTOS)}`}
+                    onClick={() => setTabKey(ItemName.PHOTO)}
+                    className={`${activeClass(ItemName.PHOTO)}`}
                   >
                     <CameraOutlined className={styles.icon} />
                     <span className={styles.label}>Photos</span>
                   </li>
                   <li
-                    onClick={() => setTabKey(CloudContent.POSTS)}
-                    className={`${activeClass(CloudContent.POSTS)}`}
+                    onClick={() => setTabKey(ItemName.POST)}
+                    className={`${activeClass(ItemName.POST)}`}
                   >
                     <MessageOutlined className={styles.icon} />
                     <span className={styles.label}>Posts</span>
                   </li>
                   <li
-                    onClick={() => setTabKey(CloudContent.LINKS)}
-                    className={`${activeClass(CloudContent.LINKS)}`}
+                    onClick={() => setTabKey(ItemName.LINK)}
+                    className={`${activeClass(ItemName.LINK)}`}
                   >
                     <LinkOutlined className={styles.icon} />
                     <span className={styles.label}>Links</span>
                   </li>
                   <li
-                    onClick={() => setTabKey(CloudContent.COILS)}
-                    className={`${activeClass(CloudContent.COILS)}`}
+                    onClick={() => setTabKey(ItemName.COIL)}
+                    className={`${activeClass(ItemName.COIL)}`}
                   >
                     <i className={styles.icon}>
                       <img
@@ -127,8 +127,8 @@ const Profile: React.FC<UserProfileProps> = props => {
                     <span className={styles.label}>Coils</span>
                   </li>
                   <li
-                    onClick={() => setTabKey(CloudContent.LIQUIDS)}
-                    className={`${activeClass(CloudContent.LIQUIDS)}`}
+                    onClick={() => setTabKey(ItemName.LIQUID)}
+                    className={`${activeClass(ItemName.LIQUID)}`}
                   >
                     <i className={styles.icon}>
                       <img

@@ -2,15 +2,16 @@ import { List } from 'antd';
 import React, { Component } from 'react';
 import styles from '@/components/ItemView/styles.less';
 import PageLoading from '@/components/PageLoading';
-import { CloudContent, dispatchFetchUserItems, UserProfileModelState } from '@/models/userProfile';
+import { dispatchFetchUserItems, UserProfileModelState } from '@/models/userProfile';
 import { ConnectProps } from '@/models/connect';
+import { ItemName } from '@/types';
 
 export interface UserItemsProps extends Partial<UserProfileModelState>, Partial<ConnectProps> {
   loadingItems?: boolean;
 }
 
 abstract class UserItems<T, P extends UserItemsProps> extends Component<P> {
-  abstract what: CloudContent;
+  abstract what: ItemName;
 
   abstract items: () => T[];
 

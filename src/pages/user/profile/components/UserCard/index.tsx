@@ -12,8 +12,8 @@ import styles from './styles.less';
 
 interface UserCardProps {
   isCurrentUser: boolean;
-  currentUser: CurrentUser;
-  userProfile: UserProfile;
+  currentUser?: CurrentUser;
+  userProfile?: UserProfile;
   isLoading: boolean;
 }
 
@@ -38,22 +38,22 @@ const UserCard: React.FC<UserCardProps> = ({
   return (
     <Card bordered={false} className={styles.card}>
       <div className={styles.avatarHolder}>
-        <FirebaseImage type={ImageType.USER} id={profile.uid} size={150} />
+        <FirebaseImage type={ImageType.USER} id={profile ? profile.uid : ''} size={150} />
       </div>
 
       <div className={styles.content}>
         <Row>
           <Col xs={24} lg={isCurrentUser ? 16 : 24}>
-            <h4 className={styles.name}>{profile.name}</h4>
+            <h4 className={styles.name}>{profile ? profile.name : ''}</h4>
             {isCurrentUser && (
               <div className={styles.detail}>
                 <p>
                   <i className={styles.title} />
-                  {currentUser.title}
+                  {currentUser ? currentUser.title : ''}
                 </p>
                 <p>
                   <i className={styles.group} />
-                  {currentUser.group}
+                  {currentUser ? currentUser.group : ''}
                 </p>
               </div>
             )}

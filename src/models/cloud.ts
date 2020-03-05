@@ -1,7 +1,6 @@
 import { Dispatch, Reducer } from 'redux';
-import { Link, Photo, Post } from '@/types';
+import { ItemName, Link, Photo, Post } from '@/types';
 import { UserModelState } from '@/models/user';
-import { CloudContent } from '@/models/userProfile';
 
 export const CLOUD = 'cloud';
 export const SET_ITEMS = 'setItems';
@@ -22,7 +21,7 @@ export interface CloudModelType {
 
 export function dispatchSetItems(
   dispatch: Dispatch,
-  what: CloudContent,
+  what: ItemName,
   items: Post[] | Photo[] | Link[],
 ) {
   dispatch({
@@ -47,9 +46,9 @@ const CloudModel: CloudModelType = {
       console.log({ what, setItems: items });
       return {
         ...(state as UserModelState),
-        photos: what === 'photos' ? items : state?.photos,
-        posts: what === 'posts' ? items : state?.posts,
-        links: what === 'links' ? items : state?.links,
+        photos: what === ItemName.PHOTO ? items : state?.photos,
+        posts: what === ItemName.POST ? items : state?.posts,
+        links: what === ItemName.LINK ? items : state?.links,
       };
     },
   },
