@@ -5,9 +5,11 @@ import PostView from '@/components/ItemView/PostView';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
+import { subscribePosts } from '@/services/items';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userPosts: userProfile.userPosts,
+  userProfile: userProfile.userProfile,
   loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
 }))
 class UserPosts extends UserItems<Post, { userPosts?: Post[] }> {
@@ -16,6 +18,8 @@ class UserPosts extends UserItems<Post, { userPosts?: Post[] }> {
   items = () => this.props.userPosts || [];
 
   renderItem = (item: Post) => <PostView item={item} />;
+
+  subscribe = (userId: string) => subscribePosts(this.props.dispatch, userId);
 }
 
 export default UserPosts;

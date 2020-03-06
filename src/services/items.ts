@@ -1,118 +1,114 @@
-import { Author, Comment, Link, OnlineStatus, Photo as FirebasePhoto, Post } from '@vapetool/types';
-import { ItemName, Link as LinkView, Photo as PhotoView, Post as PostView } from '@/types';
 import {
+  Author,
+  Comment,
+  OnlineStatus,
+  Photo as FirebasePhoto,
+  Post as FirebasePost,
+  Link as FirebaseLink,
+} from '@vapetool/types';
+import { Item, ItemName, Photo } from '@/types';
+import {
+  coilsRef,
   database,
+  DatabaseReference,
   DataSnapshot,
   linksRef,
+  liquidsRef,
   photosRef,
   postsRef,
+  Query,
   ServerValue,
 } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { getPhotoUrl, uploadPhoto } from '@/services/storage';
 import { dispatchSetItems } from '@/models/cloud';
 import { Dispatch } from 'redux';
+import { dispatchSetUserItems } from '@/models/userProfile';
 
 type FirebaseContent = 'gear' | 'post' | 'link';
 
-export function subscribePhotos(dispatch: Dispatch) {
-  const ref = photosRef
-    .orderByChild('status')
-    .equalTo(OnlineStatus.ONLINE_PUBLIC)
-    .limitToLast(100);
+export function subscribePhotos(dispatch: Dispatch, userId?: string): () => void {
+  return subscribeItems(
+    dispatch,
+    ItemName.PHOTO,
+    photosRef,
+    (snap: DataSnapshot, photo: Photo) =>
+      getPhotoUrl(snap.key || photo.uid).then((url: string) => ({
+        ...photo,
+        // backwards compatibility
+        creationTime: photo.creationTime || photo.timestamp,
+        lastTimeModified: photo.lastTimeModified || photo.timestamp,
+        url,
+        $type: ItemName.PHOTO,
+      })),
+    userId,
+  );
+}
 
-  ref.on('value', async (snapshot: DataSnapshot) => {
-    const photosPromise: Promise<PhotoView>[] = new Array<Promise<PhotoView>>();
+export function subscribeLinks(dispatch: Dispatch, userId?: string): () => void {
+  return subscribeItems(dispatch, ItemName.LINK, linksRef, null, userId);
+}
+
+export function subscribePosts(dispatch: Dispatch, userId?: string): () => void {
+  return subscribeItems(dispatch, ItemName.POST, postsRef, null, userId);
+}
+
+export function subscribeCoils(dispatch: Dispatch, userId?: string): () => void {
+  return subscribeItems(dispatch, ItemName.COIL, coilsRef, null, userId);
+}
+
+export function subscribeLiquids(dispatch: Dispatch, userId?: string): () => void {
+  return subscribeItems(dispatch, ItemName.LIQUID, liquidsRef, null, userId);
+}
+
+export function subscribeItems<T extends Item>(
+  dispatch: Dispatch,
+  itemsName: ItemName,
+  ref: DatabaseReference,
+  transformation: ((snap: DataSnapshot, item: any) => Promise<T>) | null,
+  userId?: string,
+): () => void {
+  let query: Query;
+  if (userId) {
+    query = ref.orderByChild('author/uid').equalTo(userId);
+  } else {
+    query = ref
+      .orderByChild('status')
+      .equalTo(OnlineStatus.ONLINE_PUBLIC)
+      .limitToLast(100);
+  }
+
+  query.on('value', async (snapshot: DataSnapshot) => {
+    const promises: Promise<T>[] = new Array<Promise<T>>();
     snapshot.forEach(snap => {
-      const photo = snap.val();
-      if (!photo || Object.entries(photo).length === 0 || !photo.author) {
-        console.error(`REMOVE EMPTY PHOTO: ${snap.key}`);
+      const dbObject = snap.val();
+      if (!dbObject || Object.entries(dbObject).length === 0 || !dbObject.author) {
+        // beauty of weak typed database, strange things can show up here :D
+        console.error(`REMOVE EMPTY POST: ${snap.key}`);
         return;
       }
-      const promise: Promise<PhotoView> = getPhotoUrl(snap.key || photo.uid).then((url: string) => {
-        if (photo.creationTime === undefined) {
-          // backwards compatibility
-          photo.creationTime = photo.timestamp;
-          photo.lastTimeModified = photo.timestamp;
-        }
-        const photoObj: PhotoView = {
-          ...photo,
-          url,
-          $type: 'photo',
-        };
-        return photoObj;
-      });
-      photosPromise.push(promise);
+      let item: Promise<T>;
+      if (transformation) {
+        item = transformation(snap, dbObject);
+      } else {
+        item = Promise.resolve({
+          ...dbObject,
+          $type: itemsName,
+        });
+      }
+      promises.push(item);
     });
 
-    try {
-      const photos = await Promise.all(photosPromise);
-      dispatchSetItems(dispatch, ItemName.PHOTO, photos);
-    } catch (err) {
-      console.error('failed to fetch photosUrls ', err);
+    const items = await Promise.all(promises);
+    if (userId) {
+      dispatchSetUserItems(dispatch, itemsName, items);
+    } else {
+      dispatchSetItems(dispatch, itemsName, items);
     }
   });
 
   return () => {
-    ref.off();
-  };
-}
-
-export function subscribeLinks(dispatch: Dispatch) {
-  const ref = linksRef
-    .orderByChild('status')
-    .equalTo(OnlineStatus.ONLINE_PUBLIC)
-    .limitToLast(100);
-
-  ref.on('value', (snapshot: DataSnapshot) => {
-    const links: LinkView[] = new Array<LinkView>();
-    snapshot.forEach(snap => {
-      const link = snap.val();
-      if (!link || Object.entries(link).length === 0 || !link.author) {
-        console.error(`REMOVE EMPTY LINK: ${snap.key}`);
-        return;
-      }
-      const linkObject: LinkView = {
-        ...link,
-        $type: 'link',
-      };
-      links.push(linkObject);
-    });
-
-    dispatchSetItems(dispatch, ItemName.LINK, links);
-  });
-
-  return () => {
-    ref.off();
-  };
-}
-
-export function subscribePosts(dispatch: Dispatch) {
-  const ref = postsRef
-    .orderByChild('status')
-    .equalTo(OnlineStatus.ONLINE_PUBLIC)
-    .limitToLast(100);
-
-  ref.on('value', (snapshot: DataSnapshot) => {
-    const posts: PostView[] = new Array<PostView>();
-    snapshot.forEach(snap => {
-      const post = snap.val();
-      if (!post || Object.entries(post).length === 0 || !post.author) {
-        console.error(`REMOVE EMPTY POST: ${snap.key}`);
-        return;
-      }
-      const postObject: PostView = {
-        ...post,
-        $type: 'post',
-      };
-      posts.push(postObject);
-    });
-
-    dispatchSetItems(dispatch, ItemName.POST, posts);
-  });
-
-  return () => {
-    ref.off();
+    query.off();
   };
 }
 
@@ -153,7 +149,7 @@ export async function createPost(title: string, text: string, author: Author): P
   if (uid == null) {
     throw new Error('Could not push new post to db');
   }
-  const newObject: Post = {
+  const newObject: FirebasePost = {
     uid,
     author,
     title,
@@ -188,7 +184,7 @@ export async function createLink(title: string, url: string, author: Author): Pr
   if (!uid) {
     throw new Error('Could not push new link to db');
   }
-  const link: Link = {
+  const link: FirebaseLink = {
     uid,
     title,
     url,

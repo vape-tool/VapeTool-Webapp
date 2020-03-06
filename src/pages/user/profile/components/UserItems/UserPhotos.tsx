@@ -5,9 +5,11 @@ import PhotoView from '@/components/ItemView/PhotoView';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
+import { subscribePhotos } from '@/services/items';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userPhotos: userProfile.userPhotos,
+  userProfile: userProfile.userProfile,
   loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
 }))
 class UserPhotos extends UserItems<Photo, { userPhotos?: Photo[] }> {
@@ -16,6 +18,8 @@ class UserPhotos extends UserItems<Photo, { userPhotos?: Photo[] }> {
   items = () => this.props.userPhotos || [];
 
   renderItem = (item: Photo) => <PhotoView item={item} />;
+
+  subscribe = (userId: string) => subscribePhotos(this.props.dispatch, userId);
 }
 
 export default UserPhotos;
