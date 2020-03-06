@@ -60,15 +60,15 @@ const Profile: React.FC<UserProfileProps> = props => {
 
     switch (tabKey) {
       case ItemName.PHOTO:
-        return <UserPhotos />;
+        return <UserPhotos dispatch={dispatch} />;
       case ItemName.POST:
-        return <UserPosts />;
+        return <UserPosts dispatch={dispatch} />;
       case ItemName.LINK:
-        return <UserLinks />;
+        return <UserLinks dispatch={dispatch} />;
       case ItemName.COIL:
-        return <UserCoils />;
+        return <UserCoils dispatch={dispatch} />;
       case ItemName.LIQUID:
-        return <UserLiquids />;
+        return <UserLiquids dispatch={dispatch} />;
       default:
         throw new Error(`Unknown tab: ${tabKey}`);
     }

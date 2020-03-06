@@ -1,5 +1,5 @@
 import { Dispatch, Reducer } from 'redux';
-import { ItemName, Link, Photo, Post } from '@/types';
+import { Item, ItemName, Link, Photo, Post } from '@/types';
 import { UserModelState } from '@/models/user';
 
 export const CLOUD = 'cloud';
@@ -19,11 +19,7 @@ export interface CloudModelType {
   };
 }
 
-export function dispatchSetItems(
-  dispatch: Dispatch,
-  what: ItemName,
-  items: Post[] | Photo[] | Link[],
-) {
+export function dispatchSetItems<T extends Item>(dispatch: Dispatch, what: ItemName, items: T[]) {
   dispatch({
     type: `${CLOUD}/${SET_ITEMS}`,
     what,

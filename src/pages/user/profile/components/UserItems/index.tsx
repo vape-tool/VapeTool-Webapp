@@ -2,24 +2,35 @@ import { List } from 'antd';
 import React, { Component } from 'react';
 import styles from '@/components/ItemView/styles.less';
 import PageLoading from '@/components/PageLoading';
-import { dispatchFetchUserItems, UserProfileModelState } from '@/models/userProfile';
+import { UserProfileModelState } from '@/models/userProfile';
 import { ConnectProps } from '@/models/connect';
-import { ItemName } from '@/types';
+import { Item, ItemName } from '@/types';
 
-export interface UserItemsProps extends Partial<UserProfileModelState>, Partial<ConnectProps> {
+export interface UserItemsProps extends Partial<UserProfileModelState>, ConnectProps {
   loadingItems?: boolean;
 }
 
-abstract class UserItems<T, P extends UserItemsProps> extends Component<P> {
+abstract class UserItems<T extends Item, P> extends Component<P & UserItemsProps> {
+  // eslint-disable-next-line react/sort-comp
   abstract what: ItemName;
 
   abstract items: () => T[];
 
   abstract renderItem: (item: T, index: number) => React.ReactNode;
 
-  // eslint-disable-next-line react/sort-comp
+  abstract subscribe: (userId: string) => Function;
+
+  off: Function | undefined;
+
   componentDidMount(): void {
-    dispatchFetchUserItems(this.props.dispatch!, this.what);
+    // dispatchFetchUserItems(this.props.dispatch!, this.what);
+    if (this.props.userProfile?.uid) {
+      this.off = this.subscribe(this.props.userProfile?.uid);
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.off) this.off();
   }
 
   render() {

@@ -3,7 +3,7 @@ import { Dispatch, Reducer } from 'redux';
 import { User } from '@vapetool/types';
 import { getUser } from '@/services/user';
 import { routerRedux } from 'dva/router';
-import { Coil, ItemName, Link, Liquid, Photo, Post } from '@/types';
+import { Coil, Item, ItemName, Link, Liquid, Photo, Post } from '@/types';
 import { ConnectState } from '@/models/connect';
 import {
   getUserCoils,
@@ -31,6 +31,18 @@ export function dispatchFetchUserProfile(dispatch: Dispatch, userId: string) {
   dispatch({
     type: `${USER_PROFILE}/${FETCH_USER_PROFILE}`,
     payload: userId,
+  });
+}
+
+export function dispatchSetUserItems<T extends Item>(
+  dispatch: Dispatch,
+  what: ItemName,
+  items: T[],
+) {
+  dispatch({
+    type: `${USER_PROFILE}/${SET_ITEMS}`,
+    what,
+    items,
   });
 }
 

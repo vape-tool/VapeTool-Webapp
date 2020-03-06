@@ -5,9 +5,11 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import CoilView from '@/components/ItemView/CoilView';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
+import { subscribeCoils } from '@/services/items';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userCoils: userProfile.userCoils,
+  userProfile: userProfile.userProfile,
   loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
 }))
 class UserCoils extends UserItems<Coil, { userCoils?: Coil[] }> {
@@ -16,6 +18,8 @@ class UserCoils extends UserItems<Coil, { userCoils?: Coil[] }> {
   items = () => this.props.userCoils || [];
 
   renderItem = (item: Coil) => <CoilView item={item} />;
+
+  subscribe = (userId: string) => subscribeCoils(this.props.dispatch, userId);
 }
 
 export default UserCoils;

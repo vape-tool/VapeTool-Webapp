@@ -28,8 +28,10 @@ const UserCard: React.FC<UserCardProps> = ({
   const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
   const userTags = profile?.tags || [];
   useEffect(() => {
-    getUserTotalContentCount(profile.uid).then(contentCount => setUserContentCount(contentCount));
-    getUserTotalLikesCount(profile.uid).then(likesCount => setUserLikesCount(likesCount));
+    if (profile) {
+      getUserTotalContentCount(profile.uid).then(setUserContentCount);
+      getUserTotalLikesCount(profile.uid).then(setUserLikesCount);
+    }
   }, [profile]);
 
   if (isLoading) {

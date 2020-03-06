@@ -99,6 +99,8 @@ export import DataSnapshot = firebase.database.DataSnapshot;
 export import DatabaseReference = firebase.database.Reference;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import StorageReference = firebase.storage.Reference;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import Query = firebase.database.Query;
 
 let userLoaded: boolean = false;
 
