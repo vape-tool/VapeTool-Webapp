@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
@@ -15,7 +15,8 @@ import {
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
 } from '@/models/coil';
-import { CalculatorOutlined } from '@ant-design/icons';
+import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
+import styles from './styles.less';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -26,10 +27,12 @@ export interface CoilCalculatorProps extends ConnectProps {
   baseVoltage: number;
 }
 
-let lastEdit: 'wraps' | 'resistance' | undefined;
+// let lastEdit: 'wraps' | 'resistance' = 'resistance';
 
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil, properties, baseVoltage } = props;
+
+  const [lastEdit, setLastEdit] = useState('resistance');
 
   const onSetupChange = ({ key }: any) =>
     key &&
@@ -53,7 +56,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     });
 
   const onResistanceChange = (value: number | undefined) => {
-    lastEdit = 'resistance';
+    setLastEdit('resistance');
     return (
       value &&
       dispatch({
@@ -64,7 +67,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   };
 
   const onWrapsChange = (value: number | undefined) => {
-    lastEdit = 'wraps';
+    setLastEdit('wraps');
     return (
       value &&
       dispatch({
@@ -75,20 +78,22 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   };
 
   const calculate = (): void => {
-    if (dispatch) {
-      if (lastEdit === 'wraps') {
-        dispatch({
-          type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
-          coil,
-        });
-      } else {
-        // default
-        dispatch({
-          type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
-          coil,
-        });
-      }
+    if (lastEdit === 'wraps') {
+      dispatch({
+        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
+        coil,
+      });
+    } else {
+      // default
+      dispatch({
+        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
+        coil,
+      });
     }
+  };
+
+  const toggleLock = () => {
+    setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
 
   const descriptionItem = (title: string, property: string, unit: string) => (
@@ -166,10 +171,16 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
                 value={coil.resistance}
                 onChange={onResistanceChange}
               />
+              <span className={styles.lockIcon} onClick={toggleLock}>
+                {lastEdit === 'resistance' ? <LockFilled /> : <UnlockOutlined />}
+              </span>
             </div>
             <div>
               <Title level={4}>Wraps per coil</Title>
               <InputNumber min={0} step={1} value={coil.wraps} onChange={onWrapsChange} />
+              <span className={styles.lockIcon} onClick={toggleLock}>
+                {lastEdit === 'wraps' ? <LockFilled /> : <UnlockOutlined />}
+              </span>
             </div>
           </Row>
           <br />
