@@ -65,7 +65,7 @@
   transform: rotate(90deg);
 }
 
-@media (min-width: @screen-lg) and (max-width: @screen-xl) {
+@media (min-width: @screen-lg) and (max-width: @screen-xl - 1px) {
   .swapSign {
     margin: 20px 0;
     padding: 0;
@@ -79,5 +79,17 @@
 
   .inchesInput {
     padding-top: 0;
+  }
+}
+
+@media (min-width: @screen-xl) and (max-width: @screen-xxl - 1px) {
+  .swapSign {
+    padding-top: 30px;
+    font-size: 25px;
+  }
+
+  .equalSign {
+    margin-top: 45px;
+    font-size: 25px;
   }
 }
