@@ -15,15 +15,15 @@ export interface ConverterComponentProps {
 
 const Converters: React.FC<ConverterComponentProps> = () => (
   <Row gutter={[16, 16]}>
-    <Col md={24} lg={8}>
+    <Col xs={24} md={24} lg={8}>
       <AwgConverter />
     </Col>
 
-    <Col md={24} lg={8}>
+    <Col xs={24} md={24} lg={8}>
       <InchConverter />
     </Col>
 
-    <Col md={24} lg={8}>
+    <Col xs={24} md={24} lg={8}>
       <TempConverter />
     </Col>
   </Row>
