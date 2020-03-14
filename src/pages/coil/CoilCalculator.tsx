@@ -16,6 +16,7 @@ import {
   CALCULATE_FOR_WRAPS,
 } from '@/models/coil';
 import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
+import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -25,12 +26,13 @@ export interface CoilCalculatorProps extends ConnectProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;
+  isPro: boolean;
 }
 
 // let lastEdit: 'wraps' | 'resistance' = 'resistance';
 
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
-  const { dispatch, coil, properties, baseVoltage } = props;
+  const { dispatch, coil, properties, baseVoltage, isPro } = props;
 
   const [lastEdit, setLastEdit] = useState('resistance');
 
@@ -112,8 +114,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         </Descriptions.Item>
         {descriptionItem('Current', 'current', 'A')}
         {descriptionItem('Power', 'power', 'W')}
-        {descriptionItem('Heat', 'heat', 'mW/cm^2')}
-        {descriptionItem('Surface', 'surface', 'cm^2')}
+        {descriptionItem('Heat', 'heat', 'mW/cm²')}
+        {descriptionItem('Surface', 'surface', 'cm²')}
         {descriptionItem('Total length', 'totalLength', 'mm')}
       </Descriptions>
     </Col>
@@ -199,7 +201,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   );
   const coilSchema = (
     <Card title={<Title level={4}>Type</Title>} style={{ height: '100%' }}>
-      <ComplexWire dispatch={dispatch} complexWire={coil} path={[]} />
+      <ComplexWire dispatch={dispatch} complexWire={coil} path={[]} isPro={isPro} />
     </Card>
   );
 
@@ -217,8 +219,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   );
 };
 
-export default connect(({ coil }: ConnectState) => ({
+export default connect(({ coil, user }: ConnectState) => ({
   coil: coil.currentCoil,
   properties: coil.properties,
   baseVoltage: coil.baseVoltage,
+  isPro: isProUser(user.currentUser),
 }))(CoilCalculator);

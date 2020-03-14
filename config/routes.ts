@@ -28,7 +28,7 @@ const routes: IRoute[] = [
           {
             path: '/',
             component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
+            authority: ['user'],
             routes: [
               {
                 path: '/admin',

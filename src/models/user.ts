@@ -73,7 +73,7 @@ const UserModel: UserModelType = {
 
   effects: {
     // TODO try to unify with successfullyLogin
-    *fetchCurrent(_, { put, call, select }) {
+    *[FETCH_CURRENT](_, { put, call, select }) {
       const currentUser = yield select((state: ConnectState) => state.user.currentUser);
       if (currentUser) {
         return;
@@ -94,6 +94,7 @@ const UserModel: UserModelType = {
       } else {
         console.log(`User is already created in db ${user}`);
       }
+
       const newCurrentUser = {
         ...user,
         uid: firebaseUser.uid,
@@ -104,7 +105,7 @@ const UserModel: UserModelType = {
         currentUser: newCurrentUser,
       });
     },
-    *logout(_, { call, put }) {
+    *[LOGOUT](_, { call, put }) {
       yield call(logoutFirebase);
       yield put({
         type: `${USER}/${SET_USER}`,
@@ -116,7 +117,7 @@ const UserModel: UserModelType = {
   },
 
   reducers: {
-    setUser(state, { currentUser }): UserModelState {
+    [SET_USER](state, { currentUser }): UserModelState {
       const tags = [];
       // TODO test
       if (moment(currentUser.subscription).isAfter()) {
@@ -131,13 +132,13 @@ const UserModel: UserModelType = {
         },
       };
     },
-    setFirebaseUser(state, { firebaseUser }): UserModelState {
+    [SET_FIREBASE_USER](state, { firebaseUser }): UserModelState {
       return {
         ...(state as UserModelState),
         firebaseUser,
       };
     },
-    clearUserState(): UserModelState {
+    [CLEAR_USER_STATE](): UserModelState {
       return {};
     },
   },
