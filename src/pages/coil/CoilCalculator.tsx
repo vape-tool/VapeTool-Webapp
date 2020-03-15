@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Tag, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -30,6 +30,8 @@ export interface CoilCalculatorProps extends ConnectProps {
 }
 
 // let lastEdit: 'wraps' | 'resistance' = 'resistance';
+
+const proOnlyTag = <Tag color="blue">Pro only</Tag>;
 
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil, properties, baseVoltage, isPro } = props;
@@ -98,11 +100,18 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
 
-  const descriptionItem = (title: string, property: string, unit: string) => (
-    <Descriptions.Item key={property} label={title}>
-      {properties ? `${Number(properties[property]).toFixed(2)} ${unit}` : 'Calculation required'}
-    </Descriptions.Item>
-  );
+  const descriptionItem = (title: string, property: string, unit: string, proOnly?: boolean) => {
+    const propertyValue =
+      properties && properties[property] !== undefined
+        ? `${Number(properties[property]).toFixed(2)} ${unit}`
+        : 'Calculation required';
+
+    return (
+      <Descriptions.Item key={property} label={title}>
+        {proOnly && !isPro ? proOnlyTag : propertyValue}
+      </Descriptions.Item>
+    );
+  };
 
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
   // {{descriptionItem('Total height', 'totalHeight', 'mm')}} //TODO fix it
@@ -114,9 +123,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         </Descriptions.Item>
         {descriptionItem('Current', 'current', 'A')}
         {descriptionItem('Power', 'power', 'W')}
-        {descriptionItem('Heat', 'heat', 'mW/cm²')}
-        {descriptionItem('Surface', 'surface', 'cm²')}
-        {descriptionItem('Total length', 'totalLength', 'mm')}
+        {descriptionItem('Heat', 'heat', 'mW/cm²', true)}
+        {descriptionItem('Surface', 'surface', 'cm²', true)}
+        {descriptionItem('Total length', 'totalLength', 'mm', true)}
       </Descriptions>
     </Col>
   );
