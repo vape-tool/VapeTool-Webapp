@@ -136,3 +136,6 @@ export const safeConvert = (
 
   return nanToUndefined(value);
 };
+
+export const roundWithPrecision = (value: number, precision: number) =>
+  Math.round((value + Number.EPSILON) * 10 ** precision) / 10 ** precision;
