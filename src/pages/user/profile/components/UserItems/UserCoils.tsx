@@ -6,6 +6,7 @@ import { ConnectState } from '@/models/connect';
 import CoilView from '@/components/ItemView/CoilView';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribeCoils } from '@/services/items';
+import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userCoils: userProfile.userCoils,
@@ -19,7 +20,7 @@ class UserCoils extends UserItems<Coil, { userCoils?: Coil[] }> {
 
   renderItem = (item: Coil) => <CoilView item={item} />;
 
-  subscribe = (userId: string) => subscribeCoils(this.props.dispatch, userId);
+  subscribe = (dispatch: Dispatch, userId: string) => subscribeCoils(this.props.dispatch, userId);
 }
 
 export default UserCoils;

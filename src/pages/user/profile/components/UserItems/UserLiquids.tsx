@@ -6,6 +6,7 @@ import { ItemName, Liquid } from '@/types';
 import LiquidView from '@/components/ItemView/LiquidView';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribeLiquids } from '@/services/items';
+import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userLiquids: userProfile.userLiquids,
@@ -19,7 +20,7 @@ class UserLiquids extends UserItems<Liquid, { userLiquids?: Liquid[] }> {
 
   renderItem = (item: Liquid) => <LiquidView item={item} />;
 
-  subscribe = (userId: string) => subscribeLiquids(this.props.dispatch, userId);
+  subscribe = (dispatch: Dispatch, userId: string) => subscribeLiquids(this.props.dispatch, userId);
 }
 
 export default UserLiquids;
