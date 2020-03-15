@@ -80,14 +80,12 @@ const Profile: React.FC<UserProfileProps> = props => {
     <GridContent>
       <Row justify="space-around">
         <Col xs={24} md={24} xl={20} xxl={11}>
-          {currentUser && profile && (
-            <UserCard
-              isCurrentUser={isCurrentUser}
-              currentUser={currentUser}
-              userProfile={profile}
-              isLoading={isLoading}
-            />
-          )}
+          <UserCard
+            isCurrentUser={isCurrentUser}
+            currentUser={currentUser}
+            userProfile={profile}
+            isLoading={isLoading}
+          />
         </Col>
       </Row>
       <Row justify="space-around">

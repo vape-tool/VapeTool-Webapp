@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribePosts } from '@/services/items';
+import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userPosts: userProfile.userPosts,
@@ -19,7 +20,7 @@ class UserPosts extends UserItems<Post, { userPosts?: Post[] }> {
 
   renderItem = (item: Post) => <PostView item={item} />;
 
-  subscribe = (userId: string) => subscribePosts(this.props.dispatch, userId);
+  subscribe = (dispatch: Dispatch, userId: string) => subscribePosts(this.props.dispatch, userId);
 }
 
 export default UserPosts;
