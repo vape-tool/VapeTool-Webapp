@@ -5,13 +5,15 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { Link } from 'umi';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
 import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
+import { redirectToWithFootprint } from '@/models/global';
+import { ConnectProps } from '@/models/connect';
+import { connect } from 'dva';
 
-interface UserCardProps {
+interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
   currentUser?: CurrentUser;
   userProfile?: UserProfile;
@@ -23,6 +25,7 @@ const UserCard: React.FC<UserCardProps> = ({
   isLoading,
   isCurrentUser,
   currentUser,
+  dispatch,
 }) => {
   const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
   const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
@@ -86,12 +89,16 @@ const UserCard: React.FC<UserCardProps> = ({
           </Col>
           {isCurrentUser && (
             <Col xs={24} lg={8} className={styles.buttons}>
-              <Link to={getCurrentUserEditProfileUrl()}>
-                <Button type="default" shape="round" size="small" block>
-                  <EditOutlined />
-                  Edit profile
-                </Button>
-              </Link>
+              <Button
+                type="default"
+                shape="round"
+                size="small"
+                block
+                onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
+              >
+                <EditOutlined />
+                Edit profile
+              </Button>
 
               <Button
                 type="default"
@@ -111,4 +118,4 @@ const UserCard: React.FC<UserCardProps> = ({
   );
 };
 
-export default UserCard;
+export default connect()(UserCard);
