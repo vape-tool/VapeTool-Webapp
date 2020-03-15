@@ -111,7 +111,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
-
   const descriptionItem = (title: string, property: string, unit: string, proOnly?: boolean) => {
     const propertyValue =
       properties && properties[property] !== undefined
