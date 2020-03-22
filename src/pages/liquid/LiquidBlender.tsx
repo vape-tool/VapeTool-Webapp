@@ -18,7 +18,6 @@ import {
 } from '@/models/liquid';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
-import { unitFormatter, unitParser } from '@/utils/utils';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
@@ -90,35 +89,36 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
           <Card title={<Title level={1}>Base</Title>} style={{ height: '100%' }}>
             <Row>
               <Col xs={24}>
-                <Title level={4}>Nicotine strength</Title>
-              </Col>
-              <Col xs={24}>
-                <InputNumber
-                  min={0.0}
-                  step={1}
-                  formatter={unitFormatter(0, 'mg/ml')}
-                  parser={unitParser(0, 'mg/ml')}
-                  value={currentLiquid.baseStrength}
-                  onChange={onBaseStrengthChange}
-                />
+                <label>
+                  Nicotine strength [mg/ml]
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    precision={0}
+                    value={currentLiquid.baseStrength}
+                    onChange={onBaseStrengthChange}
+                  />
+                </label>
               </Col>
             </Row>
 
             <Title level={4}>Base Ratio</Title>
             <VgPgRatioView onRatioChange={onBaseRatioChange} ratio={currentLiquid.baseRatio} />
-            <Title level={4}>Thinner</Title>
-            <InputNumber
-              min={0.0}
-              step={1}
-              formatter={unitFormatter(1, '%')}
-              parser={unitParser(1, '%')}
-              value={currentLiquid.thinner}
-              onChange={onThinnerChange}
-            />
+
+            <label>
+              Thinner [%]
+              <InputNumber
+                min={0.0}
+                step={1}
+                precision={1}
+                value={currentLiquid.thinner}
+                onChange={onThinnerChange}
+              />
+            </label>
           </Card>
         </Col>
         <Col {...responsivenessCollections}>
-          <Card title={<Title level={1}>Flavors</Title>}>
+          <Card title={<Title level={1}>Flavors</Title>} className={styles.noPadding}>
             <FlavorTable />
             <Button
               type="dashed"
@@ -135,26 +135,28 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
           <Card title={<Title level={1}>Target</Title>} style={{ height: '100%' }}>
             <Row justify="space-between">
               <Col xs={8} xl={10}>
-                <Title level={4}>Amount</Title>
-                <InputNumber
-                  min={0.0}
-                  step={1}
-                  formatter={unitFormatter(0, 'ml')}
-                  parser={unitParser(0, 'ml')}
-                  value={currentLiquid.amount}
-                  onChange={onAmountChange}
-                />
+                <label>
+                  Amount [ml]
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    precision={0}
+                    value={currentLiquid.amount}
+                    onChange={onAmountChange}
+                  />
+                </label>
               </Col>
               <Col xs={16} xl={14}>
-                <Title level={4}>Target strength</Title>
-                <InputNumber
-                  min={0.0}
-                  step={1}
-                  formatter={unitFormatter(0, 'mg/ml')}
-                  parser={unitParser(0, 'mg/ml')}
-                  value={currentLiquid.targetStrength}
-                  onChange={onTargetStrengthChange}
-                />
+                <label>
+                  Target strength [mg/ml]
+                  <InputNumber
+                    min={0.0}
+                    step={1}
+                    precision={0}
+                    value={currentLiquid.targetStrength}
+                    onChange={onTargetStrengthChange}
+                  />
+                </label>
               </Col>
             </Row>
             <Title level={4}>Target Ratio</Title>
@@ -164,6 +166,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
         <Col {...responsivenessCollections}>
           <Card
             title={<Title level={1}>Results</Title>}
+            className={styles.noPadding}
             extra={
               <Affix offsetBottom={50}>
                 <Button

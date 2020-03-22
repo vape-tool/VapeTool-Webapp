@@ -3,7 +3,6 @@ import { WireKind } from '@vapetool/types';
 import { Button, InputNumber, notification, Row, Typography } from 'antd';
 import { WireComponentProps } from '@/components/SingleWire';
 import { awgToMm, mmToAwg } from '@/utils/math';
-import { unitFormatter, unitParser } from '@/utils/utils';
 import { dispatchSetWire } from '@/models/coil';
 
 const WireDiameter: React.FC<WireComponentProps> = props => {
@@ -63,39 +62,34 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
       </div>
       <Button onClick={onAwgPlusClick}>+</Button>
       =
-      <InputNumber
-        min={0.0}
-        step={0.1}
-        value={wire.mm}
-        formatter={unitFormatter(1, 'mm')}
-        parser={unitParser(1, 'mm')}
-        onChange={onMmChange}
-      />
+      <InputNumber min={0.0} step={0.1} value={wire.mm} precision={1} onChange={onMmChange} />
     </Row>
   ) : (
     <Row justify="start" align="bottom">
       <div>
-        <div>Width</div>
-        <InputNumber
-          min={0.0}
-          step={0.1}
-          value={wire.width}
-          formatter={unitFormatter(1, 'mm')}
-          parser={unitParser(1, 'mm')}
-          onChange={onWidthChange}
-        />
+        <label>
+          Width [mm]
+          <InputNumber
+            min={0.0}
+            step={0.1}
+            value={wire.width}
+            precision={1}
+            onChange={onWidthChange}
+          />
+        </label>
       </div>
       <Typography.Text style={{ margin: 8 }}>x</Typography.Text>
       <div>
-        <div>Height</div>
-        <InputNumber
-          min={0.0}
-          step={0.1}
-          value={wire.height}
-          formatter={unitFormatter(1, 'mm')}
-          parser={unitParser(1, 'mm')}
-          onChange={onHeightChange}
-        />
+        <label>
+          Height [mm]
+          <InputNumber
+            min={0.0}
+            step={0.1}
+            value={wire.height}
+            precision={1}
+            onChange={onHeightChange}
+          />
+        </label>
       </div>
     </Row>
   );

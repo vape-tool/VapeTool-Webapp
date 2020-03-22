@@ -1,7 +1,6 @@
 import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { unitFormatter, unitParser } from '@/utils/utils';
 
 const { Text } = Typography;
 
@@ -32,37 +31,37 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
   return (
     <Row justify="space-between">
       <Col {...responsivenessRatioVg}>
-        <Tooltip title={formatMessage({ id: 'liquid.vg' })}>
-          <Text>VG</Text>
-        </Tooltip>
-        <InputNumber
-          min={0}
-          max={100}
-          step={5}
-          formatter={unitFormatter(0, '%')}
-          parser={unitParser(0, '%')}
-          style={{ marginLeft: 8 }}
-          value={100 - ratio}
-          onChange={onRatioChange}
-        />
+        <label>
+          <Tooltip title={formatMessage({ id: 'liquid.vg' })}>
+            <Text>VG [%]</Text>
+          </Tooltip>
+          <InputNumber
+            min={0}
+            max={100}
+            step={5}
+            precision={0}
+            value={100 - ratio}
+            onChange={onRatioChange}
+          />
+        </label>
       </Col>
       <Col {...responsivenessRatioSlider}>
         <Slider step={5} min={0} max={100} onChange={onRatioChange} value={100 - ratio} />
       </Col>
       <Col {...responsivenessRatioPg}>
-        <Tooltip title={formatMessage({ id: 'liquid.pg' })}>
-          <Text>PG</Text>
-        </Tooltip>
-        <InputNumber
-          min={0}
-          max={100}
-          step={5}
-          style={{ marginLeft: 8 }}
-          formatter={unitFormatter(0, '%')}
-          parser={unitParser(0, '%')}
-          value={ratio}
-          onChange={(value: number | undefined) => value && onRatioChange(100 - value)}
-        />
+        <label>
+          <Tooltip title={formatMessage({ id: 'liquid.pg' })}>
+            <Text>PG [%]</Text>
+          </Tooltip>
+          <InputNumber
+            min={0}
+            max={100}
+            step={5}
+            precision={0}
+            value={ratio}
+            onChange={(value: number | undefined) => value && onRatioChange(100 - value)}
+          />
+        </label>
       </Col>
     </Row>
   );

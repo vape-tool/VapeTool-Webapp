@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
 import { connect } from 'dva';
 import { Coil, Properties } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
-import { unitFormatter, unitParser } from '@/utils/utils';
 import {
-  SET_INNER_DIAMETER,
-  SET_SETUP,
-  COIL,
-  SET_LEGS_LENGTH,
-  SET_RESISTANCE,
-  SET_WRAPS,
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
+  COIL,
+  SET_INNER_DIAMETER,
+  SET_LEGS_LENGTH,
+  SET_RESISTANCE,
+  SET_SETUP,
+  SET_WRAPS,
 } from '@/models/coil';
 import { CalculatorOutlined } from '@ant-design/icons';
 
@@ -26,68 +25,62 @@ export interface CoilCalculatorProps extends ConnectProps {
   baseVoltage: number;
 }
 
-let lastEdit: 'wraps' | 'resistance' | undefined;
+enum Field {
+  SETUP = 'SETUP',
+  INNER_DIAMETER = 'INNER_DIAMETER',
+  LEGS_LENGTH = 'LEGS_LENGTH',
+  RESISTANCE = 'RESISTANCE',
+  WRAPS = 'WRAPS',
+}
+
+const FIELD_TO_METHOD_MAP = {
+  [Field.SETUP]: SET_SETUP,
+  [Field.INNER_DIAMETER]: SET_INNER_DIAMETER,
+  [Field.LEGS_LENGTH]: SET_LEGS_LENGTH,
+  [Field.RESISTANCE]: SET_RESISTANCE,
+  [Field.WRAPS]: SET_WRAPS,
+};
 
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil, properties, baseVoltage } = props;
 
-  const onSetupChange = ({ key }: any) =>
-    key &&
-    dispatch({
-      type: `${COIL}/${SET_SETUP}`,
-      payload: Number(key),
-    });
+  const [lastEdit, setLastEdit] = useState();
 
-  const onInnerDiameterChange = (value: number | undefined) =>
-    value &&
-    dispatch({
-      type: `${COIL}/${SET_INNER_DIAMETER}`,
-      payload: value,
-    });
+  if (!dispatch) {
+    return <div />;
+  }
 
-  const onLegsLengthChange = (value: number | undefined) =>
-    value &&
-    dispatch({
-      type: `${COIL}/${SET_LEGS_LENGTH}`,
-      payload: value,
-    });
+  const onValueChanged = (field: Field) => (value?: number) => {
+    if (field === Field.WRAPS || field === Field.RESISTANCE) {
+      setLastEdit(field);
+    }
 
-  const onResistanceChange = (value: number | undefined) => {
-    lastEdit = 'resistance';
-    return (
-      value &&
+    if (value !== undefined && !Number.isNaN(value)) {
       dispatch({
-        type: `${COIL}/${SET_RESISTANCE}`,
+        type: `${COIL}/${FIELD_TO_METHOD_MAP[field]}`,
         payload: value,
-      })
-    );
+      });
+    }
   };
 
-  const onWrapsChange = (value: number | undefined) => {
-    lastEdit = 'wraps';
-    return (
-      value &&
-      dispatch({
-        type: `${COIL}/${SET_WRAPS}`,
-        payload: value,
-      })
-    );
-  };
+  const onSetupChange = ({ key }) => onValueChanged(Field.SETUP)(Number(key));
+  const onInnerDiameterChange = onValueChanged(Field.INNER_DIAMETER);
+  const onLegsLengthChange = onValueChanged(Field.LEGS_LENGTH);
+  const onResistanceChange = onValueChanged(Field.RESISTANCE);
+  const onWrapsChange = onValueChanged(Field.WRAPS);
 
   const calculate = (): void => {
-    if (dispatch) {
-      if (lastEdit === 'wraps') {
-        dispatch({
-          type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
-          coil,
-        });
-      } else {
-        // default
-        dispatch({
-          type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
-          coil,
-        });
-      }
+    if (lastEdit === Field.WRAPS) {
+      dispatch({
+        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
+        coil,
+      });
+    } else {
+      // default
+      dispatch({
+        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
+        coil,
+      });
     }
   };
 
@@ -117,59 +110,66 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     <Card style={{ height: '100%' }}>
       <Row>
         <Col xs={24}>
-          <Title level={4}>Setup</Title>
+          <label>
+            Setup
+            <Select defaultValue={`${coil.setup}`} onChange={onSetupChange}>
+              <Option value="1">Single Coil (1)</Option>
+              <Option value="2">Dual Coil (2)</Option>
+              <Option value="3">Triple Coil (3)</Option>
+              <Option value="4">Quad Coil (4)</Option>
+            </Select>
+          </label>
         </Col>
         <Col xs={24}>
-          <Select defaultValue={`${coil.setup}`} onChange={onSetupChange}>
-            <Option value="1">Single Coil (1)</Option>
-            <Option value="2">Dual Coil (2)</Option>
-            <Option value="3">Triple Coil (3)</Option>
-            <Option value="4">Quad Coil (4)</Option>
-          </Select>
+          <label>
+            Inner diameter of coil [mm]
+            <InputNumber
+              min={0.0}
+              step={0.1}
+              precision={1}
+              defaultValue={coil.innerDiameter}
+              value={coil.innerDiameter}
+              onChange={onInnerDiameterChange}
+            />
+          </label>
         </Col>
         <Col xs={24}>
-          <Title level={4}>Inner diameter of coil</Title>
-        </Col>
-        <Col xs={24}>
-          <InputNumber
-            min={0.0}
-            step={0.1}
-            formatter={unitFormatter(1, 'mm')}
-            parser={unitParser(1, 'mm')}
-            defaultValue={coil.innerDiameter}
-            value={coil.innerDiameter}
-            onChange={onInnerDiameterChange}
-          />
-        </Col>
-        <Col xs={24}>
-          <Title level={4}>Legs length per coil</Title>
-        </Col>
-        <Col xs={24}>
-          <InputNumber
-            min={0.0}
-            step={1}
-            formatter={unitFormatter(0, 'mm')}
-            parser={unitParser(0, 'mm')}
-            value={coil.legsLength}
-            onChange={onLegsLengthChange}
-          />
+          <label>
+            Legs length per coil [mm]
+            <InputNumber
+              min={0.0}
+              step={1}
+              precision={0}
+              value={coil.legsLength}
+              onChange={onLegsLengthChange}
+            />
+          </label>
         </Col>
         <Col xs={24}>
           <Row>
             <div style={{ marginRight: 32 }}>
-              <Title level={4}>Resistance</Title>
-              <InputNumber
-                min={0.0}
-                step={0.05}
-                formatter={unitFormatter(3, 'Ω')}
-                parser={unitParser(3, 'Ω')}
-                value={coil.resistance}
-                onChange={onResistanceChange}
-              />
+              <label>
+                Resistance [Ω]
+                <InputNumber
+                  min={0.0}
+                  step={0.05}
+                  precision={3}
+                  value={coil.resistance}
+                  onChange={onResistanceChange}
+                />
+              </label>
             </div>
             <div>
-              <Title level={4}>Wraps per coil</Title>
-              <InputNumber min={0} step={1} value={coil.wraps} onChange={onWrapsChange} />
+              <label>
+                Wraps per coil
+                <InputNumber
+                  min={0}
+                  step={1}
+                  precision={0}
+                  value={coil.wraps}
+                  onChange={onWrapsChange}
+                />
+              </label>
             </div>
           </Row>
           <br />

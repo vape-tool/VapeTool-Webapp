@@ -96,43 +96,34 @@ const initialState: CoilModelState = {
   baseVoltage: 3.7,
 };
 
+function* calculateEffect(call, coil, cancel, put, method) {
+  try {
+    const response = yield call(method, coil);
+    if (response instanceof Response) {
+      cancel();
+    } else if (response instanceof Object) {
+      yield put({
+        type: SET_COIL,
+        payload: response,
+      });
+      yield put({ type: CALCULATE_PROPERTIES, coil });
+    }
+  } catch (e) {
+    message.error(e.message);
+  }
+}
+
 const CoilModel: CoilModelType = {
   namespace: COIL,
   state: initialState,
   effects: {
-    *calculateForResistance({ coil }, { call, put, cancel }) {
-      try {
-        const response = yield call(calculateForResistance, coil);
-        if (response instanceof Response) {
-          cancel();
-        } else if (response instanceof Object) {
-          yield put({
-            type: SET_COIL,
-            payload: response,
-          });
-          yield put({ type: CALCULATE_PROPERTIES, coil });
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
+    *[CALCULATE_FOR_RESISTANCE]({ coil }, { call, put, cancel }) {
+      yield* calculateEffect(call, coil, cancel, put, calculateForResistance);
     },
-    *calculateForWraps({ coil }, { call, put, cancel }) {
-      try {
-        const response = yield call(calculateForWraps, coil);
-        if (response instanceof Response) {
-          cancel();
-        } else if (response instanceof Object) {
-          yield put({
-            type: SET_COIL,
-            payload: response,
-          });
-          yield put({ type: CALCULATE_PROPERTIES, coil });
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
+    *[CALCULATE_FOR_WRAPS]({ coil }, { call, put, cancel }) {
+      yield* calculateEffect(call, coil, cancel, put, calculateForWraps);
     },
-    *calculateProperties({ coil }, { call, put, cancel, select }) {
+    *[CALCULATE_PROPERTIES]({ coil }, { call, put, cancel, select }) {
       try {
         const baseVoltage = yield select((state: ConnectState) => state.coil.baseVoltage);
         const response = yield call(calculateProperties, coil, baseVoltage);
