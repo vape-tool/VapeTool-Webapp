@@ -6,12 +6,12 @@ import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser, dispatchLogout } from '@/models/user';
-import HeaderDropdown from '../HeaderDropdown';
-import styles from './index.less';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { redirectTo } from '@/models/global';
 import { getCurrentUserProfileUrl } from '@/places/user.places';
+import styles from './index.less';
+import HeaderDropdown from '../HeaderDropdown';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
   currentUser?: CurrentUser;

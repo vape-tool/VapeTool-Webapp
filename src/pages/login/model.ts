@@ -2,12 +2,12 @@ import { AnyAction, Dispatch, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { User, UserPermission } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
-import { isProUser, setAuthority } from './utils/utils';
 import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
 import { GLOBAL, REDIRECT_BACK } from '@/models/global';
 import { SET_USER, USER as USER_NAMESPACE } from '@/models/user';
 import { getCurrentUserEditProfileUrl } from '@/places/user.places';
+import { isProUser, setAuthority } from './utils/utils';
 
 export const USER_LOGIN = 'userLogin';
 export const CHANGE_LOGIN_STATUS = 'changeLoginStatus';
@@ -17,8 +17,13 @@ export enum UserAuthorities {
   GUEST = 'guest',
   USER = 'user',
   PRO = 'pro',
-  MDOERATOR = 'moderator',
+  MODERATOR = 'moderator',
   ADMIN = 'admin',
+}
+
+export enum LoginStatus {
+  OK = 'OK',
+  ERROR = 'ERROR',
 }
 
 export function dispatchSuccessLogin(dispatch: Dispatch) {
@@ -28,7 +33,7 @@ export function dispatchSuccessLogin(dispatch: Dispatch) {
 }
 
 export interface UserLoginModelState {
-  status?: 'ok' | 'error';
+  status?: LoginStatus;
   type?: string;
   currentAuthority?: UserAuthorities;
 }
@@ -64,11 +69,11 @@ export const userPermissionToAuthority = (
 
   switch (permission) {
     case UserPermission.ONLINE_MODERATOR:
-      return [...userRoles, UserAuthorities.MDOERATOR];
+      return [...userRoles, UserAuthorities.MODERATOR];
     case UserPermission.ONLINE_ADMIN:
       return [...userRoles, UserAuthorities.ADMIN];
     case UserPermission.ONLINE_USER:
-    case UserPermission.ONLINE_PRO_BUILDER: // do not respect user permission (it's Android only) -> check subscription as for all users
+    case UserPermission.ONLINE_PRO_BUILDER: // it's not PRO subscription, but really active user
     default:
       return userRoles;
   }
@@ -112,14 +117,13 @@ const Model: UserLoginModelType = {
       yield put({
         type: `${USER_LOGIN}/${CHANGE_LOGIN_STATUS}`,
         currentAuthority: userPermissionToAuthority(user?.permission, isProUser(user)),
-        status: 'ok',
+        status: LoginStatus.OK,
       });
     },
   },
 
   reducers: {
     [CHANGE_LOGIN_STATUS](state, { currentAuthority, status }) {
-      console.log('set authority', currentAuthority);
       setAuthority(currentAuthority);
       return {
         ...state,

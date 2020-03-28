@@ -20,15 +20,15 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
 import { dispatchFetchCurrentUser } from '@/models/user';
 import { dispatchChangeLayoutCollapsed } from '@/models/global';
 import { getUserLoginUrl, getPaymentUrl } from '@/places/user.places';
 import { UserAuthorities } from '@/pages/login/model';
+import logo from '../assets/logo.svg';
 
 const noMatch = (
   <Result
-    status="403"
+    status={403}
     title="403"
     subTitle="Sorry, you are not authorized to access this page."
     extra={
@@ -41,7 +41,7 @@ const noMatch = (
 
 const proOnly = (
   <Result
-    status="403"
+    status={403}
     title="Pro users only"
     subTitle="Sorry, you need Pro subscription to access these features."
     extra={

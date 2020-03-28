@@ -4,23 +4,22 @@ import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vape
 // @ts-ignore
 import Image from 'react-image-webp';
 import SingleWire from '@/components/SingleWire';
-import {
-  dispatchAddWire,
-  dispatchSetCoilType,
-  dispatchSetInnerDiameter,
-  Path,
-} from '@/models/coil';
-import { ConnectProps } from '@/models/connect';
+import { Path } from '@/models/coil';
 
 const { Option } = Select;
 
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint global-require: 0 react/no-array-index-key: 0 */
 
-export interface WireComponentProps extends ConnectProps {
+export interface WireComponentProps {
   complexWire: Coil | Wire;
   path: Path[];
   isPro: boolean;
+  onSetWireType: (type: string, path: Path[]) => void;
+  onSetInnerDiameter: (diameter: number) => void;
+  onAddWire: (path: Path[], wire: Wire) => void;
+  onSetWire: (path: Path[], wire: Wire) => void;
+  onDeleteWire: (path: Path[]) => void;
 }
 
 const types: { name: string; src: any; proOnly?: boolean }[] = [
@@ -91,13 +90,20 @@ const types: { name: string; src: any; proOnly?: boolean }[] = [
 ];
 
 const ComplexWire: React.FC<WireComponentProps> = props => {
-  const { complexWire, dispatch, path, isPro } = props;
+  const {
+    complexWire,
+    path,
+    isPro,
+    onSetWireType,
+    onSetInnerDiameter,
+    onAddWire,
+    onSetWire,
+    onDeleteWire,
+  } = props;
 
-  const handleTypeChange = ({ key }: any) =>
-    key && dispatchSetCoilType(dispatch, WireType[key], path);
-  const onPitchChange = (value: number | undefined) =>
-    value && dispatchSetInnerDiameter(dispatch, value);
-  const onAddWireClick = () => dispatchAddWire(dispatch, path, wireGenerator.normalWire());
+  const handleTypeChange = ({ key }: any) => key && onSetWireType(WireType[key], path);
+  const onPitchChange = (value: number | undefined) => value && onSetInnerDiameter(value);
+  const onAddWireClick = () => onAddWire(path, wireGenerator.normalWire());
 
   const imageSize = 35;
 
@@ -121,7 +127,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
               {type.name.replace(/_/g, ' ')}
               {type.proOnly && !isPro && (
                 <Tag color="blue" style={{ marginLeft: 16 }}>
-                  Pro only
+                  Pro
                 </Tag>
               )}
             </div>
@@ -148,12 +154,22 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
           <ComplexWire
             key={index}
             path={childPath}
-            dispatch={dispatch}
             complexWire={wire}
             isPro={isPro}
+            onSetWireType={handleTypeChange}
+            onSetInnerDiameter={onPitchChange}
+            onAddWire={onAddWireClick}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
           />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire
+            key={index}
+            path={childPath}
+            wire={wire}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         );
       })}
 
@@ -170,11 +186,21 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
             key={index}
             path={childPath}
             complexWire={wire}
-            dispatch={dispatch}
             isPro={isPro}
+            onSetWireType={handleTypeChange}
+            onSetInnerDiameter={onPitchChange}
+            onAddWire={onAddWireClick}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
           />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire
+            key={index}
+            path={childPath}
+            wire={wire}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         );
       })}
     </Card>

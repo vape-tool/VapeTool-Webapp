@@ -9,11 +9,11 @@ import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { User as FirebaseUser } from 'firebase';
 import { GithubOutlined } from '@ant-design/icons';
+import { getCurrentUser } from '@/utils/firebase';
+import { dispatchSuccessLogin } from '@/pages/login/model';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
-import { getCurrentUser } from '@/utils/firebase';
 import PageLoading from '../components/PageLoading';
-import { dispatchSuccessLogin } from '@/pages/login/model';
 
 export interface SignupLayoutProps extends ConnectProps {
   breadcrumbNameMap: {

@@ -3,9 +3,9 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { Card, Skeleton, Typography } from 'antd';
 import FirebaseImage from '@/components/StorageAvatar';
-import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl, ImageType } from '@/services/storage';
+import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 
 interface CoilViewState extends ItemViewState {

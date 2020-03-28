@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Button, Card, Col, Radio, Row, Tag, Typography } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
-import styles from './payment.less';
 import { CheckCircleFilled } from '@ant-design/icons';
+import styles from './payment.less';
 
 const stripeLogo = require('@/assets/stripe.png');
 const paypalLogo = require('@/assets/paypal.png');

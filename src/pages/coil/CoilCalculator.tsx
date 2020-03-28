@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Tag, Typography } from 'antd';
 import { connect } from 'dva';
-import { Coil, Properties } from '@vapetool/types';
+import { Coil, Properties, Wire } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
 import {
-  SET_INNER_DIAMETER,
-  SET_SETUP,
-  COIL,
-  SET_LEGS_LENGTH,
-  SET_RESISTANCE,
-  SET_WRAPS,
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
+  COIL,
+  dispatchAddWire,
+  dispatchDeleteWire,
+  dispatchSetCoilType,
+  dispatchSetInnerDiameter,
+  dispatchSetWire,
+  Path,
+  SET_INNER_DIAMETER,
+  SET_LEGS_LENGTH,
+  SET_RESISTANCE,
+  SET_SETUP,
+  SET_WRAPS,
 } from '@/models/coil';
 import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
 import { isProUser } from '@/pages/login/utils/utils';
@@ -99,6 +105,12 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const toggleLock = () => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
+
+  const handleWireTypeChange = (type: string, path: Path[]): void => dispatchSetCoilType(dispatch, type, path);
+  const handleInnerDiameterChange = (value: number) => dispatchSetInnerDiameter(dispatch, value);
+  const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
+  const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
+  const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
 
   const descriptionItem = (title: string, property: string, unit: string, proOnly?: boolean) => {
     const propertyValue =
@@ -210,7 +222,16 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   );
   const coilSchema = (
     <Card title={<Title level={4}>Type</Title>} style={{ height: '100%' }}>
-      <ComplexWire dispatch={dispatch} complexWire={coil} path={[]} isPro={isPro} />
+      <ComplexWire
+        complexWire={coil}
+        path={[]}
+        isPro={isPro}
+        onSetWireType={handleWireTypeChange}
+        onSetInnerDiameter={handleInnerDiameterChange}
+        onAddWire={handleAddWire}
+        onSetWire={handleSetWire}
+        onDeleteWire={handleDeleteWire}
+      />
     </Card>
   );
 
