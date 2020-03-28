@@ -6,10 +6,10 @@ import { Link } from 'umi';
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
-import { ItemView } from './ItemView';
 import { Link as LinkType, ItemName } from '@/types';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
+import { ItemView } from './ItemView';
 import styles from './styles.less';
 
 class LinkView extends ItemView<LinkType> {

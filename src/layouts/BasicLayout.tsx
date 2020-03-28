@@ -20,10 +20,10 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
 import { dispatchFetchCurrentUser } from '@/models/user';
 import { dispatchChangeLayoutCollapsed } from '@/models/global';
 import { getUserLoginUrl } from '@/places/user.places';
+import logo from '../assets/logo.svg';
 
 const noMatch = (
   <Result

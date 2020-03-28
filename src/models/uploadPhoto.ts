@@ -17,6 +17,33 @@ export const SHOW_PHOTO_CHOOSER = 'showPhotoChooser';
 export const HIDE_PHOTO_CHOOSER = 'hidePhotoChooser';
 export const SUBMIT = 'submit';
 
+export interface CroppedImage {
+  imageUrl?: string;
+  imageBlob?: Blob | File;
+  width?: number;
+  height?: number;
+}
+
+export function dispatchSetCroppedImage(
+  dispatch: Dispatch,
+  { imageUrl, imageBlob, width, height }: CroppedImage,
+) {
+  dispatch({
+    type: `${UPLOAD_PHOTO}/${SET_CROPPED_IMAGE}`,
+    url: imageUrl,
+    blob: imageBlob,
+    width,
+    height,
+  });
+}
+
+export function dispatchSetDescription(dispatch: Dispatch, description: string) {
+  dispatch({
+    type: `${UPLOAD_PHOTO}/${SET_DESCRIPTION}`,
+    description,
+  });
+}
+
 export const submitPhoto = (dispatch: Dispatch) => dispatch({ type: `${UPLOAD_PHOTO}/${SUBMIT}` });
 
 export interface UploadPhotoState {

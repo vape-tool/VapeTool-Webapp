@@ -2,12 +2,12 @@ import { AnyAction, Dispatch, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { User } from '@vapetool/types';
 import { routerRedux } from 'dva/router';
-import { setAuthority } from './utils/utils';
 import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
 import { GLOBAL, REDIRECT_BACK } from '@/models/global';
 import { SET_USER, USER } from '@/models/user';
 import { getCurrentUserEditProfileUrl } from '@/places/user.places';
+import { setAuthority } from './utils/utils';
 
 export function dispatchSuccessLogin(dispatch: Dispatch) {
   dispatch({

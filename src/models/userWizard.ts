@@ -4,8 +4,8 @@ import { message } from 'antd';
 import { getUser, updateDisplayName } from '@/services/user';
 import { ConnectState } from '@/models/connect';
 import { uploadAvatar } from '@/services/storage';
-import { GLOBAL, REDIRECT_BACK } from './global';
 import { SET_USER, USER } from '@/models/user';
+import { GLOBAL, REDIRECT_BACK } from './global';
 
 export const USER_WIZARD = 'userWizard';
 export const UPDATE_USER = 'updateUser';
