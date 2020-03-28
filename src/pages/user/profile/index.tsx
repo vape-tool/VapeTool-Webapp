@@ -5,13 +5,8 @@ import { GridContent } from '@ant-design/pro-layout';
 import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
 import { RouteChildrenProps } from 'react-router';
 import { connect } from 'dva';
-import UserPhotos from './components/UserItems/UserPhotos';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser, FETCH_CURRENT, USER } from '@/models/user';
-import UserPosts from './components/UserItems/UserPosts';
-import UserLinks from './components/UserItems/UserLinks';
-import UserLiquids from './components/UserItems/UserLiquids';
-import UserCoils from './components/UserItems/UserCoils';
 import {
   dispatchFetchUserProfile,
   FETCH_USER_PROFILE,
@@ -19,8 +14,13 @@ import {
   UserProfile,
 } from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
-import styles from './styles.less';
 import { ItemName } from '@/types';
+import UserPhotos from './components/UserItems/UserPhotos';
+import UserPosts from './components/UserItems/UserPosts';
+import UserLinks from './components/UserItems/UserLinks';
+import UserLiquids from './components/UserItems/UserLiquids';
+import UserCoils from './components/UserItems/UserCoils';
+import styles from './styles.less';
 
 interface UserProfileProps extends RouteChildrenProps {
   dispatch: Dispatch;

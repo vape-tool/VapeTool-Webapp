@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
+import { UserLoginModelState } from '@/pages/login/model';
 import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
@@ -16,7 +17,6 @@ import { UserWizardState } from './userWizard';
 import { UploadState } from './upload';
 import { UploadPostState } from './uploadPost';
 import { PreviewModelState } from './preview';
-import { UserLoginModelState } from '@/pages/login/model';
 
 export interface Loading {
   global: boolean;

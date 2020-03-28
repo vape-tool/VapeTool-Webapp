@@ -5,10 +5,10 @@ import { Card, Skeleton, Typography } from 'antd';
 import { Photo } from '@/types';
 import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
-import { ItemView } from './ItemView';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
+import { ItemView } from './ItemView';
 import styles from './styles.less';
 
 class PhotoView extends ItemView<Photo> {

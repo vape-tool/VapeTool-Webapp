@@ -4,11 +4,11 @@ import { connect } from 'dva';
 import { Link } from 'umi';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
-import { ItemView } from './ItemView';
 import { Post } from '@/types';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
+import { ItemView } from './ItemView';
 import styles from './styles.less';
 
 class PostView extends ItemView<Post> {

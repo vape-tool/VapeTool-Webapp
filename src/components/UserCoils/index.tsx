@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { WireType } from '@vapetool/types';
-import styles from '../ItemView/styles.less';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { Coil } from '@/types';
+import styles from '../ItemView/styles.less';
 
 @connect(({ user }: ConnectState) => ({
   userCoils: user.userCoils,

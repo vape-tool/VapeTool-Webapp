@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
-import { Button, message } from 'antd';
-import Dragger from 'antd/es/upload/Dragger';
+import { Button, Card, message, Upload } from 'antd';
+import { CaretLeftOutlined, CaretRightOutlined, InboxOutlined } from '@ant-design/icons';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/es/upload/interface';
-import { InboxOutlined } from '@ant-design/icons';
+
+import 'react-image-crop/dist/ReactCrop.css';
+
+const { Dragger } = Upload;
 
 interface CropAndUploadImageProps {
   maxSize?: number;
   onResizeImage?: (url: string, blob: Blob | File, width: number, height: number) => any;
   uploadHintText?: string;
+  onConfirm?: () => void;
 }
 
 interface CropAndUploadImageState {
@@ -190,12 +193,13 @@ class UploadAndCropImage extends React.PureComponent<
 
   render() {
     const { sourceImage, crop } = this.state;
-    const { uploadHintText } = this.props;
+    const { uploadHintText, onConfirm } = this.props;
+
     return (
       <>
         {!sourceImage && (
           <Dragger
-            name="upload_photo"
+            name="file"
             multiple={false}
             onChange={this.onUploadChange}
             beforeUpload={beforeUpload}
@@ -211,7 +215,7 @@ class UploadAndCropImage extends React.PureComponent<
           </Dragger>
         )}
         {sourceImage && (
-          <div>
+          <Card style={{ textAlign: 'center' }}>
             <ReactCrop
               imageStyle={{ maxHeight: '80vh' }}
               src={sourceImage!}
@@ -223,8 +227,18 @@ class UploadAndCropImage extends React.PureComponent<
               onComplete={this.makeClientCrop}
               onChange={this.onCropChange}
             />
-            <Button onClick={this.onResetSourceImage}>Reset</Button>
-          </div>
+
+            <div style={{ marginTop: 24 }}>
+              <Button type="default" onClick={this.onResetSourceImage} style={{ marginRight: 12 }}>
+                <CaretLeftOutlined />
+                Upload again
+              </Button>
+              <Button type="primary" onClick={onConfirm}>
+                Continue
+                <CaretRightOutlined />
+              </Button>
+            </div>
+          </Card>
         )}
       </>
     );
