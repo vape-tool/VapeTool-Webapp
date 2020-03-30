@@ -57,6 +57,7 @@ export default {
   'menu.exception.trigger': 'Trigger',
   'menu.account': 'Account',
   'menu.account.center': 'Account Center',
+  'menu.account.unlock-pro': 'Unlock Pro',
   'menu.account.settings': 'Account Settings',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'Logout',
