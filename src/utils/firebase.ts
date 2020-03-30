@@ -20,11 +20,11 @@ const prodDb = prodApp.database();
 const prodStorage = prodApp.storage();
 
 export function database(): firebase.database.Database {
-  return devDb;
+  return REACT_APP_ENV === 'prod' ? prodDb : devDb;
 }
 
 export function storage(): firebase.storage.Storage {
-  return devStorage;
+  return REACT_APP_ENV === 'prod' ? prodStorage : devStorage;
 }
 
 export const batteriesRef = prodDb.ref('batteries');

@@ -2,10 +2,11 @@ import React from 'react';
 import { Button, Result } from 'antd';
 import { connect } from 'dva';
 import { ConnectProps } from '@/models/connect';
-import { redirectToWithFootprint } from '@/models/global';
+import { redirectTo } from '@/models/global';
+import { getPaymentUrl } from '@/places/user.places';
 
-const CancelPayment: React.FC<ConnectProps> = (props: ConnectProps) => {
-  const onBuyAgainClick = () => redirectToWithFootprint(props.dispatch!, '/payment');
+const CancelPayment: React.FC<ConnectProps> = () => {
+  const onBuyAgainClick = () => redirectTo(getPaymentUrl());
 
   return (
     <Result
@@ -13,7 +14,7 @@ const CancelPayment: React.FC<ConnectProps> = (props: ConnectProps) => {
       title="Your operation has been cancelled"
       extra={[
         <Button type="primary" onClick={onBuyAgainClick}>
-          Buy Again
+          Go back to payment page
         </Button>,
       ]}
     />

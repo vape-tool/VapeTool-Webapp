@@ -1,48 +1,94 @@
 import * as React from 'react';
-import { Button, Card, Col, Radio, Row, Tag, Typography } from 'antd';
+import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
-
 import { CheckCircleFilled } from '@ant-design/icons';
 import styles from './payment.less';
+import { ConnectState } from '@/models/connect';
+import { connect } from 'dva';
+import { stripePromise } from '@/utils/stripe';
 
 const stripeLogo = require('@/assets/stripe.png');
 const paypalLogo = require('@/assets/paypal.png');
 const coinbaseLogo = require('@/assets/coinbase.png');
 
-const { NODE_ENV } = process.env;
-
-const LIFETIME = 'LIFETIME';
-const SUBSCRIPTION = 'SUBSCRIPTION';
+export enum SubscriptionPlan {
+  MONTHLY = 'MONTHLY',
+  ANNUALLY = 'ANNUALLY',
+  LIFETIME = 'LIFETIME',
+}
 
 // TODO: Move all the codes to some config (preferably provided from server or added in CI step)
 
 const paypalCodes = {
   // first PRODUCTION, second DEVELOPMENT
-  [LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
-  [SUBSCRIPTION]: ['PAJTMA62ZSBRW', 'WABX9M3L32NJS'],
+  [SubscriptionPlan.MONTHLY]: ['PAJTMA62ZSBRW', 'WABX9M3L32NJS'],
+  [SubscriptionPlan.ANNUALLY]: ['PVFRG3TU5V5CJ', 'LSCXT5VQJGLE8'],
+  [SubscriptionPlan.LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
 };
 
-const coinbaseCodes = [
-  '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
-  '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
-];
+const coinbaseCodes = {
+  [SubscriptionPlan.MONTHLY]: '896d1477-7851-42e6-8ce3-0e141e6057ef',
+  [SubscriptionPlan.ANNUALLY]: '5dbc5bd2-421c-4050-aab2-7231d2450675',
+  [SubscriptionPlan.LIFETIME]: '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
+};
 
-const Payment: React.FC = () => {
-  const [type, setType] = React.useState(LIFETIME);
+const stripeCodes = {
+  // first PRODUCTION, second DEVELOPMENT
+  [SubscriptionPlan.MONTHLY]: ['', 'plan_GzHJlYB6AmQMJu'],
+  [SubscriptionPlan.ANNUALLY]: ['', 'plan_GzHrBem88w5v0n'],
+  [SubscriptionPlan.LIFETIME]: ['', 'sku_GzzgBtkFBKWzqn'],
+};
+
+const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
+  const [type, setType] = React.useState(SubscriptionPlan.ANNUALLY);
   const [step, setStep] = React.useState(0);
+  const [processingPayment, setProcessingPayment] = React.useState(false);
 
-  const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || LIFETIME);
+  const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || SubscriptionPlan.ANNUALLY);
 
   const getPaypalHref = () => {
-    const code = paypalCodes[type][NODE_ENV === 'production' ? 0 : 1];
-    const sandBoxStr = NODE_ENV === 'development' ? 'sandbox.' : '';
+    const code = paypalCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1];
+    const sandBoxStr = REACT_APP_ENV === 'dev' ? 'sandbox.' : '';
 
     return `https://www.${sandBoxStr}paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=${code}`;
   };
 
   const getCoinbaseHref = () => {
-    const code = coinbaseCodes[NODE_ENV === 'production' ? 0 : 1];
+    const code = coinbaseCodes[type];
     return `https://commerce.coinbase.com/checkout/${code}`;
+  };
+
+  const handleStripeClick = async () => {
+    const stripe = await stripePromise;
+    if (!userEmail) {
+      console.error('userEmail is undefined');
+      message.error('You need to be logged in');
+    } else if (stripe) {
+      setProcessingPayment(true);
+
+      let item;
+      if (type === SubscriptionPlan.LIFETIME) {
+        item = {
+          sku: stripeCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1],
+          quantity: 1,
+        };
+      } else {
+        item = {
+          plan: stripeCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1],
+          quantity: 1,
+        };
+      }
+      const err = await stripe.redirectToCheckout({
+        items: [item],
+        customerEmail: userEmail,
+        successUrl: `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${window.location.origin}/payment/cancel`,
+      });
+
+      setProcessingPayment(false);
+      console.error(err);
+      message.error(err.error.message);
+    }
   };
 
   return (
@@ -72,21 +118,42 @@ const Payment: React.FC = () => {
           <Typography.Title level={4}>Choose you plan:</Typography.Title>
           <Radio.Group onChange={onChange} value={type}>
             <Radio
-              value={LIFETIME}
-              className={`${styles.paymentOption} ${type === LIFETIME ? styles.active : ''}`}
+              value={SubscriptionPlan.MONTHLY}
+              className={`${styles.paymentOption} ${
+                type === SubscriptionPlan.MONTHLY ? styles.active : ''
+              }`}
             >
               <div className={styles.radioText}>
-                <Tag color="green">Best option</Tag>
-                <div>Lifetime @ $4.99</div>
+                <Tag color="blue">Just trying out</Tag>
+                <div>Monthly @ $0.99</div>
               </div>
             </Radio>
             <Radio
-              value={SUBSCRIPTION}
-              className={`${styles.paymentOption} ${type === SUBSCRIPTION ? styles.active : ''}`}
+              value={SubscriptionPlan.ANNUALLY}
+              className={`${styles.paymentOption} ${
+                type === SubscriptionPlan.ANNUALLY ? styles.active : ''
+              }`}
             >
               <div className={styles.radioText}>
-                <Tag color="blue">Cheapest</Tag>
-                <div>Monthly @ $0.99</div>
+                <Tag color="green">I&apos;m in</Tag>
+                <div>Annually @ $3.99</div>
+              </div>
+            </Radio>
+            <Radio
+              value={SubscriptionPlan.LIFETIME}
+              className={`${styles.paymentOption} ${
+                type === SubscriptionPlan.LIFETIME ? styles.active : ''
+              }`}
+            >
+              <div className={styles.radioText}>
+                <Tag color="red">
+                  I{' '}
+                  <span role="img" aria-label="love">
+                    love{' '}
+                  </span>{' '}
+                  it ❤️
+                </Tag>
+                <div>Lifetime @ $6.99</div>
               </div>
             </Radio>
           </Radio.Group>
@@ -94,17 +161,22 @@ const Payment: React.FC = () => {
             Continue
           </Button>
 
-          {step > 0 && (
+          {processingPayment && (
+            <div style={{ textAlign: 'center' }}>
+              <Spin size="large" style={{ marginLeft: 8, marginRight: 8 }}/>
+            </div>
+          )}
+          {!processingPayment && step > 0 && (
             <>
               <Typography.Title level={4} style={{ marginTop: 24 }}>
                 Choose you payment method:
               </Typography.Title>
               <Row justify="center" gutter={[12, 12]} style={{ marginBottom: 24 }}>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
-                  <div className={`${styles.paymentMethod} ${styles.disabled}`}>
+                  <div className={styles.paymentMethod} onClick={handleStripeClick}>
                     <span className={styles.methodName}>Credit Card</span>
                     <span className={styles.poweredBy}>powered by</span>
-                    <img src={stripeLogo} alt="Stripe" />
+                    <img src={stripeLogo} alt="Stripe"/>
                   </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
@@ -125,7 +197,7 @@ const Payment: React.FC = () => {
                     <div className={styles.paymentMethod}>
                       <span className={styles.methodName}>Cryptocurrencies</span>
                       <span className={styles.poweredBy}>powered by</span>
-                      <img src={coinbaseLogo} alt="Coinbase" />
+                      <img src={coinbaseLogo} alt="Coinbase"/>
                     </div>
                   </a>
                 </Col>
@@ -137,7 +209,7 @@ const Payment: React.FC = () => {
             Credit cards (powered by Stripe), PayPal, and all major cryptocurrencies accepted.
           </Typography.Paragraph>
           <Typography.Paragraph className={styles.return} strong>
-            <CheckCircleFilled />
+            <CheckCircleFilled style={{ marginRight: 4 }}/>
             Your purchase is fully refundable within 14 days.
           </Typography.Paragraph>
         </Card>
@@ -146,4 +218,6 @@ const Payment: React.FC = () => {
   );
 };
 
-export default Payment;
+export default connect(({ user }: ConnectState) => ({ userEmail: user.currentUser?.email }))(
+  Payment,
+);
