@@ -233,10 +233,12 @@ class UploadAndCropImage extends React.PureComponent<
                 <CaretLeftOutlined />
                 Upload again
               </Button>
-              <Button type="primary" onClick={onConfirm}>
-                Continue
-                <CaretRightOutlined />
-              </Button>
+              {onConfirm && (
+                <Button type="primary" onClick={onConfirm}>
+                  Continue
+                  <CaretRightOutlined />
+                </Button>
+              )}
             </div>
           </Card>
         )}
