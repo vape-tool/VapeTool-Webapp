@@ -4,7 +4,6 @@ import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { LockOutlined } from '@ant-design/icons';
 // @ts-ignore
-import Image from 'react-image-webp';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
@@ -18,8 +17,10 @@ import {
   SET_VOLTAGE,
   calculate,
 } from '@/models/ohm';
+import ImageWebp from '@/components/ImageWebp';
 
-const guideImage = require('@/assets/ohm_law.webp');
+const ohmLawWebp = require('@/assets/ohm_law.webp');
+const ohmLawPng = require('@/assets/ohm_law.png');
 
 export interface OhmLawProps {
   ohm: OhmModelState;
@@ -83,7 +84,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onVoltageChange}
                   placeholder="Volts [V]"
                 />
-                {lastEdits.includes('voltage') && <LockOutlined />}
+                {lastEdits.includes('voltage') && <LockOutlined/>}
               </Form.Item>
               <Form.Item label="Resistance">
                 <InputNumber
@@ -96,7 +97,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onResistanceChange}
                   placeholder="Ohms [Ω]"
                 />
-                {lastEdits.includes('resistance') && <LockOutlined />}
+                {lastEdits.includes('resistance') && <LockOutlined/>}
               </Form.Item>
               <Form.Item label="Current">
                 <InputNumber
@@ -109,7 +110,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onCurrentChange}
                   placeholder="Amps [A]"
                 />
-                {lastEdits.includes('current') && <LockOutlined />}
+                {lastEdits.includes('current') && <LockOutlined/>}
               </Form.Item>
               <Form.Item label="Power">
                 <InputNumber
@@ -122,7 +123,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onPowerChange}
                   placeholder="Wats [W]"
                 />
-                {lastEdits.includes('power') && <LockOutlined />}
+                {lastEdits.includes('power') && <LockOutlined/>}
               </Form.Item>
               <Form.Item {...tailFormItemLayout}>
                 <ButtonGroup>
@@ -137,7 +138,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
             </Form>
           </Col>
           <Col xs={18} sm={14} md={8} lg={8}>
-            <Image webp={guideImage} style={{ width: '100%' }} />
+            <ImageWebp webp={ohmLawWebp} png={ohmLawPng} style={{ width: '100%' }} alt="Ohm Law formulas"/>
           </Col>
         </Row>
       </Card>

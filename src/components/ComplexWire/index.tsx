@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Button, Card, InputNumber, Select, Tag, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
-import Image from 'react-image-webp';
 import SingleWire from '@/components/SingleWire';
 import { Path } from '@/models/coil';
+import ImageWebp from '../ImageWebp';
 
 const { Option } = Select;
 
@@ -123,7 +123,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
             title={type.proOnly && !isPro ? 'Pro users only' : ''}
           >
             <div>
-              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
+              <ImageWebp style={{ width: imageSize, paddingRight: 10 }} webp={type.src}/>
               {type.name.replace(/_/g, ' ')}
               {type.proOnly && !isPro && (
                 <Tag color="blue" style={{ marginLeft: 16 }}>
