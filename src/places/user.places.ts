@@ -7,7 +7,7 @@ export const getPaymentUrl = (): string => `/payment`;
 
 export const getCancelSubscriptionUrl = (): string =>
   `https://www.${
-    REACT_APP_ENV === 'dev' ? 'sandbox.' : ''
+    REACT_APP_ENV !== 'prod' ? 'sandbox.' : ''
   }paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=${
-    REACT_APP_ENV === 'prod' ? 'ETUSF9JPSL3E8' : '62E6JFJB7ENUC'
+    REACT_APP_ENV !== 'prod' ? '62E6JFJB7ENUC' : 'ETUSF9JPSL3E8'
   }`;
