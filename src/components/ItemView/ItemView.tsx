@@ -19,6 +19,7 @@ import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
 import { Liquid, Coil, Post, Link, Photo, Comment, ItemName } from '@/types';
 import { DeleteOutlined, FlagOutlined, MoreOutlined } from '@ant-design/icons';
+import { getLocale } from 'umi-plugin-react/locale';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -147,7 +148,7 @@ export abstract class ItemView<
           />,
           <span>
             {moment(this.props.item.creationTime)
-              .locale('en')
+              .locale(getLocale())
               .fromNow()}
           </span>,
           <Dropdown overlay={optionsMenu}>
