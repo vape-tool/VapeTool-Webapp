@@ -11,8 +11,8 @@ import { auth } from '@/utils/firebase';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import { SUCCESS_LOGIN, USER_LOGIN, UserLoginModelState } from './model';
 import styles from './style.less';
-import { UserLoginModelState } from './model';
 
 interface LoginProps extends ConnectProps {
   userLogin?: UserLoginModelState;
@@ -21,7 +21,7 @@ interface LoginProps extends ConnectProps {
 
 @connect(({ userLogin, loading }: ConnectState) => ({
   userLogin,
-  submitting: loading.effects['userLogin/successLogin'],
+  submitting: loading.effects[`${USER_LOGIN}/${SUCCESS_LOGIN}`],
 }))
 class Login extends Component<LoginProps> {
   // eslint-disable-next-line react/sort-comp

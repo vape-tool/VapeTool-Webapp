@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Tag, Typography } from 'antd';
 import { connect } from 'dva';
-import { Coil, Properties } from '@vapetool/types';
+import { Coil, Properties, Wire } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import { unitFormatter, unitParser } from '@/utils/utils';
 import {
-  SET_INNER_DIAMETER,
-  SET_SETUP,
-  COIL,
-  SET_LEGS_LENGTH,
-  SET_RESISTANCE,
-  SET_WRAPS,
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
+  COIL,
+  dispatchAddWire,
+  dispatchDeleteWire,
+  dispatchSetCoilType,
+  dispatchSetInnerDiameter,
+  dispatchSetWire,
+  Path,
+  SET_INNER_DIAMETER,
+  SET_LEGS_LENGTH,
+  SET_RESISTANCE,
+  SET_SETUP,
+  SET_WRAPS,
 } from '@/models/coil';
 import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
+import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -25,12 +32,15 @@ export interface CoilCalculatorProps extends ConnectProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;
+  isPro: boolean;
 }
 
 // let lastEdit: 'wraps' | 'resistance' = 'resistance';
 
+const proOnlyTag = <Tag color="blue">Pro only</Tag>;
+
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
-  const { dispatch, coil, properties, baseVoltage } = props;
+  const { dispatch, coil, properties, baseVoltage, isPro } = props;
 
   const [lastEdit, setLastEdit] = useState('resistance');
 
@@ -96,11 +106,24 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
 
-  const descriptionItem = (title: string, property: string, unit: string) => (
-    <Descriptions.Item key={property} label={title}>
-      {properties ? `${Number(properties[property]).toFixed(2)} ${unit}` : 'Calculation required'}
-    </Descriptions.Item>
-  );
+  const handleWireTypeChange = (type: string, path: Path[]): void => dispatchSetCoilType(dispatch, type, path);
+  const handleInnerDiameterChange = (value: number) => dispatchSetInnerDiameter(dispatch, value);
+  const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
+  const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
+  const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
+
+  const descriptionItem = (title: string, property: string, unit: string, proOnly?: boolean) => {
+    const propertyValue =
+      properties && properties[property] !== undefined
+        ? `${Number(properties[property]).toFixed(2)} ${unit}`
+        : 'Calculation required';
+
+    return (
+      <Descriptions.Item key={property} label={title}>
+        {proOnly && !isPro ? proOnlyTag : propertyValue}
+      </Descriptions.Item>
+    );
+  };
 
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
   // {{descriptionItem('Total height', 'totalHeight', 'mm')}} //TODO fix it
@@ -112,9 +135,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         </Descriptions.Item>
         {descriptionItem('Current', 'current', 'A')}
         {descriptionItem('Power', 'power', 'W')}
-        {descriptionItem('Heat', 'heat', 'mW/cm^2')}
-        {descriptionItem('Surface', 'surface', 'cm^2')}
-        {descriptionItem('Total length', 'totalLength', 'mm')}
+        {descriptionItem('Heat', 'heat', 'mW/cm²', true)}
+        {descriptionItem('Surface', 'surface', 'cm²', true)}
+        {descriptionItem('Total length', 'totalLength', 'mm', true)}
       </Descriptions>
     </Col>
   );
@@ -199,7 +222,16 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   );
   const coilSchema = (
     <Card title={<Title level={4}>Type</Title>} style={{ height: '100%' }}>
-      <ComplexWire dispatch={dispatch} complexWire={coil} path={[]} />
+      <ComplexWire
+        complexWire={coil}
+        path={[]}
+        isPro={isPro}
+        onSetWireType={handleWireTypeChange}
+        onSetInnerDiameter={handleInnerDiameterChange}
+        onAddWire={handleAddWire}
+        onSetWire={handleSetWire}
+        onDeleteWire={handleDeleteWire}
+      />
     </Card>
   );
 
@@ -217,8 +249,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   );
 };
 
-export default connect(({ coil }: ConnectState) => ({
+export default connect(({ coil, user }: ConnectState) => ({
   coil: coil.currentCoil,
   properties: coil.properties,
   baseVoltage: coil.baseVoltage,
+  isPro: isProUser(user.currentUser),
 }))(CoilCalculator);

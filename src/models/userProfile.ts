@@ -12,7 +12,7 @@ import {
   getUserPhotos,
   getUserPosts,
 } from '@/services/userCenter';
-import moment from 'moment';
+import { isProUser } from '@/pages/login/utils/utils';
 
 export const USER_PROFILE = 'userProfile';
 export const SET_USER_PROFILE = 'setUserProfile';
@@ -134,7 +134,7 @@ const UserProfileModel: UserProfileModelType = {
     [SET_USER_PROFILE](state, { user }) {
       const tags = [];
       // TODO test
-      const isPro = user.subscription && moment(user.subscription).isAfter();
+      const isPro = isProUser(user);
       if (isPro) {
         tags.push({ key: 'pro', label: 'Pro' });
       }
