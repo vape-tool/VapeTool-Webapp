@@ -1,5 +1,5 @@
-import { Input, List, Menu, Modal } from 'antd';
 import React from 'react';
+import { Input, List, Menu, Modal } from 'antd';
 import { DataSnapshot, DatabaseReference, likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
@@ -145,7 +145,11 @@ export abstract class ItemView<
             text={`${this.state.commentsCount || 0}`}
             key="list-vertical-message"
           />,
-          <span>{moment(this.props.item.creationTime).fromNow()}</span>,
+          <span>
+            {moment(this.props.item.creationTime)
+              .locale('en')
+              .fromNow()}
+          </span>,
           <Dropdown overlay={optionsMenu}>
             <MoreOutlined />
           </Dropdown>,

@@ -25,7 +25,11 @@ class UserLiquids extends Component<Partial<UserModelState>> {
             <Card className={styles.card} hoverable>
               <Card.Meta title={item.name} description={item.description} />
               <div className={styles.cardItemContent}>
-                <span>{moment(item.lastTimeModified).fromNow()}</span>
+                <span>
+                  {moment(item.lastTimeModified)
+                    .locale('en')
+                    .fromNow()}
+                </span>
               </div>
             </Card>
           </List.Item>
