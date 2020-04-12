@@ -1,6 +1,6 @@
 import React from 'react';
 import { Editor, EditorState } from 'draft-js';
-import { Button, Card, Col, Input } from 'antd';
+import { Button, Card, Input } from 'antd';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
@@ -12,6 +12,7 @@ import {
   SUBMIT_LINK,
   SUBMIT_POST,
 } from '@/models/uploadPost';
+import { ShareAltOutlined } from '@ant-design/icons/lib';
 
 interface UploadPostProps {
   currentUser?: CurrentUser;
@@ -30,17 +31,18 @@ const UploadPost: React.FC<UploadPostProps> = props => {
   const onPostClick = () => dispatchSubmit(dispatch, type === 'post' ? SUBMIT_POST : SUBMIT_LINK);
 
   return (
-    <Card>
-      <Col>
-        <Input placeholder={type === 'post' ? 'Title' : 'URL'} onChange={onTitleChange} />
-        <br />
-        <br />
-        <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange} />
-        <Editor editorState={editorState} onChange={setEditorState} />
-        <Button type="primary" onClick={onPostClick}>
-          Post
-        </Button>
-      </Col>
+    <Card style={{ textAlign: 'center' }}>
+      <Input
+        placeholder={type === 'post' ? 'Title' : 'URL'}
+        onChange={onTitleChange}
+        style={{ marginBottom: 24 }}
+      />
+      <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange} />
+      <Editor editorState={editorState} onChange={setEditorState} />
+      <Button type="primary" onClick={onPostClick}>
+        Publish post
+        <ShareAltOutlined />
+      </Button>
     </Card>
   );
 };

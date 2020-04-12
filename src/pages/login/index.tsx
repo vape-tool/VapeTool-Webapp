@@ -11,8 +11,8 @@ import { auth } from '@/utils/firebase';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import styles from './style.less';
 import { SUCCESS_LOGIN, USER_LOGIN, UserLoginModelState } from './model';
+import styles from './style.less';
 
 interface LoginProps extends ConnectProps {
   userLogin?: UserLoginModelState;
