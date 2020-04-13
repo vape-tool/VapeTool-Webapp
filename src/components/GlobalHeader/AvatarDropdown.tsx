@@ -1,17 +1,17 @@
 import { Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser, dispatchLogout } from '@/models/user';
-import HeaderDropdown from '../HeaderDropdown';
-import styles from './index.less';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { redirectTo } from '@/models/global';
-import { getCurrentUserProfileUrl } from '@/places/user.places';
+import { getCurrentUserProfileUrl, getPaymentUrl } from '@/places/user.places';
+import styles from './index.less';
+import HeaderDropdown from '../HeaderDropdown';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
   currentUser?: CurrentUser;
@@ -28,6 +28,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
         return;
       case 'profile':
         redirectTo(getCurrentUserProfileUrl());
+        return;
+      case 'unlockPro':
+        redirectTo(getPaymentUrl());
         return;
       default:
         console.error('Invalid dropdown menu item');
@@ -52,6 +55,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
       <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
     );
   }
+
+  // TODO show unlockPro only when !isPro(currentUser) is false
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
@@ -60,6 +65,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
       )}
+      <Menu.Item key="unlockPro">
+        <UnlockOutlined />
+        <FormattedMessage id="menu.account.unlock-pro" defaultMessage="unlock pro" />
+      </Menu.Item>
       {menu && <Menu.Divider />}
       <Menu.Item key="logout">
         <LogoutOutlined />

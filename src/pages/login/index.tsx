@@ -7,12 +7,12 @@ import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { routerRedux } from 'dva/router';
-import { UserLoginModelState } from './model';
-import styles from './style.less';
 import { auth } from '@/utils/firebase';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import { SUCCESS_LOGIN, USER_LOGIN, UserLoginModelState } from './model';
+import styles from './style.less';
 
 interface LoginProps extends ConnectProps {
   userLogin?: UserLoginModelState;
@@ -21,7 +21,7 @@ interface LoginProps extends ConnectProps {
 
 @connect(({ userLogin, loading }: ConnectState) => ({
   userLogin,
-  submitting: loading.effects['userLogin/successLogin'],
+  submitting: loading.effects[`${USER_LOGIN}/${SUCCESS_LOGIN}`],
 }))
 class Login extends Component<LoginProps> {
   // eslint-disable-next-line react/sort-comp

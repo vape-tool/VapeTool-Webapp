@@ -61,7 +61,7 @@ function initializeAvatar(avatarUrl: string, userId: string) {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', avatarUrl);
   xhr.responseType = 'blob';
-  xhr.onreadystatechange = function () {
+  xhr.onreadystatechange = function() {
     // Only run if the request is complete
     if (xhr.readyState !== 4) return;
 

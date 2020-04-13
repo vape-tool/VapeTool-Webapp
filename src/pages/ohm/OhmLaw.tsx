@@ -4,7 +4,6 @@ import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { LockOutlined } from '@ant-design/icons';
 // @ts-ignore
-import Image from 'react-image-webp';
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
@@ -18,8 +17,10 @@ import {
   SET_VOLTAGE,
   calculate,
 } from '@/models/ohm';
+import ImageWebp from '@/components/ImageWebp';
 
-const guideImage = require('@/assets/ohm_law.webp');
+const ohmLawWebp = require('@/assets/ohm_law.webp');
+const ohmLawPng = require('@/assets/ohm_law.png');
 
 export interface OhmLawProps {
   ohm: OhmModelState;
@@ -137,7 +138,12 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
             </Form>
           </Col>
           <Col xs={18} sm={14} md={8} lg={8}>
-            <Image webp={guideImage} style={{ width: '100%' }} />
+            <ImageWebp
+              webp={ohmLawWebp}
+              png={ohmLawPng}
+              style={{ width: '100%' }}
+              alt="Ohm Law formulas"
+            />
           </Col>
         </Row>
       </Card>

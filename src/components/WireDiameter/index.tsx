@@ -3,16 +3,15 @@ import { WireKind } from '@vapetool/types';
 import { Button, InputNumber, notification, Row, Typography } from 'antd';
 import { WireComponentProps } from '@/components/SingleWire';
 import { awgToMm, mmToAwg } from '@/utils/math';
-import { dispatchSetWire } from '@/models/coil';
 
 const WireDiameter: React.FC<WireComponentProps> = props => {
-  const { wire, dispatch, path } = props;
+  const { wire, path, onSetWire } = props;
   const awg = Math.round(mmToAwg(wire.mm));
 
   const onAwgMinusClick = () => {
     if (awg > 2) {
       wire.mm = awgToMm(awg - 1);
-      dispatchSetWire(dispatch, path, wire);
+      onSetWire(path, wire);
     } else {
       notification.info({
         message: 'Can not decrease AWG',
@@ -24,7 +23,7 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
   const onAwgPlusClick = () => {
     if (awg < 61) {
       wire.mm = awgToMm(awg + 1);
-      dispatchSetWire(dispatch, path, wire);
+      onSetWire(path, wire);
     } else {
       notification.info({
         message: 'Can not increase AWG',
@@ -36,19 +35,19 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
   const onMmChange = (value: number | undefined) => {
     if (value === undefined) return;
     wire.mm = value;
-    dispatchSetWire(dispatch, path, wire);
+    onSetWire(path, wire);
   };
 
   const onWidthChange = (value: number | undefined) => {
     if (value === undefined) return;
     wire.width = value;
-    dispatchSetWire(dispatch, path, wire);
+    onSetWire(path, wire);
   };
 
   const onHeightChange = (value: number | undefined) => {
     if (value === undefined) return;
     wire.height = value;
-    dispatchSetWire(dispatch, path, wire);
+    onSetWire(path, wire);
   };
 
   return wire.kind === WireKind.ROUND ? (

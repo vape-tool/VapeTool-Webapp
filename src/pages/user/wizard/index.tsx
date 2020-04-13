@@ -43,7 +43,7 @@ const UserWizard: React.FC<{
           <Card style={{ maxWidth: 500 }} title="Setup user">
             <div className={styles.avatarHolder}>
               <div onClick={() => showNewAvatarChooser(dispatch)}>
-                <div>
+                <div style={{ textAlign: 'center' }}>
                   {newAvatarUrl && <img alt="avatar" src={newAvatarUrl} width={200} />}
                   {!newAvatarUrl && (
                     <FirebaseImage

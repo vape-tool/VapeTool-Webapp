@@ -2,21 +2,21 @@ import * as React from 'react';
 import { Button, Card, Col, Row, Select, Typography } from 'antd';
 import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
 import { getResistancePerMeter } from '@/utils/math';
-import { dispatchDeleteWire, dispatchSetWire, Path } from '@/models/coil';
+import { Path } from '@/models/coil';
 import WireDiameter from '@/components/WireDiameter';
 import RoundIcon from '@/assets/RoundIcon';
 import DiameterIcon from '@/assets/DiameterIcon';
 import CoreIcon from '@/assets/CoreIcon';
 import OuterIcon from '@/assets/OuterIcon';
-import { Dispatch } from 'redux';
-import { MinusOutlined, CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 export interface WireComponentProps {
   wire: Wire;
   path: Path[];
-  dispatch: Dispatch;
+  onSetWire: (path: Path[], wire: Wire) => void;
+  onDeleteWire: (path: Path[]) => void;
 }
 
 const materials: Material[] = [
@@ -51,19 +51,20 @@ const materials: Material[] = [
 ].sort((a, b) => Number(a.id) - Number(b.id));
 
 const SingleWire: React.FC<WireComponentProps> = props => {
-  const { wire, path, dispatch } = props;
+  const { wire, path, onSetWire, onDeleteWire } = props;
 
   const handleMaterialChange = (materialId: string): void => {
     const material = materials.find(({ id }) => id === materialId);
     if (material !== undefined) {
       wire.material = material;
-      dispatchSetWire(dispatch, path, wire);
+      onSetWire(path, wire);
     }
   };
-  const onDeleteClick = () => dispatchDeleteWire(dispatch, path);
+  const onDeleteClick = () => onDeleteWire(path);
+  // dispatchDeleteWire(dispatch, path);
   const onChangeKindClick = () => {
     wire.kind = wire.kind === WireKind.ROUND ? WireKind.RIBBON : WireKind.ROUND;
-    dispatchSetWire(dispatch, path, wire);
+    onSetWire(path, wire);
   };
 
   return (
@@ -108,7 +109,7 @@ const SingleWire: React.FC<WireComponentProps> = props => {
         <DiameterIcon style={{ color: 'primary' }} />
         Diameter of wire
       </Typography.Title>
-      <WireDiameter path={path} dispatch={dispatch} wire={wire} />
+      <WireDiameter path={path} wire={wire} onSetWire={onSetWire} onDeleteWire={onDeleteWire} />
       <br />
       <Typography.Text disabled={!wire.totalLength}>
         {wire.totalLength

@@ -1,19 +1,22 @@
 import { CurrentUser } from '@/models/user';
 import { UserProfile } from '@/models/userProfile';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { Link } from 'umi';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
 import styles from './styles.less';
+import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
+import { redirectToWithFootprint } from '@/models/global';
+import { ConnectProps } from '@/models/connect';
+import { connect } from 'dva';
 
-interface UserCardProps {
+interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
-  currentUser: CurrentUser;
-  userProfile: UserProfile;
+  currentUser?: CurrentUser;
+  userProfile?: UserProfile;
   isLoading: boolean;
 }
 
@@ -22,8 +25,17 @@ const UserCard: React.FC<UserCardProps> = ({
   isLoading,
   isCurrentUser,
   currentUser,
+  dispatch,
 }) => {
+  const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
+  const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
   const userTags = profile?.tags || [];
+  useEffect(() => {
+    if (profile) {
+      getUserTotalContentCount(profile.uid).then(setUserContentCount);
+      getUserTotalLikesCount(profile.uid).then(setUserLikesCount);
+    }
+  }, [profile]);
 
   if (isLoading) {
     return (
@@ -38,22 +50,22 @@ const UserCard: React.FC<UserCardProps> = ({
   return (
     <Card bordered={false} className={styles.card}>
       <div className={styles.avatarHolder}>
-        <FirebaseImage type={ImageType.USER} id={profile.uid} size={150} />
+        <FirebaseImage type={ImageType.USER} id={profile ? profile.uid : ''} size={150} />
       </div>
 
       <div className={styles.content}>
         <Row>
           <Col xs={24} lg={isCurrentUser ? 16 : 24}>
-            <h4 className={styles.name}>{profile.name}</h4>
+            <h4 className={styles.name}>{profile ? profile.name : ''}</h4>
             {isCurrentUser && (
               <div className={styles.detail}>
                 <p>
                   <i className={styles.title} />
-                  {currentUser.title}
+                  {currentUser ? currentUser.title : ''}
                 </p>
                 <p>
                   <i className={styles.group} />
-                  {currentUser.group}
+                  {currentUser ? currentUser.group : ''}
                 </p>
               </div>
             )}
@@ -66,23 +78,27 @@ const UserCard: React.FC<UserCardProps> = ({
 
             <div className={styles.infos}>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>451</span>
-                <span className={styles.label}>photos</span>
+                <span className={styles.value}>{userContentCount || ''}</span>
+                <span className={styles.label}>posts</span>
               </div>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>123</span>
-                <span className={styles.label}>coils</span>
+                <span className={styles.value}>{userLikesCount || ''}</span>
+                <span className={styles.label}>likes</span>
               </div>
             </div>
           </Col>
           {isCurrentUser && (
             <Col xs={24} lg={8} className={styles.buttons}>
-              <Link to={getCurrentUserEditProfileUrl()}>
-                <Button type="default" shape="round" size="small" block>
-                  <EditOutlined />
-                  Edit profile
-                </Button>
-              </Link>
+              <Button
+                type="default"
+                shape="round"
+                size="small"
+                block
+                onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
+              >
+                <EditOutlined />
+                Edit profile
+              </Button>
 
               <Button
                 type="default"
@@ -102,4 +118,4 @@ const UserCard: React.FC<UserCardProps> = ({
   );
 };
 
-export default UserCard;
+export default connect()(UserCard);

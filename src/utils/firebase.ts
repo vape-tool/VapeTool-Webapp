@@ -20,11 +20,11 @@ const prodDb = prodApp.database();
 const prodStorage = prodApp.storage();
 
 export function database(): firebase.database.Database {
-  return devDb;
+  return REACT_APP_ENV === 'prod' ? prodDb : devDb;
 }
 
 export function storage(): firebase.storage.Storage {
-  return devStorage;
+  return REACT_APP_ENV === 'prod' ? prodStorage : devStorage;
 }
 
 export const batteriesRef = prodDb.ref('batteries');
@@ -99,6 +99,8 @@ export import DataSnapshot = firebase.database.DataSnapshot;
 export import DatabaseReference = firebase.database.Reference;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import StorageReference = firebase.storage.Reference;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import Query = firebase.database.Query;
 
 let userLoaded: boolean = false;
 

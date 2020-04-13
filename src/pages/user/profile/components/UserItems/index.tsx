@@ -2,23 +2,35 @@ import { List } from 'antd';
 import React, { Component } from 'react';
 import styles from '@/components/ItemView/styles.less';
 import PageLoading from '@/components/PageLoading';
-import { CloudContent, dispatchFetchUserItems, UserProfileModelState } from '@/models/userProfile';
+import { UserProfileModelState } from '@/models/userProfile';
 import { ConnectProps } from '@/models/connect';
+import { Item, ItemName } from '@/types';
+import { Dispatch } from 'redux';
 
-export interface UserItemsProps extends Partial<UserProfileModelState>, Partial<ConnectProps> {
+export interface UserItemsProps extends Partial<UserProfileModelState>, ConnectProps {
   loadingItems?: boolean;
 }
 
-abstract class UserItems<T, P extends UserItemsProps> extends Component<P> {
-  abstract what: CloudContent;
+abstract class UserItems<T extends Item, P> extends Component<P & UserItemsProps> {
+  // eslint-disable-next-line react/sort-comp
+  abstract what: ItemName;
 
   abstract items: () => T[];
 
   abstract renderItem: (item: T, index: number) => React.ReactNode;
 
-  // eslint-disable-next-line react/sort-comp
+  abstract subscribe: (dispatch: Dispatch, userId: string) => () => void;
+
+  offItemsSubscription: (() => void) | undefined;
+
   componentDidMount(): void {
-    dispatchFetchUserItems(this.props.dispatch!, this.what);
+    if (this.props.userProfile?.uid) {
+      this.offItemsSubscription = this.subscribe(this.props.dispatch, this.props.userProfile?.uid);
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.offItemsSubscription) this.offItemsSubscription();
   }
 
   render() {

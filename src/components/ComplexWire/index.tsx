@@ -1,28 +1,28 @@
 import * as React from 'react';
-import { Button, Card, InputNumber, Select, Typography } from 'antd';
+import { Button, Card, InputNumber, Select, Tag, Typography } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
 // @ts-ignore
-import Image from 'react-image-webp';
 import SingleWire from '@/components/SingleWire';
-import {
-  dispatchAddWire,
-  dispatchSetCoilType,
-  dispatchSetInnerDiameter,
-  Path,
-} from '@/models/coil';
-import { ConnectProps } from '@/models/connect';
+import { Path } from '@/models/coil';
+import ImageWebp from '../ImageWebp';
 
 const { Option } = Select;
 
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint global-require: 0 react/no-array-index-key: 0 */
 
-export interface WireComponentProps extends ConnectProps {
+export interface WireComponentProps {
   complexWire: Coil | Wire;
   path: Path[];
+  isPro: boolean;
+  onSetWireType: (type: string, path: Path[]) => void;
+  onSetInnerDiameter: (diameter: number) => void;
+  onAddWire: (path: Path[], wire: Wire) => void;
+  onSetWire: (path: Path[], wire: Wire) => void;
+  onDeleteWire: (path: Path[]) => void;
 }
 
-const types: { name: string; src: any }[] = [
+const types: { name: string; src: any; proOnly?: boolean }[] = [
   {
     name: WireType[WireType.NORMAL],
     src: require('@/assets/coil_type_normal.webp'),
@@ -50,44 +50,60 @@ const types: { name: string; src: any }[] = [
   {
     name: WireType[WireType.ALIEN_CLAPTON],
     src: require('@/assets/coil_type_alien_clapton.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.TIGER],
     src: require('@/assets/coil_type_tiger.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.STAPLE],
     src: require('@/assets/coil_type_staple.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.STAGGERED_CLAPTON],
     src: require('@/assets/coil_type_staggered_clapton.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.STAGGERED_FUSED_CLAPTON],
     src: require('@/assets/coil_type_staggered_fused_clapton.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.STAPLE_STAGGERED_FUSED_CLAPTON],
     src: require('@/assets/coil_type_staple_staggered_fused_clapton.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.FRAMED_STAPLE],
     src: require('@/assets/coil_type_juggernaut.webp'),
+    proOnly: true,
   },
   {
     name: WireType[WireType.CUSTOM],
     src: require('@/assets/coil_type_custom.webp'),
+    proOnly: true,
   },
 ];
-const ComplexWire: React.FC<WireComponentProps> = props => {
-  const { complexWire, dispatch, path } = props;
 
-  const handleTypeChange = ({ key }: any) =>
-    key && dispatchSetCoilType(dispatch, WireType[key], path);
-  const onPitchChange = (value: number | undefined) =>
-    value && dispatchSetInnerDiameter(dispatch, value);
-  const onAddWireClick = () => dispatchAddWire(dispatch, path, wireGenerator.normalWire());
+const ComplexWire: React.FC<WireComponentProps> = props => {
+  const {
+    complexWire,
+    path,
+    isPro,
+    onSetWireType,
+    onSetInnerDiameter,
+    onAddWire,
+    onSetWire,
+    onDeleteWire,
+  } = props;
+
+  const handleTypeChange = ({ key }: any) => key && onSetWireType(WireType[key], path);
+  const onPitchChange = (value: number | undefined) => value && onSetInnerDiameter(value);
+  const onAddWireClick = () => onAddWire(path, wireGenerator.normalWire());
 
   const imageSize = 35;
 
@@ -96,14 +112,24 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
       <Select
         size="large"
         defaultValue={WireType[WireType.NORMAL]}
-        style={{ width: 220 }}
+        style={{ width: 400 }}
         onChange={handleTypeChange}
       >
         {types.map(type => (
-          <Option key={type.name} value={type.name.replace(/_/g, ' ')}>
+          <Option
+            key={type.name}
+            value={type.name.replace(/_/g, ' ')}
+            disabled={type.proOnly && !isPro}
+            title={type.proOnly && !isPro ? 'Pro users only' : ''}
+          >
             <div>
-              <Image style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
+              <ImageWebp style={{ width: imageSize, paddingRight: 10 }} webp={type.src} />
               {type.name.replace(/_/g, ' ')}
+              {type.proOnly && !isPro && (
+                <Tag color="blue" style={{ marginLeft: 16 }}>
+                  Pro
+                </Tag>
+              )}
             </div>
           </Option>
         ))}
@@ -125,9 +151,25 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         const childPath = path.slice();
         childPath.push({ style: WireStyle.CORE, index });
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} dispatch={dispatch} complexWire={wire} />
+          <ComplexWire
+            key={index}
+            path={childPath}
+            complexWire={wire}
+            isPro={isPro}
+            onSetWireType={handleTypeChange}
+            onSetInnerDiameter={onPitchChange}
+            onAddWire={onAddWireClick}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire
+            key={index}
+            path={childPath}
+            wire={wire}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         );
       })}
 
@@ -140,9 +182,25 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         childPath.push({ style: WireStyle.OUTER, index });
 
         return isComplex(wire) ? (
-          <ComplexWire key={index} path={childPath} complexWire={wire} dispatch={dispatch} />
+          <ComplexWire
+            key={index}
+            path={childPath}
+            complexWire={wire}
+            isPro={isPro}
+            onSetWireType={handleTypeChange}
+            onSetInnerDiameter={onPitchChange}
+            onAddWire={onAddWireClick}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         ) : (
-          <SingleWire key={index} path={childPath} wire={wire} dispatch={dispatch} />
+          <SingleWire
+            key={index}
+            path={childPath}
+            wire={wire}
+            onSetWire={onSetWire}
+            onDeleteWire={onDeleteWire}
+          />
         );
       })}
     </Card>

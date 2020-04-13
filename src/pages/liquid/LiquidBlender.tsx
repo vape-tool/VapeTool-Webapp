@@ -21,6 +21,7 @@ import NewFlavorModal from '@/components/NewFlavorModal';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
+import LiquidResultsChart from './LiquidResultsChart';
 
 const { Title } = Typography;
 
@@ -198,6 +199,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   : []
               }
             />
+
+            <div className={styles.chartPanel}>
+              {results && <LiquidResultsChart results={results} />}
+            </div>
           </Card>
         </Col>
       </Row>
