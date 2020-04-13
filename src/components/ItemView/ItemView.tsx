@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Input, List, Menu, Modal } from 'antd';
 import { DataSnapshot, DatabaseReference, likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
@@ -14,12 +15,10 @@ import {
 import CommentView from '@/components/ItemView/CommentView';
 import { LikeIconText } from '@/components/LikeIconText';
 import { CommentIconText } from '@/components/CommentIconText';
-import moment from 'moment';
 import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
 import { Liquid, Coil, Post, Link, Photo, Comment, ItemName } from '@/types';
 import { DeleteOutlined, FlagOutlined, MoreOutlined } from '@ant-design/icons';
-import { getLocale } from 'umi-plugin-react/locale';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -146,11 +145,7 @@ export abstract class ItemView<
             text={`${this.state.commentsCount || 0}`}
             key="list-vertical-message"
           />,
-          <span>
-            {moment(this.props.item.creationTime)
-              .locale(getLocale())
-              .fromNow()}
-          </span>,
+          <span>{moment(this.props.item.creationTime).fromNow()}</span>,
           <Dropdown overlay={optionsMenu}>
             <MoreOutlined />
           </Dropdown>,
