@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Tag, Typography } from 'antd';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -17,8 +18,8 @@ import {
   SET_LEGS_LENGTH,
   SET_RESISTANCE,
   SET_SETUP,
-  SET_WRAPS,
   SET_VOLTAGE,
+  SET_WRAPS,
 } from '@/models/coil';
 import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
 import { isProUser } from '@/pages/login/utils/utils';
@@ -107,14 +108,17 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
-  const descriptionItem = (title: string, property: string, unit: string, proOnly?: boolean) => {
+  const descriptionItem = (property: string, unit: string, proOnly?: boolean) => {
     const propertyValue =
       properties && properties[property] !== undefined
         ? `${Number(properties[property]).toFixed(2)} ${unit}`
         : 'Calculation required';
 
     return (
-      <Descriptions.Item key={property} label={title}>
+      <Descriptions.Item
+        key={property}
+        label={<FormattedMessage id={`coilCalculator.properties.${property}`} />}
+      >
         {proOnly && !isPro ? proOnlyTag : propertyValue}
       </Descriptions.Item>
     );
@@ -125,11 +129,11 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const coilProperties = (
     <Col xs={24}>
       <Descriptions title="Properties" layout="horizontal" column={1}>
-        {descriptionItem('Current', 'current', 'A')}
-        {descriptionItem('Power', 'power', 'W')}
-        {descriptionItem('Heat', 'heat', 'mW/cm²', true)}
-        {descriptionItem('Surface', 'surface', 'cm²', true)}
-        {descriptionItem('Total length', 'totalLength', 'mm', true)}
+        {descriptionItem('current', 'A')}
+        {descriptionItem('power', 'W')}
+        {descriptionItem('heat', 'mW/cm²', true)}
+        {descriptionItem('surface', 'cm²', true)}
+        {descriptionItem('totalLength', 'mm', true)}
       </Descriptions>
     </Col>
   );
@@ -138,7 +142,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       <Row>
         <Col xs={24}>
           <label>
-            Setup
+            <FormattedMessage id="coilCalculator.inputs.setup" />
             <Select defaultValue={`${coil.setup}`} onChange={onSetupChange}>
               <Option value="1">Single Coil (1)</Option>
               <Option value="2">Dual Coil (2)</Option>
@@ -150,7 +154,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
         <Col xs={24}>
           <label>
-            Inner diameter of coil [mm]
+            <FormattedMessage id="coilCalculator.inputs.innerDiameter" />
             <InputNumber
               min={0.0}
               step={0.1}
@@ -164,7 +168,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
         <Col xs={24}>
           <label>
-            Legs length per coil [mm]
+            <FormattedMessage id="coilCalculator.inputs.legsLength" />
             <InputNumber
               min={0.0}
               step={1}
@@ -179,7 +183,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           <Row>
             <div style={{ marginRight: 32 }}>
               <label>
-                Resistance [Ω]
+                <FormattedMessage id="coilCalculator.inputs.resistance" />
                 <InputNumber
                   min={0.0}
                   step={0.05}
@@ -194,7 +198,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             </div>
             <div>
               <label>
-                Wraps per coil
+                <FormattedMessage id="coilCalculator.inputs.wraps" />
                 <InputNumber
                   min={0}
                   step={1}
@@ -211,7 +215,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         </Col>
         <Col xs={24}>
           <label>
-            Base voltage [V] (default: 3.7V)
+            <FormattedMessage id="coilCalculator.inputs.baseVoltage" />
             <InputNumber
               min={0.0}
               step={0.1}
@@ -225,7 +229,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
         <Col xs={24} style={{ marginTop: 20 }}>
           <Button type="primary" icon={<CalculatorOutlined />} size="large" onClick={calculate}>
-            Calculate
+            <FormattedMessage id="coilCalculator.inputs.calculate" />
           </Button>
         </Col>
 

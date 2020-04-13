@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Button, Card, InputNumber, Select, Tag, Typography } from 'antd';
+import { Button, Card, InputNumber, Select, Tag } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
-// @ts-ignore
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import SingleWire from '@/components/SingleWire';
 import { Path } from '@/models/coil';
 import ImageWebp from '../ImageWebp';
@@ -136,14 +136,16 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
       </Select>
       {complexWire.pitch > 0 && (
         <div>
-          <Typography.Title level={4}>Pitch</Typography.Title>
-          <InputNumber
-            min={0.0}
-            step={0.1}
-            defaultValue={complexWire.pitch}
-            value={complexWire.pitch}
-            onChange={onPitchChange}
-          />
+          <label>
+            <FormattedMessage id="coilCalculator.inputs.pitch" />
+            <InputNumber
+              min={0.0}
+              step={0.1}
+              defaultValue={complexWire.pitch}
+              value={complexWire.pitch}
+              onChange={onPitchChange}
+            />
+          </label>
         </div>
       )}
 
