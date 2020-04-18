@@ -13,6 +13,7 @@ import {
   SUBMIT_POST,
 } from '@/models/uploadPost';
 import { ShareAltOutlined } from '@ant-design/icons/lib';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 interface UploadPostProps {
   currentUser?: CurrentUser;
@@ -33,14 +34,18 @@ const UploadPost: React.FC<UploadPostProps> = props => {
   return (
     <Card style={{ textAlign: 'center' }}>
       <Input
-        placeholder={type === 'post' ? 'Title' : 'URL'}
+        placeholder={formatMessage({ id: type === 'post' ? 'misc.title' : 'misc.url' })}
         onChange={onTitleChange}
         style={{ marginBottom: 24 }}
       />
-      <Input.TextArea allowClear placeholder="Text (optional)" onChange={onTextChange} />
+      <Input.TextArea
+        allowClear
+        placeholder={formatMessage({ id: 'misc.optionalText' })}
+        onChange={onTextChange}
+      />
       <Editor editorState={editorState} onChange={setEditorState} />
       <Button type="primary" onClick={onPostClick}>
-        Publish post
+        <FormattedMessage id="user.actions.publishPost" />
         <ShareAltOutlined />
       </Button>
     </Card>

@@ -19,6 +19,7 @@ import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
 import { Liquid, Coil, Post, Link, Photo, Comment, ItemName } from '@/types';
 import { DeleteOutlined, FlagOutlined, MoreOutlined } from '@ant-design/icons';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -85,8 +86,12 @@ export abstract class ItemView<
       onPressEnter={this.postComment}
       value={this.state.draftComment}
       onChange={this.onChangeCommentText}
-      placeholder="Add a comment..."
-      suffix={<a onClick={this.postComment}>Post</a>}
+      placeholder={formatMessage({ id: 'user.addComment' })}
+      suffix={
+        <a onClick={this.postComment}>
+          <FormattedMessage id="user.actions.post" />
+        </a>
+      }
     />
   );
 
@@ -114,8 +119,9 @@ export abstract class ItemView<
           disabled={!this.props.user || this.props.user.uid === this.props.item.author.uid}
         >
           <FlagOutlined />
-          Report
+          <FormattedMessage id="user.actions.report" />
         </Menu.Item>
+
         <Menu.Item
           key="delete"
           onClick={this.onDeleteClick}
@@ -126,7 +132,7 @@ export abstract class ItemView<
           }
         >
           <DeleteOutlined />
-          Delete
+          <FormattedMessage id="misc.actions.delete" />
         </Menu.Item>
       </Menu>
     );
@@ -181,10 +187,10 @@ export abstract class ItemView<
     const { what } = this;
     const { dispatch, item } = this.props;
     Modal.confirm({
-      title: 'Are you sure delete this photo ?',
-      okText: 'Remove',
+      title: formatMessage({ id: 'user.modalTitles.deletePost' }),
+      okText: formatMessage({ id: 'misc.actions.delete' }),
       okType: 'danger',
-      cancelText: 'Cancel',
+      cancelText: formatMessage({ id: 'misc.actions.cancel' }),
       onOk() {
         dispatchDelete(dispatch, what, item.uid);
         dispatchSelectItem(dispatch, undefined);
@@ -196,10 +202,10 @@ export abstract class ItemView<
     const { what } = this;
     const { dispatch, item } = this.props;
     Modal.confirm({
-      title: 'Are you sure delete this comment ?',
-      okText: 'Remove',
+      title: formatMessage({ id: 'user.modalTitles.deleteComment' }),
+      okText: formatMessage({ id: 'misc.actions.delete' }),
       okType: 'danger',
-      cancelText: 'Cancel',
+      cancelText: formatMessage({ id: 'misc.actions.cancel' }),
       onOk() {
         dispatchDeleteComment(dispatch, what, comment.uid, item.uid);
         dispatchSelectItem(dispatch, undefined);

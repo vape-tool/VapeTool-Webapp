@@ -6,6 +6,7 @@ import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/es/upload/interface';
 
 import 'react-image-crop/dist/ReactCrop.css';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const { Dragger } = Upload;
 
@@ -207,10 +208,11 @@ class UploadAndCropImage extends React.PureComponent<
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-text">
+              <FormattedMessage id="user.uploadPhoto.clickOrDrag" />
+            </p>
             <p className="ant-upload-hint">
-              {uploadHintText ||
-                'Please upload only vape related photos. Breaking those rules will result in account suspension.'}
+              {uploadHintText || formatMessage({ id: 'user.uploadPhoto.rules' })}
             </p>
           </Dragger>
         )}
@@ -231,11 +233,11 @@ class UploadAndCropImage extends React.PureComponent<
             <div style={{ marginTop: 24 }}>
               <Button type="default" onClick={this.onResetSourceImage} style={{ marginRight: 12 }}>
                 <CaretLeftOutlined />
-                Upload again
+                <FormattedMessage id="user.uploadPhoto.uploadAgain" />
               </Button>
               {onConfirm && (
                 <Button type="primary" onClick={onConfirm}>
-                  Continue
+                  <FormattedMessage id="misc.actions.continue" />
                   <CaretRightOutlined />
                 </Button>
               )}

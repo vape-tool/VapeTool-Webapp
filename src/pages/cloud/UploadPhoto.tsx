@@ -13,6 +13,7 @@ import {
 import { ConnectProps, ConnectState } from '@/models/connect';
 import UploadAndCropImage from '@/components/UploadAndCropImage';
 import { CaretLeftOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 interface UploadPhotoProps extends ConnectProps {
   uploadPhoto: UploadPhotoState;
@@ -66,7 +67,7 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
           fontFamily: 'Proxima Nova Bold,Helvetica Neue,Helvetica,Arial,sans-serif',
           border: 0,
         }}
-        placeholder="Say something about this photo"
+        placeholder={formatMessage({ id: 'user.uploadPhoto.saySomething' })}
         onChange={onDescriptionChange}
         value={description}
       />
@@ -82,10 +83,10 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
       <div style={{ marginTop: 24 }}>
         <Button type="default" onClick={() => setIsCropping(true)} style={{ marginRight: 12 }}>
           <CaretLeftOutlined />
-          Crop again
+          <FormattedMessage id="user.uploadPhoto.cropAgain" />
         </Button>
         <Button type="primary" onClick={postPhoto}>
-          Publish post
+          <FormattedMessage id="user.actions.publishPost" />
           <ShareAltOutlined />
         </Button>
       </div>

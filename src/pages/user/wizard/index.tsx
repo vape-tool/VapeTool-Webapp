@@ -18,6 +18,7 @@ import {
 import { redirectBack } from '@/models/global';
 import { ImageType } from '@/services/storage';
 import { SaveOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;
@@ -40,7 +41,7 @@ const UserWizard: React.FC<{
       <Row>
         <Col xs={0} md={4} lg={6} xl={8} />
         <Col xs={24} md={16} lg={14} xl={10}>
-          <Card style={{ maxWidth: 500 }} title="Setup user">
+          <Card style={{ maxWidth: 500 }} title={<FormattedMessage id="user.setupUser" />}>
             <div className={styles.avatarHolder}>
               <div onClick={() => showNewAvatarChooser(dispatch)}>
                 <div style={{ textAlign: 'center' }}>
@@ -78,13 +79,16 @@ const UserWizard: React.FC<{
             </div>
             <div style={{ textAlign: 'right' }}>
               <ButtonGroup>
-                <Button onClick={() => redirectBack(dispatch)}>Cancel</Button>
+                <Button onClick={() => redirectBack(dispatch)}>
+                  <FormattedMessage id="misc.actions.cancel" />
+                </Button>
+
                 <Button
                   icon={<SaveOutlined />}
                   type="primary"
                   onClick={() => dispatchUpdateUser(dispatch)}
                 >
-                  Save
+                  <FormattedMessage id="misc.actions.save" />
                 </Button>
               </ButtonGroup>
             </div>

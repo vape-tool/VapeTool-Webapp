@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { Flavor } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 interface NewFlavorModalProps extends ConnectProps {
   showNewFlavorModal?: boolean;
@@ -39,8 +40,8 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
     <Modal
       centered
       visible={showNewFlavorModal || false}
-      title="Add new flavor"
-      okText="Add"
+      title={<FormattedMessage id="liquid.actions.addFlavor" />}
+      okText={<FormattedMessage id="misc.actions.add" />}
       onCancel={onCancel}
       onOk={() => form.submit()}
     >
@@ -56,27 +57,31 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
       >
         <Form.Item
           name="name"
-          label="Name"
+          label={<FormattedMessage id="misc.name" />}
           rules={[{ required: true, message: 'Please input the flavor name!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="manufacturer" label="Manufacturer">
+
+        <Form.Item name="manufacturer" label={<FormattedMessage id="misc.manufacturer" />}>
           <Input type="textarea" />
         </Form.Item>
+
         <Form.Item
           name="percentage"
-          label="Percentage"
+          label={<FormattedMessage id="misc.units.long.percentage" />}
           rules={[{ required: true, message: 'Please input the flavor percentage!' }]}
         >
           <InputNumber min={0} max={100} step={1} />
         </Form.Item>
-        <Form.Item name="price" label="Price per 10ml">
+
+        <Form.Item name="price" label={<FormattedMessage id="liquid.pricePer10ml" />}>
           <InputNumber min={0} step={0.1} />
         </Form.Item>
+
         <Form.Item
           name="ratio"
-          label="PG Ratio"
+          label={<FormattedMessage id="liquid.pgRatioPerc" />}
           rules={[{ required: true, message: 'Please input the flavor ratio!' }]}
         >
           <InputNumber min={0} max={100} step={10} />

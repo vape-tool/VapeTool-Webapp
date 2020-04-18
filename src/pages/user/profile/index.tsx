@@ -1,6 +1,7 @@
-import { Col, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Col, Row } from 'antd';
 import { Dispatch } from 'redux';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { GridContent } from '@ant-design/pro-layout';
 import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
 import { RouteChildrenProps } from 'react-router';
@@ -99,21 +100,27 @@ const Profile: React.FC<UserProfileProps> = props => {
                     className={`${activeClass(ItemName.PHOTO)}`}
                   >
                     <CameraOutlined className={styles.icon} />
-                    <span className={styles.label}>Photos</span>
+                    <span className={styles.label}>
+                      <FormattedMessage id="user.photos" />
+                    </span>
                   </li>
                   <li
                     onClick={() => setTabKey(ItemName.POST)}
                     className={`${activeClass(ItemName.POST)}`}
                   >
                     <MessageOutlined className={styles.icon} />
-                    <span className={styles.label}>Posts</span>
+                    <span className={styles.label}>
+                      <FormattedMessage id="user.posts" />
+                    </span>
                   </li>
                   <li
                     onClick={() => setTabKey(ItemName.LINK)}
                     className={`${activeClass(ItemName.LINK)}`}
                   >
                     <LinkOutlined className={styles.icon} />
-                    <span className={styles.label}>Links</span>
+                    <span className={styles.label}>
+                      <FormattedMessage id="user.links" />
+                    </span>
                   </li>
                   <li
                     onClick={() => setTabKey(ItemName.COIL)}
@@ -125,7 +132,9 @@ const Profile: React.FC<UserProfileProps> = props => {
                         alt="coils"
                       />
                     </i>
-                    <span className={styles.label}>Coils</span>
+                    <span className={styles.label}>
+                      <FormattedMessage id="user.coils" />
+                    </span>
                   </li>
                   <li
                     onClick={() => setTabKey(ItemName.LIQUID)}
@@ -134,10 +143,12 @@ const Profile: React.FC<UserProfileProps> = props => {
                     <i className={styles.icon}>
                       <img
                         src="https://web.vapetool.app/img/menu_icons/menu_liquid_blender.svg"
-                        alt="coils"
+                        alt="liquids"
                       />
                     </i>
-                    <span className={styles.label}>Liquids</span>
+                    <span className={styles.label}>
+                      <FormattedMessage id="user.liquids" />
+                    </span>
                   </li>
                 </ul>
               </div>
