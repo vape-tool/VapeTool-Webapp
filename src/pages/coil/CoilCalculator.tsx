@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, Descriptions, InputNumber, Row, Select, Tag, Typography } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Select, Typography } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
+import PropertyItem from '@/components/PropertyItem';
 import {
   CALCULATE_FOR_RESISTANCE,
   CALCULATE_FOR_WRAPS,
@@ -53,8 +54,6 @@ const FIELD_TO_METHOD_MAP = {
   [Field.VOLTAGE]: SET_VOLTAGE,
 };
 
-const proOnlyTag = <Tag color="blue">Pro only</Tag>;
-
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil, properties, baseVoltage, isPro } = props;
 
@@ -82,7 +81,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const onLegsLengthChange = onValueChanged(Field.LEGS_LENGTH);
   const onResistanceChange = onValueChanged(Field.RESISTANCE);
   const onWrapsChange = onValueChanged(Field.WRAPS);
-  const onBaseVoltageChange = onValueChanged(Field.VOLTAGE);
 
   const calculate = (): void => {
     if (lastEdit === Field.WRAPS) {
@@ -99,6 +97,11 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     }
   };
 
+  const onBaseVoltageChange = (value?: number) => {
+    onValueChanged(Field.VOLTAGE)(value);
+    calculate();
+  };
+
   const toggleLock = () => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
@@ -108,33 +111,36 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
-  const descriptionItem = (property: string, unit: string, proOnly?: boolean) => {
-    const propertyValue =
-      properties && properties[property] !== undefined
-        ? `${Number(properties[property]).toFixed(2)} ${unit}`
-        : 'Calculation required';
-
-    return (
-      <Descriptions.Item
-        key={property}
-        label={<FormattedMessage id={`coilCalculator.properties.${property}`} />}
-      >
-        {proOnly && !isPro ? proOnlyTag : propertyValue}
-      </Descriptions.Item>
-    );
-  };
 
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
   // {{descriptionItem('Total height', 'totalHeight', 'mm')}} //TODO fix it
   const coilProperties = (
     <Col xs={24}>
-      <Descriptions title="Properties" layout="horizontal" column={1}>
-        {descriptionItem('current', 'A')}
-        {descriptionItem('power', 'W')}
-        {descriptionItem('heat', 'mW/cm²', true)}
-        {descriptionItem('surface', 'cm²', true)}
-        {descriptionItem('totalLength', 'mm', true)}
-      </Descriptions>
+      <PropertyItem
+        property="baseVoltage"
+        value={baseVoltage}
+        unit="V"
+        editable
+        onChangeValue={onBaseVoltageChange}
+        isPro={isPro}
+      />
+      <PropertyItem property="current" value={properties?.current} unit="A" isPro={isPro} />
+      <PropertyItem property="power" value={properties?.power} unit="W" isPro={isPro} />
+      <PropertyItem property="heat" value={properties?.heat} unit="mW/cm²" proOnly isPro={isPro} />
+      <PropertyItem
+        property="surface"
+        value={properties?.surface}
+        unit="cm²"
+        proOnly
+        isPro={isPro}
+      />
+      <PropertyItem
+        property="totalLength"
+        value={properties?.totalLength}
+        unit="mm"
+        proOnly
+        isPro={isPro}
+      />
     </Col>
   );
   const coilSetup = (
@@ -213,19 +219,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             </div>
           </Row>
         </Col>
-        <Col xs={24}>
-          <label>
-            <FormattedMessage id="coilCalculator.inputs.baseVoltage" />
-            <InputNumber
-              min={0.0}
-              step={0.1}
-              precision={1}
-              defaultValue={baseVoltage}
-              value={baseVoltage}
-              onChange={onBaseVoltageChange}
-            />
-          </label>
-        </Col>
 
         <Col xs={24} style={{ marginTop: 20 }}>
           <Button type="primary" icon={<CalculatorOutlined />} size="large" onClick={calculate}>
@@ -239,6 +232,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       </Row>
     </Card>
   );
+
   const coilSchema = (
     <Card title={<Title level={4}>Type</Title>} style={{ height: '100%' }}>
       <ComplexWire
