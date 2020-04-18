@@ -4,6 +4,10 @@ import menu from './en-US/menu';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
+import misc from './en-US/misc';
+import converters from './en-US/converters';
+import user from './en-US/user';
+import battery from './en-US/battery';
 import liquid from './en-US/liquid';
 import coilCalculator from './en-US/coilCalculator';
 
@@ -20,6 +24,10 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+  ...misc,
+  ...converters,
+  ...user,
+  ...battery,
   ...liquid,
   ...coilCalculator,
 };

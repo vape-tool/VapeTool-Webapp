@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
 import { SwapOutlined } from '@ant-design/icons';
@@ -21,11 +22,11 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
   const onChangeFahrenheit = dispatchChangeValue(dispatch, SET_FAHRENHEIT_IN_TEMPERATURE);
 
   return (
-    <Card title="Convert Celsius to Fahrenheit">
+    <Card title={<FormattedMessage id="converters.titles.temp" />}>
       <Row justify="space-between">
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
-            Celsius [°C]
+            <FormattedMessage id="misc.units.long.celsius" />
             <InputNumber
               size="large"
               type="number"
@@ -34,7 +35,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               value={celsius}
               precision={2}
               onChange={onChangeCelsius}
-              placeholder="Celsius"
+              placeholder={formatMessage({ id: 'misc.units.short.celsius' })}
               className={styles.input}
             />
           </label>
@@ -46,7 +47,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
 
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
-            Fahrenheit [°F]
+            <FormattedMessage id="misc.units.long.fahrenheit" />
             <InputNumber
               size="large"
               type="number"
@@ -54,7 +55,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               value={fahrenheit}
               precision={1}
               onChange={onChangeFahrenheit}
-              placeholder="Fahrenheit"
+              placeholder={formatMessage({ id: 'misc.units.short.fahrenheit' })}
               className={styles.input}
             />
           </label>

@@ -1,6 +1,6 @@
-import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
 import React from 'react';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const { Text } = Typography;
 
@@ -33,7 +33,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
       <Col {...responsivenessRatioVg}>
         <label>
           <Tooltip title={formatMessage({ id: 'liquid.vg' })}>
-            <Text>VG [%]</Text>
+            <Text>
+              <FormattedMessage id="liquid.vgShort" />
+            </Text>
           </Tooltip>
           <InputNumber
             min={0}
@@ -51,7 +53,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
       <Col {...responsivenessRatioPg}>
         <label>
           <Tooltip title={formatMessage({ id: 'liquid.pg' })}>
-            <Text>PG [%]</Text>
+            <Text>
+              <FormattedMessage id="liquid.pgShort" />
+            </Text>
           </Tooltip>
           <InputNumber
             min={0}

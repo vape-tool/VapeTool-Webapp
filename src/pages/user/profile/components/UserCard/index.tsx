@@ -7,11 +7,12 @@ import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
-import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
 import { connect } from 'dva';
+import { FormattedMessage } from 'umi-plugin-react/locale';
+import styles from './styles.less';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
@@ -78,12 +79,20 @@ const UserCard: React.FC<UserCardProps> = ({
 
             <div className={styles.infos}>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>{userContentCount || ''}</span>
-                <span className={styles.label}>posts</span>
+                <span className={styles.value}>
+                  {userContentCount !== undefined ? userContentCount : ''}
+                </span>
+                <span className={styles.label}>
+                  <FormattedMessage id="user.posts" />
+                </span>
               </div>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>{userLikesCount || ''}</span>
-                <span className={styles.label}>likes</span>
+                <span className={styles.value}>
+                  {userLikesCount !== undefined ? userLikesCount : ''}
+                </span>
+                <span className={styles.label}>
+                  <FormattedMessage id="user.likes" />
+                </span>
               </div>
             </div>
           </Col>
@@ -97,7 +106,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
               >
                 <EditOutlined />
-                Edit profile
+                <FormattedMessage id="user.actions.editProfile" />
               </Button>
 
               <Button
@@ -108,7 +117,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 target="_blank"
                 href={getCancelSubscriptionUrl()}
               >
-                Cancel subscription
+                <FormattedMessage id="user.actions.cancelSubscription" />
               </Button>
             </Col>
           )}
