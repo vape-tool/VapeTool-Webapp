@@ -1,7 +1,7 @@
 import React from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
 import { connect } from 'dva';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
@@ -32,30 +32,31 @@ export interface LiquidBlenderProps {
 
 const resultColumns = [
   {
-    title: 'Ingredient',
+    title: <FormattedMessage id="liquid.ingredient" />,
     dataIndex: 'name',
   },
   {
-    title: 'Percentage',
+    title: <FormattedMessage id="misc.units.percentage" />,
     dataIndex: 'percentage',
   },
   {
-    title: 'Amount',
+    title: <FormattedMessage id="liquid.amount" />,
     dataIndex: 'ml',
   },
   {
-    title: 'Drops',
+    title: <FormattedMessage id="liquid.drops" />,
     dataIndex: 'drips',
   },
   {
-    title: 'Weight',
+    title: <FormattedMessage id="misc.properties.weight" />,
     dataIndex: 'weight',
   },
   {
-    title: 'Price',
+    title: <FormattedMessage id="misc.properties.price" />,
     dataIndex: 'price',
   },
 ];
+
 const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   dispatch,
   liquid: { currentLiquid, results },
@@ -87,10 +88,18 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
     <div>
       <Row style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
         <Col {...responsivenessProps}>
-          <Card title={<Title level={1}>Base</Title>} style={{ height: '100%' }}>
+          <Card
+            title={
+              <Title level={1}>
+                <FormattedMessage id="liquid.titles.base" />
+              </Title>
+            }
+            style={{ height: '100%' }}
+          >
             <Row>
               <Col xs={24}>
                 <label>
+                <FormattedMessage id="liquid.nicotineStrength" />
                   Nicotine strength [mg/ml]
                   <InputNumber
                     min={0.0}
@@ -103,11 +112,13 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               </Col>
             </Row>
 
-            <Title level={4}>Base Ratio</Title>
+            <Title level={4}>
+              <FormattedMessage id="liquid.baseRatio" />
+            </Title>
             <VgPgRatioView onRatioChange={onBaseRatioChange} ratio={currentLiquid.baseRatio} />
 
             <label>
-              Thinner [%]
+            <FormattedMessage id="liquid.thinner" />
               <InputNumber
                 min={0.0}
                 step={1}
@@ -118,9 +129,18 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             </label>
           </Card>
         </Col>
+
         <Col {...responsivenessCollections}>
-          <Card title={<Title level={1}>Flavors</Title>} className={styles.noPadding}>
+          <Card
+            className={styles.noPadding}
+            title={
+              <Title level={1}>
+                <FormattedMessage id="liquid.titles.flavors" />
+              </Title>
+            }
+          >
             <FlavorTable />
+
             <Button
               type="dashed"
               icon={<PlusOutlined />}
@@ -128,16 +148,24 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               style={{ width: '100%' }}
               onClick={showNewFlavorModal}
             >
-              Add Flavor
+              <FormattedMessage id="liquid.actions.addFlavor" />
             </Button>
           </Card>
         </Col>
+
         <Col {...responsivenessProps}>
-          <Card title={<Title level={1}>Target</Title>} style={{ height: '100%' }}>
+          <Card
+            title={
+              <Title level={1}>
+                <FormattedMessage id="liquid.titles.target" />
+              </Title>
+            }
+            style={{ height: '100%' }}
+          >
             <Row justify="space-between">
               <Col xs={8} xl={10}>
                 <label>
-                  Amount [ml]
+                  <FormattedMessage id="liquid.amount" />
                   <InputNumber
                     min={0.0}
                     step={1}
@@ -147,9 +175,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   />
                 </label>
               </Col>
+
               <Col xs={16} xl={14}>
                 <label>
-                  Target strength [mg/ml]
+                  <FormattedMessage id="liquid.targetStrength" />
                   <InputNumber
                     min={0.0}
                     step={1}
@@ -160,14 +189,22 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                 </label>
               </Col>
             </Row>
-            <Title level={4}>Target Ratio</Title>
+
+            <Title level={4}>
+              <FormattedMessage id="liquid.targetRatio" />
+            </Title>
             <VgPgRatioView onRatioChange={onTargetRatioChange} ratio={currentLiquid.targetRatio} />
           </Card>
         </Col>
+
         <Col {...responsivenessCollections}>
           <Card
-            title={<Title level={1}>Results</Title>}
             className={styles.noPadding}
+            title={
+              <Title level={1}>
+                <FormattedMessage id="liquid.titles.results" />
+              </Title>
+            }
             extra={
               <Affix offsetBottom={50}>
                 <Button
@@ -177,7 +214,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   size="large"
                   onClick={onCalculateClick}
                 >
-                  Calculate
+                  <FormattedMessage id="misc.actions.calculate" />
                 </Button>
               </Affix>
             }

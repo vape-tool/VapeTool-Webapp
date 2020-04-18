@@ -9,6 +9,7 @@ import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectBattery, dispatchToggleEditBattery } from '@/models/batteries';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 interface BatteryPreviewDrawerProps {
   dispatch: Dispatch;
@@ -92,63 +93,92 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
 
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Brand" content={brand} />
-        </Col>
-        <Col span={12}>
-          <DescriptionItem title="Model" content={model} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={8}>
-          <DescriptionItem title="Chemistry" content={chemistry} />
-        </Col>
-        <Col span={8}>
-          <DescriptionItem title="Size" content={size} />
-        </Col>
-        <Col span={8}>
-          <DescriptionItem title="Capacity" content={capacity} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <DescriptionItem title="Stable current" content={stableCurrent} />
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.brand" />}
+            content={brand}
+          />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title="Min. stable resistance"
+            title={<FormattedMessage id="battery.properties.model" />}
+            content={model}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={8}>
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.chemistry" />}
+            content={chemistry}
+          />
+        </Col>
+        <Col span={8}>
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.size" />}
+            content={size}
+          />
+        </Col>
+        <Col span={8}>
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.capacity" />}
+            content={capacity}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.stableCurrent" />}
+            content={stableCurrent}
+          />
+        </Col>
+        <Col span={12}>
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.minStableResistance" />}
             content={(voltage / stableCurrent).toFixed(3)}
           />
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Max vaping current" content={maxVapingCurrent} />
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.maxVapingCurrent" />}
+            content={maxVapingCurrent}
+          />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title="Min. vaping resistance"
+            title={<FormattedMessage id="battery.properties.minVapingResistance" />}
             content={(voltage / maxVapingCurrent).toFixed(3)}
           />
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Nominal voltage" content={voltage} />
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.nominalVoltage" />}
+            content={voltage}
+          />
         </Col>
         <Col span={12}>
-          <DescriptionItem title="Cut-off" content={cutOff} />
+          <DescriptionItem
+            title={<FormattedMessage id="battery.properties.cutOff" />}
+            content={cutOff}
+          />
         </Col>
       </Row>
       <Divider />
 
       <Row>
         <Col xs={12}>
-          <span style={pStyle}>Links</span>
+          <span style={pStyle}>
+            <FormattedMessage id="battery.links" />
+          </span>
         </Col>
         {user && user.permission >= UserPermission.ONLINE_MODERATOR && (
           <Col xs={12}>
             <Button type="link" onClick={toggleEditBattery}>
-              Edit affiliates
+              <FormattedMessage id="battery.actions.editAffiliates" />
             </Button>
           </Col>
         )}
@@ -168,7 +198,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
               rel="noopener noreferrer"
               target="_blank"
             >
-              Read review
+              <FormattedMessage id="battery.actions.readReview" />
             </a>
           </Col>
         )}
@@ -176,7 +206,6 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
         {!editBattery &&
           affiliate &&
           Array.from(affiliate, ([key, value]) => {
-            console.log(`${key} ${value}`);
             return (
               <Col xs="auto">
                 <a
@@ -190,7 +219,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
                   target="_blank"
                   href={value}
                 >
-                  Buy on {key}
+                  <FormattedMessage id="battery.actions.buyOn" values={{ key }} />
                 </a>
               </Col>
             );

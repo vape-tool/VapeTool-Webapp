@@ -10,6 +10,7 @@ import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
 import { Link } from 'umi';
 import { MoreOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 interface CommentViewProps {
   user?: CurrentUser;
@@ -33,11 +34,11 @@ const CommentView: React.FC<CommentViewProps> = props => {
       {user !== undefined &&
         (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR) && (
           <Menu.Item onClick={deleteComment} key="delete">
-            Delete
+            <FormattedMessage id="misc.actions.delete" />
           </Menu.Item>
         )}
       <Menu.Item onClick={() => onReply(props.comment)} key="reply">
-        Reply
+        <FormattedMessage id="user.actions.reply" />
       </Menu.Item>
     </Menu>
   );

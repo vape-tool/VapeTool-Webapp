@@ -7,6 +7,7 @@ import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
 import { Tab, changeTab } from '@/models/upload';
 import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 interface UploadProps {
   currentTab: string;
@@ -26,7 +27,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <PictureOutlined />
-                Image
+                <FormattedMessage id="user.photo" />
               </span>
             }
             key={Tab.PHOTO}
@@ -37,7 +38,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <FormOutlined />
-                Post
+                <FormattedMessage id="user.post" />
               </span>
             }
             key={Tab.POST}
@@ -48,7 +49,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <LinkOutlined />
-                Link
+                <FormattedMessage id="user.link" />
               </span>
             }
             key={Tab.LINK}

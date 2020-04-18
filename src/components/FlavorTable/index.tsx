@@ -6,6 +6,7 @@ import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { LiquidModelState, dispatchSetFlavor } from '@/models/liquid';
 import { DeleteOutlined, EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
 
@@ -102,31 +103,31 @@ const EditableTable: React.FC<EditableTableProps> = props => {
 
   const columns: any[] = [
     {
-      title: 'Name',
+      title: <FormattedMessage id="misc.name" />,
       dataIndex: 'name',
       width: '20%',
       editable: true,
     },
     {
-      title: 'Manufacturer',
+      title: <FormattedMessage id="misc.manufacturer" />,
       dataIndex: 'manufacturer',
       width: '17%',
       editable: true,
     },
     {
-      title: 'Percentage [%]',
+      title: <FormattedMessage id="misc.units.long.percentage" />,
       dataIndex: 'percentage',
       width: '17%',
       editable: true,
     },
     {
-      title: 'Price per 10ml [$]',
+      title: <FormattedMessage id="liquid.pricePer10ml" />,
       dataIndex: 'price',
       width: '17%',
       editable: true,
     },
     {
-      title: 'PG Ratio [%]',
+      title: <FormattedMessage id="liquid.pgRatioPerc" />,
       dataIndex: 'ratio',
       width: '17%',
       editable: true,

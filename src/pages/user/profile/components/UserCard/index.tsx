@@ -17,6 +17,7 @@ import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
 import { connect } from 'dva';
 import { isProUser } from '@/pages/login/utils/utils';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
@@ -26,12 +27,12 @@ interface UserCardProps extends ConnectProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({
-  userProfile: profile,
-  isLoading,
-  isCurrentUser,
-  currentUser,
-  dispatch,
-}) => {
+                                             userProfile: profile,
+                                             isLoading,
+                                             isCurrentUser,
+                                             currentUser,
+                                             dispatch,
+                                           }) => {
   const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
   const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
   const userTags = profile?.tags || [];
@@ -83,12 +84,20 @@ const UserCard: React.FC<UserCardProps> = ({
 
             <div className={styles.infos}>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>{userContentCount || ''}</span>
-                <span className={styles.label}>posts</span>
+                <span className={styles.value}>
+                  {userContentCount !== undefined ? userContentCount : ''}
+                </span>
+                <span className={styles.label}>
+                  <FormattedMessage id="user.posts" />
+                </span>
               </div>
               <div className={styles.infoGroup}>
-                <span className={styles.value}>{userLikesCount || ''}</span>
-                <span className={styles.label}>likes</span>
+                <span className={styles.value}>
+                  {userLikesCount !== undefined ? userLikesCount : ''}
+                </span>
+                <span className={styles.label}>
+                  <FormattedMessage id="user.likes" />
+                </span>
               </div>
             </div>
           </Col>
@@ -102,7 +111,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
               >
                 <EditOutlined />
-                Edit profile
+                <FormattedMessage id="user.actions.editProfile" />
               </Button>
 
               {isProUser(currentUser) && (
@@ -114,7 +123,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   target="_blank"
                   href={getCancelSubscriptionUrl()}
                 >
-                  Cancel subscription
+                  <FormattedMessage id="user.actions.cancelSubscription" />
                 </Button>
               )}
               {!isProUser(currentUser) && (
@@ -128,6 +137,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   Unlock Pro
                 </Button>
               )}
+
             </Col>
           )}
         </Row>

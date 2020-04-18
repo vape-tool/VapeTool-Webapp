@@ -3,7 +3,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
 import { connect } from 'dva';
 import { LockOutlined } from '@ant-design/icons';
-// @ts-ignore
 import ButtonGroup from 'antd/es/button/button-group';
 import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
@@ -18,6 +17,7 @@ import {
   calculate,
 } from '@/models/ohm';
 import ImageWebp from '@/components/ImageWebp';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const ohmLawWebp = require('@/assets/ohm_law.webp');
 const ohmLawPng = require('@/assets/ohm_law.png');
@@ -67,13 +67,14 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
       },
     },
   };
+
   return (
     <PageHeaderWrapper>
       <Card>
         <Row justify="center" gutter={32}>
           <Col xs={24} sm={20} md={14}>
             <Form {...formItemLayout} onSubmitCapture={handleCalculate}>
-              <Form.Item label="Voltage">
+              <Form.Item label={<FormattedMessage id="misc.properties.voltage" />}>
                 <InputNumber
                   value={voltage}
                   size="large"
@@ -82,11 +83,12 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onVoltageChange}
-                  placeholder="Volts [V]"
+                  placeholder={formatMessage({ id: 'misc.units.long.volt' })}
                 />
                 {lastEdits.includes('voltage') && <LockOutlined />}
               </Form.Item>
-              <Form.Item label="Resistance">
+
+              <Form.Item label={<FormattedMessage id="misc.properties.resistance" />}>
                 <InputNumber
                   value={resistance}
                   size="large"
@@ -95,11 +97,12 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onResistanceChange}
-                  placeholder="Ohms [Ω]"
+                  placeholder={formatMessage({ id: 'misc.units.long.ohm' })}
                 />
                 {lastEdits.includes('resistance') && <LockOutlined />}
               </Form.Item>
-              <Form.Item label="Current">
+
+              <Form.Item label={<FormattedMessage id="misc.properties.current" />}>
                 <InputNumber
                   value={current}
                   size="large"
@@ -108,11 +111,12 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onCurrentChange}
-                  placeholder="Amps [A]"
+                  placeholder={formatMessage({ id: 'misc.units.long.amp' })}
                 />
                 {lastEdits.includes('current') && <LockOutlined />}
               </Form.Item>
-              <Form.Item label="Power">
+
+              <Form.Item label={<FormattedMessage id="misc.properties.power" />}>
                 <InputNumber
                   value={power}
                   size="large"
@@ -121,22 +125,25 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onPowerChange}
-                  placeholder="Wats [W]"
+                  placeholder={formatMessage({ id: 'misc.units.long.wat' })}
                 />
                 {lastEdits.includes('power') && <LockOutlined />}
               </Form.Item>
+
               <Form.Item {...tailFormItemLayout}>
                 <ButtonGroup>
                   <Button type="primary" htmlType="submit">
-                    Calculate
+                    <FormattedMessage id="misc.actions.calculate" />
                   </Button>
+
                   <Button type="default" onClick={handleClear}>
-                    Clear
+                    <FormattedMessage id="misc.actions.clear" />
                   </Button>
                 </ButtonGroup>
               </Form.Item>
             </Form>
           </Col>
+
           <Col xs={18} sm={14} md={8} lg={8}>
             <ImageWebp
               webp={ohmLawWebp}
