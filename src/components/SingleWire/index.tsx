@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button, Card, Col, Row, Select, Typography } from 'antd';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
 import { getResistancePerMeter } from '@/utils/math';
 import { Path } from '@/models/coil';
@@ -105,11 +106,12 @@ const SingleWire: React.FC<WireComponentProps> = props => {
       </Select>
       <Button>{getResistancePerMeter(wire).toFixed(2)} [Ω/m]</Button>
 
-      <Typography.Title level={4}>
-        <DiameterIcon style={{ color: 'primary' }} />
-        Diameter of wire
-      </Typography.Title>
+      <label>
+        <DiameterIcon style={{ color: 'primary', marginRight: 4 }} />
+        <FormattedMessage id="coilCalculator.inputs.diameterOfWire" />
+      </label>
       <WireDiameter path={path} wire={wire} onSetWire={onSetWire} onDeleteWire={onDeleteWire} />
+
       <br />
       <Typography.Text disabled={!wire.totalLength}>
         {wire.totalLength

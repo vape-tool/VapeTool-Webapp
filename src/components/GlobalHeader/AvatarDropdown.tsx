@@ -52,7 +52,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
         <span className={styles.name}>{currentUser.name}</span>
       </span>
     ) : (
-      <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }}/>
+      <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
     );
   }
 
@@ -61,18 +61,18 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = props => {
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
         <Menu.Item key="profile">
-          <UserOutlined/>
-          <FormattedMessage id="menu.account.center" defaultMessage="account center"/>
+          <UserOutlined />
+          <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
       )}
       <Menu.Item key="unlockPro">
-        <UnlockOutlined/>
-        <FormattedMessage id="menu.account.unlock-pro" defaultMessage="unlock pro"/>
+        <UnlockOutlined />
+        <FormattedMessage id="menu.account.unlock-pro" defaultMessage="unlock pro" />
       </Menu.Item>
-      {menu && <Menu.Divider/>}
+      {menu && <Menu.Divider />}
       <Menu.Item key="logout">
-        <LogoutOutlined/>
-        <FormattedMessage id="menu.account.logout" defaultMessage="logout"/>
+        <LogoutOutlined />
+        <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
       </Menu.Item>
     </Menu>
   );

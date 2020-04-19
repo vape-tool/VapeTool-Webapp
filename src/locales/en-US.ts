@@ -5,6 +5,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import liquid from './en-US/liquid';
+import coilCalculator from './en-US/coilCalculator';
 
 export default {
   'navBar.lang': 'Languages',
@@ -20,4 +21,5 @@ export default {
   ...pwa,
   ...component,
   ...liquid,
+  ...coilCalculator,
 };

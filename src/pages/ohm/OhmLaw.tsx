@@ -84,7 +84,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onVoltageChange}
                   placeholder="Volts [V]"
                 />
-                {lastEdits.includes('voltage') && <LockOutlined/>}
+                {lastEdits.includes('voltage') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Resistance">
                 <InputNumber
@@ -97,7 +97,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onResistanceChange}
                   placeholder="Ohms [Ω]"
                 />
-                {lastEdits.includes('resistance') && <LockOutlined/>}
+                {lastEdits.includes('resistance') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Current">
                 <InputNumber
@@ -110,7 +110,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onCurrentChange}
                   placeholder="Amps [A]"
                 />
-                {lastEdits.includes('current') && <LockOutlined/>}
+                {lastEdits.includes('current') && <LockOutlined />}
               </Form.Item>
               <Form.Item label="Power">
                 <InputNumber
@@ -123,7 +123,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   onChange={onPowerChange}
                   placeholder="Wats [W]"
                 />
-                {lastEdits.includes('power') && <LockOutlined/>}
+                {lastEdits.includes('power') && <LockOutlined />}
               </Form.Item>
               <Form.Item {...tailFormItemLayout}>
                 <ButtonGroup>
@@ -138,7 +138,12 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
             </Form>
           </Col>
           <Col xs={18} sm={14} md={8} lg={8}>
-            <ImageWebp webp={ohmLawWebp} png={ohmLawPng} style={{ width: '100%' }} alt="Ohm Law formulas"/>
+            <ImageWebp
+              webp={ohmLawWebp}
+              png={ohmLawPng}
+              style={{ width: '100%' }}
+              alt="Ohm Law formulas"
+            />
           </Col>
         </Row>
       </Card>

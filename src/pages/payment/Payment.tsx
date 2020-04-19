@@ -163,7 +163,7 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
 
           {processingPayment && (
             <div style={{ textAlign: 'center' }}>
-              <Spin size="large" style={{ marginLeft: 8, marginRight: 8 }}/>
+              <Spin size="large" style={{ marginLeft: 8, marginRight: 8 }} />
             </div>
           )}
           {!processingPayment && step > 0 && (
@@ -176,7 +176,7 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
                   <div className={styles.paymentMethod} onClick={handleStripeClick}>
                     <span className={styles.methodName}>Credit Card</span>
                     <span className={styles.poweredBy}>powered by</span>
-                    <img src={stripeLogo} alt="Stripe"/>
+                    <img src={stripeLogo} alt="Stripe" />
                   </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
@@ -197,7 +197,7 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
                     <div className={styles.paymentMethod}>
                       <span className={styles.methodName}>Cryptocurrencies</span>
                       <span className={styles.poweredBy}>powered by</span>
-                      <img src={coinbaseLogo} alt="Coinbase"/>
+                      <img src={coinbaseLogo} alt="Coinbase" />
                     </div>
                   </a>
                 </Col>
@@ -209,7 +209,7 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
             Credit cards (powered by Stripe), PayPal, and all major cryptocurrencies accepted.
           </Typography.Paragraph>
           <Typography.Paragraph className={styles.return} strong>
-            <CheckCircleFilled style={{ marginRight: 4 }}/>
+            <CheckCircleFilled style={{ marginRight: 4 }} />
             Your purchase is fully refundable within 14 days.
           </Typography.Paragraph>
         </Card>

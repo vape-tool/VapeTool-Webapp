@@ -12,6 +12,7 @@ export const SET_COIL = 'setCoil';
 export const SET_LEGS_LENGTH = 'setLegsLength';
 export const SET_RESISTANCE = 'setResistance';
 export const SET_WRAPS = 'setWraps';
+export const SET_VOLTAGE = 'setVoltage';
 export const SET_PROPERTIES = 'setProperties';
 export const SET_TYPE = 'setType';
 export const SET_WIRE = 'setWire';
@@ -26,13 +27,6 @@ export function dispatchSetCoilType(dispatch: Dispatch, wireType: string, paths:
   dispatch({
     type: `${COIL}/${SET_TYPE}`,
     payload: { type: wireType, paths },
-  });
-}
-
-export function dispatchSetInnerDiameter(dispatch: Dispatch, innerDiameter: number) {
-  dispatch({
-    type: `${COIL}/${SET_INNER_DIAMETER}`,
-    payload: innerDiameter,
   });
 }
 
@@ -78,6 +72,7 @@ export interface CoilModelType {
     [SET_LEGS_LENGTH]: Reducer<CoilModelState>;
     [SET_RESISTANCE]: Reducer<CoilModelState>;
     [SET_WRAPS]: Reducer<CoilModelState>;
+    [SET_VOLTAGE]: Reducer<CoilModelState>;
     [SET_PROPERTIES]: Reducer<CoilModelState>;
     [SET_TYPE]: Reducer<CoilModelState>;
     [SET_WIRE]: Reducer<CoilModelState>;
@@ -96,43 +91,34 @@ const initialState: CoilModelState = {
   baseVoltage: 3.7,
 };
 
+function* calculateEffect(call, coil, cancel, put, method) {
+  try {
+    const response = yield call(method, coil);
+    if (response instanceof Response) {
+      cancel();
+    } else if (response instanceof Object) {
+      yield put({
+        type: SET_COIL,
+        payload: response,
+      });
+      yield put({ type: CALCULATE_PROPERTIES, coil });
+    }
+  } catch (e) {
+    message.error(e.message);
+  }
+}
+
 const CoilModel: CoilModelType = {
   namespace: COIL,
   state: initialState,
   effects: {
-    *calculateForResistance({ coil }, { call, put, cancel }) {
-      try {
-        const response = yield call(calculateForResistance, coil);
-        if (response instanceof Response) {
-          cancel();
-        } else if (response instanceof Object) {
-          yield put({
-            type: SET_COIL,
-            payload: response,
-          });
-          yield put({ type: CALCULATE_PROPERTIES, coil });
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
+    *[CALCULATE_FOR_RESISTANCE]({ coil }, { call, put, cancel }) {
+      yield* calculateEffect(call, coil, cancel, put, calculateForResistance);
     },
-    *calculateForWraps({ coil }, { call, put, cancel }) {
-      try {
-        const response = yield call(calculateForWraps, coil);
-        if (response instanceof Response) {
-          cancel();
-        } else if (response instanceof Object) {
-          yield put({
-            type: SET_COIL,
-            payload: response,
-          });
-          yield put({ type: CALCULATE_PROPERTIES, coil });
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
+    *[CALCULATE_FOR_WRAPS]({ coil }, { call, put, cancel }) {
+      yield* calculateEffect(call, coil, cancel, put, calculateForWraps);
     },
-    *calculateProperties({ coil }, { call, put, cancel, select }) {
+    *[CALCULATE_PROPERTIES]({ coil }, { call, put, cancel, select }) {
       try {
         const baseVoltage = yield select((state: ConnectState) => state.coil.baseVoltage);
         const response = yield call(calculateProperties, coil, baseVoltage);
@@ -150,7 +136,7 @@ const CoilModel: CoilModelType = {
     },
   },
   reducers: {
-    setSetup(state = initialState, { payload }) {
+    [SET_SETUP](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -159,7 +145,7 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setInnerDiameter(state = initialState, { payload }) {
+    [SET_INNER_DIAMETER](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -168,7 +154,7 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setCoil(state = initialState, { payload }) {
+    [SET_COIL](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -177,7 +163,7 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setLegsLength(state = initialState, { payload }) {
+    [SET_LEGS_LENGTH](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -186,7 +172,7 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setResistance(state = initialState, { payload }) {
+    [SET_RESISTANCE](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -195,7 +181,7 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setWraps(state = initialState, { payload }) {
+    [SET_WRAPS](state = initialState, { payload }) {
       return {
         ...state,
         currentCoil: {
@@ -204,15 +190,19 @@ const CoilModel: CoilModelType = {
         },
       };
     },
-    setProperties(state = initialState, { payload }) {
+    [SET_VOLTAGE](state = initialState, { payload }) {
+      return {
+        ...state,
+        baseVoltage: payload,
+      };
+    },
+    [SET_PROPERTIES](state = initialState, { payload }) {
       return {
         ...state,
         properties: payload,
       };
     },
-    setType(state = initialState, { payload: { paths, type } }) {
-      console.dir(paths);
-      console.log(type);
+    [SET_TYPE](state = initialState, { payload: { paths, type } }) {
       if (paths.length > 0) {
         const newCoil = wireGenerator.coilOfType(type);
         return {
