@@ -99,7 +99,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             <Row>
               <Col xs={24}>
                 <label>
-                <FormattedMessage id="liquid.nicotineStrength" defaultMessage="Nicotine strength [mg/ml]" />
+                  <FormattedMessage
+                    id="liquid.nicotineStrength"
+                    defaultMessage="Nicotine strength [mg/ml]"
+                  />
                   Nicotine strength [mg/ml]
                   <InputNumber
                     min={0.0}
@@ -118,7 +121,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             <VgPgRatioView onRatioChange={onBaseRatioChange} ratio={currentLiquid.baseRatio} />
 
             <label>
-            <FormattedMessage id="liquid.thinner" defaultMessage="Thinner [%]" />
+              <FormattedMessage id="liquid.thinner" defaultMessage="Thinner [%]" />
               <InputNumber
                 min={0.0}
                 step={1}
@@ -178,7 +181,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
 
               <Col xs={16} xl={14}>
                 <label>
-                  <FormattedMessage id="liquid.targetStrength" defaultMessage="Target strength [mg/ml]" />
+                  <FormattedMessage
+                    id="liquid.targetStrength"
+                    defaultMessage="Target strength [mg/ml]"
+                  />
                   <InputNumber
                     min={0.0}
                     step={1}
