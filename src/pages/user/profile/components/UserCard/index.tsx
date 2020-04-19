@@ -6,12 +6,17 @@ import { ImageType } from '@/services/storage';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
-import { getCancelSubscriptionUrl, getCurrentUserEditProfileUrl } from '@/places/user.places';
+import {
+  getCancelSubscriptionUrl,
+  getCurrentUserEditProfileUrl,
+  getPaymentUrl,
+} from '@/places/user.places';
 import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
-import { redirectToWithFootprint } from '@/models/global';
+import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
 import { connect } from 'dva';
+import { isProUser } from '@/pages/login/utils/utils';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
@@ -100,16 +105,29 @@ const UserCard: React.FC<UserCardProps> = ({
                 Edit profile
               </Button>
 
-              <Button
-                type="default"
-                shape="round"
-                size="small"
-                block
-                target="_blank"
-                href={getCancelSubscriptionUrl()}
-              >
-                Cancel subscription
-              </Button>
+              {isProUser(currentUser) && (
+                <Button
+                  type="default"
+                  shape="round"
+                  size="small"
+                  block
+                  target="_blank"
+                  href={getCancelSubscriptionUrl()}
+                >
+                  Cancel subscription
+                </Button>
+              )}
+              {!isProUser(currentUser) && (
+                <Button
+                  type="default"
+                  shape="round"
+                  size="small"
+                  block
+                  onClick={() => redirectTo(getPaymentUrl())}
+                >
+                  Unlock Pro
+                </Button>
+              )}
             </Col>
           )}
         </Row>
