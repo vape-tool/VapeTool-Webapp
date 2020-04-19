@@ -103,31 +103,31 @@ const EditableTable: React.FC<EditableTableProps> = props => {
 
   const columns: any[] = [
     {
-      title: <FormattedMessage id="misc.name" />,
+      title: <FormattedMessage id="misc.name" defaultMessage="Name" />,
       dataIndex: 'name',
       width: '20%',
       editable: true,
     },
     {
-      title: <FormattedMessage id="misc.manufacturer" />,
+      title: <FormattedMessage id="misc.manufacturer" defaultMessage="Manufacturer" />,
       dataIndex: 'manufacturer',
       width: '17%',
       editable: true,
     },
     {
-      title: <FormattedMessage id="misc.units.long.percentage" />,
+      title: <FormattedMessage id="misc.units.long.percentage" defaultMessage="Percentage [%]" />,
       dataIndex: 'percentage',
       width: '17%',
       editable: true,
     },
     {
-      title: <FormattedMessage id="liquid.pricePer10ml" />,
+      title: <FormattedMessage id="liquid.pricePer10ml" defaultMessage="Price per 10ml" />,
       dataIndex: 'price',
       width: '17%',
       editable: true,
     },
     {
-      title: <FormattedMessage id="liquid.pgRatioPerc" />,
+      title: <FormattedMessage id="liquid.pgRatioPerc" defaultMessage="PG Ratio [%]" />,
       dataIndex: 'ratio',
       width: '17%',
       editable: true,

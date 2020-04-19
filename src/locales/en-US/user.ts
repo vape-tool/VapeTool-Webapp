@@ -25,8 +25,8 @@ export default {
 
   'user.addComment': 'Add a comment...',
 
-  'user.modalTitles.deletePost': 'Are you sure delete this post?',
-  'user.modalTitles.deleteComment': 'Are you sure delete this comment?',
+  'user.modalTitles.deletePost': 'Are you sure to delete this post?',
+  'user.modalTitles.deleteComment': 'Are you sure to delete this comment?',
 
   'user.actions.post': 'Post',
   'user.actions.report': 'Report',

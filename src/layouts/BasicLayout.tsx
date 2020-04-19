@@ -9,7 +9,7 @@ import ProLayout, {
   Settings,
   DefaultFooter,
 } from '@ant-design/pro-layout';
-import { formatMessage, getLocale } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage, getLocale } from 'umi-plugin-react/locale';
 import React, { useEffect } from 'react';
 import { Link } from 'umi';
 import { Dispatch } from 'redux';
@@ -81,11 +81,16 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 Created with ❤️ for Vapers"
+    copyright={formatMessage({
+      id: 'misc.copyrights',
+      defaultMessage: '2019 Created with ❤️ for Vapers',
+    })}
     links={[
       {
         key: 'android',
-        title: 'Vape Tool on Android',
+        title: (
+          <FormattedMessage id="menu.vapeToolOnAndroid" defaultMessage="VapeTool on Android" />
+        ),
         href: 'https://play.google.com/store/apps/details?id=com.stasbar.vape_tool',
         blankTarget: true,
       },
@@ -97,7 +102,7 @@ const defaultFooterDom = (
       },
       {
         key: 'privacy policy',
-        title: 'Privacy Policy',
+        title: <FormattedMessage id="menu.privacyPolicy" defaultMessage="Privacy Policy" />,
         href: 'https://vapetool.app/privacy_policy',
         blankTarget: true,
       },

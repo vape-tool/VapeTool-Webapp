@@ -40,12 +40,12 @@ const UploadPost: React.FC<UploadPostProps> = props => {
       />
       <Input.TextArea
         allowClear
-        placeholder={formatMessage({ id: 'misc.optionalText' })}
+        placeholder={formatMessage({ id: 'misc.optionalText', defaultMessage: 'Text (Optional)' })}
         onChange={onTextChange}
       />
       <Editor editorState={editorState} onChange={setEditorState} />
       <Button type="primary" onClick={onPostClick}>
-        <FormattedMessage id="user.actions.publishPost" />
+        <FormattedMessage id="user.actions.publishPost" defaultMessage="Publish post" />
         <ShareAltOutlined />
       </Button>
     </Card>

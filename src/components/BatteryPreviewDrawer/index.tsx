@@ -94,13 +94,13 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.brand" />}
+            title={<FormattedMessage id="battery.properties.brand" defaultMessage="Brand" />}
             content={brand}
           />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.model" />}
+            title={<FormattedMessage id="battery.properties.model" defaultMessage="Model" />}
             content={model}
           />
         </Col>
@@ -108,19 +108,21 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col span={8}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.chemistry" />}
+            title={
+              <FormattedMessage id="battery.properties.chemistry" defaultMessage="Chemistry" />
+            }
             content={chemistry}
           />
         </Col>
         <Col span={8}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.size" />}
+            title={<FormattedMessage id="battery.properties.size" defaultMessage="Size" />}
             content={size}
           />
         </Col>
         <Col span={8}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.capacity" />}
+            title={<FormattedMessage id="battery.properties.capacity" defaultMessage="Capacity" />}
             content={capacity}
           />
         </Col>
@@ -128,13 +130,23 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.stableCurrent" />}
+            title={
+              <FormattedMessage
+                id="battery.properties.stableCurrent"
+                defaultMessage="Stable current"
+              />
+            }
             content={stableCurrent}
           />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.minStableResistance" />}
+            title={
+              <FormattedMessage
+                id="battery.properties.minStableResistance"
+                defaultMessage="Min. stable resistance"
+              />
+            }
             content={(voltage / stableCurrent).toFixed(3)}
           />
         </Col>
@@ -142,13 +154,23 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.maxVapingCurrent" />}
+            title={
+              <FormattedMessage
+                id="battery.properties.maxVapingCurrent"
+                defaultMessage="Max. Vaping current"
+              />
+            }
             content={maxVapingCurrent}
           />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.minVapingResistance" />}
+            title={
+              <FormattedMessage
+                id="battery.properties.minVapingResistance"
+                defaultMessage="Min. Vaping resistance"
+              />
+            }
             content={(voltage / maxVapingCurrent).toFixed(3)}
           />
         </Col>
@@ -156,13 +178,18 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.nominalVoltage" />}
+            title={
+              <FormattedMessage
+                id="battery.properties.nominalVoltage"
+                defaultMessage="Nominal voltage"
+              />
+            }
             content={voltage}
           />
         </Col>
         <Col span={12}>
           <DescriptionItem
-            title={<FormattedMessage id="battery.properties.cutOff" />}
+            title={<FormattedMessage id="battery.properties.cutOff" defaultMessage="Cut-off" />}
             content={cutOff}
           />
         </Col>
@@ -172,13 +199,16 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       <Row>
         <Col xs={12}>
           <span style={pStyle}>
-            <FormattedMessage id="battery.links" />
+            <FormattedMessage id="battery.links" defaultMessage="Links" />
           </span>
         </Col>
         {user && user.permission >= UserPermission.ONLINE_MODERATOR && (
           <Col xs={12}>
             <Button type="link" onClick={toggleEditBattery}>
-              <FormattedMessage id="battery.actions.editAffiliates" />
+              <FormattedMessage
+                id="battery.actions.editAffiliates"
+                defaultMessage="Edit Affiliates"
+              />
             </Button>
           </Col>
         )}
@@ -198,7 +228,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
               rel="noopener noreferrer"
               target="_blank"
             >
-              <FormattedMessage id="battery.actions.readReview" />
+              <FormattedMessage id="battery.actions.readReview" defaultMessage="Read review" />
             </a>
           </Col>
         )}
@@ -219,7 +249,11 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
                   target="_blank"
                   href={value}
                 >
-                  <FormattedMessage id="battery.actions.buyOn" values={{ key }} />
+                  <FormattedMessage
+                    id="battery.actions.buyOn"
+                    values={{ key }}
+                    defaultMessage="Buy on {key}"
+                  />
                 </a>
               </Col>
             );

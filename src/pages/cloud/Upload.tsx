@@ -27,7 +27,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <PictureOutlined />
-                <FormattedMessage id="user.photo" />
+                <FormattedMessage id="user.photo" defaultMessage="Photo" />
               </span>
             }
             key={Tab.PHOTO}
@@ -38,7 +38,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <FormOutlined />
-                <FormattedMessage id="user.post" />
+                <FormattedMessage id="user.post" defaultMessage="Post" />
               </span>
             }
             key={Tab.POST}
@@ -49,7 +49,7 @@ const Upload: React.FC<UploadProps> = props => {
             tab={
               <span>
                 <LinkOutlined />
-                <FormattedMessage id="user.link" />
+                <FormattedMessage id="user.link" defaultMessage="Link" />
               </span>
             }
             key={Tab.LINK}

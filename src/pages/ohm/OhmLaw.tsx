@@ -74,7 +74,9 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
         <Row justify="center" gutter={32}>
           <Col xs={24} sm={20} md={14}>
             <Form {...formItemLayout} onSubmitCapture={handleCalculate}>
-              <Form.Item label={<FormattedMessage id="misc.properties.voltage" />}>
+              <Form.Item
+                label={<FormattedMessage id="misc.properties.voltage" defaultMessage="Voltage" />}
+              >
                 <InputNumber
                   value={voltage}
                   size="large"
@@ -83,12 +85,19 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onVoltageChange}
-                  placeholder={formatMessage({ id: 'misc.units.long.volt' })}
+                  placeholder={formatMessage({
+                    id: 'misc.units.long.volt',
+                    defaultMessage: 'Volts [V]',
+                  })}
                 />
                 {lastEdits.includes('voltage') && <LockOutlined />}
               </Form.Item>
 
-              <Form.Item label={<FormattedMessage id="misc.properties.resistance" />}>
+              <Form.Item
+                label={
+                  <FormattedMessage id="misc.properties.resistance" defaultMessage="Resistance" />
+                }
+              >
                 <InputNumber
                   value={resistance}
                   size="large"
@@ -97,12 +106,17 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onResistanceChange}
-                  placeholder={formatMessage({ id: 'misc.units.long.ohm' })}
+                  placeholder={formatMessage({
+                    id: 'misc.units.long.ohm',
+                    defaultMessage: 'Ohms [Ω]',
+                  })}
                 />
                 {lastEdits.includes('resistance') && <LockOutlined />}
               </Form.Item>
 
-              <Form.Item label={<FormattedMessage id="misc.properties.current" />}>
+              <Form.Item
+                label={<FormattedMessage id="misc.properties.current" defaultMessage="Current" />}
+              >
                 <InputNumber
                   value={current}
                   size="large"
@@ -111,12 +125,17 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onCurrentChange}
-                  placeholder={formatMessage({ id: 'misc.units.long.amp' })}
+                  placeholder={formatMessage({
+                    id: 'misc.units.long.amp',
+                    defaultMessage: 'Amps [A]',
+                  })}
                 />
                 {lastEdits.includes('current') && <LockOutlined />}
               </Form.Item>
 
-              <Form.Item label={<FormattedMessage id="misc.properties.power" />}>
+              <Form.Item
+                label={<FormattedMessage id="misc.properties.power" defaultMessage="Power" />}
+              >
                 <InputNumber
                   value={power}
                   size="large"
@@ -125,7 +144,10 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onPowerChange}
-                  placeholder={formatMessage({ id: 'misc.units.long.wat' })}
+                  placeholder={formatMessage({
+                    id: 'misc.units.long.wat',
+                    defaultMessage: 'Wats [W]',
+                  })}
                 />
                 {lastEdits.includes('power') && <LockOutlined />}
               </Form.Item>
@@ -133,11 +155,11 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
               <Form.Item {...tailFormItemLayout}>
                 <ButtonGroup>
                   <Button type="primary" htmlType="submit">
-                    <FormattedMessage id="misc.actions.calculate" />
+                    <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                   </Button>
 
                   <Button type="default" onClick={handleClear}>
-                    <FormattedMessage id="misc.actions.clear" />
+                    <FormattedMessage id="misc.actions.clear" defaultMessage="Reset" />
                   </Button>
                 </ButtonGroup>
               </Form.Item>

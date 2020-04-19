@@ -101,7 +101,7 @@ const Profile: React.FC<UserProfileProps> = props => {
                   >
                     <CameraOutlined className={styles.icon} />
                     <span className={styles.label}>
-                      <FormattedMessage id="user.photos" />
+                      <FormattedMessage id="user.photos" defaultMessage="Photos" />
                     </span>
                   </li>
                   <li
@@ -110,7 +110,7 @@ const Profile: React.FC<UserProfileProps> = props => {
                   >
                     <MessageOutlined className={styles.icon} />
                     <span className={styles.label}>
-                      <FormattedMessage id="user.posts" />
+                      <FormattedMessage id="user.posts" defaultMessage="Posts" />
                     </span>
                   </li>
                   <li
@@ -119,7 +119,7 @@ const Profile: React.FC<UserProfileProps> = props => {
                   >
                     <LinkOutlined className={styles.icon} />
                     <span className={styles.label}>
-                      <FormattedMessage id="user.links" />
+                      <FormattedMessage id="user.links" defaultMessage="Links" />
                     </span>
                   </li>
                   <li
@@ -133,7 +133,7 @@ const Profile: React.FC<UserProfileProps> = props => {
                       />
                     </i>
                     <span className={styles.label}>
-                      <FormattedMessage id="user.coils" />
+                      <FormattedMessage id="user.coils" defaultMessage="Coils" />
                     </span>
                   </li>
                   <li
@@ -147,7 +147,7 @@ const Profile: React.FC<UserProfileProps> = props => {
                       />
                     </i>
                     <span className={styles.label}>
-                      <FormattedMessage id="user.liquids" />
+                      <FormattedMessage id="user.liquids" defaultMessage="Liquids" />
                     </span>
                   </li>
                 </ul>

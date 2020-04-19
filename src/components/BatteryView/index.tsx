@@ -1,20 +1,17 @@
 import { Card, List, Typography } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
 import styles from '@/components/ItemView/styles.less';
-import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
-import { dispatchSelectBattery } from '@/models/batteries';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 
-interface BatteryViewProps extends ConnectProps {
+interface BatteryViewProps {
+  onBatteryClick: (battery: Battery) => void;
   battery: Battery;
   height: number;
-  width: number;
+  width?: number;
 }
 
-const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispatch }) => {
-  const onCardClick = () => dispatchSelectBattery(dispatch, battery);
-
+const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, onBatteryClick }) => {
   return (
     <List.Item style={{ height, width }}>
       <Card
@@ -27,7 +24,7 @@ const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispa
             src={battery.url}
           />
         }
-        onClick={onCardClick}
+        onClick={() => onBatteryClick(battery)}
       >
         <Card.Meta
           title={`${battery.brand} ${battery.model}`}
@@ -40,8 +37,10 @@ const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispa
               </li>
               <li>
                 <Typography.Text>
-                  {battery.capacity}mAh
-                  {battery.stableCurrent}A
+                  {battery.capacity}{' '}
+                  <FormattedMessage id="misc.units.milliAmpHours" defaultMessage="mAh" />
+                  {battery.stableCurrent}{' '}
+                  <FormattedMessage id="misc.units.short.amp" defaultMessage="A" />
                 </Typography.Text>
               </li>
             </ul>
@@ -52,4 +51,4 @@ const BatteryView: React.FC<BatteryViewProps> = ({ battery, height, width, dispa
   );
 };
 
-export default connect(({ batteries }: ConnectState) => ({ batteries }))(BatteryView);
+export default BatteryView;

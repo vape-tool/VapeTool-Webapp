@@ -21,4 +21,8 @@ export default {
   'liquid.pgRatioPerc': 'PG Ratio [%]',
 
   'liquid.actions.addFlavor': 'Add new flavor',
+
+  'liquid.validation.name': 'Please input the flavor name!',
+  'liquid.validation.pgRatio': 'Please input the flavor ratio!',
+  'liquid.validation.percentage': 'Please input the flavor percentage!',
 };

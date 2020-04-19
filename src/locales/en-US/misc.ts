@@ -1,5 +1,6 @@
 export default {
   'misc.name': 'Name',
+  'misc.link': 'Link',
   'misc.manufacturer': 'Manufacturer',
 
   'misc.title': 'Title',
@@ -10,6 +11,8 @@ export default {
   'misc.units.mm': 'mm',
   'misc.units.cm': 'cm',
   'misc.units.inch': 'inch',
+  'misc.units.milliAmpHours': 'mAh',
+  'misc.units.gram': 'g',
 
   'misc.units.percentage': 'Percentage',
   'misc.units.short.percentage': '%',
@@ -46,11 +49,16 @@ export default {
   'misc.properties.weight': 'Weight',
   'misc.properties.price': 'Price',
 
-  'misc.actions.clear': 'Clear',
+  'misc.actions.clear': 'Reset',
   'misc.actions.calculate': 'Calculate',
   'misc.actions.add': 'Add',
   'misc.actions.save': 'Save',
   'misc.actions.cancel': 'Cancel',
   'misc.actions.delete': 'Delete',
   'misc.actions.continue': 'Continue',
+  'misc.actions.sureRemove': 'Are you sure to remove?',
+
+  'misc.validation.required': 'Please input {name}!',
+
+  'misc.copyrights': '2019 Created with ❤️ for Vapers',
 };
