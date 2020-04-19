@@ -103,7 +103,6 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                     id="liquid.nicotineStrength"
                     defaultMessage="Nicotine strength [mg/ml]"
                   />
-                  Nicotine strength [mg/ml]
                   <InputNumber
                     min={0.0}
                     step={1}
