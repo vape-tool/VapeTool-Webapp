@@ -11,6 +11,7 @@ import {
   getCurrentUserEditProfileUrl,
   getPaymentUrl,
 } from '@/places/user.places';
+import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
@@ -26,12 +27,12 @@ interface UserCardProps extends ConnectProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({
-                                             userProfile: profile,
-                                             isLoading,
-                                             isCurrentUser,
-                                             currentUser,
-                                             dispatch,
-                                           }) => {
+  userProfile: profile,
+  isLoading,
+  isCurrentUser,
+  currentUser,
+  dispatch,
+}) => {
   const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
   const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
   const userTags = profile?.tags || [];
