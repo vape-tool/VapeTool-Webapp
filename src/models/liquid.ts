@@ -199,7 +199,7 @@ const LiquidModel: LiquidModelType = {
           cancel();
         } else if (response instanceof Array) {
           yield put({
-            type: `${LIQUID}/${SET_RESULTS}`,
+            type: SET_RESULTS,
             payload: response,
           });
         }
