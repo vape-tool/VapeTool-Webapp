@@ -43,7 +43,7 @@ const SelectLang: React.FC<SelectLangProps> = props => {
   return (
     <HeaderDropdown overlay={langMenu} placement="bottomRight">
       <span className={classNames(styles.dropDown, className)}>
-        <GlobalOutlined title={formatMessage({ id: 'navBar.lang' })} />
+        <GlobalOutlined title={formatMessage({ id: 'navBar.lang', defaultMessage: 'Languages' })} />
       </span>
     </HeaderDropdown>
   );

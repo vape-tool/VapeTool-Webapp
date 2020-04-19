@@ -22,11 +22,11 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
   const onChangeMm = dispatchChangeValue(dispatch, SET_MM_IN_AWG_TO_MM);
 
   return (
-    <Card title={<FormattedMessage id="converters.titles.awgToMm" />}>
+    <Card title={<FormattedMessage id="converters.titles.awgToMm" defaultMessage="AWG to mm" />}>
       <Row justify="space-between">
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
-            <FormattedMessage id="misc.units.awg" />
+            <FormattedMessage id="misc.units.awg" defaultMessage="AWG" />
             <InputNumber
               size="large"
               type="number"
@@ -35,7 +35,7 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
               value={awg}
               precision={0}
               onChange={onChangeAwg}
-              placeholder={formatMessage({ id: 'misc.units.awg' })}
+              placeholder={formatMessage({ id: 'misc.units.awg', defaultMessage: 'AWG' })}
               className={styles.input}
             />
           </label>
@@ -48,7 +48,7 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
             [
-            <FormattedMessage id="misc.units.mm" />
+            <FormattedMessage id="misc.units.mm" defaultMessage="mm" />
             ]
             <InputNumber
               size="large"
@@ -59,7 +59,7 @@ const AwgConverter: React.FC<ConverterComponentProps> = props => {
               value={mm}
               precision={3}
               onChange={onChangeMm}
-              placeholder={formatMessage({ id: 'misc.units.mm' })}
+              placeholder={formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
               className={styles.input}
             />
           </label>

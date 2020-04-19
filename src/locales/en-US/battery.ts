@@ -12,7 +12,10 @@ export default {
   'battery.properties.cutOff': 'Cut-off',
 
   'battery.links': 'Links',
+  'battery.battery.affiliateName': 'Affiliate name',
+  'battery.battery.affiliateLink': 'Affiliate link',
 
+  'battery.actions.addNewAffiliate': 'Add new affiliate',
   'battery.actions.editAffiliates': 'Edit affiliates',
   'battery.actions.readReview': 'Read review',
   'battery.actions.buyOn': 'Buy on {key}',

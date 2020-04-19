@@ -5,6 +5,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import misc from './en-US/misc';
+import signIn from './en-US/signIn';
 import converters from './en-US/converters';
 import user from './en-US/user';
 import battery from './en-US/battery';
@@ -25,6 +26,7 @@ export default {
   ...pwa,
   ...component,
   ...misc,
+  ...signIn,
   ...converters,
   ...user,
   ...battery,

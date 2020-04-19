@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'umi';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -79,16 +79,29 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
                 <span className={styles.title}>Vape Tool</span>
               </Link>
             </div>
-            <div className={styles.desc}>Sign in using your favorite method</div>
+            <div className={styles.desc}>
+              <FormattedMessage
+                id="signIn.chooseMethod"
+                defaultMessage="Sign in using your favorite method"
+              />
+            </div>
           </div>
           {children}
         </div>
         <DefaultFooter
-          copyright="2019 Created with ❤️ for Vapers"
+          copyright={formatMessage({
+            id: 'misc.copyrights',
+            defaultMessage: '2019 Created with ❤️ for Vapers',
+          })}
           links={[
             {
               key: 'android',
-              title: 'Vape Tool on Android',
+              title: (
+                <FormattedMessage
+                  id="menu.vapeToolOnAndroid"
+                  defaultMessage="VapeTool on Android"
+                />
+              ),
               href: 'https://play.google.com/store/apps/details?id=com.stasbar.vape_tool',
               blankTarget: true,
             },
@@ -100,7 +113,7 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
             },
             {
               key: 'privacy policy',
-              title: 'Privacy Policy',
+              title: <FormattedMessage id="menu.privacyPolicy" defaultMessage="Privacy Policy" />,
               href: 'https://vapetool.app/privacy_policy',
               blankTarget: true,
             },

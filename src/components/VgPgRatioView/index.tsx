@@ -32,9 +32,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
     <Row justify="space-between">
       <Col {...responsivenessRatioVg}>
         <label>
-          <Tooltip title={formatMessage({ id: 'liquid.vg' })}>
+          <Tooltip title={formatMessage({ id: 'liquid.vg', defaultMessage: 'Vegetable Glycerin' })}>
             <Text>
-              <FormattedMessage id="liquid.vgShort" />
+              <FormattedMessage id="liquid.vgShort" defaultMessage="VG" />
             </Text>
           </Tooltip>
           <InputNumber
@@ -52,9 +52,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
       </Col>
       <Col {...responsivenessRatioPg}>
         <label>
-          <Tooltip title={formatMessage({ id: 'liquid.pg' })}>
+          <Tooltip title={formatMessage({ id: 'liquid.pg', defaultMessage: 'Propylene Glycol' })}>
             <Text>
-              <FormattedMessage id="liquid.pgShort" />
+              <FormattedMessage id="liquid.pgShort" defaultMessage="PG" />
             </Text>
           </Tooltip>
           <InputNumber

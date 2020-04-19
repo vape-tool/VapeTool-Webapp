@@ -34,11 +34,11 @@ const CommentView: React.FC<CommentViewProps> = props => {
       {user !== undefined &&
         (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR) && (
           <Menu.Item onClick={deleteComment} key="delete">
-            <FormattedMessage id="misc.actions.delete" />
+            <FormattedMessage id="misc.actions.delete" defaultMessage="Delete" />
           </Menu.Item>
         )}
       <Menu.Item onClick={() => onReply(props.comment)} key="reply">
-        <FormattedMessage id="user.actions.reply" />
+        <FormattedMessage id="user.actions.reply" defaultMessage="Reply" />
       </Menu.Item>
     </Menu>
   );

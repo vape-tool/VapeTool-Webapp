@@ -13,6 +13,8 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
+import { FormattedMessage } from 'umi-plugin-react/locale';
+import { i18nValidationRequired } from '@/utils/i18n';
 
 type Column = 'name' | 'link';
 
@@ -34,7 +36,7 @@ const EditableCell: React.FC<EditableCellProps> = props => {
         <Form.Item
           style={{ margin: 0 }}
           name={dataIndex}
-          rules={[{ required: true, message: `Please Input ${title}!` }]}
+          rules={[{ required: true, message: i18nValidationRequired(title) }]}
         >
           <Input defaultValue={affiliate[dataIndex]} />
         </Form.Item>
@@ -90,13 +92,13 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   };
   const columnsSchema: any[] = [
     {
-      title: 'Name',
+      title: <FormattedMessage id="misc.name" defaultMessage="Name" />,
       dataIndex: 'name',
       width: '10%',
       editable: true,
     },
     {
-      title: 'Link',
+      title: <FormattedMessage id="misc.link" defaultMessage="Link" />,
       dataIndex: 'link',
       width: '60%',
       editable: true,
@@ -132,7 +134,15 @@ const EditableTable: React.FC<EditableTableProps> = props => {
           <div>
             <ButtonGroup>
               <Button onClick={() => edit(affiliate.name)} icon={<EditOutlined />} />
-              <Popconfirm title="Sure to remove?" onConfirm={() => remove(affiliate.name)}>
+              <Popconfirm
+                title={
+                  <FormattedMessage
+                    id="misc.actions.sureRemove"
+                    defaultMessage="Are you sure to remove?"
+                  />
+                }
+                onConfirm={() => remove(affiliate.name)}
+              >
                 <Button icon={<DeleteOutlined />} />
               </Popconfirm>
             </ButtonGroup>

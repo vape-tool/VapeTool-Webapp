@@ -2,6 +2,8 @@ import { Form, Input, Modal } from 'antd';
 import * as React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import { FormattedMessage } from 'umi-plugin-react/locale';
+import { i18nValidationRequired } from '@/utils/i18n';
 
 interface NewAffiliateModalProps extends ConnectProps {
   showNewAffiliateModal?: boolean;
@@ -39,28 +41,38 @@ const NewAffiliateModal: React.FC<NewAffiliateModalProps> = props => {
       sm: { span: 16 },
     },
   };
+
+  const affiliateName = (
+    <FormattedMessage id="battery.affiliateName" defaultMessage="Affiliate name" />
+  );
+  const affiliateLink = (
+    <FormattedMessage id="battery.affiliateLink" defaultMessage="Affiliate link" />
+  );
+
   return (
     <Modal
       centered
       visible={showNewAffiliateModal || false}
-      title="Add new affiliate"
-      okText="Add"
+      title={
+        <FormattedMessage id="battery.actions.addNewAffiliate" defaultMessage="Add new affiliate" />
+      }
+      okText={<FormattedMessage id="misc.actions.add" defaultMessage="Add" />}
       onCancel={onCancel}
       onOk={() => form.submit()}
     >
       <Form layout="horizontal" {...formItemLayout} form={form} onFinish={onFinished}>
         <Form.Item
           name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Please input the affiliate name!' }]}
+          label={affiliateName}
+          rules={[{ required: true, message: i18nValidationRequired(affiliateName) }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="link"
-          label="Link"
-          rules={[{ required: true, message: 'Please input the affiliate link!' }]}
+          label={affiliateLink}
+          rules={[{ required: true, message: i18nValidationRequired(affiliateLink) }]}
         >
           <Input type="textarea" />
         </Form.Item>
