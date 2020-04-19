@@ -11,7 +11,6 @@ import {
   getCurrentUserEditProfileUrl,
   getPaymentUrl,
 } from '@/places/user.places';
-import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
