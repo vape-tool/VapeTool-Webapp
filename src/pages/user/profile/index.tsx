@@ -6,7 +6,7 @@ import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons
 import { RouteChildrenProps } from 'react-router';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { CurrentUser, FETCH_CURRENT, USER } from '@/models/user';
+import { CurrentUser, FETCH_CURRENT_USER, USER } from '@/models/user';
 import {
   dispatchFetchUserProfile,
   FETCH_USER_PROFILE,
@@ -152,7 +152,7 @@ const Profile: React.FC<UserProfileProps> = props => {
 
 export default connect(({ loading, user, userProfile }: ConnectState) => ({
   currentUser: user.currentUser,
-  currentUserLoading: loading.effects[`${USER}/${FETCH_CURRENT}`],
+  currentUserLoading: loading.effects[`${USER}/${FETCH_CURRENT_USER}`],
   userProfile: userProfile.userProfile,
   profileLoading: loading.effects[`${USER_PROFILE}/${FETCH_USER_PROFILE}`],
 }))(Profile);

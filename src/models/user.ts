@@ -3,23 +3,22 @@ import { Dispatch, Reducer } from 'redux';
 import { User as FirebaseUser } from 'firebase/app';
 import { routerRedux } from 'dva/router';
 import { getUser, initializeUser, logoutFirebase } from '@/services/user';
-import { ConnectState } from '@/models/connect';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
-import moment from 'moment';
 import { getCurrentUserEditProfileUrl } from '@/places/user.places';
 import { redirectReplace } from '@/models/global';
+import { isProUser } from '@/pages/login/utils/utils';
 
 export const USER = 'user';
 export const LOGOUT = 'logout';
-export const FETCH_CURRENT = 'fetchCurrent';
+export const FETCH_CURRENT_USER = 'fetchCurrent';
 export const SET_USER = 'setUser';
 export const SET_FIREBASE_USER = 'setFirebaseUser';
 export const CLEAR_USER_STATE = 'clearUserState';
 
 export function dispatchFetchCurrentUser(dispatch: Dispatch) {
   dispatch({
-    type: `${USER}/${FETCH_CURRENT}`,
+    type: `${USER}/${FETCH_CURRENT_USER}`,
   });
 }
 
@@ -50,7 +49,7 @@ export interface UserModelType {
   namespace: string;
   state: UserModelState;
   effects: {
-    [FETCH_CURRENT]: Effect;
+    [FETCH_CURRENT_USER]: Effect;
     [LOGOUT]: Effect;
   };
   reducers: {
@@ -73,11 +72,7 @@ const UserModel: UserModelType = {
 
   effects: {
     // TODO try to unify with successfullyLogin
-    *[FETCH_CURRENT](_, { put, call, select }) {
-      const currentUser = yield select((state: ConnectState) => state.user.currentUser);
-      if (currentUser) {
-        return;
-      }
+    *[FETCH_CURRENT_USER](_, { put, call }) {
       const firebaseUser = auth.currentUser;
       if (!firebaseUser) {
         // It should never happen
@@ -119,8 +114,7 @@ const UserModel: UserModelType = {
   reducers: {
     [SET_USER](state, { currentUser }): UserModelState {
       const tags = [];
-      // TODO test
-      if (moment(currentUser.subscription).isAfter()) {
+      if (isProUser(currentUser)) {
         tags.push({ key: 'pro', label: 'Pro' });
       }
       return {
