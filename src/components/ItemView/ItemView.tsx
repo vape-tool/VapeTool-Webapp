@@ -86,10 +86,10 @@ export abstract class ItemView<
       onPressEnter={this.postComment}
       value={this.state.draftComment}
       onChange={this.onChangeCommentText}
-      placeholder={formatMessage({ id: 'user.addComment' })}
+      placeholder={formatMessage({ id: 'user.addComment', defaultMessage: 'Add new comment...' })}
       suffix={
         <a onClick={this.postComment}>
-          <FormattedMessage id="user.actions.post" />
+          <FormattedMessage id="user.actions.post" defaultMessage="Post" />
         </a>
       }
     />
@@ -119,7 +119,7 @@ export abstract class ItemView<
           disabled={!this.props.user || this.props.user.uid === this.props.item.author.uid}
         >
           <FlagOutlined />
-          <FormattedMessage id="user.actions.report" />
+          <FormattedMessage id="user.actions.report" defaultMessage="Report" />
         </Menu.Item>
 
         <Menu.Item
@@ -132,7 +132,7 @@ export abstract class ItemView<
           }
         >
           <DeleteOutlined />
-          <FormattedMessage id="misc.actions.delete" />
+          <FormattedMessage id="misc.actions.delete" defaultMessage="Delete" />
         </Menu.Item>
       </Menu>
     );
@@ -187,10 +187,13 @@ export abstract class ItemView<
     const { what } = this;
     const { dispatch, item } = this.props;
     Modal.confirm({
-      title: formatMessage({ id: 'user.modalTitles.deletePost' }),
-      okText: formatMessage({ id: 'misc.actions.delete' }),
+      title: formatMessage({
+        id: 'user.modalTitles.deletePost',
+        defaultMessage: 'Are you sure to delete this post?',
+      }),
+      okText: formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
       okType: 'danger',
-      cancelText: formatMessage({ id: 'misc.actions.cancel' }),
+      cancelText: formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
       onOk() {
         dispatchDelete(dispatch, what, item.uid);
         dispatchSelectItem(dispatch, undefined);
@@ -202,10 +205,13 @@ export abstract class ItemView<
     const { what } = this;
     const { dispatch, item } = this.props;
     Modal.confirm({
-      title: formatMessage({ id: 'user.modalTitles.deleteComment' }),
-      okText: formatMessage({ id: 'misc.actions.delete' }),
+      title: formatMessage({
+        id: 'user.modalTitles.deleteComment',
+        defaultMessage: 'Are you sure to delete this comment?',
+      }),
+      okText: formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
       okType: 'danger',
-      cancelText: formatMessage({ id: 'misc.actions.cancel' }),
+      cancelText: formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
       onOk() {
         dispatchDeleteComment(dispatch, what, comment.uid, item.uid);
         dispatchSelectItem(dispatch, undefined);

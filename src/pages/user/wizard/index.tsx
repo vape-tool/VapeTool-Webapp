@@ -41,7 +41,10 @@ const UserWizard: React.FC<{
       <Row>
         <Col xs={0} md={4} lg={6} xl={8} />
         <Col xs={24} md={16} lg={14} xl={10}>
-          <Card style={{ maxWidth: 500 }} title={<FormattedMessage id="user.setupUser" />}>
+          <Card
+            style={{ maxWidth: 500 }}
+            title={<FormattedMessage id="user.setupUser" defaultMessage="Setup user" />}
+          >
             <div className={styles.avatarHolder}>
               <div onClick={() => showNewAvatarChooser(dispatch)}>
                 <div style={{ textAlign: 'center' }}>
@@ -80,7 +83,7 @@ const UserWizard: React.FC<{
             <div style={{ textAlign: 'right' }}>
               <ButtonGroup>
                 <Button onClick={() => redirectBack(dispatch)}>
-                  <FormattedMessage id="misc.actions.cancel" />
+                  <FormattedMessage id="misc.actions.cancel" defaultMessage="Cancel" />
                 </Button>
 
                 <Button
@@ -88,7 +91,7 @@ const UserWizard: React.FC<{
                   type="primary"
                   onClick={() => dispatchUpdateUser(dispatch)}
                 >
-                  <FormattedMessage id="misc.actions.save" />
+                  <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
                 </Button>
               </ButtonGroup>
             </div>

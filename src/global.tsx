@@ -9,7 +9,9 @@ const { pwa } = defaultSettings;
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(formatMessage({ id: 'app.pwa.offline' }));
+    message.warning(
+      formatMessage({ id: 'app.pwa.offline', defaultMessage: 'You are offline now' }),
+    );
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -47,12 +49,18 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+        {formatMessage({ id: 'app.pwa.serviceworker.updated.ok', defaultMessage: 'Refresh' })}
       </Button>
     );
     notification.open({
-      message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+      message: formatMessage({
+        id: 'app.pwa.serviceworker.updated',
+        defaultMessage: 'New content is available',
+      }),
+      description: formatMessage({
+        id: 'app.pwa.serviceworker.updated.hint',
+        defaultMessage: 'Please press the "Refresh" button to reload current page',
+      }),
       btn,
       key,
       onClose: async () => {},

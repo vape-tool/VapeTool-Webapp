@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { routerRedux } from 'dva/router';
@@ -98,7 +99,7 @@ class Login extends Component<LoginProps> {
             paddingBottom: 10,
           }}
         >
-          Sign in with {name}
+          <FormattedMessage id="signIn.method" values={{ name }} />
         </span>
       </div>
     );

@@ -67,7 +67,10 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
           fontFamily: 'Proxima Nova Bold,Helvetica Neue,Helvetica,Arial,sans-serif',
           border: 0,
         }}
-        placeholder={formatMessage({ id: 'user.uploadPhoto.saySomething' })}
+        placeholder={formatMessage({
+          id: 'user.uploadPhoto.saySomething',
+          defaultMessage: 'Say something about this photo',
+        })}
         onChange={onDescriptionChange}
         value={description}
       />
@@ -83,10 +86,10 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
       <div style={{ marginTop: 24 }}>
         <Button type="default" onClick={() => setIsCropping(true)} style={{ marginRight: 12 }}>
           <CaretLeftOutlined />
-          <FormattedMessage id="user.uploadPhoto.cropAgain" />
+          <FormattedMessage id="user.uploadPhoto.cropAgain" defaultMessage="Crop again" />
         </Button>
         <Button type="primary" onClick={postPhoto}>
-          <FormattedMessage id="user.actions.publishPost" />
+          <FormattedMessage id="user.actions.publishPost" defaultMessage="Publish post" />
           <ShareAltOutlined />
         </Button>
       </div>

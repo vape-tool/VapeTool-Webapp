@@ -32,27 +32,27 @@ export interface LiquidBlenderProps {
 
 const resultColumns = [
   {
-    title: <FormattedMessage id="liquid.ingredient" />,
+    title: <FormattedMessage id="liquid.ingredient" defaultMessage="Ingredient" />,
     dataIndex: 'name',
   },
   {
-    title: <FormattedMessage id="misc.units.percentage" />,
+    title: <FormattedMessage id="misc.units.percentage" defaultMessage="Percentage" />,
     dataIndex: 'percentage',
   },
   {
-    title: <FormattedMessage id="liquid.amount" />,
+    title: <FormattedMessage id="liquid.amount" defaultMessage="Amount" />,
     dataIndex: 'ml',
   },
   {
-    title: <FormattedMessage id="liquid.drops" />,
+    title: <FormattedMessage id="liquid.drops" defaultMessage="Drops" />,
     dataIndex: 'drips',
   },
   {
-    title: <FormattedMessage id="misc.properties.weight" />,
+    title: <FormattedMessage id="misc.properties.weight" defaultMessage="Weight" />,
     dataIndex: 'weight',
   },
   {
-    title: <FormattedMessage id="misc.properties.price" />,
+    title: <FormattedMessage id="misc.properties.price" defaultMessage="Price" />,
     dataIndex: 'price',
   },
 ];
@@ -91,7 +91,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
           <Card
             title={
               <Title level={1}>
-                <FormattedMessage id="liquid.titles.base" />
+                <FormattedMessage id="liquid.titles.base" defaultMessage="Base" />
               </Title>
             }
             style={{ height: '100%' }}
@@ -99,7 +99,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             <Row>
               <Col xs={24}>
                 <label>
-                <FormattedMessage id="liquid.nicotineStrength" />
+                <FormattedMessage id="liquid.nicotineStrength" defaultMessage="Nicotine strength [mg/ml]" />
                   Nicotine strength [mg/ml]
                   <InputNumber
                     min={0.0}
@@ -113,12 +113,12 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             </Row>
 
             <Title level={4}>
-              <FormattedMessage id="liquid.baseRatio" />
+              <FormattedMessage id="liquid.baseRatio" defaultMessage="Base ratio" />
             </Title>
             <VgPgRatioView onRatioChange={onBaseRatioChange} ratio={currentLiquid.baseRatio} />
 
             <label>
-            <FormattedMessage id="liquid.thinner" />
+            <FormattedMessage id="liquid.thinner" defaultMessage="Thinner [%]" />
               <InputNumber
                 min={0.0}
                 step={1}
@@ -135,7 +135,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             className={styles.noPadding}
             title={
               <Title level={1}>
-                <FormattedMessage id="liquid.titles.flavors" />
+                <FormattedMessage id="liquid.titles.flavors" defaultMessage="Flavors" />
               </Title>
             }
           >
@@ -148,7 +148,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               style={{ width: '100%' }}
               onClick={showNewFlavorModal}
             >
-              <FormattedMessage id="liquid.actions.addFlavor" />
+              <FormattedMessage id="liquid.actions.addFlavor" defaultMessage="Add new Flavor" />
             </Button>
           </Card>
         </Col>
@@ -157,7 +157,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
           <Card
             title={
               <Title level={1}>
-                <FormattedMessage id="liquid.titles.target" />
+                <FormattedMessage id="liquid.titles.target" defaultMessage="Target" />
               </Title>
             }
             style={{ height: '100%' }}
@@ -165,7 +165,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             <Row justify="space-between">
               <Col xs={8} xl={10}>
                 <label>
-                  <FormattedMessage id="liquid.amount" />
+                  <FormattedMessage id="liquid.amount" defaultMessage="Amount [ml]" />
                   <InputNumber
                     min={0.0}
                     step={1}
@@ -178,7 +178,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
 
               <Col xs={16} xl={14}>
                 <label>
-                  <FormattedMessage id="liquid.targetStrength" />
+                  <FormattedMessage id="liquid.targetStrength" defaultMessage="Target strength [mg/ml]" />
                   <InputNumber
                     min={0.0}
                     step={1}
@@ -191,7 +191,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             </Row>
 
             <Title level={4}>
-              <FormattedMessage id="liquid.targetRatio" />
+              <FormattedMessage id="liquid.targetRatio" defaultMessage="Target ratio" />
             </Title>
             <VgPgRatioView onRatioChange={onTargetRatioChange} ratio={currentLiquid.targetRatio} />
           </Card>
@@ -202,7 +202,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             className={styles.noPadding}
             title={
               <Title level={1}>
-                <FormattedMessage id="liquid.titles.results" />
+                <FormattedMessage id="liquid.titles.results" defaultMessage="Results" />
               </Title>
             }
             extra={
@@ -214,7 +214,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                   size="large"
                   onClick={onCalculateClick}
                 >
-                  <FormattedMessage id="misc.actions.calculate" />
+                  <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                 </Button>
               </Affix>
             }
@@ -230,8 +230,14 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                       percentage: `${result.percentage.toFixed(1)}%`,
                       ml: `${result.ml.toFixed(1)} ml`,
                       drips: result.drips.toFixed(0),
-                      price: `${result.price.toFixed(2)}${formatMessage({ id: 'app.currency' })}`,
-                      weight: `${result.weight.toFixed(3)} g`,
+                      price: `${result.price.toFixed(2)}${formatMessage({
+                        id: 'app.currency',
+                        defaultMessage: '$',
+                      })}`,
+                      weight: `${result.weight.toFixed(3)} ${formatMessage({
+                        id: 'misc.units.gram',
+                        defaultMessage: 'g',
+                      })}`,
                     }))
                   : []
               }

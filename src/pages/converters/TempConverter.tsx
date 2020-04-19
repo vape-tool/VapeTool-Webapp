@@ -22,11 +22,18 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
   const onChangeFahrenheit = dispatchChangeValue(dispatch, SET_FAHRENHEIT_IN_TEMPERATURE);
 
   return (
-    <Card title={<FormattedMessage id="converters.titles.temp" />}>
+    <Card
+      title={
+        <FormattedMessage
+          id="converters.titles.temp"
+          defaultMessage="Convert Celsius to Fahrenheit"
+        />
+      }
+    >
       <Row justify="space-between">
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
-            <FormattedMessage id="misc.units.long.celsius" />
+            <FormattedMessage id="misc.units.long.celsius" defaultMessage="Celsius [°C]" />
             <InputNumber
               size="large"
               type="number"
@@ -35,7 +42,10 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               value={celsius}
               precision={2}
               onChange={onChangeCelsius}
-              placeholder={formatMessage({ id: 'misc.units.short.celsius' })}
+              placeholder={formatMessage({
+                id: 'misc.units.short.celsius',
+                defaultMessage: '[°C]',
+              })}
               className={styles.input}
             />
           </label>
@@ -47,7 +57,7 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
 
         <Col xs={10} lg={24} xl={10} style={{ textAlign: 'center' }}>
           <label>
-            <FormattedMessage id="misc.units.long.fahrenheit" />
+            <FormattedMessage id="misc.units.long.fahrenheit" defaultMessage="Fahrenheit [°F]" />
             <InputNumber
               size="large"
               type="number"
@@ -55,7 +65,10 @@ const TempConverter: React.FC<ConverterComponentProps> = props => {
               value={fahrenheit}
               precision={1}
               onChange={onChangeFahrenheit}
-              placeholder={formatMessage({ id: 'misc.units.short.fahrenheit' })}
+              placeholder={formatMessage({
+                id: 'misc.units.short.fahrenheit',
+                defaultMessage: '[°F]',
+              })}
               className={styles.input}
             />
           </label>

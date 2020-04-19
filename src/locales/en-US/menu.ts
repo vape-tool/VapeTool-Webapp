@@ -65,4 +65,6 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.vapeToolOnAndroid': 'Vape Tool on Android',
+  'menu.privacyPolicy': 'Privacy Policy',
 };

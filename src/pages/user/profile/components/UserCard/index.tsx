@@ -88,7 +88,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   {userContentCount !== undefined ? userContentCount : ''}
                 </span>
                 <span className={styles.label}>
-                  <FormattedMessage id="user.posts" />
+                  <FormattedMessage id="user.posts" defaultMessage="Posts" />
                 </span>
               </div>
               <div className={styles.infoGroup}>
@@ -96,7 +96,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   {userLikesCount !== undefined ? userLikesCount : ''}
                 </span>
                 <span className={styles.label}>
-                  <FormattedMessage id="user.likes" />
+                  <FormattedMessage id="user.likes" defaultMessage="Likes" />
                 </span>
               </div>
             </div>
@@ -111,7 +111,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
               >
                 <EditOutlined />
-                <FormattedMessage id="user.actions.editProfile" />
+                <FormattedMessage id="user.actions.editProfile" defaultMessage="Edit profile" />
               </Button>
 
               {isProUser(currentUser) && (
@@ -123,7 +123,10 @@ const UserCard: React.FC<UserCardProps> = ({
                   target="_blank"
                   href={getCancelSubscriptionUrl()}
                 >
-                  <FormattedMessage id="user.actions.cancelSubscription" />
+                  <FormattedMessage
+                    id="user.actions.cancelSubscription"
+                    defaultMessage="Cancel subscription"
+                  />
                 </Button>
               )}
               {!isProUser(currentUser) && (
@@ -137,7 +140,6 @@ const UserCard: React.FC<UserCardProps> = ({
                   Unlock Pro
                 </Button>
               )}
-
             </Col>
           )}
         </Row>

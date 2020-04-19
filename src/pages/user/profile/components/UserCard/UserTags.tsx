@@ -10,7 +10,7 @@ interface UserCardProps {
 const UserTags: React.FC<UserCardProps> = ({ userTags }) => (
   <div className={styles.tags}>
     <span className={styles.tagsTitle}>
-      <FormattedMessage id="user.labels" />:
+      <FormattedMessage id="user.labels" defaultMessage="Labels" />:
     </span>
     {userTags.map(item => (
       <Tag key={item.key}>{item.label}</Tag>

@@ -209,10 +209,18 @@ class UploadAndCropImage extends React.PureComponent<
               <InboxOutlined />
             </p>
             <p className="ant-upload-text">
-              <FormattedMessage id="user.uploadPhoto.clickOrDrag" />
+              <FormattedMessage
+                id="user.uploadPhoto.clickOrDrag"
+                defaultMessage="Click or drag file to this area to upload"
+              />
             </p>
             <p className="ant-upload-hint">
-              {uploadHintText || formatMessage({ id: 'user.uploadPhoto.rules' })}
+              {uploadHintText ||
+                formatMessage({
+                  id: 'user.uploadPhoto.rules',
+                  defaultMessage:
+                    'Please upload only vape related photos. Breaking those rules will result in account suspension.',
+                })}
             </p>
           </Dragger>
         )}
@@ -233,11 +241,11 @@ class UploadAndCropImage extends React.PureComponent<
             <div style={{ marginTop: 24 }}>
               <Button type="default" onClick={this.onResetSourceImage} style={{ marginRight: 12 }}>
                 <CaretLeftOutlined />
-                <FormattedMessage id="user.uploadPhoto.uploadAgain" />
+                <FormattedMessage id="user.uploadPhoto.uploadAgain" defaultMessage="Upload again" />
               </Button>
               {onConfirm && (
                 <Button type="primary" onClick={onConfirm}>
-                  <FormattedMessage id="misc.actions.continue" />
+                  <FormattedMessage id="misc.actions.continue" defaultMessage="Continue" />
                   <CaretRightOutlined />
                 </Button>
               )}
