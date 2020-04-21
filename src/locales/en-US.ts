@@ -2,7 +2,6 @@ import component from './en-US/component';
 import globalHeader from './en-US/globalHeader';
 import menu from './en-US/menu';
 import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import misc from './en-US/misc';
 import signIn from './en-US/signIn';
@@ -21,7 +20,6 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   ...globalHeader,
   ...menu,
-  ...settingDrawer,
   ...settings,
   ...pwa,
   ...component,
