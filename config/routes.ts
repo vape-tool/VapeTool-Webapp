@@ -115,12 +115,12 @@ const routes: IRoute[] = [
                 icon: 'https://web.vapetool.app/img/menu_icons/menu_converters.svg',
                 component: './converters/Converters',
               },
-              // {
-              //   path: '/battery-life',
-              //   name: 'battery-life',
-              //   icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
-              //   component: './batterylife/BatteryLife',
-              // },
+              {
+                path: '/battery-life',
+                name: 'battery-life',
+                icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
+                component: './batterylife/BatteryLife',
+              },
               // {
               //   path: '/knowledge',
               //   name: 'knowledge',
