@@ -5,7 +5,6 @@ import { connect } from 'dva';
 import ButtonGroup from 'antd/es/button/button-group';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
-// TODO check if not needed adjust to new Form API
 const BatteryLife: React.FC = () => {
   const [capacityMah, setCapacityMah] = useState<number | undefined>();
   const [capacityWah, setCapacityWah] = useState<number | undefined>();
