@@ -11,24 +11,18 @@ const BatteryLife: React.FC = () => {
   const [power, setPower] = useState<number | undefined>();
   const [puffSeconds, setPuffSeconds] = useState<number | undefined>();
   const [mahLastChanged, setLastChangedMah] = useState<boolean>();
-
   const [totalRuntime, setTotalRuntime] = useState<string>();
-
   const [amountOfPuffs, setAmountOfPuffs] = useState<string>();
 
-  function convertToWah(mah: number) {
-    return (mah * 3.7) / 1000;
-  }
-  function convertToMah(wah: number) {
-    return (wah * 1000) / 3.7;
-  }
+  const convertToMah = (wah: number) => (wah * 1000) / 3.7;
+  const convertToWh = (mah: number) => (mah * 3.7) / 1000;
 
   function setResult() {
     let wah: number;
 
-    if (capacityMah !== undefined && power !== undefined) {
-      wah = convertToWah(capacityMah);
-    } else if (capacityWah !== undefined && power !== undefined) {
+    if (capacityMah && power) {
+      wah = convertToWh(capacityMah);
+    } else if (capacityWah && power) {
       wah = capacityWah;
     } else {
       return;
@@ -36,16 +30,16 @@ const BatteryLife: React.FC = () => {
 
     setTotalRuntime(`Total runtime: ${Math.round((wah / power) * 60)}`);
 
-    if (puffSeconds !== undefined) {
+    if (puffSeconds) {
       setAmountOfPuffs(`Amount of puffs: ${Math.round(((wah / power) * 3600) / puffSeconds)}`);
     }
   }
 
   const handleCalculate = (e: any) => {
     e.preventDefault();
-    if (mahLastChanged && capacityMah !== undefined) {
-      setCapacityWah(convertToWah(capacityMah));
-    } else if (capacityWah !== undefined) {
+    if (mahLastChanged && capacityMah) {
+      setCapacityWah(convertToWh(capacityMah));
+    } else if (capacityWah) {
       setCapacityMah(convertToMah(capacityWah));
     }
     setResult();
