@@ -7,40 +7,40 @@ import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const BatteryLife: React.FC = () => {
   const [capacityMah, setCapacityMah] = useState<number | undefined>();
-  const [capacityWah, setCapacityWah] = useState<number | undefined>();
+  const [capacityWh, setCapacityWh] = useState<number | undefined>();
   const [power, setPower] = useState<number | undefined>();
   const [puffSeconds, setPuffSeconds] = useState<number | undefined>();
   const [mahLastChanged, setLastChangedMah] = useState<boolean>();
   const [totalRuntime, setTotalRuntime] = useState<string>();
   const [amountOfPuffs, setAmountOfPuffs] = useState<string>();
 
-  const convertToMah = (wah: number) => (wah * 1000) / 3.7;
+  const convertToMah = (wh: number) => (wh * 1000) / 3.7;
   const convertToWh = (mah: number) => (mah * 3.7) / 1000;
 
   function setResult() {
-    let wah: number;
+    let wh: number;
 
     if (capacityMah && power) {
-      wah = convertToWh(capacityMah);
-    } else if (capacityWah && power) {
-      wah = capacityWah;
+      wh = convertToWh(capacityMah);
+    } else if (capacityWh && power) {
+      wh = capacityWh;
     } else {
       return;
     }
 
-    setTotalRuntime(`Total runtime: ${Math.round((wah / power) * 60)}`);
+    setTotalRuntime(`Total runtime: ${Math.round((wh / power) * 60)}`);
 
     if (puffSeconds) {
-      setAmountOfPuffs(`Amount of puffs: ${Math.round(((wah / power) * 3600) / puffSeconds)}`);
+      setAmountOfPuffs(`Amount of puffs: ${Math.round(((wh / power) * 3600) / puffSeconds)}`);
     }
   }
 
   const handleCalculate = (e: any) => {
     e.preventDefault();
     if (mahLastChanged && capacityMah) {
-      setCapacityWah(convertToWh(capacityMah));
-    } else if (capacityWah) {
-      setCapacityMah(convertToMah(capacityWah));
+      setCapacityWh(convertToWh(capacityMah));
+    } else if (capacityWh) {
+      setCapacityMah(convertToMah(capacityWh));
     }
     setResult();
   };
@@ -49,7 +49,7 @@ const BatteryLife: React.FC = () => {
     e.preventDefault();
     [
       setCapacityMah,
-      setCapacityWah,
+      setCapacityWh,
       setPower,
       setPuffSeconds,
       setAmountOfPuffs,
@@ -117,14 +117,14 @@ const BatteryLife: React.FC = () => {
                 }
               >
                 <InputNumber
-                  value={capacityWah}
+                  value={capacityWh}
                   size="large"
                   step={0.1}
                   min={0.01}
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={e => {
-                    setCapacityWah(e === undefined ? undefined : Number(e));
+                    setCapacityWh(e === undefined ? undefined : Number(e));
                     setLastChangedMah(false);
                   }}
                   placeholder={formatMessage({
