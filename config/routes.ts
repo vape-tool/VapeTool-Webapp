@@ -121,6 +121,12 @@ const routes: IRoute[] = [
                 icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
                 component: './batterylife/BatteryLife',
               },
+              {
+                path: '/mixer',
+                name: 'Mixer',
+                icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
+                component: './mixer/Mixer',
+              },
               // {
               //   path: '/knowledge',
               //   name: 'knowledge',
