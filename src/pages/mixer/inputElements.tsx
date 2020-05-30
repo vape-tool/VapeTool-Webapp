@@ -1,25 +1,24 @@
 import React from 'react';
 import { InputNumber } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import FormItem from 'antd/lib/form/FormItem';
 import VgPgRatioView from '@/components/VgPgRatioView';
 
 export default function InputElements(props: any) {
   return (
     <>
-      Amount [ml]
-      <FormItem>
+      <FormItem label={<FormattedMessage id="misc.properties.ml" defaultMessage="Amount [ml]" />}>
         <InputNumber
-          value={props.mixData.ml}
+          value={props.mixData.amount}
           size="large"
           step={1}
           min={0.5}
           precision={2}
           style={{ width: '100%', maxWidth: 200 }}
-          onChange={newValue => {
+          onChange={amount => {
             props.onValueChange({
               ...props.mixData,
-              ml: newValue,
+              amount,
             });
           }}
           placeholder={formatMessage({
@@ -28,19 +27,20 @@ export default function InputElements(props: any) {
           })}
         />
       </FormItem>
-      Strength [mg/ml]
-      <FormItem>
+      <FormItem
+        label={<FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />}
+      >
         <InputNumber
-          value={props.mixData.mg_ml}
+          value={props.mixData.strength}
           size="large"
           step={0.5}
           min={0}
           precision={2}
           style={{ width: '100%', maxWidth: 200 }}
-          onChange={newValue => {
+          onChange={strength => {
             props.onValueChange({
               ...props.mixData,
-              mg_ml: newValue,
+              strength,
             });
           }}
           placeholder={formatMessage({
@@ -53,13 +53,14 @@ export default function InputElements(props: any) {
         onRatioChange={newValue => {
           props.onValueChange({
             ...props.mixData,
-            vgRatio: 100 - newValue,
+            ratio: 100 - newValue,
           });
         }}
-        ratio={props.mixData.vgRatio}
+        ratio={props.mixData.ratio}
       />
-      Thinner [%]
-      <FormItem>
+      <FormItem
+        label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
+      >
         <InputNumber
           value={props.mixData.thinner}
           size="large"
