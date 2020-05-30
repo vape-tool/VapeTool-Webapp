@@ -1,14 +1,24 @@
 import React from 'react';
 import Select from 'antd/es/select';
+import { MixableType } from '@vapetool/types';
 
 const { Option } = Select;
 
-export default function() {
+export default function(props: any) {
   return (
-    <Select defaultValue={1} style={{ display: 'flex', margin: 'auto' }}>
-      <Option value={1}>Premix</Option>
-      <Option value={2}>Base (NicoShot)</Option>
-      <Option value={3}>E-Liquid</Option>
+    <Select
+      onChange={type => {
+        props.onChange({
+          ...props.mixable,
+          type,
+        });
+      }}
+      defaultValue={MixableType.BASE}
+      style={{ display: 'flex', margin: 'auto' }}
+    >
+      <Option value={MixableType.PREMIX}>Premix</Option>
+      <Option value={MixableType.BASE}>Base (NicoShot)</Option>
+      <Option value={MixableType.LIQUID}>E-Liquid</Option>
     </Select>
   );
 }

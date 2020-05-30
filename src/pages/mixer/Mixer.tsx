@@ -7,6 +7,7 @@ import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { UpOutlined } from '@ant-design/icons';
+import { MixableType } from '@vapetool/types';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
 
@@ -18,34 +19,40 @@ export interface OhmLawProps {
 // TODO check if not needed adjust to new Form API
 const OhmLaw: React.FC<OhmLawProps> = () => {
   const mixDataPattern = {
-    ml: undefined,
-    mg_ml: undefined,
-    vgRatio: 50,
+    type: MixableType.BASE,
+    amount: undefined,
+    strength: undefined,
+    ratio: 50,
     thinner: undefined,
   };
 
-  const [mixData1, setMixData1] = useState(mixDataPattern);
+  const [mixable1, setMixable1] = useState(mixDataPattern);
 
-  const [mixData2, setMixData2] = useState(mixDataPattern);
+  const [mixable2, setMixable2] = useState(mixDataPattern);
 
   const handleClear = () => {
-    setMixData1({
+    setMixable1({
+      ...mixDataPattern,
+    });
+    setMixable2({
       ...mixDataPattern,
     });
   };
 
-  //   const [result, setResult] = useState({
-  //     totalMl: 0,
-  //     pgRatio: 50,
-  //     strength: 0,
-  //   });
-
   const handleCalculate = async (e: any) => {
     e.preventDefault();
+    console.log(mixable1, mixable2);
+    const headers = new Headers();
+    headers.append('mixable1', JSON.stringify(mixable1));
+    headers.append('mixable2', JSON.stringify(mixable2));
+    fetch('url', {
+      method: 'POST',
+      headers,
+    })
+      .then(response => response.json())
+      .then(responseJson => console.log(responseJson))
+      .catch(error => alert(`Error when fetching ${error}`));
     alert('Calculated');
-    // fetch('url')
-    //   .then(response => response.json())
-    //   .then(responseJson => setMixData1(responseJson));
   };
 
   return (
@@ -57,16 +64,16 @@ const OhmLaw: React.FC<OhmLawProps> = () => {
           </Col>
           <Row>
             <Col xs={12} sm={12} md={12} lg={12}>
-              <SelectType />
+              <SelectType mixable={mixable1} onChange={setMixable1} />
               <Card>
-                <InputElements mixData={mixData1} onValueChange={setMixData1} />
+                <InputElements mixData={mixable1} onValueChange={setMixable1} />
               </Card>
             </Col>
 
             <Col xs={12} sm={12} md={12} lg={12}>
-              <SelectType />
+              <SelectType mixable={mixable2} onChange={setMixable2} />
               <Card>
-                <InputElements mixData={mixData2} onValueChange={setMixData2} />
+                <InputElements mixData={mixable2} onValueChange={setMixable2} />
               </Card>
             </Col>
           </Row>
