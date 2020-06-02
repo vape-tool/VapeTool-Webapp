@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputNumber } from 'antd';
+import { InputNumber, Col } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import FormItem from 'antd/lib/form/FormItem';
 import VgPgRatioView from '@/components/VgPgRatioView';
@@ -27,6 +27,7 @@ export default function InputElements(props: any) {
           })}
         />
       </FormItem>
+
       <FormItem
         label={<FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />}
       >
@@ -49,15 +50,18 @@ export default function InputElements(props: any) {
           })}
         />
       </FormItem>
-      <VgPgRatioView
-        onRatioChange={newValue => {
-          props.onValueChange({
-            ...props.mixData,
-            ratio: 100 - newValue,
-          });
-        }}
-        ratio={props.mixData.ratio}
-      />
+      <Col style={{ textAlign: 'center' }}>
+        <VgPgRatioView
+          onRatioChange={newValue => {
+            props.onValueChange({
+              ...props.mixData,
+              ratio: 100 - newValue,
+            });
+          }}
+          ratio={props.mixData.ratio}
+        />
+      </Col>
+
       <FormItem
         label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
       >
