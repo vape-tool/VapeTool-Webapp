@@ -7,9 +7,10 @@ import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { UpOutlined } from '@ant-design/icons';
-import { MixableType } from '@vapetool/types';
+import { MixableType, Mixable } from '@vapetool/types';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
+import { calculate } from '@/services/mixer';
 
 export interface OhmLawProps {
   ohm: OhmModelState;
@@ -18,14 +19,21 @@ export interface OhmLawProps {
 
 // TODO check if not needed adjust to new Form API
 const OhmLaw: React.FC<OhmLawProps> = () => {
-  const mixDataPattern = {
+  // const mixDataPattern = {
+  //   type: MixableType.BASE,
+  //   amount: null,
+  //   strength: null,
+  //   ratio: 50,
+  //   thinner: null,
+  // };
+
+  const mixDataPattern: Mixable = {
     type: MixableType.BASE,
     amount: undefined,
     strength: undefined,
     ratio: 50,
     thinner: undefined,
   };
-
   const [mixable1, setMixable1] = useState(mixDataPattern);
 
   const [mixable2, setMixable2] = useState(mixDataPattern);
@@ -41,18 +49,7 @@ const OhmLaw: React.FC<OhmLawProps> = () => {
 
   const handleCalculate = async (e: any) => {
     e.preventDefault();
-    console.log(mixable1, mixable2);
-    const headers = new Headers();
-    headers.append('mixable1', JSON.stringify(mixable1));
-    headers.append('mixable2', JSON.stringify(mixable2));
-    fetch('url', {
-      method: 'POST',
-      headers,
-    })
-      .then(response => response.json())
-      .then(responseJson => console.log(responseJson))
-      .catch(error => alert(`Error when fetching ${error}`));
-    alert('Calculated');
+    console.log(await calculate(mixable1, mixable2));
   };
 
   return (
