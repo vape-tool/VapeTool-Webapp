@@ -134,24 +134,29 @@ const Mixer: React.FC = () => {
           <Card>
             <Row
               style={{
-                textAlign: 'left',
+                textAlign: 'center',
                 alignItems: 'center',
+                flex: 1,
+                flexDirection: 'row',
+                fontSize: 24,
               }}
             >
-              <Col style={{ float: 'left', width: '25%', textAlign: 'left' }}>
-                <Typography style={{ fontWeight: 'bold', fontSize: 20 }}>Result:</Typography>
+              <Col style={{ margin: 'auto' }}>
+                <Row>
+                  <Typography style={{ fontWeight: 'bold', fontSize: 24 }}>Ratio:&nbsp;</Typography>
+                  <Typography>55VG/45PG</Typography>
+                </Row>
               </Col>
-              <Col style={{ width: '15%' }}>
-                <Typography>20.00 ml</Typography>
-              </Col>
-              <Col style={{ width: '30%' }}>
-                <Typography>55VG/45PG</Typography>
-              </Col>
-              <Col style={{ width: '25%' }}>
-                <Typography>18.0 mg/ml</Typography>
+              <Col style={{ margin: 'auto' }}>
+                <Row>
+                  <Typography style={{ fontWeight: 'bold', fontSize: 24 }}>
+                    Strength:&nbsp;
+                  </Typography>
+                  <Typography>18.00 mg/ml</Typography>
+                </Row>
               </Col>
             </Row>
-            <Table columns={columns} dataSource={data} />
+            <Table columns={columns} dataSource={data} pagination={false} />
           </Card>
 
           <Col xs={24} sm={24} md={24} lg={24}>
