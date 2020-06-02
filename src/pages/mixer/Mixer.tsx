@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, Row } from 'antd';
-import { connect } from 'dva';
 import ButtonGroup from 'antd/es/button/button-group';
-import { Dispatch } from 'redux';
-import { ConnectState } from '@/models/connect';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { UpOutlined } from '@ant-design/icons';
 import { MixableType, Mixable } from '@vapetool/types';
@@ -12,13 +9,8 @@ import InputElements from './inputElements';
 import SelectType from './SelectType';
 import { calculate } from '@/services/mixer';
 
-export interface OhmLawProps {
-  ohm: OhmModelState;
-  dispatch: Dispatch;
-}
-
 // TODO check if not needed adjust to new Form API
-const OhmLaw: React.FC<OhmLawProps> = () => {
+export const Mixer: React.FC = () => {
   // const mixDataPattern = {
   //   type: MixableType.BASE,
   //   amount: null,
@@ -93,7 +85,3 @@ const OhmLaw: React.FC<OhmLawProps> = () => {
     </PageHeaderWrapper>
   );
 };
-
-export default connect(({ ohm }: ConnectState) => ({
-  ohm,
-}))(OhmLaw);
