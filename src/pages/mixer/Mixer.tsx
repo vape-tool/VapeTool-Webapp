@@ -10,7 +10,7 @@ import SelectType from './SelectType';
 import { calculate } from '@/services/mixer';
 
 // TODO check if not needed adjust to new Form API
-export const Mixer: React.FC = () => {
+const Mixer: React.FC = () => {
   // const mixDataPattern = {
   //   type: MixableType.BASE,
   //   amount: null,
@@ -85,3 +85,5 @@ export const Mixer: React.FC = () => {
     </PageHeaderWrapper>
   );
 };
+
+export default Mixer;
