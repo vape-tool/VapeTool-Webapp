@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Col, Form, Row } from 'antd';
+import { Button, Card, Col, Form, Row, Table, Typography } from 'antd';
 import ButtonGroup from 'antd/es/button/button-group';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { UpOutlined } from '@ant-design/icons';
@@ -44,6 +44,70 @@ const Mixer: React.FC = () => {
     console.log(await calculate(mixable1, mixable2));
   };
 
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Percentage [%]',
+      dataIndex: 'percentage',
+      key: 'percentage',
+    },
+    {
+      title: 'Amount [ml]',
+      dataIndex: 'amount',
+      key: 'amount',
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: 'Drops',
+      dataIndex: 'drops',
+      key: 'drops',
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: 'Weight [g]',
+      dataIndex: 'weight',
+      key: 'weight',
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+  ];
+
+  const data = [
+    {
+      key: '1',
+      name: 'Base',
+      percentage: 32,
+      amount: 10,
+      drops: 400,
+      weight: 10,
+    },
+    {
+      key: '2',
+      name: 'Premix',
+      percentage: 32,
+      amount: 10,
+      drops: 400,
+      weight: 10,
+    },
+    {
+      key: '3',
+      name: 'Total',
+      percentage: 32,
+      amount: 10,
+      drops: 400,
+      weight: 10,
+    },
+  ];
+
   return (
     <PageHeaderWrapper>
       <Card>
@@ -66,6 +130,29 @@ const Mixer: React.FC = () => {
               </Card>
             </Col>
           </Row>
+
+          <Card>
+            <Row
+              style={{
+                textAlign: 'left',
+                alignItems: 'center',
+              }}
+            >
+              <Col style={{ float: 'left', width: '25%', textAlign: 'left' }}>
+                <Typography style={{ fontWeight: 'bold', fontSize: 20 }}>Result:</Typography>
+              </Col>
+              <Col style={{ width: '15%' }}>
+                <Typography>20.00 ml</Typography>
+              </Col>
+              <Col style={{ width: '30%' }}>
+                <Typography>55VG/45PG</Typography>
+              </Col>
+              <Col style={{ width: '25%' }}>
+                <Typography>18.0 mg/ml</Typography>
+              </Col>
+            </Row>
+            <Table columns={columns} dataSource={data} />
+          </Card>
 
           <Col xs={24} sm={24} md={24} lg={24}>
             <Form.Item style={{ marginTop: 20, display: 'flex', marginLeft: 'auto' }}>
