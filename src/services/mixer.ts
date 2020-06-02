@@ -2,11 +2,14 @@ import { Mixable } from '@vapetool/types';
 import request from '@/utils/request';
 import { auth } from '@/utils/firebase';
 
-export function calculate(mixable1: Mixable, mixable2: Mixable) {
+export function calculate(mixable1: Partial<Mixable>, mixable2: Partial<Mixable>) {
   return sendRequest(mixable1, mixable2);
 }
 
-export async function sendRequest<T>(mixable1: Mixable, mixable2: Mixable): Promise<T> {
+export async function sendRequest<T>(
+  mixable1: Partial<Mixable>,
+  mixable2: Partial<Mixable>,
+): Promise<T> {
   try {
     if (!auth.currentUser) {
       throw Error('You are not logged in');
