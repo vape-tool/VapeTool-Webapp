@@ -27,7 +27,7 @@ const OhmLaw: React.FC<OhmLawProps> = () => {
   //   thinner: null,
   // };
 
-  const mixDataPattern: Mixable = {
+  const mixDataPattern: Partial<Mixable> = {
     type: MixableType.BASE,
     amount: undefined,
     strength: undefined,
