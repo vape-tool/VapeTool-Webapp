@@ -126,7 +126,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'https://web.vapetool.app/',
+      target: 'http://localhost:8001',
       changeOrigin: true,
       // pathRewrite: {
       //   '^/api': '',

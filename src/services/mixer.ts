@@ -14,7 +14,7 @@ export async function sendRequest<T>(mixable1: Mixable, mixable2: Mixable): Prom
     const idToken = await auth.currentUser!.getIdToken(false);
     console.log({ data: JSON.stringify({ mixable1, mixable2, idToken }) });
     return await request.post(`/api/calculator/mixer/mix`, {
-      data: JSON.stringify({ mixable1, mixable2, idToken }),
+      data: { mixable1, mixable2, idToken },
     });
   } catch (e) {
     console.error(e);
