@@ -3,6 +3,7 @@ import { InputNumber, Col } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import FormItem from 'antd/lib/form/FormItem';
 import VgPgRatioView from '@/components/VgPgRatioView';
+import { MixableType } from '@vapetool/types';
 
 export default function InputElements(props: any) {
   return (
@@ -28,7 +29,7 @@ export default function InputElements(props: any) {
         />
       </FormItem>
 
-      {!props.isPremix && (
+      {props.mixData.type !== MixableType.PREMIX && (
         <FormItem
           label={
             <FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />
@@ -65,6 +66,32 @@ export default function InputElements(props: any) {
           ratio={props.mixData.ratio}
         />
       </Col>
+      {props.mixData.type === MixableType.LIQUID && (
+        <FormItem
+          label={
+            <FormattedMessage id="misc.properties.flavorPercentage" defaultMessage="Flavor [%]" />
+          }
+        >
+          <InputNumber
+            value={props.mixData.flavorsPercentage}
+            size="large"
+            step={0.1}
+            min={0}
+            precision={2}
+            style={{ width: '100%', maxWidth: 200 }}
+            onChange={newValue => {
+              props.onValueChange({
+                ...props.mixData,
+                flavorPercentage: newValue,
+              });
+            }}
+            placeholder={formatMessage({
+              id: 'misc.units.long.flavorPercentage',
+              defaultMessage: 'Flavor [%]',
+            })}
+          />
+        </FormItem>
+      )}
       <FormItem
         label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
       >

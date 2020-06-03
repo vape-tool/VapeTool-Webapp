@@ -26,6 +26,7 @@ const Mixer: React.FC = () => {
     strength: undefined,
     ratio: 50,
     thinner: undefined,
+    flavorPercentage: undefined,
   };
   const [mixable1, setMixable1] = useState(mixDataPattern);
 
@@ -73,22 +74,14 @@ const Mixer: React.FC = () => {
                 <Col xs={12}>
                   <SelectType mixable={mixable1} onChange={setMixable1} />
                   <Card>
-                    <InputElements
-                      mixData={mixable1}
-                      onValueChange={setMixable1}
-                      isPremix={mixable1.type === MixableType.PREMIX}
-                    />
+                    <InputElements mixData={mixable1} onValueChange={setMixable1} />
                   </Card>
                 </Col>
 
                 <Col xs={12}>
                   <SelectType mixable={mixable2} onChange={setMixable2} />
                   <Card>
-                    <InputElements
-                      mixData={mixable2}
-                      onValueChange={setMixable2}
-                      isPremix={mixable2.type === MixableType.PREMIX}
-                    />
+                    <InputElements mixData={mixable2} onValueChange={setMixable2} />
                   </Card>
                 </Col>
               </Row>
