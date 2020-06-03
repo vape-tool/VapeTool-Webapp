@@ -34,30 +34,3 @@ export const columns = [
     },
   },
 ];
-
-export const data = [
-  {
-    key: '1',
-    name: 'Base',
-    percentage: 32,
-    amount: 10,
-    drops: 400,
-    weight: 10,
-  },
-  {
-    key: '2',
-    name: 'Premix',
-    percentage: 32,
-    amount: 10,
-    drops: 400,
-    weight: 10,
-  },
-  {
-    key: '3',
-    name: 'Total',
-    percentage: 32,
-    amount: 10,
-    drops: 400,
-    weight: 10,
-  },
-];
