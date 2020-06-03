@@ -70,7 +70,7 @@
     "@stripe/react-stripe-js": "^1.1.0",
     "@stripe/stripe-js": "^1.2.0",
     "@svgr/webpack": "^4.3.3",
-    "@vapetool/types": "^1.4.25",
+    "@vapetool/types": "^1.4.28",
     "antd": "^4.0.0-rc.1",
     "apexcharts": "^3.16.1",
     "classnames": "^2.2.6",
