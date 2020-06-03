@@ -28,28 +28,32 @@ export default function InputElements(props: any) {
         />
       </FormItem>
 
-      <FormItem
-        label={<FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />}
-      >
-        <InputNumber
-          value={props.mixData.strength}
-          size="large"
-          step={0.5}
-          min={0}
-          precision={2}
-          style={{ width: '100%', maxWidth: 200 }}
-          onChange={strength => {
-            props.onValueChange({
-              ...props.mixData,
-              strength,
-            });
-          }}
-          placeholder={formatMessage({
-            id: 'misc.units.long.nicotine',
-            defaultMessage: 'Strength [mg/ml]',
-          })}
-        />
-      </FormItem>
+      {!props.isPremix && (
+        <FormItem
+          label={
+            <FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />
+          }
+        >
+          <InputNumber
+            value={props.mixData.strength}
+            size="large"
+            step={0.5}
+            min={0}
+            precision={2}
+            style={{ width: '100%', maxWidth: 200 }}
+            onChange={strength => {
+              props.onValueChange({
+                ...props.mixData,
+                strength,
+              });
+            }}
+            placeholder={formatMessage({
+              id: 'misc.units.long.nicotine',
+              defaultMessage: 'Strength [mg/ml]',
+            })}
+          />
+        </FormItem>
+      )}
       <Col style={{ textAlign: 'center' }}>
         <VgPgRatioView
           onRatioChange={newValue => {
@@ -61,7 +65,6 @@ export default function InputElements(props: any) {
           ratio={props.mixData.ratio}
         />
       </Col>
-
       <FormItem
         label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
       >

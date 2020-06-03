@@ -73,14 +73,22 @@ const Mixer: React.FC = () => {
                 <Col xs={12}>
                   <SelectType mixable={mixable1} onChange={setMixable1} />
                   <Card>
-                    <InputElements mixData={mixable1} onValueChange={setMixable1} />
+                    <InputElements
+                      mixData={mixable1}
+                      onValueChange={setMixable1}
+                      isPremix={mixable1.type === MixableType.PREMIX}
+                    />
                   </Card>
                 </Col>
 
                 <Col xs={12}>
                   <SelectType mixable={mixable2} onChange={setMixable2} />
                   <Card>
-                    <InputElements mixData={mixable2} onValueChange={setMixable2} />
+                    <InputElements
+                      mixData={mixable2}
+                      onValueChange={setMixable2}
+                      isPremix={mixable2.type === MixableType.PREMIX}
+                    />
                   </Card>
                 </Col>
               </Row>
