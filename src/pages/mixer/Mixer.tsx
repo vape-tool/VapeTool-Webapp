@@ -10,27 +10,18 @@ import SelectType from './SelectType';
 import { calculate } from '@/services/mixer';
 import { columns } from './tableData';
 
-// TODO check if not needed adjust to new Form API
 const Mixer: React.FC = () => {
-  // const mixDataPattern = {
-  //   type: MixableType.BASE,
-  //   amount: null,
-  //   strength: null,
-  //   ratio: 50,
-  //   thinner: null,
-  // };
-
   const mixDataPattern: Partial<Mixable> = {
     type: MixableType.BASE,
     amount: undefined,
     strength: undefined,
     ratio: 50,
     thinner: undefined,
-    flavorPercentage: undefined,
   };
 
   const mixResultPattern: Partial<MixResult> = {
-    amount: 0,
+    // @ts-ignore
+    results: [mixDataPattern, mixDataPattern],
     ratio: 0,
     strength: 0,
   };
@@ -79,25 +70,25 @@ const Mixer: React.FC = () => {
       key: '1',
       name: MixableType[mixable1.type],
       percentage: Math.round(results.results[0].percentage * 100) / 100,
-      amount: results.results[0].ml,
+      amount: results.results[0].amount,
       drops: results.results[0].drips,
-      weight: results.results[0].weight,
+      weight: Math.round(results.results[0].weight * 100) / 100,
     },
     {
       key: '2',
       name: MixableType[mixable2.type],
       percentage: Math.round(results.results[1].percentage * 100) / 100,
-      amount: results.results[1].ml,
+      amount: results.results[1].amount,
       drops: results.results[1].drips,
-      weight: results.results[1].weight,
+      weight: Math.round(results.results[1].weight * 100) / 100,
     },
     {
       key: '3',
       name: 'Total',
       percentage: 100,
-      amount: results.results[1].ml + results.results[2].ml,
-      drops: results.results[1].drips + results.results[2].drips,
-      weight: results.results[1].weight + results.results[2].weight,
+      amount: results.results[0].amount + results.results[1].amount,
+      drops: results.results[0].drips + results.results[1].drips,
+      weight: Math.round(results.results[0].weight + results.results[1].weight * 100) / 100,
     },
   ];
   return (
@@ -145,7 +136,10 @@ const Mixer: React.FC = () => {
                         <Typography style={{ fontWeight: 'bold', fontSize: 24 }}>
                           Ratio:&nbsp;
                         </Typography>
-                        <Typography>55VG/45PG</Typography>
+                        <Typography>
+                          {Math.round(100 - results.ratio * 10) / 10}VG/
+                          {Math.round(results.ratio * 10) / 10}PG
+                        </Typography>
                       </Row>
                     </Col>
                     <Col style={{ margin: 'auto' }}>
@@ -153,7 +147,9 @@ const Mixer: React.FC = () => {
                         <Typography style={{ fontWeight: 'bold', fontSize: 24 }}>
                           Strength:&nbsp;
                         </Typography>
-                        <Typography>{results.strength}mg/ml</Typography>
+                        <Typography>
+                          {Math.round(results.strength * 100) / 100}&nbsp;mg/ml
+                        </Typography>
                       </Row>
                     </Col>
                   </Row>
