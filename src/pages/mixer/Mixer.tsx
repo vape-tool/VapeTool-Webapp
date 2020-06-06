@@ -4,55 +4,74 @@ import { Button, Card, Col, Form, Row, Table, Typography } from 'antd';
 import ButtonGroup from 'antd/es/button/button-group';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { UpOutlined } from '@ant-design/icons';
-import { MixableType, Mixable, MixResult } from '@vapetool/types';
+import { MixableType, Mixable, MixableResult } from '@vapetool/types';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
 import { calculate } from '@/services/mixer';
 import { columns } from './tableData';
 
 const Mixer: React.FC = () => {
+  const [form] = Form.useForm();
+
   const mixDataPattern: Partial<Mixable> = {
-    type: MixableType.BASE,
     amount: undefined,
     strength: undefined,
     ratio: 50,
     thinner: undefined,
+    flavorsPercentage: undefined,
   };
 
-  const mixResultPattern: Partial<MixResult> = {
-    // @ts-ignore
-    results: [mixDataPattern, mixDataPattern],
-    ratio: 0,
-    strength: 0,
-  };
-
-  const [mixable1, setMixable1] = useState(mixDataPattern);
-
-  const [mixable2, setMixable2] = useState(mixDataPattern);
-
-  const [results, setResults] = useState({
-    ...mixResultPattern,
-    results: [mixResultPattern, mixResultPattern, mixResultPattern],
+  const [mixable1, setMixable1] = useState({
+    ...mixDataPattern,
+    type: MixableType.PREMIX,
   });
 
-  const [resultsVisible, setResultsVisible] = useState(false);
+  const [mixable2, setMixable2] = useState({
+    ...mixDataPattern,
+    type: MixableType.BASE,
+  });
+
+  const [data, setData] = useState<MixableResult[] | undefined>(undefined);
+
+  const [strength, setStrength] = useState<number | undefined>(undefined);
+
+  const [ratio, setRatio] = useState<number | undefined>(undefined);
 
   const handleClear = () => {
     setMixable1({
       ...mixDataPattern,
+      type: mixable1.type,
     });
     setMixable2({
       ...mixDataPattern,
+      type: mixable2.type,
     });
   };
 
-  const handleCalculate = async (e: any) => {
-    e.preventDefault();
-    await calculate(mixable1, mixable2).then(_results => {
-      setResultsVisible(true);
-      setResults(_results);
-      console.log(_results);
-    });
+  const handleCalculate = async () => {
+    const result = await calculate(
+      {
+        ...(mixable1 as Mixable),
+        thinner: mixable1.thinner || 0,
+        strength: mixable1.strength || 0,
+      },
+      {
+        ...(mixable2 as Mixable),
+        thinner: mixable2.thinner || 0,
+        strength: mixable2.strength || 0,
+      },
+    );
+    setRatio(result.ratio);
+    setStrength(result.strength);
+    console.log(result);
+    const newData: MixableResult[] = result.results.map(
+      (mixableResult: MixableResult, index: number) => ({
+        ...mixableResult,
+        key: index,
+        name: MixableType[mixableResult.type],
+      }),
+    );
+    setData(newData);
   };
 
   const formItemLayout = {
@@ -65,38 +84,18 @@ const Mixer: React.FC = () => {
       sm: { span: 16 },
     },
   };
-  const data = [
-    {
-      key: '1',
-      name: MixableType[mixable1.type],
-      percentage: Math.round(results.results[0].percentage * 100) / 100,
-      amount: results.results[0].amount,
-      drops: results.results[0].drips,
-      weight: Math.round(results.results[0].weight * 100) / 100,
-    },
-    {
-      key: '2',
-      name: MixableType[mixable2.type],
-      percentage: Math.round(results.results[1].percentage * 100) / 100,
-      amount: results.results[1].amount,
-      drops: results.results[1].drips,
-      weight: Math.round(results.results[1].weight * 100) / 100,
-    },
-    {
-      key: '3',
-      name: 'Total',
-      percentage: 100,
-      amount: results.results[0].amount + results.results[1].amount,
-      drops: results.results[0].drips + results.results[1].drips,
-      weight: Math.round(results.results[0].weight + results.results[1].weight * 100) / 100,
-    },
-  ];
   return (
     <PageHeaderWrapper>
       <Card>
         <Row justify="center" gutter={32}>
           <Col xs={24} sm={20} md={20}>
-            <Form onSubmitCapture={handleCalculate} {...formItemLayout}>
+            <Form
+              form={form}
+              name="mixer_form"
+              onFinish={handleCalculate}
+              onFinishFailed={() => console.log('erro')}
+              {...formItemLayout}
+            >
               <Col lg={24} style={{ textAlign: 'center' }}>
                 <UpOutlined style={{ fontSize: 60 }} />
               </Col>
@@ -108,19 +107,32 @@ const Mixer: React.FC = () => {
                 <Col xs={12}>
                   <SelectType mixable={mixable1} onChange={setMixable1} />
                   <Card>
-                    <InputElements mixData={mixable1} onValueChange={setMixable1} />
+                    <InputElements mixData={mixable1} onValueChange={setMixable1} side="left" />
                   </Card>
                 </Col>
 
                 <Col xs={12}>
                   <SelectType mixable={mixable2} onChange={setMixable2} />
                   <Card>
-                    <InputElements mixData={mixable2} onValueChange={setMixable2} />
+                    <InputElements mixData={mixable2} onValueChange={setMixable2} side="right" />
                   </Card>
                 </Col>
               </Row>
 
-              {resultsVisible && (
+              <Col>
+                <Form.Item style={{ marginTop: 20, display: 'flex', marginLeft: 'auto' }}>
+                  <ButtonGroup>
+                    <Button type="primary" htmlType="submit">
+                      <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
+                    </Button>
+
+                    <Button type="default" onClick={handleClear}>
+                      <FormattedMessage id="misc.actions.clear" defaultMessage="Reset" />
+                    </Button>
+                  </ButtonGroup>
+                </Form.Item>
+              </Col>
+              {!!ratio && !!strength && data && (
                 <Card>
                   <Row
                     style={{
@@ -137,8 +149,8 @@ const Mixer: React.FC = () => {
                           Ratio:&nbsp;
                         </Typography>
                         <Typography>
-                          {Math.round(100 - results.ratio * 10) / 10}VG/
-                          {Math.round(results.ratio * 10) / 10}PG
+                          {100 - Math.round(ratio)}VG/
+                          {Math.round(ratio)}PG
                         </Typography>
                       </Row>
                     </Col>
@@ -147,29 +159,13 @@ const Mixer: React.FC = () => {
                         <Typography style={{ fontWeight: 'bold', fontSize: 24 }}>
                           Strength:&nbsp;
                         </Typography>
-                        <Typography>
-                          {Math.round(results.strength * 100) / 100}&nbsp;mg/ml
-                        </Typography>
+                        <Typography>{Math.round(strength * 100) / 100}&nbsp;mg/ml</Typography>
                       </Row>
                     </Col>
                   </Row>
                   <Table columns={columns} dataSource={data} pagination={false} />
                 </Card>
               )}
-
-              <Col>
-                <Form.Item style={{ marginTop: 20, display: 'flex', marginLeft: 'auto' }}>
-                  <ButtonGroup>
-                    <Button type="primary" htmlType="submit">
-                      <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
-                    </Button>
-
-                    <Button type="default" onClick={handleClear}>
-                      <FormattedMessage id="misc.actions.clear" defaultMessage="Reset" />
-                    </Button>
-                  </ButtonGroup>
-                </Form.Item>
-              </Col>
             </Form>
           </Col>
         </Row>
