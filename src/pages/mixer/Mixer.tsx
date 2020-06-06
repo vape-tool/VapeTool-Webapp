@@ -9,6 +9,7 @@ import InputElements from './inputElements';
 import SelectType from './SelectType';
 import { calculate } from '@/services/mixer';
 import { columns } from './tableData';
+import { capitalize } from '@/utils/utils';
 
 const Mixer: React.FC = () => {
   const [form] = Form.useForm();
@@ -31,7 +32,9 @@ const Mixer: React.FC = () => {
     type: MixableType.BASE,
   });
 
-  const [data, setData] = useState<MixableResult[] | undefined>(undefined);
+  const [data, setData] = useState<Omit<Omit<MixableResult, 'type'>, 'price'>[] | undefined>(
+    undefined,
+  );
 
   const [strength, setStrength] = useState<number | undefined>(undefined);
 
@@ -64,13 +67,21 @@ const Mixer: React.FC = () => {
     setRatio(result.ratio);
     setStrength(result.strength);
     console.log(result);
-    const newData: MixableResult[] = result.results.map(
+    const newData: Omit<Omit<MixableResult, 'type'>, 'price'>[] = result.results.map(
       (mixableResult: MixableResult, index: number) => ({
         ...mixableResult,
         key: index,
-        name: MixableType[mixableResult.type],
+        name: capitalize(MixableType[mixableResult.type]),
       }),
     );
+    const total = {
+      name: 'Total',
+      percentage: 100,
+      amount: newData.reduce((current, _result) => current + _result.amount, 0),
+      drops: newData.reduce((current, _result) => current + _result.drops, 0),
+      weight: newData.reduce((current, _result) => current + _result.weight, 0),
+    };
+    newData.push(total);
     setData(newData);
   };
 

@@ -139,3 +139,8 @@ export const safeConvert = (
 
 export const roundWithPrecision = (value: number, precision: number) =>
   Math.round((value + Number.EPSILON) * 10 ** precision) / 10 ** precision;
+
+export const capitalize = (s: string) => {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};
