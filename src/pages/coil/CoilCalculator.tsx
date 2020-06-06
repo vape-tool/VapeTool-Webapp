@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, InputNumber, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, Modal } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire } from '@vapetool/types';
@@ -22,9 +22,15 @@ import {
   SET_VOLTAGE,
   SET_WRAPS,
 } from '@/models/coil';
-import { CalculatorOutlined, LockFilled, UnlockOutlined } from '@ant-design/icons';
+import {
+  CalculatorOutlined,
+  LockFilled,
+  UnlockOutlined,
+  QuestionCircleFilled,
+} from '@ant-design/icons';
 import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
+import CoilHelper from '@/components/CoilHelper';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -58,6 +64,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const { dispatch, coil, properties, baseVoltage, isPro } = props;
 
   const [lastEdit, setLastEdit] = useState('resistance');
+  const [helpModalVisibile, setHelpModalVisible] = useState(false);
+  const [slider, setSlider] = useState<Carousel>();
 
   if (!dispatch) {
     return <div />;
@@ -143,6 +151,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       />
     </Col>
   );
+
   const coilSetup = (
     <Card style={{ height: '100%' }}>
       <Row>
@@ -156,6 +165,10 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
               <Option value="4">Quad Coil (4)</Option>
             </Select>
           </label>
+          <QuestionCircleFilled
+            style={{ fontSize: 32, float: 'right', textAlign: 'center' }}
+            onClick={() => setHelpModalVisible(true)}
+          />
         </Col>
 
         <Col xs={24}>
@@ -250,7 +263,37 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   return (
     <div>
-      <Row style={{ alignItems: 'stretch' }} justify="center">
+      <Modal
+        style={{ top: 20 }}
+        title="Help"
+        visible={helpModalVisibile}
+        onCancel={() => setHelpModalVisible(false)}
+        footer={[
+          <Button
+            key="back"
+            type="primary"
+            onClick={() =>
+              slider ? slider.prev() : console.error('Please restart page, something went wrong')
+            }
+          >
+            Previous
+          </Button>,
+          <Button
+            key="next"
+            type="primary"
+            onClick={() =>
+              slider ? slider.next() : console.error('Please restart page, something went wrong')
+            }
+          >
+            Next
+          </Button>,
+        ]}
+        // onOk={this.handleOk}
+        // onCancel={this.handleCancel}
+      >
+        <CoilHelper setSlider={setSlider} />
+      </Modal>
+      <Row style={{}} justify="center">
         <Col xs={{ span: 24, order: 2 }} xl={{ span: 8, order: 1 }}>
           {coilSetup}
         </Col>
