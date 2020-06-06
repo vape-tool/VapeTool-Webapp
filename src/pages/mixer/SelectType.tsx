@@ -13,7 +13,7 @@ export default function(props: any) {
           type,
         });
       }}
-      defaultValue={MixableType.BASE}
+      defaultValue={props.mixable.type}
       style={{ display: 'flex', margin: 'auto' }}
     >
       <Option value={MixableType.PREMIX}>Premix</Option>

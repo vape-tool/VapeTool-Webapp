@@ -8,6 +8,7 @@ export const columns = [
     title: 'Percentage [%]',
     dataIndex: 'percentage',
     key: 'percentage',
+    render: (text: number) => Math.round(text),
   },
   {
     title: 'Amount [ml]',
@@ -29,6 +30,7 @@ export const columns = [
     title: 'Weight [g]',
     dataIndex: 'weight',
     key: 'weight',
+    render: (text: number) => Math.round(text * 1000) / 1000,
     ellipsis: {
       showTitle: false,
     },

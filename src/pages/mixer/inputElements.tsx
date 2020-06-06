@@ -8,7 +8,16 @@ import { MixableType } from '@vapetool/types';
 export default function InputElements(props: any) {
   return (
     <>
-      <FormItem label={<FormattedMessage id="misc.properties.ml" defaultMessage="Amount [ml]" />}>
+      <FormItem
+        name={`amount-${props.side}`}
+        label={<FormattedMessage id="misc.properties.ml" defaultMessage="Amount [ml]" />}
+        rules={[
+          {
+            required: true,
+            message: 'Please input value!',
+          },
+        ]}
+      >
         <InputNumber
           value={props.mixData.amount}
           size="large"
@@ -31,9 +40,16 @@ export default function InputElements(props: any) {
 
       {props.mixData.type !== MixableType.PREMIX && (
         <FormItem
+          name={`strength-${props.side}`}
           label={
             <FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />
           }
+          rules={[
+            {
+              required: props.mixData.type !== MixableType.PREMIX,
+              message: 'Please input value!',
+            },
+          ]}
         >
           <InputNumber
             value={props.mixData.strength}
@@ -68,6 +84,7 @@ export default function InputElements(props: any) {
       </Col>
       {props.mixData.type === MixableType.LIQUID && (
         <FormItem
+          name={`flavorPercentage-${props.side}`}
           label={
             <FormattedMessage id="misc.properties.flavorPercentage" defaultMessage="Flavor [%]" />
           }
@@ -93,6 +110,7 @@ export default function InputElements(props: any) {
         </FormItem>
       )}
       <FormItem
+        name={`thinner-${props.side}`}
         label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
       >
         <InputNumber
