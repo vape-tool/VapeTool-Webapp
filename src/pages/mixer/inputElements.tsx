@@ -10,7 +10,7 @@ export default function InputElements(props: any) {
     <>
       <FormItem
         name={`amount-${props.side}`}
-        label={<FormattedMessage id="misc.properties.ml" defaultMessage="Amount [ml]" />}
+        label={<FormattedMessage id="liquid.amount" defaultMessage="Amount [ml]" />}
         rules={[
           {
             required: true,
@@ -32,7 +32,7 @@ export default function InputElements(props: any) {
             });
           }}
           placeholder={formatMessage({
-            id: 'misc.units.long.ml',
+            id: 'liquid.amount',
             defaultMessage: 'Amount [ml]',
           })}
         />
@@ -41,9 +41,7 @@ export default function InputElements(props: any) {
       {props.mixData.type !== MixableType.PREMIX && (
         <FormItem
           name={`strength-${props.side}`}
-          label={
-            <FormattedMessage id="misc.properties.strength" defaultMessage="Strength [mg/ml]" />
-          }
+          label={<FormattedMessage id="mixer.strength" defaultMessage="Strength [mg/ml]" />}
           rules={[
             {
               required: props.mixData.type !== MixableType.PREMIX,
@@ -65,7 +63,7 @@ export default function InputElements(props: any) {
               });
             }}
             placeholder={formatMessage({
-              id: 'misc.units.long.nicotine',
+              id: 'mixer.strength',
               defaultMessage: 'Strength [mg/ml]',
             })}
           />
@@ -85,9 +83,7 @@ export default function InputElements(props: any) {
       {props.mixData.type === MixableType.LIQUID && (
         <FormItem
           name={`flavorPercentage-${props.side}`}
-          label={
-            <FormattedMessage id="misc.properties.flavorPercentage" defaultMessage="Flavor [%]" />
-          }
+          label={<FormattedMessage id="mixer.flavorPercentage" defaultMessage="Flavor [%]" />}
         >
           <InputNumber
             value={props.mixData.flavorsPercentage}
@@ -103,7 +99,7 @@ export default function InputElements(props: any) {
               });
             }}
             placeholder={formatMessage({
-              id: 'misc.units.long.flavorPercentage',
+              id: 'mixer.flavorPercentage',
               defaultMessage: 'Flavor [%]',
             })}
           />
@@ -111,7 +107,7 @@ export default function InputElements(props: any) {
       )}
       <FormItem
         name={`thinner-${props.side}`}
-        label={<FormattedMessage id="misc.properties.thinner" defaultMessage="Thinner [%]" />}
+        label={<FormattedMessage id="liquid.thinner" defaultMessage="Thinner [%]" />}
       >
         <InputNumber
           value={props.mixData.thinner}
@@ -127,7 +123,7 @@ export default function InputElements(props: any) {
             });
           }}
           placeholder={formatMessage({
-            id: 'misc.units.long.thinner',
+            id: 'liquid.thinner',
             defaultMessage: 'Thinner [%]',
           })}
         />

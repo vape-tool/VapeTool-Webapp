@@ -10,6 +10,7 @@ import converters from './en-US/converters';
 import user from './en-US/user';
 import battery from './en-US/battery';
 import liquid from './en-US/liquid';
+import mixer from './en-US/mixer';
 import coilCalculator from './en-US/coilCalculator';
 
 export default {
@@ -31,5 +32,6 @@ export default {
   ...user,
   ...battery,
   ...liquid,
+  ...mixer,
   ...coilCalculator,
 };
