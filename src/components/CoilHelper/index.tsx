@@ -1,16 +1,19 @@
 import React from 'react';
 import { Carousel, Modal, Button } from 'antd';
 import ImageWebp from '../ImageWebp';
-import innerDiameterPng from '../../assets/innerCoilDiameter.png';
-import coilLegsLength from '../../assets/coilLegsLength.png';
-import coilWraps from '../../assets/coilWraps.png';
+import innerDiameterJpg from '../../assets/innerCoilDiameter.jpg';
+import coilLegsLengthJpg from '../../assets/coilLegsLength.jpg';
+import coilWrapsJpg from '../../assets/coilWraps.jpg';
+import innerDiameterWebp from '../../assets/innerCoilDiameter.webp';
+import coilLengsLengthWebp from '../../assets/coilLegsLength.webp';
+import coilWrapsWebp from '../../assets/coilWraps.webp';
 
 export default function CoilHelper(props: any) {
   return (
     <Modal
       style={{ top: 20 }}
       title="Help"
-      visible={props.helpModalVisibile}
+      visible={props.helpModalVisible}
       onCancel={() => props.setHelpModalVisible(false)}
       footer={[
         <Button
@@ -54,7 +57,8 @@ export default function CoilHelper(props: any) {
             <h3>This is diameter of drill on which you are wrapping your coil</h3>
           </div>
           <ImageWebp
-            png={innerDiameterPng}
+            png={innerDiameterJpg}
+            webp={innerDiameterWebp}
             style={{
               width: '100%',
             }}
@@ -70,7 +74,8 @@ export default function CoilHelper(props: any) {
             </h3>
           </div>
           <ImageWebp
-            png={coilLegsLength}
+            png={coilLegsLengthJpg}
+            webp={coilLengsLengthWebp}
             style={{
               width: '100%',
             }}
@@ -87,7 +92,8 @@ export default function CoilHelper(props: any) {
             </h3>
           </div>
           <ImageWebp
-            png={coilWraps}
+            png={coilWrapsJpg}
+            webp={coilWrapsWebp}
             style={{
               width: '100%',
             }}
