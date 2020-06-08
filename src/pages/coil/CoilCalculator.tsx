@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, Modal } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire } from '@vapetool/types';
@@ -263,36 +263,12 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   return (
     <div>
-      <Modal
-        style={{ top: 20 }}
-        title="Help"
-        visible={helpModalVisibile}
-        onCancel={() => setHelpModalVisible(false)}
-        footer={[
-          <Button
-            key="back"
-            type="primary"
-            onClick={() =>
-              slider ? slider.prev() : console.error('Please restart page, something went wrong')
-            }
-          >
-            Previous
-          </Button>,
-          <Button
-            key="next"
-            type="primary"
-            onClick={() =>
-              slider ? slider.next() : console.error('Please restart page, something went wrong')
-            }
-          >
-            Next
-          </Button>,
-        ]}
-        // onOk={this.handleOk}
-        // onCancel={this.handleCancel}
-      >
-        <CoilHelper setSlider={setSlider} />
-      </Modal>
+      <CoilHelper
+        setSlider={setSlider}
+        helpModalVisible={helpModalVisibile}
+        setHelpModalVisible={setHelpModalVisible}
+        slider={slider}
+      />
       <Row style={{}} justify="center">
         <Col xs={{ span: 24, order: 2 }} xl={{ span: 8, order: 1 }}>
           {coilSetup}
