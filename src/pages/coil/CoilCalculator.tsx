@@ -167,7 +167,10 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           </label>
           <QuestionCircleFilled
             style={{ fontSize: 32, float: 'right', textAlign: 'center' }}
-            onClick={() => setHelpModalVisible(true)}
+            onClick={() => {
+              setHelpModalVisible(true);
+              console.log(helpModalVisibile);
+            }}
           />
         </Col>
 
