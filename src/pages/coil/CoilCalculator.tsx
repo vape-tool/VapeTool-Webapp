@@ -32,6 +32,7 @@ import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
 import saveCoil from './saveCoil';
+import { UserModelState } from '@/models/user';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -41,6 +42,7 @@ export interface CoilCalculatorProps extends ConnectProps {
   properties?: Properties;
   baseVoltage: number;
   isPro: boolean;
+  user: UserModelState;
 }
 
 enum Field {
@@ -62,7 +64,7 @@ const FIELD_TO_METHOD_MAP = {
 };
 
 const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
-  const { dispatch, coil, properties, baseVoltage, isPro } = props;
+  const { dispatch, coil, properties, baseVoltage, isPro, user } = props;
 
   const [lastEdit, setLastEdit] = useState('resistance');
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
@@ -244,7 +246,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             icon={<CalculatorOutlined />}
             size="large"
             onClick={() => {
-              saveCoil(coil);
+              saveCoil(coil, user);
             }}
           >
             <FormattedMessage id="misc.save" defaultMessage="Save" />
@@ -298,4 +300,5 @@ export default connect(({ coil, user }: ConnectState) => ({
   properties: coil.properties,
   baseVoltage: coil.baseVoltage,
   isPro: isProUser(user.currentUser),
+  user: user.currentUser,
 }))(CoilCalculator);
