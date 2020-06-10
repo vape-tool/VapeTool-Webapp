@@ -22,11 +22,14 @@ import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
+import { UserModelState } from '@/models/user';
+import { saveLiquid } from '@/services/liquid';
 
 const { Title } = Typography;
 
 export interface LiquidBlenderProps {
   liquid: LiquidModelState;
+  user: UserModelState;
   dispatch: Dispatch;
 }
 
@@ -60,6 +63,7 @@ const resultColumns = [
 const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   dispatch,
   liquid: { currentLiquid, results },
+  user,
 }) => {
   const onBaseStrengthChange = (value: number | undefined) =>
     dispatchSetBaseStrength(dispatch, value);
@@ -211,17 +215,34 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               </Title>
             }
             extra={
-              <Affix offsetBottom={50}>
-                <Button
-                  type="primary"
-                  icon={<CalculatorOutlined />}
-                  shape="round"
-                  size="large"
-                  onClick={onCalculateClick}
-                >
-                  <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
-                </Button>
-              </Affix>
+              <Row>
+                <Affix offsetBottom={50}>
+                  <Button
+                    type="primary"
+                    icon={<CalculatorOutlined />}
+                    shape="round"
+                    size="large"
+                    onClick={onCalculateClick}
+                  >
+                    <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
+                  </Button>
+                </Affix>
+                {results && (
+                  <Affix offsetBottom={50}>
+                    <Button
+                      type="primary"
+                      icon={<CalculatorOutlined />}
+                      shape="round"
+                      size="large"
+                      onClick={() => {
+                        saveLiquid(currentLiquid, user);
+                      }}
+                    >
+                      <FormattedMessage id="misc.save" defaultMessage="Save" />
+                    </Button>
+                  </Affix>
+                )}
+              </Row>
             }
           >
             <Table
@@ -259,6 +280,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   );
 };
 
-export default connect(({ liquid }: ConnectState) => ({
+export default connect(({ liquid, user }: ConnectState) => ({
   liquid,
+  user: user.currentUser,
 }))(LiquidBlender);
