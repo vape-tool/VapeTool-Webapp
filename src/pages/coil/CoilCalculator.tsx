@@ -31,6 +31,7 @@ import {
 import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
+import saveCoil from './saveCoil';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -236,6 +237,17 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         <Col xs={24} style={{ marginTop: 20 }}>
           <Button type="primary" icon={<CalculatorOutlined />} size="large" onClick={calculate}>
             <FormattedMessage id="coilCalculator.inputs.calculate" />
+          </Button>
+          &nbsp;
+          <Button
+            type="primary"
+            icon={<CalculatorOutlined />}
+            size="large"
+            onClick={() => {
+              saveCoil(coil);
+            }}
+          >
+            <FormattedMessage id="misc.save" defaultMessage="Save" />
           </Button>
         </Col>
 
