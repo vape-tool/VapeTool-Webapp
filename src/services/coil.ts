@@ -1,6 +1,7 @@
 import { Coil, Properties } from '@vapetool/types';
 import request from '@/utils/request';
 import { auth, coilsRef } from '@/utils/firebase';
+import { UserModelState } from '@/models/user';
 
 export function calculateForWraps(coil: Coil): Promise<Coil> {
   return sendRequest('wraps', coil);
@@ -33,19 +34,23 @@ export async function sendRequest<T>(
   }
 }
 
-export async function addCoil(coil: Coil) {
+export async function addCoil(coil: Coil, user: UserModelState) {
   const newObjectUid = await coilsRef.push();
   const uid = newObjectUid.key;
   if (uid == null) {
     throw new Error('Could not push new post to db');
   }
-  if (!coil.author || !coil.author.uid || !coil.author.displayName) {
+  if (!user) {
     throw new Error('Author can not be null');
   }
   try {
     const newObject: Coil = {
       ...coil,
+      author: {
+        ...user,
+      },
     };
+    console.log(newObject);
 
     // It must be published to storage prior to database because db will trigger
     // update listener before storage is completed
