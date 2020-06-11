@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
-import { Coil, Properties, Wire } from '@vapetool/types';
+import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
@@ -31,8 +31,8 @@ import {
 import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
-import saveCoil from './saveCoil';
-import { UserModelState } from '@/models/user';
+import { CurrentUser } from '@/models/user';
+import { saveCoil } from '@/services/items';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -42,7 +42,7 @@ export interface CoilCalculatorProps extends ConnectProps {
   properties?: Properties;
   baseVoltage: number;
   isPro: boolean;
-  user: UserModelState;
+  user?: CurrentUser;
 }
 
 enum Field {
@@ -245,9 +245,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             type="primary"
             icon={<CalculatorOutlined />}
             size="large"
-            onClick={() => {
-              saveCoil(coil, user);
-            }}
+            onClick={
+              () => user && saveCoil(coil, new Author(user.uid, user.name), '', '') // TODO grzechu19
+            }
           >
             <FormattedMessage id="misc.save" defaultMessage="Save" />
           </Button>

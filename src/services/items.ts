@@ -5,6 +5,8 @@ import {
   Photo as FirebasePhoto,
   Post as FirebasePost,
   Link as FirebaseLink,
+  Liquid as FirebaseLiquid,
+  Coil as FirebaseCoil,
 } from '@vapetool/types';
 import { Item, ItemName, Photo } from '@/types';
 import {
@@ -244,6 +246,95 @@ export async function createPhoto(
     return uid;
   } catch (e) {
     photosRef.child(uid).remove();
+    throw e;
+  }
+}
+
+export async function saveLiquid(
+  liquid: Omit<FirebaseLiquid, 'name' | 'description'>,
+  author: Author,
+  name: string,
+  description: string,
+) {
+  const newObjectUid = await liquidsRef.push();
+  const uid = newObjectUid.key;
+  if (uid == null) {
+    throw new Error('Could not push new liquid to db');
+  }
+  if (!author) {
+    throw new Error('Author can not be null');
+  }
+  try {
+    const newObject: FirebaseLiquid = {
+      uid,
+      author,
+      name,
+      description,
+      creationTime: ServerValue.TIMESTAMP,
+      lastTimeModified: ServerValue.TIMESTAMP,
+      status: OnlineStatus.ONLINE_PUBLIC,
+      baseStrength: liquid.baseStrength,
+      baseRatio: liquid.baseRatio,
+      thinner: liquid.thinner,
+      targetStrength: liquid.targetStrength,
+      targetRatio: liquid.targetRatio,
+      amount: liquid.amount,
+      rating: liquid.rating,
+      flavors: liquid.flavors,
+    };
+    console.log(newObject);
+    await liquidsRef.child(uid).set(newObject);
+    return uid;
+  } catch (e) {
+    liquidsRef.child(uid).remove();
+    throw e;
+  }
+}
+export async function saveCoil(
+  coil: Omit<FirebaseCoil, 'name' | 'description'>,
+  author: Author,
+  name: string,
+  description: string,
+) {
+  const newObjectUid = await coilsRef.push();
+  const uid = newObjectUid.key;
+  if (uid == null) {
+    throw new Error('Could not push new coil to db');
+  }
+  if (!author) {
+    throw new Error('Author can not be null');
+  }
+  try {
+    const newObject: FirebaseCoil = {
+      uid,
+      author,
+      name,
+      description,
+      creationTime: ServerValue.TIMESTAMP,
+      lastTimeModified: ServerValue.TIMESTAMP,
+      status: OnlineStatus.ONLINE_PUBLIC,
+      type: coil.type,
+      setup: coil.setup,
+      wraps: coil.wraps,
+      resistance: coil.resistance,
+      legsLength: coil.legsLength,
+      innerDiameter: coil.innerDiameter,
+      pitch: coil.pitch,
+      heightDiameter: coil.heightDiameter,
+      widthDiameter: coil.widthDiameter,
+      totalLength: coil.totalLength,
+      cores: coil.cores,
+      outers: coil.outers,
+    };
+    console.log(newObject);
+
+    // It must be published to storage prior to database because db will trigger
+    // update listener before storage is completed
+    // await uploadPhoto(imageBlob, uid);
+    await coilsRef.child(uid).set(newObject);
+    return uid;
+  } catch (e) {
+    coilsRef.child(uid).remove();
     throw e;
   }
 }
