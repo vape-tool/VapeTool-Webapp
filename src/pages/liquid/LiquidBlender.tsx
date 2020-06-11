@@ -20,10 +20,12 @@ import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
+import { Author } from '@vapetool/types';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
 import { CurrentUser } from '@/models/user';
-import SaveLiquidModal from '@/components/saveToDatabaseModal/saveLiquidModal';
+import SaveModal from '@/components/saveToDatabaseModal';
+import { saveLiquid } from '@/services/items';
 
 const { Title } = Typography;
 
@@ -66,6 +68,8 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   user,
 }) => {
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [liquidName, setLiquidName] = useState('');
+  const [liquidDescription, setLiquidDescription] = useState('');
 
   const onBaseStrengthChange = (value: number | undefined) =>
     dispatchSetBaseStrength(dispatch, value);
@@ -92,12 +96,23 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
 
   return (
     <div>
-      <SaveLiquidModal
+      <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        currentLiquid={currentLiquid}
-        userUid={user ? user.uid : ''}
-        userName={user ? user.name : ''}
+        setDescription={setLiquidDescription}
+        setName={setLiquidName}
+        save={async () => {
+          if (user && user.uid && user.name) {
+            saveLiquid(
+              currentLiquid,
+              new Author(user.uid, user.name),
+              liquidName,
+              liquidDescription,
+            );
+          } else {
+            throw new Error();
+          }
+        }}
       />
       <Row style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
         <Col {...responsivenessProps}>
