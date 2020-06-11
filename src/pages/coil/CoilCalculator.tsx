@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
-import { Coil, Properties, Wire } from '@vapetool/types';
+import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
@@ -32,7 +32,8 @@ import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
 import { CurrentUser } from '@/models/user';
-import SaveCoilModal from '@/components/saveToDatabaseModal/saveCoilModal';
+import { saveCoil } from '@/services/items';
+import SaveModal from '@/components/saveToDatabaseModal';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -70,6 +71,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [coilName, setCoilName] = useState('');
+  const [coilDescription, setCoilDescription] = useState('');
 
   if (!dispatch) {
     return <div />;
@@ -158,12 +161,18 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const coilSetup = (
     <Card style={{ height: '100%' }}>
-      <SaveCoilModal
+      <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        coil={coil}
-        userUid={user ? user.uid : ''}
-        userName={user ? user.name : ''}
+        setDescription={setCoilDescription}
+        setName={setCoilName}
+        save={async () => {
+          if (user && user.uid && user.name) {
+            saveCoil(coil, new Author(user.uid, user.name), coilName, coilDescription);
+          } else {
+            throw new Error();
+          }
+        }}
       />
       <Row>
         <Col xs={24}>
