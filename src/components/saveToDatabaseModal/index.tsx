@@ -26,14 +26,14 @@ export default function SaveModal(props: any) {
       confirmLoading={isLoading}
       onCancel={handleCancel}
     >
-      <FormItem label={<FormattedMessage id="name" defaultMessage="Name" />}>
+      <FormItem label={<FormattedMessage id="misc.name" defaultMessage="Name" />}>
         <Input
           placeholder="Name"
           value={props.name}
           onChange={e => props.setName(e.target.value)}
         />
       </FormItem>
-      <FormItem label={<FormattedMessage id="description" defaultMessage="Description" />}>
+      <FormItem label={<FormattedMessage id="misc.description" defaultMessage="Description" />}>
         <Input
           placeholder="Description"
           value={props.description}
