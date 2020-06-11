@@ -22,14 +22,15 @@ import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
-import { UserModelState } from '@/models/user';
-import { saveLiquid } from '@/services/liquid';
+import { CurrentUser } from '@/models/user';
+import { saveLiquid } from '@/services/items';
+import { Author } from '@vapetool/types';
 
 const { Title } = Typography;
 
 export interface LiquidBlenderProps {
   liquid: LiquidModelState;
-  user: UserModelState;
+  user?: CurrentUser;
   dispatch: Dispatch;
 }
 
@@ -234,9 +235,10 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                       icon={<CalculatorOutlined />}
                       shape="round"
                       size="large"
-                      onClick={() => {
-                        saveLiquid(currentLiquid, user);
-                      }}
+                      onClick={
+                        () =>
+                          user && saveLiquid(currentLiquid, new Author(user.uid, user.name), '', '') // TODO gbaranski19
+                      }
                     >
                       <FormattedMessage id="misc.save" defaultMessage="Save" />
                     </Button>
