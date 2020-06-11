@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Input, Form } from 'antd';
+import { Modal, Input } from 'antd';
 import { saveCoil } from '@/services/items';
 import { Author } from '@vapetool/types';
 import FormItem from 'antd/lib/form/FormItem';
@@ -23,7 +23,10 @@ export default function SaveCoilModal(props: any) {
       props.setVisible(false);
     }, 200);
   };
-  const handleCancel = async () => {};
+  const handleCancel = () => {
+    props.setVisible(false);
+  };
+
   return (
     <Modal
       title="Title"
@@ -32,15 +35,13 @@ export default function SaveCoilModal(props: any) {
       confirmLoading={isLoading}
       onCancel={handleCancel}
     >
-      <Form onSubmitCapture={e => e.preventDefault()}>
-        <FormItem label={<FormattedMessage id="coil.name" defaultMessage="Coil name" />}>
-          <Input
-            placeholder="Coil name"
-            value={coilName}
-            onChange={e => setCoilName(e.target.value)}
-          />
-        </FormItem>
-      </Form>
+      <FormItem label={<FormattedMessage id="coil.name" defaultMessage="Coil name" />}>
+        <Input
+          placeholder="Coil name"
+          value={coilName}
+          onChange={e => setCoilName(e.target.value)}
+        />
+      </FormItem>
       <FormItem
         label={<FormattedMessage id="coil.description" defaultMessage="Coil description" />}
       >
