@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
@@ -23,8 +23,7 @@ import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
 import { CurrentUser } from '@/models/user';
-import { saveLiquid } from '@/services/items';
-import { Author } from '@vapetool/types';
+import SaveLiquidModal from '@/components/saveToDatabaseModal/saveLiquidModal';
 
 const { Title } = Typography;
 
@@ -66,6 +65,8 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   liquid: { currentLiquid, results },
   user,
 }) => {
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+
   const onBaseStrengthChange = (value: number | undefined) =>
     dispatchSetBaseStrength(dispatch, value);
 
@@ -91,6 +92,13 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
 
   return (
     <div>
+      <SaveLiquidModal
+        visible={saveModalVisible}
+        setVisible={setSaveModalVisible}
+        currentLiquid={currentLiquid}
+        userUid={user ? user.uid : ''}
+        userName={user ? user.name : ''}
+      />
       <Row style={{ alignItems: 'stretch' }} justify="center" className={styles.root}>
         <Col {...responsivenessProps}>
           <Card
@@ -235,10 +243,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                       icon={<CalculatorOutlined />}
                       shape="round"
                       size="large"
-                      onClick={
-                        () =>
-                          user && saveLiquid(currentLiquid, new Author(user.uid, user.name), '', '') // TODO gbaranski19
-                      }
+                      onClick={() => setSaveModalVisible(true)}
                     >
                       <FormattedMessage id="misc.save" defaultMessage="Save" />
                     </Button>
