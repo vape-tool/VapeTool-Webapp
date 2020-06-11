@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
-import { Coil, Properties, Wire, Author } from '@vapetool/types';
+import { Coil, Properties, Wire } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
@@ -32,7 +32,7 @@ import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
 import { CurrentUser } from '@/models/user';
-import { saveCoil } from '@/services/items';
+import SaveCoilModal from '@/components/saveToDatabaseModal/saveCoilModal';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -69,6 +69,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const [lastEdit, setLastEdit] = useState('resistance');
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   if (!dispatch) {
     return <div />;
@@ -157,6 +158,13 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
 
   const coilSetup = (
     <Card style={{ height: '100%' }}>
+      <SaveCoilModal
+        visible={saveModalVisible}
+        setVisible={setSaveModalVisible}
+        coil={coil}
+        userUid={user ? user.uid : ''}
+        userName={user ? user.name : ''}
+      />
       <Row>
         <Col xs={24}>
           <label>
@@ -245,9 +253,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             type="primary"
             icon={<CalculatorOutlined />}
             size="large"
-            onClick={
-              () => user && saveCoil(coil, new Author(user.uid, user.name), '', '') // TODO grzechu19
-            }
+            onClick={() => setSaveModalVisible(true)}
           >
             <FormattedMessage id="misc.save" defaultMessage="Save" />
           </Button>
