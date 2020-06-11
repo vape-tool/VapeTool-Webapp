@@ -1,5 +1,6 @@
 export default {
   'misc.name': 'Name',
+  'misc.description': 'Description',
   'misc.link': 'Link',
   'misc.manufacturer': 'Manufacturer',
 
