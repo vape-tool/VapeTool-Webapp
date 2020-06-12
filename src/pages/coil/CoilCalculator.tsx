@@ -170,7 +170,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
           if (user && user.uid && user.name) {
             saveCoil(coil, new Author(user.uid, user.name), name, description);
           } else {
-            throw new Error();
+            throw new Error('Can not save with undefined user ');
           }
         }}
       />
