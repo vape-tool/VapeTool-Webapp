@@ -110,7 +110,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               liquidDescription,
             );
           } else {
-            throw new Error();
+            throw new Error('Can not save with undefined user ');
           }
         }}
       />
