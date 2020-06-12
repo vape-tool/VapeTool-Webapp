@@ -71,8 +71,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [coilName, setCoilName] = useState('');
-  const [coilDescription, setCoilDescription] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   if (!dispatch) {
     return <div />;
@@ -164,11 +164,11 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        setDescription={setCoilDescription}
-        setName={setCoilName}
+        setDescription={setDescription}
+        setName={setName}
         save={async () => {
           if (user && user.uid && user.name) {
-            saveCoil(coil, new Author(user.uid, user.name), coilName, coilDescription);
+            saveCoil(coil, new Author(user.uid, user.name), name, description);
           } else {
             throw new Error();
           }
