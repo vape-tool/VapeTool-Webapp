@@ -24,7 +24,7 @@ import { Author } from '@vapetool/types';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
 import { CurrentUser } from '@/models/user';
-import SaveModal from '@/components/saveToDatabaseModal';
+import SaveModal from '@/components/SaveModal';
 import { saveLiquid } from '@/services/items';
 
 const { Title } = Typography;
@@ -68,8 +68,6 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   user,
 }) => {
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [liquidName, setLiquidName] = useState('');
-  const [liquidDescription, setLiquidDescription] = useState('');
 
   const onBaseStrengthChange = (value: number | undefined) =>
     dispatchSetBaseStrength(dispatch, value);
@@ -99,16 +97,9 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
       <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        setDescription={setLiquidDescription}
-        setName={setLiquidName}
-        save={async () => {
+        save={async (name, description) => {
           if (user && user.uid && user.name) {
-            saveLiquid(
-              currentLiquid,
-              new Author(user.uid, user.name),
-              liquidName,
-              liquidDescription,
-            );
+            saveLiquid(currentLiquid, new Author(user.uid, user.name), name, description || '');
           } else {
             throw new Error('Can not save with undefined user ');
           }

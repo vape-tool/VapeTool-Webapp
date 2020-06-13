@@ -33,7 +33,7 @@ import styles from './styles.less';
 import CoilHelper from '@/components/CoilHelper';
 import { CurrentUser } from '@/models/user';
 import { saveCoil } from '@/services/items';
-import SaveModal from '@/components/saveToDatabaseModal';
+import SaveModal from '@/components/SaveModal';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -71,8 +71,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
 
   if (!dispatch) {
     return <div />;
@@ -164,11 +162,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        setDescription={setDescription}
-        setName={setName}
-        save={async () => {
+        save={async (name, description) => {
           if (user && user.uid && user.name) {
-            saveCoil(coil, new Author(user.uid, user.name), name, description);
+            saveCoil(coil, new Author(user.uid, user.name), name, description || '');
           } else {
             throw new Error('Can not save with undefined user ');
           }
