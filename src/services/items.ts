@@ -282,7 +282,7 @@ export async function saveLiquid(
       rating: liquid.rating,
       flavors: liquid.flavors,
     };
-    console.log(newObject);
+    console.log('saving liquid', newObject);
     await liquidsRef.child(uid).set(newObject);
     return uid;
   } catch (e) {
@@ -326,7 +326,7 @@ export async function saveCoil(
       cores: coil.cores,
       outers: coil.outers,
     };
-    console.log(newObject);
+    console.log('saving coil', newObject);
 
     // It must be published to storage prior to database because db will trigger
     // update listener before storage is completed

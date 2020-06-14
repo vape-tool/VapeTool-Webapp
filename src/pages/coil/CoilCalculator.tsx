@@ -27,6 +27,7 @@ import {
   LockFilled,
   UnlockOutlined,
   QuestionCircleFilled,
+  SaveOutlined,
 } from '@ant-design/icons';
 import { isProUser } from '@/pages/login/utils/utils';
 import styles from './styles.less';
@@ -254,13 +255,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
             <FormattedMessage id="coilCalculator.inputs.calculate" />
           </Button>
           &nbsp;
-          <Button
-            type="primary"
-            icon={<CalculatorOutlined />}
-            size="large"
-            onClick={() => setSaveModalVisible(true)}
-          >
-            <FormattedMessage id="misc.save" defaultMessage="Save" />
+          <Button icon={<SaveOutlined />} size="large" onClick={() => setSaveModalVisible(true)}>
+            <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
           </Button>
         </Col>
 

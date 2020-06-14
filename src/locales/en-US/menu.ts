@@ -10,6 +10,7 @@ export default {
   'menu.batteries': 'Batteries',
   'menu.converters': 'Converters',
   'menu.battery-life': 'Battery Life',
+  'menu.mixer': 'Mixer',
   'menu.knowledge': 'Knowledge Zone',
   'menu.center': 'My Account',
   'menu.userWizard': 'User Wizard',
