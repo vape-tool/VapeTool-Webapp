@@ -245,13 +245,12 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                 {results && (
                   <Affix offsetBottom={50}>
                     <Button
-                      type="primary"
                       icon={<CalculatorOutlined />}
                       shape="round"
                       size="large"
                       onClick={() => setSaveModalVisible(true)}
                     >
-                      <FormattedMessage id="misc.save" defaultMessage="Save" />
+                      <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
                     </Button>
                   </Affix>
                 )}

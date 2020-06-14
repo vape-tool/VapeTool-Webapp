@@ -98,6 +98,12 @@ const routes: IRoute[] = [
                 component: './liquid/LiquidBlender',
               },
               {
+                path: '/mixer',
+                name: 'mixer',
+                icon: 'https://web.vapetool.app/img/menu_icons/menu_liquid_blender.svg',
+                component: './mixer/Mixer',
+              },
+              {
                 path: '/ohm-law',
                 name: 'ohm-law',
                 icon: 'https://web.vapetool.app/img/menu_icons/menu_ohm_law.svg',
@@ -120,12 +126,6 @@ const routes: IRoute[] = [
                 name: 'battery-life',
                 icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
                 component: './batterylife/BatteryLife',
-              },
-              {
-                path: '/mixer',
-                name: 'Mixer',
-                icon: 'https://web.vapetool.app/img/menu_icons/menu_battery_life.svg',
-                component: './mixer/Mixer',
               },
               // {
               //   path: '/knowledge',

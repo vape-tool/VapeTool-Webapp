@@ -176,11 +176,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           return defaultDom;
         }
 
-        return (
-          <Link to={menuItemProps.path} onClick={() => handleMenuCollapse(true)}>
-            {defaultDom}
-          </Link>
-        );
+        return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => [
         {
