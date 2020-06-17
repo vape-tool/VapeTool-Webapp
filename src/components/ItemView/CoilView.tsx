@@ -1,15 +1,22 @@
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { Card, Skeleton, Typography } from 'antd';
-import FirebaseImage from '@/components/StorageAvatar';
+import { Card, Typography, Descriptions } from 'antd';
 import { ItemName, Coil } from '@/types';
-import { getCoilUrl, ImageType } from '@/services/storage';
+import { getCoilUrl } from '@/services/storage';
+import { WireType } from '@vapetool/types/dist/wire';
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 
 interface CoilViewState extends ItemViewState {
   coilImageUrl: string;
+}
+
+enum Tuple {
+  Single = 1,
+  Dual = 2,
+  Triple = 3,
+  Quad = 4,
 }
 
 class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
@@ -36,24 +43,38 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
         className={styles.card}
         hoverable
         cover={
-          coilImageUrl ? (
+          !coilImageUrl ?? (
             <img
               onClick={this.onSelectItem}
               style={{ objectFit: 'cover', maxHeight: 714 }}
               alt={item.description}
               src={coilImageUrl}
             />
-          ) : (
-            <Skeleton avatar={{ shape: 'square', size: 200 }} />
           )
         }
       >
         <Card.Meta
-          avatar={<FirebaseImage type={ImageType.USER} id={item.author.uid} />}
-          description={<Typography.Text>{item.description}</Typography.Text>}
+          title={
+            <span onClick={this.onSelectItem}>
+              <Typography.Text>{item.name}</Typography.Text>
+            </span>
+          }
+          description={
+            <span onClick={this.onSelectItem}>
+              <Typography.Text>{item.description}</Typography.Text>
+            </span>
+          }
         />
-        <this.Actions />
+        <Descriptions>
+          <Descriptions.Item label="Setup">
+            {Tuple[item.setup]} Coil({item.setup})
+          </Descriptions.Item>
+          <Descriptions.Item label="Wraps">{item.wraps}</Descriptions.Item>
+          <Descriptions.Item label="Wire type">{WireType[item.type]}</Descriptions.Item>
+          <Descriptions.Item label="Resistance[Ω]">{item.resistance}</Descriptions.Item>
+        </Descriptions>
 
+        <this.Actions />
         {displayComments && displayComments.length > 0 && <this.CommentsList />}
         <this.CommentInput />
       </Card>
