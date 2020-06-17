@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { Card, Typography, Descriptions, Button, Dropdown, Menu, Modal } from 'antd';
@@ -11,6 +11,7 @@ import styles from './styles.less';
 
 interface CoilViewState extends ItemViewState {
   coilImageUrl: string;
+  modalVisible: any;
 }
 
 enum Tuple {
@@ -33,6 +34,10 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
   componentDidMount(): void {
     super.componentDidMount();
     this.fetchCoilImage();
+    this.state = {
+      ...this.state,
+      modalVisible: false,
+    };
   }
 
   fetchCoilImage = async () => {
@@ -46,24 +51,40 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
     const { item } = this.props;
     const { displayComments, coilImageUrl } = this.state;
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const handleClose = () => {
+      this.setState({ modalVisible: false });
+    };
+    const handleOpen = () => {
+      this.setState({
+        modalVisible: true,
+      });
+    };
 
     return (
       <>
         <Modal
           title="More coil info"
-          visible={modalVisible}
-          onOk={() => setModalVisible(false)}
-          onCancel={() => setModalVisible(false)}
+          visible={this.state.modalVisible}
+          onOk={handleClose}
+          cancelButtonProps={{ hidden: true }}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <Descriptions>
+            <Descriptions.Item label="Setup">
+              {Tuple[item.setup]} Coil({item.setup})
+            </Descriptions.Item>
+            <Descriptions.Item label="Wraps">{item.wraps}</Descriptions.Item>
+            <Descriptions.Item label="Wire type">{WireType[item.type]}</Descriptions.Item>
+            <Descriptions.Item label="Resistance [Ω]">{item.resistance}</Descriptions.Item>
+            <Descriptions.Item label="Legs length [mm]">{item.legsLength}mm</Descriptions.Item>
+            <Descriptions.Item label="Inner diameter [mm]">
+              {item.innerDiameter}mm
+            </Descriptions.Item>
+          </Descriptions>
         </Modal>
         <Card
           className={styles.card}
           hoverable
-          onClick={() => setModalVisible(true)}
+          onClick={handleOpen}
           cover={
             !coilImageUrl ?? (
               <img
