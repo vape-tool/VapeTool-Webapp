@@ -19,6 +19,8 @@ enum SetupsName {
   Dual = 2,
   Triple = 3,
   Quad = 4,
+  Penta = 5,
+  Hexa = 6,
 }
 
 class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
