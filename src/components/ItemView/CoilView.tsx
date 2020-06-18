@@ -14,7 +14,7 @@ interface CoilViewState extends ItemViewState {
   modalVisible: any;
 }
 
-enum Tuple {
+enum SetupsName {
   Single = 1,
   Dual = 2,
   Triple = 3,
@@ -103,7 +103,7 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
 
           <Descriptions>
             <Descriptions.Item label="Setup">
-              {Tuple[item.setup]} Coil({item.setup})
+              {SetupsName[item.setup]} Coil({item.setup})
             </Descriptions.Item>
             <Descriptions.Item label="Wraps">{item.wraps}</Descriptions.Item>
             <Descriptions.Item label="Wire type">{WireType[item.type]}</Descriptions.Item>
