@@ -11,18 +11,28 @@ interface LiquidViewState extends ItemViewState {
   item: Liquid;
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item key="1">Edit</Menu.Item>
-    <Menu.Item key="2">Remove</Menu.Item>
-  </Menu>
-);
-
 class LiquidView extends ItemView<Liquid, ItemViewProps<Liquid>, LiquidViewState> {
+  private dropdownMenu: any;
+
+  private isOwner: boolean = false;
+
   what: ItemName = ItemName.LIQUID;
 
   componentDidMount(): void {
     super.componentDidMount();
+
+    this.isOwner = this.props.user?.uid === this.props.item.author.uid;
+
+    this.dropdownMenu = (
+      <Menu>
+        <Menu.Item key="1" disabled={!this.isOwner}>
+          Edit
+        </Menu.Item>
+        <Menu.Item key="2" disabled={!this.isOwner}>
+          Remove
+        </Menu.Item>
+      </Menu>
+    );
   }
 
   render() {
@@ -39,7 +49,7 @@ class LiquidView extends ItemView<Liquid, ItemViewProps<Liquid>, LiquidViewState
               top: 10,
             }}
           >
-            <Dropdown overlay={menu}>
+            <Dropdown overlay={this.dropdownMenu}>
               <Button>
                 More <DownOutlined />
               </Button>
