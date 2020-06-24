@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
-import { Card, Typography, Descriptions, Button, Dropdown, Menu } from 'antd';
+import { Card, Typography, Descriptions } from 'antd';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
-import { DownOutlined } from '@ant-design/icons';
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 
@@ -21,13 +20,11 @@ enum SetupsName {
   Quad = 4,
   Penta = 5,
   Hexa = 6,
+  Hepta = 7,
+  Octa = 8,
 }
 
 class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
-  private dropdownMenu: any;
-
-  private isOwner: boolean = false;
-
   what: ItemName = ItemName.COIL;
 
   componentDidMount(): void {
@@ -37,18 +34,6 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
       ...this.state,
       modalVisible: false,
     };
-    this.isOwner = this.props.user?.uid === this.props.item.author.uid;
-
-    this.dropdownMenu = (
-      <Menu>
-        <Menu.Item key="1" disabled={!this.isOwner}>
-          Edit
-        </Menu.Item>
-        <Menu.Item key="2" disabled={!this.isOwner}>
-          Remove
-        </Menu.Item>
-      </Menu>
-    );
   }
 
   fetchCoilImage = async () => {
@@ -77,19 +62,6 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
             )
           }
         >
-          <div
-            style={{
-              position: 'absolute',
-              right: 10,
-              top: 10,
-            }}
-          >
-            <Dropdown overlay={this.dropdownMenu}>
-              <Button>
-                More <DownOutlined />
-              </Button>
-            </Dropdown>
-          </div>
           <Card.Meta
             title={
               <span onClick={this.onSelectItem}>
@@ -108,7 +80,7 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
               {SetupsName[item.setup]} Coil({item.setup})
             </Descriptions.Item>
             <Descriptions.Item label="Wraps">{item.wraps}</Descriptions.Item>
-            <Descriptions.Item label="Wire type">{WireType[item.type]}</Descriptions.Item>
+            <Descriptions.Item label="Coil type">{WireType[item.type]}</Descriptions.Item>
             <Descriptions.Item label="Resistance[Ω]">{item.resistance}</Descriptions.Item>
           </Descriptions>
           <this.Actions />
