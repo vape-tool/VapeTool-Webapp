@@ -8,6 +8,7 @@ export default {
   'coilCalculator.inputs.calculate': 'Calculate',
   'coilCalculator.inputs.diameterOfWire': 'Diameter of wire [AWG or mm]',
   'coilCalculator.inputs.pitch': 'Pitch',
+  'coilCalculator.inputs.coilType': 'Coil Type',
 
   'coilCalculator.properties.baseVoltage': 'Base voltage',
   'coilCalculator.properties.current': 'Current',
