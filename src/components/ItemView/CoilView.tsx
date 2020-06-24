@@ -5,12 +5,12 @@ import { Card, Typography, Descriptions } from 'antd';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 
 interface CoilViewState extends ItemViewState {
   coilImageUrl: string;
-  modalVisible: any;
 }
 
 enum SetupsName {
@@ -30,10 +30,6 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
   componentDidMount(): void {
     super.componentDidMount();
     this.fetchCoilImage();
-    this.state = {
-      ...this.state,
-      modalVisible: false,
-    };
   }
 
   fetchCoilImage = async () => {
@@ -76,12 +72,33 @@ class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
           />
 
           <Descriptions>
-            <Descriptions.Item label="Setup">
+            <Descriptions.Item
+              label={<FormattedMessage id="coilCalculator.inputs.setup" defaultMessage="Setup" />}
+            >
               {SetupsName[item.setup]} Coil({item.setup})
             </Descriptions.Item>
-            <Descriptions.Item label="Wraps">{item.wraps}</Descriptions.Item>
-            <Descriptions.Item label="Coil type">{WireType[item.type]}</Descriptions.Item>
-            <Descriptions.Item label="Resistance[Ω]">{item.resistance}</Descriptions.Item>
+            <Descriptions.Item
+              label={<FormattedMessage id="coilCalculator.inputs.wraps" defaultMessage="Wraps" />}
+            >
+              {item.wraps}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={
+                <FormattedMessage id="coilCalculator.inputs.coilType" defaultMessage="Coil Type" />
+              }
+            >
+              {WireType[item.type]}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={
+                <FormattedMessage
+                  id="coilCalculator.inputs.resistance"
+                  defaultMessage="Resistance"
+                />
+              }
+            >
+              {Math.round(item.resistance * 1000) / 1000}
+            </Descriptions.Item>
           </Descriptions>
           <this.Actions />
           {displayComments && displayComments.length > 0 && <this.CommentsList />}
