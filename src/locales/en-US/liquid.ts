@@ -16,6 +16,7 @@ export default {
   'liquid.pg': 'Propylene Glycol',
   'liquid.ingredient': 'Ingredient',
   'liquid.drops': 'Drops',
+  'liquid.vp/pg': 'VG/PG',
 
   'liquid.pricePer10ml': 'Price per 10ml [$]',
   'liquid.pgRatioPerc': 'PG Ratio [%]',

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { Card, Descriptions, Typography } from 'antd';
 import { ItemName, Liquid } from '@/types';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 
@@ -34,11 +35,26 @@ class LiquidView extends ItemView<Liquid, ItemViewProps<Liquid>, LiquidViewState
           />
 
           <Descriptions>
-            <Descriptions.Item label="VP/PG">
+            <Descriptions.Item
+              label={<FormattedMessage id="liquid.vg/pg" defaultMessage="VG/PG" />}
+            >
               {100 - item.targetRatio}/{item.targetRatio}
             </Descriptions.Item>
-            <Descriptions.Item label="Strength [mg/ml]">{item.targetStrength}mg</Descriptions.Item>
-            <Descriptions.Item label="Amount [ml]">{item.amount}ml</Descriptions.Item>
+            <Descriptions.Item
+              label={
+                <FormattedMessage
+                  id="liquid.nicotineStrength"
+                  defaultMessage="Nicotine strength [mg/ml]"
+                />
+              }
+            >
+              {item.targetStrength}mg/ml
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={<FormattedMessage id="liquid.amount" defaultMessage="Amount [ml]" />}
+            >
+              {item.amount}ml
+            </Descriptions.Item>
           </Descriptions>
           <this.Actions />
           {displayComments && displayComments.length > 0 && <this.CommentsList />}
