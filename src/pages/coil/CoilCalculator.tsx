@@ -35,6 +35,7 @@ import CoilHelper from '@/components/CoilHelper';
 import { CurrentUser } from '@/models/user';
 import { saveCoil } from '@/services/items';
 import SaveModal from '@/components/SaveModal';
+import { sendRequest } from '@/services/coil';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -127,17 +128,19 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
 
   const validateAndSaveCoil = (name: string, description: string) => {
-    try {
-      calculate();
-    } catch (e) {
-      message.error("Couldn't save coil");
-      return;
-    }
-    if (user && user.uid && user.name) {
-      saveCoil(coil, new Author(user.uid, user.name), name, description || '');
-    } else {
-      throw new Error('Can not save with undefined user ');
-    }
+    // @ts-ignore
+    sendRequest('resistance', coil).then((res: { ok?: boolean; author?: string }) => {
+      // res.author is random element of valid response
+      if (!res.ok && !res.author) {
+        message.error("Couldn't save coil");
+        return;
+      }
+      if (user && user.uid && user.name) {
+        saveCoil(coil, new Author(user.uid, user.name), name, description || '');
+      } else {
+        throw new Error('Can not save with undefined user ');
+      }
+    });
   };
 
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
