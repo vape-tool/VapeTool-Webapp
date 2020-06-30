@@ -16,7 +16,7 @@ export interface WireComponentProps {
   complexWire: Coil | Wire;
   path: Path[];
   isPro: boolean;
-  onSetWireType: (type: string, path: Path[]) => void;
+  onSetWireType: (type: number, path: Path[]) => void;
   onSetInnerDiameter: (diameter: number) => void;
   onAddWire: (path: Path[], wire: Wire) => void;
   onSetWire: (path: Path[], wire: Wire) => void;
@@ -91,7 +91,7 @@ const ComplexWire: React.FC<WireComponentProps> = ({
             path={childPath}
             complexWire={wire}
             isPro={isPro}
-            onSetWireType={handleTypeChange}
+            onSetWireType={onSetWireType}
             onSetInnerDiameter={onPitchChange}
             onAddWire={onAddWireClick}
             onSetWire={onSetWire}
@@ -122,7 +122,7 @@ const ComplexWire: React.FC<WireComponentProps> = ({
             path={childPath}
             complexWire={wire}
             isPro={isPro}
-            onSetWireType={handleTypeChange}
+            onSetWireType={onSetWireType}
             onSetInnerDiameter={onPitchChange}
             onAddWire={onAddWireClick}
             onSetWire={onSetWire}

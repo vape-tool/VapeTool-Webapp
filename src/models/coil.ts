@@ -23,7 +23,7 @@ export const CALCULATE_FOR_RESISTANCE = 'calculateForResistance';
 export const CALCULATE_FOR_WRAPS = 'calculateForWraps';
 export const CALCULATE_PROPERTIES = 'calculateProperties';
 
-export function dispatchSetCoilType(dispatch: Dispatch, wireType: string, paths: Path[]) {
+export function dispatchSetCoilType(dispatch: Dispatch, wireType: number, paths: Path[]) {
   dispatch({
     type: `${COIL}/${SET_TYPE}`,
     payload: { type: wireType, paths },
@@ -203,6 +203,7 @@ const CoilModel: CoilModelType = {
       };
     },
     [SET_TYPE](state = initialState, { payload: { paths, type } }) {
+      console.log('setType', { paths, type });
       if (paths.length === 0) {
         const newCoil = wireGenerator.coilOfType(type);
         return {
