@@ -164,6 +164,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
         save={async (name, description) => {
+          calculate();
           if (user && user.uid && user.name) {
             saveCoil(coil, new Author(user.uid, user.name), name, description || '');
           } else {
