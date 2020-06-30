@@ -87,7 +87,7 @@ export interface CoilModelType {
 }
 
 const initialState: CoilModelState = {
-  currentCoil: wireGenerator.claptonCoil(),
+  currentCoil: wireGenerator.normalCoil(),
   baseVoltage: 3.7,
 };
 

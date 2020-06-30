@@ -11,6 +11,8 @@ import { UPLOAD } from '@/models/upload';
 import { UPLOAD_POST } from '@/models/uploadPost';
 import { UPLOAD_PHOTO } from '@/models/uploadPhoto';
 
+const isDevelopment = REACT_APP_ENV === 'dev';
+
 export const dva = {
   config: {
     onError(e) {
@@ -19,23 +21,25 @@ export const dva = {
     extraEnhancers: [
       persistEnhancer({
         storage,
-        whitelist: [
-          // 'user',
-          BATTERIES,
-          COIL,
-          'converter',
-          GLOBAL,
-          LIQUID,
-          OHM,
-          CLOUD,
-          SETTINGS,
-          UPLOAD,
-          UPLOAD_POST,
-          UPLOAD_PHOTO,
-        ],
+        whitelist: isDevelopment
+          ? []
+          : [
+              // 'user',
+              BATTERIES,
+              COIL,
+              'converter',
+              GLOBAL,
+              LIQUID,
+              OHM,
+              CLOUD,
+              SETTINGS,
+              UPLOAD,
+              UPLOAD_POST,
+              UPLOAD_PHOTO,
+            ],
       }),
     ],
   },
   // eslint-disable-next-line global-require
-  plugins: [REACT_APP_ENV === 'dev' ? require('dva-logger')() : {}],
+  plugins: [isDevelopment ? require('dva-logger')() : {}],
 };

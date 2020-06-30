@@ -35,9 +35,13 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
     onDeleteWire,
   } = props;
 
-  const handleTypeChange = ({ key }: any) => key && onSetWireType(WireType[key], path);
+  const handleTypeChange = (key: string) => key && onSetWireType(WireType[key], path);
   const onPitchChange = (value: number | undefined) => value && onSetInnerDiameter(value);
   const onAddWireClick = () => onAddWire(path, wireGenerator.normalWire());
+
+  React.useEffect(() => {
+    handleTypeChange(WireType[0]);
+  }, []);
 
   const imageSize = 35;
 
@@ -69,7 +73,7 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
         ))}
       </Select>
       {complexWire.pitch > 0 && (
-        <div>
+        <div style={{ margin: 10 }}>
           <label>
             <FormattedMessage id="coilCalculator.inputs.pitch" />
             <InputNumber
