@@ -120,7 +120,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
 
-  const handleWireTypeChange = (type: string, path: Path[]): void =>
+  const handleWireTypeChange = (type: number, path: Path[]): void =>
     dispatchSetCoilType(dispatch, type, path);
   const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
