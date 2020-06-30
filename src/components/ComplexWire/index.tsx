@@ -23,25 +23,20 @@ export interface WireComponentProps {
   onDeleteWire: (path: Path[]) => void;
 }
 
-const ComplexWire: React.FC<WireComponentProps> = props => {
-  const {
-    complexWire,
-    path,
-    isPro,
-    onSetWireType,
-    onSetInnerDiameter,
-    onAddWire,
-    onSetWire,
-    onDeleteWire,
-  } = props;
-
+const ComplexWire: React.FC<WireComponentProps> = ({
+  complexWire,
+  path,
+  isPro,
+  onSetWireType,
+  onSetInnerDiameter,
+  onAddWire,
+  onSetWire,
+  onDeleteWire,
+}) => {
   const handleTypeChange = (key: string) => key && onSetWireType(WireType[key], path);
-  const onPitchChange = (value: number | undefined) => value && onSetInnerDiameter(value);
+  const onPitchChange = (value: string | number | undefined) =>
+    value && Number.isFinite(value) && onSetInnerDiameter(Number(value));
   const onAddWireClick = () => onAddWire(path, wireGenerator.normalWire());
-
-  React.useEffect(() => {
-    handleTypeChange(WireType[0]);
-  }, []);
 
   const imageSize = 35;
 
@@ -49,14 +44,14 @@ const ComplexWire: React.FC<WireComponentProps> = props => {
     <Card type={path.length === 0 ? undefined : 'inner'}>
       <Select
         size="large"
-        defaultValue={WireType[WireType.NORMAL]}
+        value={WireType[complexWire.type]}
         style={{ width: 400 }}
         onChange={handleTypeChange}
       >
         {types.map(type => (
           <Option
             key={type.name}
-            value={type.name.replace(/_/g, ' ')}
+            value={type.name}
             disabled={type.proOnly && !isPro}
             title={type.proOnly && !isPro ? 'Pro users only' : ''}
           >
