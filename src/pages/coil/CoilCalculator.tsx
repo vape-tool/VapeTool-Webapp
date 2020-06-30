@@ -3,6 +3,7 @@ import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, mess
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
+import { Coil as CoilType } from '@/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
@@ -127,20 +128,20 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
 
-  const validateAndSaveCoil = (name: string, description: string) => {
-    // @ts-ignore
-    sendRequest('resistance', coil).then((res: { ok?: boolean; author?: string }) => {
-      // res.author is random element of valid response
-      if (!res.ok && !res.author) {
-        message.error("Couldn't save coil");
-        return;
-      }
-      if (user && user.uid && user.name) {
-        saveCoil(coil, new Author(user.uid, user.name), name, description || '');
-      } else {
-        throw new Error('Can not save with undefined user ');
-      }
-    });
+  const validateAndSaveCoil = async (name: string, description?: string) => {
+    const res = await sendRequest(
+      lastEdit === 'resistance' ? 'wraps' : 'resistance',
+      coil as CoilType,
+    );
+    if (res instanceof Response && !res.ok) {
+      message.error("Couldn't save coil");
+      return;
+    }
+    if (user && user.uid && user.name) {
+      saveCoil(coil, new Author(user.uid, user.name), name, description || '');
+    } else {
+      throw new Error('Can not save with undefined user ');
+    }
   };
 
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
