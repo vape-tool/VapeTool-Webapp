@@ -203,7 +203,7 @@ const CoilModel: CoilModelType = {
       };
     },
     [SET_TYPE](state = initialState, { payload: { paths, type } }) {
-      if (paths.length > 0) {
+      if (paths.length === 0) {
         const newCoil = wireGenerator.coilOfType(type);
         return {
           ...state,
