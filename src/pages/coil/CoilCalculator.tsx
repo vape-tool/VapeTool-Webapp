@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel } from 'antd';
+import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, message } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
@@ -126,6 +126,20 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
   const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
   const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
 
+  const validateAndSaveCoil = (name: string, description: string) => {
+    try {
+      calculate();
+    } catch (e) {
+      message.error("Couldn't save coil");
+      return;
+    }
+    if (user && user.uid && user.name) {
+      saveCoil(coil, new Author(user.uid, user.name), name, description || '');
+    } else {
+      throw new Error('Can not save with undefined user ');
+    }
+  };
+
   // {{descriptionItem('Total width', 'totalWidth', 'mm')}}  //TODO fix it
   // {{descriptionItem('Total height', 'totalHeight', 'mm')}} //TODO fix it
   const coilProperties = (
@@ -163,14 +177,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
       <SaveModal
         visible={saveModalVisible}
         setVisible={setSaveModalVisible}
-        save={async (name, description) => {
-          calculate();
-          if (user && user.uid && user.name) {
-            saveCoil(coil, new Author(user.uid, user.name), name, description || '');
-          } else {
-            throw new Error('Can not save with undefined user ');
-          }
-        }}
+        save={validateAndSaveCoil}
       />
       <Row>
         <Col xs={24}>
