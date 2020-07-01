@@ -14,6 +14,7 @@ import GoogleIcon from '@/assets/GoogleIcon';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { SUCCESS_LOGIN, USER_LOGIN, UserLoginModelState } from './model';
 import styles from './style.less';
+import CookieConsent from 'react-cookie-consent';
 
 interface LoginProps extends ConnectProps {
   userLogin?: UserLoginModelState;
@@ -142,6 +143,18 @@ class Login extends Component<LoginProps> {
           )}
         />
         <FirebaseAuth uiConfig={this.uiConfig} firebaseAuth={auth} />
+        <CookieConsent
+          location="bottom"
+          buttonText="Okay!"
+          cookieName="awesomeCookie"
+          style={{ background: '#2B373B' }}
+          buttonStyle={{ color: '#4e503b', fontSize: '13px' }}
+          expires={150}
+        >
+          We use cookies to enhance your experience. By continuing to visit this site you agree to
+          our use of cookies.
+          <a href="https://en.wikipedia.org/wiki/HTTP_cookie">More info</a>
+        </CookieConsent>
       </div>
     );
   }
