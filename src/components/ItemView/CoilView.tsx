@@ -5,7 +5,8 @@ import { Card, Typography, Descriptions } from 'antd';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 

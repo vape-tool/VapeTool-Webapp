@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button, Card, Col, Row, Select, Typography } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { Material, Materials, Wire, WireKind, WireStyle } from '@vapetool/types';
 import { getResistancePerMeter } from '@/utils/math';
 import { Path } from '@/models/coil';

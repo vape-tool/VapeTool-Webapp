@@ -140,13 +140,13 @@ const routes: IRoute[] = [
                 component: './user/profile',
                 exact: true,
               },
-              {
-                hideInMenu: true,
-                name: 'profile',
-                icon: 'user',
-                path: '/user/profile/:id',
-                component: './user/profile',
-              },
+              // {
+              //   hideInMenu: true,
+              //   name: 'profile',
+              //   icon: 'user',
+              //   path: '/user/profile/:id',
+              //   component: './user/profile',
+              // },
               {
                 component: './404',
               },

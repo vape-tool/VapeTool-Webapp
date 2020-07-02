@@ -3,7 +3,8 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { Card, Descriptions, Typography } from 'antd';
 import { ItemName, Liquid } from '@/types';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';
 

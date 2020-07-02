@@ -10,7 +10,7 @@ import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
 import { Link } from 'umi';
 import { MoreOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 interface CommentViewProps {
   user?: CurrentUser;

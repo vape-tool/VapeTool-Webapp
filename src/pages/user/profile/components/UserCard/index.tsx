@@ -17,7 +17,7 @@ import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
 import { connect } from 'dva';
 import { isProUser } from '@/pages/login/utils/utils';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;

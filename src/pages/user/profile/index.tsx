@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
 import { Dispatch } from 'redux';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { GridContent } from '@ant-design/pro-layout';
 import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
 import { RouteChildrenProps } from 'react-router';

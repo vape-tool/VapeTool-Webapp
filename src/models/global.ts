@@ -1,10 +1,9 @@
 import { Dispatch, Reducer } from 'redux';
-import { Effect, Subscription } from 'dva';
+import { Effect, Subscription, historyRedux } from 'dva';
 
 import { getPageQuery } from '@/utils/utils';
-import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import router from 'umi/router';
+import { history } from 'umi';
 
 export const GLOBAL = 'global';
 export const REDIRECT_BACK = 'redirectBack';
@@ -20,11 +19,11 @@ export function redirectToWithFootprint(dispatch: Dispatch, path: string) {
 }
 
 export function redirectTo(path: string) {
-  router.push(path);
+  history.push(path);
 }
 
 export function redirectReplace(path: string) {
-  router.replace(path);
+  history.replace(path);
 }
 
 export function dispatchChangeLayoutCollapsed(dispatch: Dispatch, payload: boolean) {
@@ -74,12 +73,12 @@ const GlobalModel: GlobalModelType = {
       }
 
       console.log(`isAbout to redirect to ${redirect || '/'}`);
-      yield put(routerRedux.replace(redirect || '/'));
+      yield put(historyRedux.replace(redirect || '/'));
     },
     *redirectToWithFootprint({ path }, { put }) {
       console.log(`redirect to ${path}`);
       yield put(
-        routerRedux.replace({
+        historyRedux.replace({
           pathname: path,
           search: stringify({
             redirect: window.location.href,
@@ -99,9 +98,9 @@ const GlobalModel: GlobalModelType = {
   },
 
   subscriptions: {
-    setup({ history }): void {
+    setup({ _history }): void {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      history.listen(({ pathname, search }): void => {
+      _history.listen(({ pathname, search }): void => {
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }

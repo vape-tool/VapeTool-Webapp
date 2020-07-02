@@ -9,7 +9,7 @@ import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectBattery, dispatchToggleEditBattery } from '@/models/batteries';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 interface BatteryPreviewDrawerProps {
   dispatch: Dispatch;

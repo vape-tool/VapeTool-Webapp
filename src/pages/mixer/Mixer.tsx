@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, Row, Table, Typography } from 'antd';
 import ButtonGroup from 'antd/es/button/button-group';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { UpOutlined } from '@ant-design/icons';
 import { MixableType, Mixable, MixableResult } from '@vapetool/types';
 import InputElements from './inputElements';

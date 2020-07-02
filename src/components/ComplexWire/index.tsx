@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, Card, InputNumber, Select, Tag } from 'antd';
 import { Coil, isComplex, Wire, wireGenerator, WireStyle, WireType } from '@vapetool/types';
-import { FormattedMessage } from 'umi-plugin-react/locale';
 import SingleWire from '@/components/SingleWire';
+import { FormattedMessage } from '@umijs/preset-react';
 import { Path } from '@/models/coil';
 import ImageWebp from '../ImageWebp';
 import types from './coilTypes';
