@@ -1,5 +1,5 @@
 import { Dispatch, Reducer } from 'redux';
-import { Effect, Subscription, historyRedux } from 'dva';
+import { Effect, Subscription, routerRedux } from 'dva';
 
 import { getPageQuery } from '@/utils/utils';
 import { stringify } from 'qs';
@@ -73,12 +73,12 @@ const GlobalModel: GlobalModelType = {
       }
 
       console.log(`isAbout to redirect to ${redirect || '/'}`);
-      yield put(historyRedux.replace(redirect || '/'));
+      yield put(routerRedux.replace(redirect || '/'));
     },
     *redirectToWithFootprint({ path }, { put }) {
       console.log(`redirect to ${path}`);
       yield put(
-        historyRedux.replace({
+        routerRedux.replace({
           pathname: path,
           search: stringify({
             redirect: window.location.href,
