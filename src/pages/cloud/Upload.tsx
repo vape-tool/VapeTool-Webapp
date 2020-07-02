@@ -7,7 +7,7 @@ import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
 import { Tab, changeTab } from '@/models/upload';
 import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 interface UploadProps {
   currentTab: string;

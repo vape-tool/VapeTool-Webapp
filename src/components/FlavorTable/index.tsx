@@ -6,7 +6,7 @@ import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { LiquidModelState, dispatchSetFlavor } from '@/models/liquid';
 import { DeleteOutlined, EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
 

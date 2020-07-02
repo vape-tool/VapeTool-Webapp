@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, message } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import { connect } from 'dva';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { Coil as CoilType } from '@/types';

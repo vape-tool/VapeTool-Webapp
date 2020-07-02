@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tag } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import styles from './styles.less';
 
 interface UserCardProps {

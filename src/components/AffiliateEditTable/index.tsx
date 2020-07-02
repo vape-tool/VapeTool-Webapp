@@ -13,7 +13,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 import { i18nValidationRequired } from '@/utils/i18n';
 
 type Column = 'name' | 'link';

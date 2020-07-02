@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, InputNumber, Tag } from 'antd';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
+
 import styles from './styles.less';
 
 interface PropertyItemProps {

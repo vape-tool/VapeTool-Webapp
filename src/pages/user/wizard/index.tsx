@@ -18,7 +18,7 @@ import {
 import { redirectBack } from '@/models/global';
 import { ImageType } from '@/services/storage';
 import { SaveOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;

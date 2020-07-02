@@ -2,7 +2,7 @@ import { Card, List, Typography } from 'antd';
 import React from 'react';
 import styles from '@/components/ItemView/styles.less';
 import { Battery } from '@/types';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from '@umijs/preset-react';
 
 interface BatteryViewProps {
   onBatteryClick: (battery: Battery) => void;

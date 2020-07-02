@@ -1,4 +1,4 @@
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
@@ -91,16 +91,22 @@ export const photosStorageRef = storage()
   .ref('gears')
   .child('images');
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export import ServerValue = firebase.database.ServerValue;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export import DataSnapshot = firebase.database.DataSnapshot;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export import DatabaseReference = firebase.database.Reference;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export import StorageReference = firebase.storage.Reference;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export import Query = firebase.database.Query;
+export const {
+  ServerValue,
+  DataSnapshot,
+  DatabaseReference,
+  StorageReference,
+  Query,
+} = firebase.database;
+
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// export import DataSnapshot = firebase.database.DataSnapshot;
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// export import DatabaseReference = firebase.database.Reference;
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// export import StorageReference = firebase.storage.Reference;
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// export import Query = firebase.database.Query;
 
 let userLoaded: boolean = false;
 
