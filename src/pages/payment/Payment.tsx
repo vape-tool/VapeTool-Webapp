@@ -34,9 +34,10 @@ const coinbaseCodes = {
 
 const stripeCodes = {
   // first PRODUCTION, second DEVELOPMENT
-  [SubscriptionPlan.MONTHLY]: ['', 'plan_GzHJlYB6AmQMJu'],
-  [SubscriptionPlan.ANNUALLY]: ['', 'plan_GzHrBem88w5v0n'],
-  [SubscriptionPlan.LIFETIME]: ['', 'sku_GzzgBtkFBKWzqn'],
+
+  [SubscriptionPlan.MONTHLY]: ['', 'plan_Ha1E7UzNidhC9Q'],
+  [SubscriptionPlan.ANNUALLY]: ['', 'plan_Ha1E0tVa0Be7Zx'],
+  [SubscriptionPlan.LIFETIME]: ['', 'sku_Ha1EpVv51gdqrb'],
 };
 
 const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
