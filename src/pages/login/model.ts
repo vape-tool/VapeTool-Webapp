@@ -1,7 +1,5 @@
-import { AnyAction, Dispatch, Reducer } from 'redux';
-import { EffectsCommandMap } from 'dva';
+import { Dispatch, Reducer, history, Effect  } from 'umi';
 import { User, UserPermission } from '@vapetool/types';
-import { routerRedux } from 'dva/router';
 import { auth } from '@/utils/firebase';
 import { getUser, initializeUser } from '@/services/user';
 import { GLOBAL, REDIRECT_BACK } from '@/models/global';
@@ -38,10 +36,6 @@ export interface UserLoginModelState {
   currentAuthority?: UserAuthorities;
 }
 
-export type Effect = (
-  action: AnyAction,
-  effects: EffectsCommandMap & { select: <T>(func: (state: UserLoginModelState) => T) => T },
-) => void;
 
 export interface UserLoginModelType {
   namespace: string;
@@ -99,7 +93,7 @@ const Model: UserLoginModelType = {
       if (user === null) {
         // user not yet saved to database, saving now and redirecting to wizard page
         user = yield call(initializeUser, firebaseUser);
-        yield put(routerRedux.replace({ pathname: getCurrentUserEditProfileUrl() }));
+        yield put(history.replace({ pathname: getCurrentUserEditProfileUrl() }));
       } else {
         // user already initialized and saved on cloud
         yield put({ type: `${GLOBAL}/${REDIRECT_BACK}` });

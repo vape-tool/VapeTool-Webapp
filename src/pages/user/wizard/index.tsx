@@ -1,8 +1,7 @@
 import { Button, Card, Col, Input, Row, Spin } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
+import { connect, Dispatch, FormattedMessage    } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
-import { Dispatch } from 'redux';
 import styles from '@/pages/user/profile/styles.less';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
@@ -18,7 +17,6 @@ import {
 import { redirectBack } from '@/models/global';
 import { ImageType } from '@/services/storage';
 import { SaveOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@umijs/preset-react';
 
 const UserWizard: React.FC<{
   currentUser?: CurrentUser;

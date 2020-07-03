@@ -1,9 +1,7 @@
-import { Dispatch, Reducer } from 'redux';
-import { Effect } from 'dva';
+import { Effect, Dispatch, Reducer, history } from 'umi';
 import ReactCrop from 'react-image-crop';
 import { Author } from '@vapetool/types';
 import { message } from 'antd';
-import { routerRedux } from 'dva/router';
 import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/items';
 
@@ -113,7 +111,7 @@ const Model: ModelType = {
         );
         message.success('Successfully published cloud');
         yield put({ type: 'reset' });
-        yield put(routerRedux.replace({ pathname: '/cloud' }));
+        yield put(history.replace({ pathname: '/cloud' }));
       } catch (e) {
         message.error('Failed upload cloud to cloud');
       }

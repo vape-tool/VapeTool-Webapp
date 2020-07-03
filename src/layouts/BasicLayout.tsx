@@ -9,12 +9,8 @@ import ProLayout, {
   Settings,
   DefaultFooter,
 } from '@ant-design/pro-layout';
-import { formatMessage, FormattedMessage, getLocale } from 'umi-plugin-react/locale';
 import React, { useEffect } from 'react';
-import { Link } from 'umi';
-import { Dispatch } from 'redux';
-import { connect } from 'dva';
-import moment from 'moment';
+import { Link, connect, useIntl, FormattedMessage } from 'umi';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
@@ -79,7 +75,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
 
-const defaultFooterDom = (
+const defaultFooterDom = formatMessage => (
   <DefaultFooter
     copyright={formatMessage({
       id: 'misc.copyrights',
@@ -110,9 +106,9 @@ const defaultFooterDom = (
   />
 );
 
-const footerRender: BasicLayoutProps['footerRender'] = () => (
+const footerRender: BasicLayoutProps['footerRender'] = formatMessage => (
   <>
-    {defaultFooterDom}
+    {defaultFooterDom(formatMessage)}
     <div
       style={{
         padding: '0px 24px 24px',
@@ -134,8 +130,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   /**
    * constructor
    */
-
-  moment.locale(getLocale());
 
   useEffect(() => {
     dispatchFetchCurrentUser(dispatch);
@@ -159,6 +153,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   if (authorized.authority?.includes(UserAuthorities.PRO)) {
     noMatchPage = proOnly;
   }
+
+  const { formatMessage } = useIntl();
 
   return (
     <ProLayout
@@ -196,7 +192,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           <span>{route.breadcrumbName}</span>
         );
       }}
-      footerRender={footerRender}
+      footerRender={footerRender(formatMessage)}
       menuDataRender={menuDataRender}
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}

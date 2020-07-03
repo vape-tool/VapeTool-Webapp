@@ -1,4 +1,4 @@
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer } from 'umi';
 import { Item, ItemName, Link, Photo, Post } from '@/types';
 import { UserModelState } from '@/models/user';
 

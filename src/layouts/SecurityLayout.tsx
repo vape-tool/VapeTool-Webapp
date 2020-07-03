@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { connect } from 'dva';
-import { Redirect } from 'umi';
+import { Redirect, connect } from 'umi';
 import { stringify } from 'querystring';
 import { User as FirebaseUser } from 'firebase/app';
 import { ConnectState } from '@/models/connect';

@@ -3,7 +3,7 @@ import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'a
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ConnectState } from '@/models/connect';
-import { connect } from 'dva';
+import { connect } from 'umi';
 import { stripePromise } from '@/utils/stripe';
 import styles from './payment.less';
 

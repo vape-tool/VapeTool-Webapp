@@ -1,10 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import { Input, List, Menu, Modal } from 'antd';
-import { DataSnapshot, DatabaseReference, likesRef, commentsRef } from '@/utils/firebase';
+import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectItem } from '@/models/preview';
-import { Dispatch } from 'redux';
+import { Dispatch, FormattedMessage, formatMessage } from 'umi';
+import firebase from 'firebase';
 import {
   dispatchComment,
   dispatchDelete,
@@ -19,7 +20,6 @@ import Dropdown from 'antd/es/dropdown';
 import { UserPermission } from '@vapetool/types';
 import { Liquid, Coil, Post, Link, Photo, Comment, ItemName } from '@/types';
 import { DeleteOutlined, FlagOutlined, MoreOutlined } from '@ant-design/icons';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 export interface ItemViewProps<T> {
   item: T;
@@ -44,9 +44,9 @@ export abstract class ItemView<
 > extends React.Component<Props, State> {
   protected inputRef?: any = undefined;
 
-  protected likesRef?: DatabaseReference = undefined;
+  protected likesRef?: firebase.database.Reference = undefined;
 
-  private commentsRef?: DatabaseReference = undefined;
+  private commentsRef?: firebase.database.Reference = undefined;
 
   constructor(props: Readonly<Props>) {
     super(props);
@@ -221,7 +221,7 @@ export abstract class ItemView<
 
   private listenLikes = () =>
     this.likesRef &&
-    this.likesRef.on('value', (snapshot: DataSnapshot) => {
+    this.likesRef.on('value', (snapshot: firebase.database.DataSnapshot) => {
       this.setState({ likesCount: snapshot.numChildren() });
       let likedByMe = false;
       snapshot.forEach(snap => {
@@ -235,7 +235,7 @@ export abstract class ItemView<
 
   private listenComments = () =>
     this.commentsRef &&
-    this.commentsRef.on('value', (snapshot: DataSnapshot) => {
+    this.commentsRef.on('value', (snapshot: firebase.database.DataSnapshot) => {
       const comments: Comment[] = [];
       snapshot.forEach(snap => {
         comments.push({ ...snap.val(), uid: snap.key });

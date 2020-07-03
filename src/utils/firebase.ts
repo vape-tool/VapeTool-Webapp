@@ -81,23 +81,11 @@ export const commentsRef = (item: ItemName) => {
 };
 
 export const batteriesStorageRef = prodStorage.ref('batteries').child('images');
-export const usersStorageRef = storage()
-  .ref('users')
-  .child('images');
-export const coilsStorageRef = storage()
-  .ref('coils')
-  .child('images');
-export const photosStorageRef = storage()
-  .ref('gears')
-  .child('images');
+export const usersStorageRef = storage().ref('users').child('images');
+export const coilsStorageRef = storage().ref('coils').child('images');
+export const photosStorageRef = storage().ref('gears').child('images');
 
-export const {
-  ServerValue,
-  DataSnapshot,
-  DatabaseReference,
-  StorageReference,
-  Query,
-} = firebase.database;
+export const { ServerValue } = firebase.database;
 
 // // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // export import DataSnapshot = firebase.database.DataSnapshot;
@@ -115,7 +103,7 @@ export function getCurrentUser(): Promise<FirebaseUser | null> {
     if (userLoaded) {
       resolve(auth.currentUser);
     }
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       userLoaded = true;
       unsubscribe();
       resolve(user);

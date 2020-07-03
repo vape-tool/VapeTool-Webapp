@@ -1,8 +1,6 @@
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer, history, Effect } from 'umi';
 import { message } from 'antd';
 import { Author } from '@vapetool/types';
-import { routerRedux } from 'dva/router';
-import { Effect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { createLink, createPost } from '@/services/items';
 
@@ -76,7 +74,7 @@ const Model: ModelType = {
         yield call(createPost, title, text, new Author(uid, name));
         message.success('Successfully published post');
         yield put({ type: 'reset' });
-        yield put(routerRedux.replace({ pathname: '/cloud' }));
+        yield put(history.replace({ pathname: '/cloud' }));
       } catch (e) {
         console.error(e);
         message.error('Failed upload post to cloud');
@@ -98,7 +96,7 @@ const Model: ModelType = {
         yield call(createLink, text, url, new Author(uid, name));
         message.success('Successfully published link');
         yield put({ type: 'reset' });
-        yield put(routerRedux.replace({ pathname: '/cloud' }));
+        yield put(history.replace({ pathname: '/cloud' }));
       } catch (e) {
         console.error(e);
         message.error('Failed upload link to cloud');

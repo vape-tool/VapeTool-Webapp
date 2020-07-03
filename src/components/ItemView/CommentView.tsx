@@ -1,6 +1,5 @@
 import { Button, Dropdown, Menu, Typography } from 'antd';
 import * as React from 'react';
-import { connect } from 'dva';
 import { UserPermission } from '@vapetool/types';
 import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
@@ -8,9 +7,8 @@ import { Comment } from '@/types';
 import { CurrentUser } from '@/models/user';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { Link } from 'umi';
+import { Link, FormattedMessage, connect } from 'umi';
 import { MoreOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@umijs/preset-react';
 
 interface CommentViewProps {
   user?: CurrentUser;

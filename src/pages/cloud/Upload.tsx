@@ -1,13 +1,11 @@
 import { Col, Row, Tabs } from 'antd';
 import React from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'dva';
+import { connect, Dispatch, FormattedMessage } from 'umi';
 import { ConnectState } from '@/models/connect';
 import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
 import { Tab, changeTab } from '@/models/upload';
 import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@umijs/preset-react';
 
 interface UploadProps {
   currentTab: string;

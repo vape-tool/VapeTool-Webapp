@@ -1,9 +1,7 @@
 import { DefaultFooter, getMenuData, getPageTitle, MenuDataItem } from '@ant-design/pro-layout';
-import { Helmet } from 'react-helmet';
-import { Link } from 'umi';
+import { Helmet } from 'react-helmet-async';
+import { Link, connect, useIntl, FormattedMessage } from 'umi';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'dva';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -34,6 +32,8 @@ const SignupLayout: React.FC<SignupLayoutProps> = props => {
   };
 
   useEffect(() => fetchCurrentUser(), [firebaseUser]);
+
+  const formatMessage = useIntl()
 
   if (!isReady) {
     return <PageLoading />;

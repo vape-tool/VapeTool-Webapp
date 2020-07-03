@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
-import { connect } from 'dva';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
-
-import { Dispatch } from 'redux';
+import { connect, Dispatch, formatMessage, FormattedMessage  } from 'umi';
 import { ConnectState } from '@/models/connect';
 import {
   dispatchCalculateResults,

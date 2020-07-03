@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
-import { Dispatch } from 'redux';
-import { FormattedMessage } from '@umijs/preset-react';
-
+import { Dispatch, FormattedMessage, connect } from 'umi';
 import { GridContent } from '@ant-design/pro-layout';
 import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
 import { RouteChildrenProps } from 'react-router';
-import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser, FETCH_CURRENT_USER, USER } from '@/models/user';
 import {
@@ -32,7 +29,7 @@ interface UserProfileProps extends RouteChildrenProps {
   profileLoading?: boolean;
 }
 
-const Profile: React.FC<UserProfileProps> = props => {
+const Profile: React.FC<UserProfileProps> = (props) => {
   const {
     dispatch,
     currentUser,

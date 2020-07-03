@@ -1,5 +1,4 @@
-import { Dispatch, Reducer } from 'redux';
-import { Effect } from 'dva';
+import { Dispatch, Reducer, Effect } from 'umi';
 import { Flavor, Liquid, Result } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateResults } from '@/services/liquid';
@@ -353,7 +352,7 @@ const LiquidModel: LiquidModelType = {
       { payload: { uid, row } },
     ): LiquidModelState {
       const newData = [...state.currentLiquid.flavors];
-      const index = newData.findIndex(item => uid === item.uid);
+      const index = newData.findIndex((item) => uid === item.uid);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {

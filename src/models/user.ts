@@ -1,7 +1,5 @@
-import { Effect, Subscription } from 'dva';
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer, Effect, Subscription, history } from 'umi';
 import { User as FirebaseUser } from 'firebase/app';
-import { routerRedux } from 'dva/router';
 import { getUser, initializeUser, logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
 import { User } from '@vapetool/types';
@@ -84,7 +82,7 @@ const UserModel: UserModelType = {
       if (user == null) {
         console.log('user not yet saved to database, saving now');
         user = yield call(initializeUser, firebaseUser);
-        yield put(routerRedux.replace({ pathname: getCurrentUserEditProfileUrl() }));
+        yield put(history.replace({ pathname: getCurrentUserEditProfileUrl() }));
         console.log(user);
       } else {
         console.log(`User is already created in db ${user}`);

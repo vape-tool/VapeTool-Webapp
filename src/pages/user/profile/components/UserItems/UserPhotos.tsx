@@ -2,11 +2,10 @@ import UserItems from '@/pages/user/profile/components/UserItems/index';
 import { ItemName, Photo } from '@/types';
 import React from 'react';
 import PhotoView from '@/components/ItemView/PhotoView';
-import { connect } from 'dva';
+import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribePhotos } from '@/services/items';
-import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userPhotos: userProfile.userPhotos,

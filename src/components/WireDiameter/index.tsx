@@ -4,7 +4,7 @@ import { Button, InputNumber, notification, Row, Typography } from 'antd';
 import { WireComponentProps } from '@/components/SingleWire';
 import { awgToMm, mmToAwg } from '@/utils/math';
 
-const WireDiameter: React.FC<WireComponentProps> = props => {
+const WireDiameter: React.FC<WireComponentProps> = (props) => {
   const { wire, path, onSetWire } = props;
   const awg = Math.round(mmToAwg(wire.mm));
 
@@ -32,21 +32,21 @@ const WireDiameter: React.FC<WireComponentProps> = props => {
     }
   };
 
-  const onMmChange = (value: number | undefined) => {
-    if (value === undefined) return;
-    wire.mm = value;
+  const onMmChange = (value: number | string | undefined) => {
+    if (value === undefined || !Number.isFinite(value)) return;
+    wire.mm = Number(value);
     onSetWire(path, wire);
   };
 
-  const onWidthChange = (value: number | undefined) => {
-    if (value === undefined) return;
-    wire.width = value;
+  const onWidthChange = (value: number | string | undefined) => {
+    if (value === undefined || !Number.isFinite(value)) return;
+    wire.width = Number(value);
     onSetWire(path, wire);
   };
 
-  const onHeightChange = (value: number | undefined) => {
-    if (value === undefined) return;
-    wire.height = value;
+  const onHeightChange = (value: number | string | undefined) => {
+    if (value === undefined || !Number.isFinite(value)) return;
+    wire.height = Number(value);
     onSetWire(path, wire);
   };
 

@@ -6,7 +6,7 @@ import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/es/upload/interface';
 
 import 'react-image-crop/dist/ReactCrop.css';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi';
 
 const { Dragger } = Upload;
 

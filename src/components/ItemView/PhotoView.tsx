@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'dva';
-import { Link } from 'umi';
+import { Link, connect } from 'umi';
 import { Card, Skeleton, Typography } from 'antd';
 import { Photo } from '@/types';
 import { ConnectState } from '@/models/connect';

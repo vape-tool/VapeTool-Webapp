@@ -1,4 +1,4 @@
-import { Effect } from 'dva';
+import { Effect, Dispatch } from 'umi';
 import { message, notification } from 'antd';
 import { ConnectState } from '@/models/connect';
 import {
@@ -18,7 +18,6 @@ import {
   reportPhoto,
   reportPost,
 } from '@/services/items';
-import { Dispatch } from 'redux';
 import { ItemName } from '@/types';
 
 export const OPERATION = 'operation';

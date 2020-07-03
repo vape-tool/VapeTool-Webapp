@@ -1,15 +1,13 @@
 import { Button, Col, Divider, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage, Dispatch } from 'umi';
 import { UserPermission } from '@vapetool/types';
-import { Dispatch } from 'redux';
 import useMedia from 'react-media-hook2';
 import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/models/user';
 import { dispatchSelectBattery, dispatchToggleEditBattery } from '@/models/batteries';
-import { FormattedMessage } from '@umijs/preset-react';
 
 interface BatteryPreviewDrawerProps {
   dispatch: Dispatch;
@@ -235,29 +233,27 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
 
         {!editBattery &&
           affiliate &&
-          Array.from(affiliate, ([key, value]) => {
-            return (
-              <Col xs="auto">
-                <a
-                  style={{
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    display: 'inherit',
-                  }}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href={value}
-                >
-                  <FormattedMessage
-                    id="battery.actions.buyOn"
-                    values={{ key }}
-                    defaultMessage="Buy on {key}"
-                  />
-                </a>
-              </Col>
-            );
-          })}
+          Array.from(affiliate, ([key, value]) => (
+            <Col xs="auto">
+              <a
+                style={{
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  display: 'inherit',
+                }}
+                rel="noopener noreferrer"
+                target="_blank"
+                href={value}
+              >
+                <FormattedMessage
+                  id="battery.actions.buyOn"
+                  values={{ key }}
+                  defaultMessage="Buy on {key}"
+                />
+              </a>
+            </Col>
+          ))}
       </Row>
       {editBattery && <AffiliateEditTable />}
     </Drawer>

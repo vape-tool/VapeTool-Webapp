@@ -1,7 +1,6 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
-import { Link } from 'umi';
+import { Link, connect } from 'umi';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ConnectState } from '@/models/connect';
 import { Post } from '@/types';

@@ -1,5 +1,4 @@
-import { Effect } from 'dva';
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer, Effect  } from 'umi';
 import { message } from 'antd';
 import { getUser, updateDisplayName } from '@/services/user';
 import { ConnectState } from '@/models/connect';

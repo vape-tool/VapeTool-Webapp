@@ -1,5 +1,5 @@
 import { Item } from '@/types';
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer } from 'umi';
 
 export const PREVIEW = 'preview';
 export const SELECT_ITEM = 'selectItem';

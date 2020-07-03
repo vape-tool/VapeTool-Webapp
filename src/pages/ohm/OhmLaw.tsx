@@ -1,10 +1,9 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
-import { connect } from 'dva';
+import { connect, Dispatch, formatMessage, FormattedMessage } from 'umi';
 import { LockOutlined } from '@ant-design/icons';
 import ButtonGroup from 'antd/es/button/button-group';
-import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import {
   clear,
@@ -17,7 +16,6 @@ import {
   calculate,
 } from '@/models/ohm';
 import ImageWebp from '@/components/ImageWebp';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const ohmLawWebp = require('@/assets/ohm_law.webp');
 const ohmLawPng = require('@/assets/ohm_law.png');

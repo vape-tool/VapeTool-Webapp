@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, InputNumber, message, Popconfirm, Table } from 'antd';
 import { Flavor } from '@vapetool/types';
-import { connect } from 'dva';
+import { connect, FormattedMessage } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { LiquidModelState, dispatchSetFlavor } from '@/models/liquid';
 import { DeleteOutlined, EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@umijs/preset-react';
 
 type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
 

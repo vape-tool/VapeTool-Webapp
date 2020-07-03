@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputNumber, Col } from 'antd';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi';
 import FormItem from 'antd/lib/form/FormItem';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { MixableType } from '@vapetool/types';

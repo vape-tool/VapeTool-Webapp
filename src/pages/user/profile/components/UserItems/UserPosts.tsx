@@ -2,11 +2,10 @@ import UserItems from '@/pages/user/profile/components/UserItems/index';
 import { ItemName, Post } from '@/types';
 import React from 'react';
 import PostView from '@/components/ItemView/PostView';
-import { connect } from 'dva';
+import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribePosts } from '@/services/items';
-import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userPosts: userProfile.userPosts,

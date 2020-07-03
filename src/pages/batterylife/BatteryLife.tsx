@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row, Typography } from 'antd';
-import { connect } from 'dva';
+import { connect, formatMessage, FormattedMessage  } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 const BatteryLife: React.FC = () => {
   const [capacityMah, setCapacityMah] = useState<number | undefined>();

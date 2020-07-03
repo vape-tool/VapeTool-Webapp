@@ -1,6 +1,5 @@
-import { Dispatch } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
-import { RouterTypes } from 'umi';
+import { RouterTypes, Dispatch } from 'umi';
 import { UserLoginModelState } from '@/pages/login/model';
 import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
