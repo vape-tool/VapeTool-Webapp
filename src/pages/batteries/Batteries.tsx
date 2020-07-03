@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'dva';
+import { connect } from 'umi';
 import { List } from 'antd';
 import { id } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';

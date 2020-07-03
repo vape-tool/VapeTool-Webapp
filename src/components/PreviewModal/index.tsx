@@ -1,6 +1,6 @@
 import { Modal } from 'antd';
 import * as React from 'react';
-import { connect } from 'dva';
+import { connect } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import PhotoView from '@/components/ItemView/PhotoView';

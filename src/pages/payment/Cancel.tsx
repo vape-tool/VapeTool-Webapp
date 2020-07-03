@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Result } from 'antd';
-import { connect } from 'dva';
+import { connect } from 'umi';
 import { ConnectProps } from '@/models/connect';
 import { redirectTo } from '@/models/global';
 import { getPaymentUrl } from '@/places/user.places';

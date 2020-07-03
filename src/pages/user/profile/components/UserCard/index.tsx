@@ -15,9 +15,8 @@ import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
-import { connect } from 'dva';
+import { connect, FormattedMessage  } from 'umi';
 import { isProUser } from '@/pages/login/utils/utils';
-import { FormattedMessage } from '@umijs/preset-react';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;

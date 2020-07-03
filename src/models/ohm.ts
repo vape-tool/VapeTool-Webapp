@@ -1,4 +1,4 @@
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer } from 'umi';
 
 export const OHM = 'ohm';
 export const SET_VOLTAGE = 'setVoltage';

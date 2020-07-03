@@ -1,10 +1,9 @@
 import { Form, Input, InputNumber, Modal, message } from 'antd';
 import * as React from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage, formatMessage} from 'umi';
 import { Flavor } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 
 interface NewFlavorModalProps extends ConnectProps {
   showNewFlavorModal?: boolean;

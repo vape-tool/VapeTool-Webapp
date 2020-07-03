@@ -1,5 +1,4 @@
-import { Dispatch, Reducer } from 'redux';
-import { Effect } from 'dva';
+import { Dispatch, Reducer, Effect } from 'umi';
 import { Coil, Properties, Wire, wireGenerator, WireStyle } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateForResistance, calculateForWraps, calculateProperties } from '@/services/coil';

@@ -1,9 +1,8 @@
 import React from 'react';
-import { connect } from 'dva';
+import { connect, Dispatch } from 'umi';
 import { User as FirebaseUser } from 'firebase/app';
 import firebase from 'firebase';
 import { notification } from 'antd';
-import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import PageLoading from '@/components/PageLoading';
 import { getPageFragment } from '@/utils/utils';

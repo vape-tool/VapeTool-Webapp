@@ -1,7 +1,6 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
-import { Link } from 'umi';
+import { Link, connect } from 'umi';
 // @ts-ignore
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';

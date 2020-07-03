@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import { FormattedMessage } from '@umijs/preset-react';
+import { FormattedMessage } from 'umi';
 
 interface SaveModalProps {
   save: (name: string, description?: string) => Promise<void>;

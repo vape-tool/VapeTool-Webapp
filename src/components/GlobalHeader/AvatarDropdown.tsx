@@ -1,9 +1,8 @@
 import { Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
-import { FormattedMessage } from '@umijs/preset-react';
 import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons';
 import React from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage  } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser, dispatchLogout } from '@/models/user';
 import FirebaseImage from '@/components/StorageAvatar';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Affix, Button, List } from 'antd';
-import { connect } from 'dva';
+import { connect } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import styles from '@/components/ItemView/styles.less';
 import { PhotoView } from '@/components/ItemView';

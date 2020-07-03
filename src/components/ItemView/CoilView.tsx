@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage  } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { Card, Typography, Descriptions } from 'antd';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
-import { FormattedMessage } from '@umijs/preset-react';
 
 import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
 import styles from './styles.less';

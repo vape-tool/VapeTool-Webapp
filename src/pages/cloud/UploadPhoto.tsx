@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Input } from 'antd';
-import { connect } from 'dva';
+import { connect, formatMessage, FormattedMessage } from 'umi';
 import {
   CroppedImage,
   dispatchSetCroppedImage,
@@ -13,7 +13,6 @@ import {
 import { ConnectProps, ConnectState } from '@/models/connect';
 import UploadAndCropImage from '@/components/UploadAndCropImage';
 import { CaretLeftOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 
 interface UploadPhotoProps extends ConnectProps {
   uploadPhoto: UploadPhotoState;

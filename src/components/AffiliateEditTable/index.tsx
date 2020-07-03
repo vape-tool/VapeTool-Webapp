@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message, Popconfirm, Table } from 'antd';
-import { connect } from 'dva';
+import { connect, FormattedMessage  } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery, Affiliate } from '@/types';
@@ -13,7 +13,6 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { FormattedMessage } from '@umijs/preset-react';
 import { i18nValidationRequired } from '@/utils/i18n';
 
 type Column = 'name' | 'link';

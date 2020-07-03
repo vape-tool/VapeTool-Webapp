@@ -1,9 +1,6 @@
-import { Dispatch, Reducer } from 'redux';
-import { Effect, Subscription, routerRedux } from 'dva';
-
+import { Effect, Subscription, history, Dispatch, Reducer } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import { stringify } from 'qs';
-import { history } from 'umi';
 
 export const GLOBAL = 'global';
 export const REDIRECT_BACK = 'redirectBack';
@@ -73,12 +70,12 @@ const GlobalModel: GlobalModelType = {
       }
 
       console.log(`isAbout to redirect to ${redirect || '/'}`);
-      yield put(routerRedux.replace(redirect || '/'));
+      yield put(history.replace(redirect || '/'));
     },
     *redirectToWithFootprint({ path }, { put }) {
       console.log(`redirect to ${path}`);
       yield put(
-        routerRedux.replace({
+        history.replace({
           pathname: path,
           search: stringify({
             redirect: window.location.href,
@@ -98,9 +95,10 @@ const GlobalModel: GlobalModelType = {
   },
 
   subscriptions: {
-    setup({ _history }): void {
+    // eslint-disable-next-line no-shadow
+    setup({ history }): void {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      _history.listen(({ pathname, search }): void => {
+      history.listen(({ pathname, search }): void => {
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }

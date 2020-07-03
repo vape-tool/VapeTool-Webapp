@@ -1,8 +1,6 @@
-import { Effect } from 'dva';
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer, Effect, history  } from 'umi';
 import { User } from '@vapetool/types';
 import { getUser } from '@/services/user';
-import { routerRedux } from 'dva/router';
 import { Coil, Item, ItemName, Link, Liquid, Photo, Post } from '@/types';
 import { ConnectState } from '@/models/connect';
 import {
@@ -86,7 +84,7 @@ const UserProfileModel: UserProfileModelType = {
     *[FETCH_USER_PROFILE]({ payload: userId }, { put, call }) {
       const user: User | null = yield call(getUser, userId);
       if (!user) {
-        yield put(routerRedux.replace({ pathname: '/404' }));
+        yield put(history.routerRedux.replace({ pathname: '/404' }));
         return;
       }
 

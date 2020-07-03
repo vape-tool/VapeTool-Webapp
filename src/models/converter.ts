@@ -1,4 +1,4 @@
-import { Dispatch, Reducer } from 'redux';
+import { Dispatch, Reducer } from 'umi';
 import { awgToMm, celsiusToFahrenheit, fahrenheitToCelsius, mmToAwg } from '@/utils/math';
 import { identity, nanToUndefined, safeConvert } from '@/utils/utils';
 

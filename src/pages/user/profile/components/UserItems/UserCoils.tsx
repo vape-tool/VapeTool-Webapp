@@ -1,12 +1,11 @@
 import UserItems from '@/pages/user/profile/components/UserItems/index';
 import React from 'react';
 import { Coil, ItemName } from '@/types';
-import { connect } from 'dva';
+import { connect, Dispatch  } from 'umi';
 import { ConnectState } from '@/models/connect';
 import CoilView from '@/components/ItemView/CoilView';
 import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribeCoils } from '@/services/items';
-import { Dispatch } from 'redux';
 
 @connect(({ userProfile, loading }: ConnectState) => ({
   userCoils: userProfile.userCoils,

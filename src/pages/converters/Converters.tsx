@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'dva';
-import { Dispatch } from 'redux';
+import { connect, Dispatch  } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { ConverterModelState } from '@/models/converter';
 import AwgConverter from '@/pages/converters/AwgConverter';

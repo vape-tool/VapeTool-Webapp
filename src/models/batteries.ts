@@ -1,6 +1,4 @@
-import { Effect } from 'dva';
-import { Reducer, Dispatch } from 'redux';
-
+import { Effect, Reducer, Dispatch } from 'umi';
 import { id } from '@vapetool/types';
 import { Battery } from '@/types';
 import { ConnectState } from '@/models/connect';

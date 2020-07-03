@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, InputNumber, Tag } from 'antd';
-import { FormattedMessage } from '@umijs/preset-react';
+import { FormattedMessage } from 'umi';
 
 import styles from './styles.less';
 
@@ -11,14 +11,14 @@ interface PropertyItemProps {
   proOnly?: boolean;
   editable?: boolean;
   isPro: boolean;
-  onChangeValue?: (newValue?: number) => void;
+  onChangeValue?: (newValue?: number | string) => void;
 }
 
 const PropertyItem = (props: PropertyItemProps) => {
   const { property, value, unit, proOnly, isPro, editable, onChangeValue } = props;
   const displayProOnlyTag = proOnly && !isPro;
 
-  const [editValue, setEditValue] = useState();
+  const [editValue, setEditValue] = useState<number | undefined>();
   const [isEditing, setIsEditing] = useState(false);
 
   const enableEditing = () => {
@@ -61,7 +61,10 @@ const PropertyItem = (props: PropertyItemProps) => {
                 step={0.1}
                 precision={2}
                 value={editValue}
-                onChange={setEditValue}
+                onChange={(val) =>
+                  (Number.isFinite(val) && setEditValue(Number(val))) ||
+                  (val === undefined && setEditValue(val))
+                }
               />
             )}
 

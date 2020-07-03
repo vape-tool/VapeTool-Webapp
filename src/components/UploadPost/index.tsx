@@ -1,8 +1,6 @@
 import React from 'react';
 import { Editor, EditorState } from 'draft-js';
 import { Button, Card, Input } from 'antd';
-import { connect } from 'dva';
-import { Dispatch } from 'redux';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import {
@@ -13,7 +11,7 @@ import {
   SUBMIT_POST,
 } from '@/models/uploadPost';
 import { ShareAltOutlined } from '@ant-design/icons/lib';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage, connect, Dispatch   } from 'umi';
 
 interface UploadPostProps {
   currentUser?: CurrentUser;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect } from 'dva';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { connect, formatMessage, FormattedMessage  } from 'umi';
 import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
 import { LineOutlined, PauseOutlined, SwapOutlined } from '@ant-design/icons';

@@ -1,8 +1,7 @@
 import { Form, Input, Modal } from 'antd';
 import * as React from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage  } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import { FormattedMessage } from '@umijs/preset-react';
 import { i18nValidationRequired } from '@/utils/i18n';
 
 interface NewAffiliateModalProps extends ConnectProps {

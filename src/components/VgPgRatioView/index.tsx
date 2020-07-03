@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
-import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
+import { formatMessage, FormattedMessage } from 'umi';
 
 const { Text } = Typography;
 
@@ -9,7 +9,7 @@ interface VgPgRatioProps {
   ratio: number;
 }
 
-const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
+const VgPgRatioView: React.FC<VgPgRatioProps> = (props) => {
   const { onRatioChange, ratio } = props;
 
   const responsivenessRatioVg = {
@@ -63,7 +63,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = props => {
             step={5}
             precision={0}
             value={ratio}
-            onChange={(value: number | undefined) => value && onRatioChange(100 - value)}
+            onChange={(value: number | string | undefined) =>
+              value && Number.isFinite(value) && onRatioChange(100 - Number(value))
+            }
           />
         </label>
       </Col>

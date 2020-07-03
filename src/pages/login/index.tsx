@@ -1,37 +1,30 @@
 import { notification } from 'antd';
 import React, { Component } from 'react';
-import { connect } from 'dva';
+import { connect, FormattedMessage, history } from 'umi';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
-import { FormattedMessage } from '@umijs/preset-react';
 
 // @ts-ignore
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import { routerRedux } from 'dva/router';
 import { auth } from '@/utils/firebase';
 import FacebookIcon from '@/assets/FacebookIcon';
 import GoogleIcon from '@/assets/GoogleIcon';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import CookieConsent from 'react-cookie-consent';
 import { SUCCESS_LOGIN, USER_LOGIN, UserLoginModelState } from './model';
 import styles from './style.less';
-import CookieConsent from 'react-cookie-consent';
 
 interface LoginProps extends ConnectProps {
   userLogin?: UserLoginModelState;
   submitting?: boolean;
 }
 
-@connect(({ userLogin, loading }: ConnectState) => ({
-  userLogin,
-  submitting: loading.effects[`${USER_LOGIN}/${SUCCESS_LOGIN}`],
-}))
 class Login extends Component<LoginProps> {
   // eslint-disable-next-line react/sort-comp
   signInSuccessWithAuthResult = (): boolean => {
     notification.info({ message: 'User logged in' });
-    if (this.props.dispatch)
-      this.props.dispatch(routerRedux.replace({ pathname: '/login/success' }));
+    if (this.props.dispatch) this.props.dispatch(history.replace({ pathname: '/login/success' }));
     return false;
   };
 
@@ -118,7 +111,7 @@ class Login extends Component<LoginProps> {
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
           cookiePolicy="single_host_origin"
-          render={props => (
+          render={(props) => (
             <LoginButton
               name="Google"
               onClick={props.onClick}
@@ -161,4 +154,7 @@ class Login extends Component<LoginProps> {
   }
 }
 
-export default Login;
+export default connect(({ userLogin, loading }: ConnectState) => ({
+  userLogin,
+  submitting: loading.effects[`${USER_LOGIN}/${SUCCESS_LOGIN}`],
+}))(Login);
