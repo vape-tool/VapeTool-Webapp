@@ -1,6 +1,6 @@
 # Vape Tool Webapp
 
-![Demo](images/cloud.jpg)
+![Demo](img/cloud.jpg)
 
 ## Environment Prepare
 
