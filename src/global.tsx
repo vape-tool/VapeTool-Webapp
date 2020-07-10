@@ -26,7 +26,7 @@ if (pwa) {
       // Send skip-waiting event to waiting SW with MessageChannel
       await new Promise((resolve, reject) => {
         const channel = new MessageChannel();
-        channel.port1.onmessage = msgEvent => {
+        channel.port1.onmessage = (msgEvent) => {
           if (msgEvent.data.error) {
             reject(msgEvent.data.error);
           } else {

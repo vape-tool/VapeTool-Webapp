@@ -1,6 +1,8 @@
-import { parse } from 'qs';
-import pathRegexp from 'path-to-regexp';
-import { Route } from '@/models/connect';
+import { parse } from 'querystring';
+import moment from 'moment';
+import { history } from 'umi';
+import { UserPermission } from '@vapetool/types';
+import { UserAuthorities } from '@/types/UserAuthorities';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -8,10 +10,7 @@ const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(
 export const isUrl = (path: string): boolean => reg.test(path);
 
 export const isAntDesignPro = (): boolean => {
-  if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
-    return true;
-  }
-  return window.location.hostname === 'preview.pro.ant.design';
+  return window.location.hostname === 'web.vapetool.app';
 };
 
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性
@@ -25,45 +24,6 @@ export const isAntDesignProOrDev = (): boolean => {
 
 export const getPageQuery = () => parse(window.location.href.split('?')[1]);
 export const getPageFragment = () => parse(window.location.href.split('#')[1]);
-
-/**
- * props.route.routes
- * @param router [{}]
- * @param pathname string
- */
-export const getAuthorityFromRouter = <T extends Route>(
-  router: T[] = [],
-  pathname: string,
-): T | undefined => {
-  const authority = router.find(
-    ({ routes, path = '/' }) =>
-      (path && pathRegexp(path).exec(pathname)) ||
-      (routes && getAuthorityFromRouter(routes, pathname)),
-  );
-  if (authority) return authority;
-  return undefined;
-};
-
-export const getRouteAuthority = (path: string, routeData: Route[]) => {
-  let authorities: string[] | string | undefined;
-  routeData.forEach(route => {
-    // match prefix
-    if (pathRegexp(`${route.path}/(.*)`).test(`${path}/`)) {
-      if (route.authority) {
-        authorities = route.authority;
-      }
-      // exact match
-      if (route.path === path) {
-        authorities = route.authority || authorities;
-      }
-      // get children authority recursively
-      if (route.routes) {
-        authorities = getRouteAuthority(path, route.routes) || authorities;
-      }
-    }
-  });
-  return authorities;
-};
 
 export function unitFormatter(
   decimals: number,
@@ -126,7 +86,7 @@ export const safeConvert = (
   params: Array<number | undefined>,
   precision = 0,
 ): number | undefined => {
-  if (params.some(param => param === undefined)) {
+  if (params.some((param) => param === undefined)) {
     return undefined;
   }
 
@@ -144,3 +104,58 @@ export const capitalize = (s: string) => {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 };
+
+export const isProUser = (userSubscription?: Date | null | undefined): boolean =>
+  userSubscription !== undefined && moment(userSubscription).isAfter();
+
+export const redirectBack = () => {
+  const urlParams = new URL(window.location.href);
+  const params = getPageQuery();
+  let { redirect } = params as { redirect: string };
+  if (redirect) {
+    const redirectUrlParams = new URL(redirect);
+    if (redirectUrlParams.origin === urlParams.origin) {
+      redirect = redirect.substr(urlParams.origin.length);
+      if (redirect.match(/^\/.*#/)) {
+        redirect = redirect.substr(redirect.indexOf('#') + 1);
+      }
+    } else {
+      window.location.href = redirect;
+      return;
+    }
+  }
+
+  console.log(`isAbout to redirect to ${redirect || '/'}`);
+  history.replace(redirect || '/');
+};
+
+export const userPermissionToAuthority = (
+  permission: UserPermission = UserPermission.ONLINE_USER,
+  isPro: boolean = false,
+): UserAuthorities[] => {
+  const userRoles = [UserAuthorities.USER];
+  if (isPro) {
+    userRoles.push(UserAuthorities.PRO);
+  }
+
+  if (permission === undefined) {
+    return userRoles;
+  }
+
+  switch (permission) {
+    case UserPermission.ONLINE_MODERATOR:
+      return [...userRoles, UserAuthorities.MODERATOR];
+    case UserPermission.ONLINE_ADMIN:
+      return [...userRoles, UserAuthorities.ADMIN];
+    case UserPermission.ONLINE_USER:
+    case UserPermission.ONLINE_PRO_BUILDER: // it's not PRO subscription, but really active user
+    default:
+      return userRoles;
+  }
+};
+
+export function storeAuthority(authority: string | string[]) {
+  const proAuthority = typeof authority === 'string' ? [authority] : authority;
+  return localStorage.setItem('antd-pro-authority', JSON.stringify(proAuthority));
+}
+

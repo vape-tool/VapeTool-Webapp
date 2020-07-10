@@ -1,5 +1,5 @@
-import { CurrentUser } from '@/models/user';
-import { UserProfile } from '@/models/userProfile';
+import { CurrentUser } from '@/app';
+import { UserProfile } from '@/models/profile';
 import React, { useEffect, useState } from 'react';
 import FirebaseImage from '@/components/StorageAvatar';
 import { ImageType } from '@/services/storage';
@@ -11,12 +11,12 @@ import {
   getCurrentUserEditProfileUrl,
   getPaymentUrl,
 } from '@/places/user.places';
-import styles from './styles.less';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectTo, redirectToWithFootprint } from '@/models/global';
 import { ConnectProps } from '@/models/connect';
-import { connect, FormattedMessage  } from 'umi';
-import { isProUser } from '@/pages/login/utils/utils';
+import { connect, FormattedMessage } from 'umi';
+import { isProUser } from '@/utils/utils';
+import styles from './styles.less';
 
 interface UserCardProps extends ConnectProps {
   isCurrentUser: boolean;
@@ -113,7 +113,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 <FormattedMessage id="user.actions.editProfile" defaultMessage="Edit profile" />
               </Button>
 
-              {isProUser(currentUser) && (
+              {isProUser(currentUser?.subscription) && (
                 <Button
                   type="default"
                   shape="round"
@@ -128,7 +128,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   />
                 </Button>
               )}
-              {!isProUser(currentUser) && (
+              {!isProUser(currentUser?.subscription) && (
                 <Button
                   type="default"
                   shape="round"

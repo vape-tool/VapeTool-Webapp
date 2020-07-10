@@ -4,7 +4,7 @@ import { UserLoginModelState } from '@/pages/login/model';
 import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
-import { UserProfileModelState } from './userProfile';
+import { UserProfileModelState } from './profile';
 import { CoilModelState } from './coil';
 import { CloudModelState } from './cloud';
 import { LiquidModelState } from './liquid';

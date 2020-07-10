@@ -1,24 +1,15 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, formatMessage, FormattedMessage } from 'umi';
-import { ConverterComponentProps } from '@/pages/converters/Converters';
+import { connect, formatMessage, FormattedMessage, useModel } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { SwapOutlined } from '@ant-design/icons';
-import {
-  AWG_TO_MM,
-  dispatchChangeValue,
-  SET_AWG_IN_AWG_TO_MM,
-  SET_MM_IN_AWG_TO_MM,
-} from '@/models/converter';
-
 import styles from './converters.less';
 
-const AwgConverter: React.FC<ConverterComponentProps> = props => {
-  const { converter, dispatch } = props;
-  const { awg, mm } = converter[AWG_TO_MM];
+const AwgConverter: React.FC = () => {
+  const { awg, setAwg, mm, setMm } = useModel('awgMm');
 
-  const onChangeAwg = dispatchChangeValue(dispatch, SET_AWG_IN_AWG_TO_MM);
-  const onChangeMm = dispatchChangeValue(dispatch, SET_MM_IN_AWG_TO_MM);
+  const onChangeAwg = setAwg
+  const onChangeMm = setMm
 
   return (
     <Card title={<FormattedMessage id="converters.titles.awgToMm" defaultMessage="AWG to mm" />}>

@@ -3,7 +3,6 @@ import { message } from 'antd';
 import { getUser, updateDisplayName } from '@/services/user';
 import { ConnectState } from '@/models/connect';
 import { uploadAvatar } from '@/services/storage';
-import { SET_USER, USER } from '@/models/user';
 import { GLOBAL, REDIRECT_BACK } from './global';
 
 export const USER_WIZARD = 'userWizard';
@@ -112,7 +111,7 @@ const UserWizardModel: ModelType = {
       }
 
       yield put({
-        type: `${USER}/${SET_USER}`,
+        type: `USER/setUser`,
         currentUser: yield call(getUser, currentUser.uid),
       });
       yield put({ type: `${GLOBAL}/${REDIRECT_BACK}` });

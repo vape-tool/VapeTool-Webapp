@@ -6,8 +6,8 @@ import useMedia from 'react-media-hook2';
 import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
-import { CurrentUser } from '@/models/user';
 import { dispatchSelectBattery, dispatchToggleEditBattery } from '@/models/batteries';
+import { CurrentUser } from '@/app';
 
 interface BatteryPreviewDrawerProps {
   dispatch: Dispatch;

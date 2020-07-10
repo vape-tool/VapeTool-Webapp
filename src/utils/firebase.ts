@@ -87,26 +87,18 @@ export const photosStorageRef = storage().ref('gears').child('images');
 
 export const { ServerValue } = firebase.database;
 
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export import DataSnapshot = firebase.database.DataSnapshot;
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export import DatabaseReference = firebase.database.Reference;
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export import StorageReference = firebase.storage.Reference;
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export import Query = firebase.database.Query;
 
 let userLoaded: boolean = false;
 
-export function getCurrentUser(): Promise<FirebaseUser | null> {
-  return new Promise<FirebaseUser | null>((resolve, reject) => {
+export function getCurrentUser(): Promise<FirebaseUser | undefined> {
+  return new Promise<FirebaseUser | undefined>((resolve, reject) => {
     if (userLoaded) {
-      resolve(auth.currentUser);
+      resolve(auth.currentUser ?? undefined);
     }
     const unsubscribe = auth.onAuthStateChanged((user) => {
       userLoaded = true;
       unsubscribe();
-      resolve(user);
+      resolve(user ?? undefined);
     }, reject);
   });
 }

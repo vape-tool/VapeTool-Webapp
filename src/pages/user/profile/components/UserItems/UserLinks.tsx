@@ -1,25 +1,23 @@
 import UserItems from '@/pages/user/profile/components/UserItems/index';
 import React from 'react';
-import { ItemName, Link } from '@/types';
+import { Link } from '@/types';
 import LinkView from '@/components/ItemView/LinkView';
-import { connect, Dispatch } from 'umi';
-import { ConnectState } from '@/models/connect';
-import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
-import { subscribePosts } from '@/services/items';
+import { subscribeLinks } from '@/services/items';
+import { CurrentUser } from '@/app';
 
-@connect(({ userProfile, loading }: ConnectState) => ({
-  userLinks: userProfile.userLinks,
-  userProfile: userProfile.userProfile,
-  loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
-}))
-class UserPosts extends UserItems<Link, { userLinks?: Link[] }> {
-  what: ItemName = ItemName.LINK;
-
-  items = () => this.props.userLinks || [];
-
-  renderItem = (item: Link) => <LinkView item={item} />;
-
-  subscribe = (dispatch: Dispatch, userId: string) => subscribePosts(this.props.dispatch, userId);
+interface Props {
+  userId: string;
+  currentUser: CurrentUser;
 }
 
-export default UserPosts;
+export default function UserLinks({ userId, currentUser }: Props) {
+  return (
+    <UserItems<Link>
+      userId={userId}
+      renderItem={(item: Link) => (
+        <LinkView item={item} displayCommentsLength={5} currentUser={currentUser} />
+      )}
+      subscribe={subscribeLinks}
+    />
+  );
+}

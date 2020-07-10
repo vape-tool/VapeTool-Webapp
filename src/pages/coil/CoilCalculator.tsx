@@ -29,13 +29,13 @@ import {
   QuestionCircleFilled,
   SaveOutlined,
 } from '@ant-design/icons';
-import { isProUser } from '@/pages/login/utils/utils';
-import styles from './styles.less';
+import { isProUser } from '@/utils/utils';
 import CoilHelper from '@/components/CoilHelper';
-import { CurrentUser } from '@/models/user';
+import { CurrentUser } from '@/app';
 import { saveCoil } from '@/services/items';
 import SaveModal from '@/components/SaveModal';
 import { sendRequest } from '@/services/coil';
+import styles from './styles.less';
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -66,7 +66,7 @@ const FIELD_TO_METHOD_MAP = {
   [Field.VOLTAGE]: SET_VOLTAGE,
 };
 
-const CoilCalculator: React.FC<CoilCalculatorProps> = props => {
+const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
   const { dispatch, coil, properties, baseVoltage, isPro, user } = props;
 
   const [lastEdit, setLastEdit] = useState('resistance');

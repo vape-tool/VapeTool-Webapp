@@ -1,17 +1,12 @@
-import React from 'react';
-import { connect, FormattedMessage  } from 'umi';
-import { ConnectState } from '@/models/connect';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useModel } from 'umi';
 import { Card, Typography, Descriptions } from 'antd';
+import { CurrentUser } from '@/app';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
-
-import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
+import { Actions } from './ItemView';
 import styles from './styles.less';
-
-interface CoilViewState extends ItemViewState {
-  coilImageUrl: string;
-}
 
 enum SetupsName {
   Single = 1,
@@ -24,89 +19,91 @@ enum SetupsName {
   Octa = 8,
 }
 
-class CoilView extends ItemView<Coil, ItemViewProps<Coil>, CoilViewState> {
-  what: ItemName = ItemName.COIL;
-
-  componentDidMount(): void {
-    super.componentDidMount();
-    this.fetchCoilImage();
-  }
-
-  fetchCoilImage = async () => {
-    const coilImageUrl = await getCoilUrl(this.props.item.uid);
-    if (coilImageUrl) {
-      this.setState({ coilImageUrl });
-    }
-  };
-
-  render() {
-    const { item } = this.props;
-    const { displayComments, coilImageUrl } = this.state;
-
-    return (
-      <>
-        <Card
-          className={styles.card}
-          cover={
-            !coilImageUrl ?? (
-              <img
-                onClick={this.onSelectItem}
-                style={{ objectFit: 'cover', maxHeight: 714 }}
-                alt={item.description}
-                src={coilImageUrl}
-              />
-            )
-          }
-        >
-          <Card.Meta
-            title={
-              <span onClick={this.onSelectItem}>
-                <Typography.Text>{item.name}</Typography.Text>
-              </span>
-            }
-            description={
-              <span onClick={this.onSelectItem}>
-                <Typography.Text>{item.description}</Typography.Text>
-              </span>
-            }
-          />
-
-          <Descriptions>
-            <Descriptions.Item
-              label={<FormattedMessage id="coilCalculator.inputs.setup" defaultMessage="Setup" />}
-            >
-              {SetupsName[item.setup]} Coil({item.setup})
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={<FormattedMessage id="coilCalculator.inputs.wraps" defaultMessage="Wraps" />}
-            >
-              {item.wraps}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <FormattedMessage id="coilCalculator.inputs.coilType" defaultMessage="Coil Type" />
-              }
-            >
-              {WireType[item.type]}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <FormattedMessage
-                  id="coilCalculator.inputs.resistance"
-                  defaultMessage="Resistance"
-                />
-              }
-            >
-              {Math.round(item.resistance * 1000) / 1000}
-            </Descriptions.Item>
-          </Descriptions>
-          <this.Actions />
-          {displayComments && displayComments.length > 0 && <this.CommentsList />}
-          <this.CommentInput />
-        </Card>
-      </>
-    );
-  }
+function useCoilImage(itemUid: string) {
+  const [coilImageCoil, setCoilImageCoil] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    getCoilUrl(itemUid).then((coilImageUrl: string | undefined) => {
+      if (coilImageUrl) {
+        setCoilImageCoil(coilImageUrl);
+      }
+    });
+  }, [itemUid]);
+  return coilImageCoil;
 }
 
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(CoilView);
+export default function CoilView({
+  item,
+  displayCommentsLength,
+  currentUser,
+}: {
+  item: Coil;
+  displayCommentsLength: number;
+  currentUser: CurrentUser;
+}) {
+  const coilImageUrl = useCoilImage(item.uid);
+  const { setSelectedItem, unselectItem } = useModel('preview');
+  const onSelectItem = () => setSelectedItem(item);
+
+  return (
+    <Card
+      className={styles.card}
+      cover={
+        !coilImageUrl ?? (
+          <img
+            onClick={() => setSelectedItem(item)}
+            style={{ objectFit: 'cover', maxHeight: 714 }}
+            alt={item.description}
+            src={coilImageUrl}
+          />
+        )
+      }
+    >
+      <Card.Meta
+        title={
+          <span onClick={onSelectItem}>
+            <Typography.Text>{item.name}</Typography.Text>
+          </span>
+        }
+        description={
+          <span onClick={onSelectItem}>
+            <Typography.Text>{item.description}</Typography.Text>
+          </span>
+        }
+      />
+
+      <Descriptions>
+        <Descriptions.Item
+          label={<FormattedMessage id="coilCalculator.inputs.setup" defaultMessage="Setup" />}
+        >
+          {SetupsName[item.setup]} Coil({item.setup})
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={<FormattedMessage id="coilCalculator.inputs.wraps" defaultMessage="Wraps" />}
+        >
+          {item.wraps}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={
+            <FormattedMessage id="coilCalculator.inputs.coilType" defaultMessage="Coil Type" />
+          }
+        >
+          {WireType[item.type]}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={
+            <FormattedMessage id="coilCalculator.inputs.resistance" defaultMessage="Resistance" />
+          }
+        >
+          {Math.round(item.resistance * 1000) / 1000}
+        </Descriptions.Item>
+      </Descriptions>
+      <Actions
+        what={ItemName.COIL}
+        item={item}
+        user={currentUser}
+        displayCommentsLength={displayCommentsLength}
+        unselectItem={unselectItem}
+      />
+    </Card>
+  );
+}

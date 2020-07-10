@@ -1,51 +1,56 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
-import { Link, connect } from 'umi';
+import { Link, useModel } from 'umi';
+import { CurrentUser } from '@/app';
 // @ts-ignore
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
-import { ConnectState } from '@/models/connect';
 import { Link as LinkType, ItemName } from '@/types';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { ItemView } from './ItemView';
+import { Actions } from './ItemView';
 import styles from './styles.less';
 
-class LinkView extends ItemView<LinkType> {
-  what: ItemName = ItemName.LINK;
+export default function LinkView({
+  item,
+  displayCommentsLength,
+  currentUser,
+}: {
+  item: LinkType;
+  displayCommentsLength: number;
+  currentUser: CurrentUser;
+}) {
+  const { setSelectedItem, unselectItem } = useModel('preview');
+  const onSelectItem = () => setSelectedItem(item);
 
-  render() {
-    const { item } = this.props;
-    const { displayComments } = this.state;
-
-    return (
-      <Card className={styles.card} hoverable>
-        <Card.Meta
-          avatar={
-            <Link to={getUserProfileUrl(item.author.uid)}>
-              <FirebaseImage type={ImageType.USER} id={item.author.uid} />
-            </Link>
-          }
-          title={
-            <span onClick={this.onSelectItem}>
-              <Typography.Text>{item.title}</Typography.Text>
-            </span>
-          }
-          description={
-            <a href={item.url} target="_blank" rel="noopener noreferrer">
-              <Typography.Text>{item.url}</Typography.Text>
-            </a>
-          }
-        />
-        <br />
-        <Microlink url={item.url} lazy />
-        <this.Actions />
-
-        {displayComments && displayComments.length > 0 && <this.CommentsList />}
-        <this.CommentInput />
-      </Card>
-    );
-  }
+  return (
+    <Card className={styles.card} hoverable>
+      <Card.Meta
+        avatar={
+          <Link to={getUserProfileUrl(item.author.uid)}>
+            <FirebaseImage type={ImageType.USER} id={item.author.uid} />
+          </Link>
+        }
+        title={
+          <span onClick={onSelectItem}>
+            <Typography.Text>{item.title}</Typography.Text>
+          </span>
+        }
+        description={
+          <a href={item.url} target="_blank" rel="noopener noreferrer">
+            <Typography.Text>{item.url}</Typography.Text>
+          </a>
+        }
+      />
+      <br />
+      <Microlink url={item.url} lazy />
+      <Actions
+        what={ItemName.LINK}
+        item={item}
+        user={currentUser}
+        displayCommentsLength={displayCommentsLength}
+        unselectItem={unselectItem}
+      />
+    </Card>
+  );
 }
-
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(LinkView);

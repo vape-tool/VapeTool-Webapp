@@ -1,18 +1,55 @@
-import React from 'react';
-import { connect, Dispatch } from 'umi';
-import { User as FirebaseUser } from 'firebase/app';
+import React, { useEffect } from 'react';
 import firebase from 'firebase';
 import { notification } from 'antd';
-import { ConnectState } from '@/models/connect';
 import PageLoading from '@/components/PageLoading';
-import { getPageFragment } from '@/utils/utils';
+import { getPageFragment, isProUser, userPermissionToAuthority } from '@/utils/utils';
 import { auth } from '@/utils/firebase';
-import { dispatchSuccessLogin } from '@/pages/login/model';
+import { useModel, history } from 'umi';
+import { getUser, initializeUser } from '@/services/user';
+import { getCurrentUserEditProfileUrl } from '@/places/user.places';
+import { User } from '@vapetool/types';
 
-const LoginSuccess: React.FC<{
-  firebaseUser?: FirebaseUser;
-  dispatch: Dispatch;
-}> = props => {
+const LoginSuccess: React.FC = () => {
+  const { firebaseUser } = useModel('user');
+  const { initialState, setInitialState } = useModel('@@initialState');
+  useEffect(() => {
+    if (firebaseUser) {
+      getUser(firebaseUser.uid).then(async (user: User | undefined) => {
+        if (!user) {
+          // User is first time logged in
+          // eslint-disable-next-line no-param-reassign
+          user = await initializeUser(firebaseUser);
+          // Save user to database
+          if (!user) {
+            // failed to save to database redirect to /oops
+            return history.push('/oops');
+          }
+          // redirect to user wizzard
+          history.replace({ pathname: getCurrentUserEditProfileUrl() });
+        }
+        const tags = [];
+        if (isProUser(user.subscription)) {
+          tags.push({ key: 'pro', label: 'Pro' });
+        }
+        const authorities = userPermissionToAuthority(
+          user.permission,
+          isProUser(user.subscription),
+        );
+        setInitialState({
+          ...initialState,
+          firebaseUser,
+          currentUser: {
+            ...user,
+            name: user.display_name,
+            tags,
+            authorities,
+          },
+        });
+        history.push('/');
+      });
+    }
+  }, [firebaseUser]);
+
   const fragment = getPageFragment();
   const comesFromGoogleRedirect = fragment && fragment.id_token;
   const comesFromFacebookRedirect =
@@ -20,25 +57,22 @@ const LoginSuccess: React.FC<{
   if (comesFromGoogleRedirect) {
     // TODO clear page fragment preventing from double login because of redraw
     //  because of firebaseUser state change
-    const credentials = firebase.auth.GoogleAuthProvider.credential(fragment.id_token);
-    auth.signInWithCredential(credentials).catch(e => {
+    const credentials = firebase.auth.GoogleAuthProvider.credential(fragment.id_token as string);
+    auth.signInWithCredential(credentials).catch((e) => {
       console.error({ signInWithCredentialFacebook: e });
       notification.error({ message: e.message });
     });
   } else if (comesFromFacebookRedirect) {
-    const credentials = firebase.auth.FacebookAuthProvider.credential(fragment.access_token);
-    auth.signInWithCredential(credentials).catch(e => {
+    const credentials = firebase.auth.FacebookAuthProvider.credential(
+      fragment.access_token as string,
+    );
+    auth.signInWithCredential(credentials).catch((e) => {
       console.error({ signInWithCredentialFacebook: e });
       notification.error({ message: e.message });
     });
   }
 
-  if (props.firebaseUser) {
-    dispatchSuccessLogin(props.dispatch);
-  }
   return <PageLoading />;
 };
 
-export default connect(({ user }: ConnectState) => ({
-  firebaseUser: user.firebaseUser,
-}))(LoginSuccess);
+export default LoginSuccess;

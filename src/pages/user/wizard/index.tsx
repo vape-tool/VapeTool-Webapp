@@ -4,7 +4,7 @@ import { connect, Dispatch, FormattedMessage    } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import styles from '@/pages/user/profile/styles.less';
 import { ConnectState } from '@/models/connect';
-import { CurrentUser } from '@/models/user';
+import { CurrentUser } from '@/app';
 import FirebaseImage from '@/components/StorageAvatar';
 import ImageChooser from '@/components/ImageChoser';
 import {

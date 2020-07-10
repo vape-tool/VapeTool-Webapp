@@ -4,11 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
+      name="keywords"
+      content="vape,vapetool,Vape Tool,Steam Enginge,Coil Calculator,coil,liquid calculator,e-liquid"
+    />
+    <meta
+      name="description"
+      content="
+    An out-of-box UI solution for enterprise applications as a React boilerplate."
+    />
+    <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
-    <title>Vape Tool Webapp</title>
-    <link rel="icon" href="/favicon.png" type="image/x-icon" />
+    <title>Vape Tool</title>
+    <link rel="icon" href="<%= context.config.publicPath +'favicon.png'%>" type="image/x-icon" />
   </head>
   <body>
     <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
@@ -22,7 +31,7 @@
           padding: 0;
         }
         #root {
-          background-image: url('/home_bg.png');
+          background-image: url('<%= context.config.publicPath +"home_bg.png"%>');
           background-repeat: no-repeat;
           background-size: 100% auto;
         }
@@ -56,11 +65,13 @@
           transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
             -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
         }
+
         .ant-spin-spinning {
           position: static;
           display: inline-block;
           opacity: 1;
         }
+
         .ant-spin-dot {
           position: relative;
           display: inline-block;
@@ -68,6 +79,7 @@
           width: 20px;
           height: 20px;
         }
+
         .ant-spin-dot-item {
           position: absolute;
           display: block;
@@ -85,28 +97,33 @@
           -webkit-animation: antSpinMove 1s infinite linear alternate;
           animation: antSpinMove 1s infinite linear alternate;
         }
+
         .ant-spin-dot-item:nth-child(1) {
           top: 0;
           left: 0;
         }
+
         .ant-spin-dot-item:nth-child(2) {
           top: 0;
           right: 0;
           -webkit-animation-delay: 0.4s;
           animation-delay: 0.4s;
         }
+
         .ant-spin-dot-item:nth-child(3) {
           right: 0;
           bottom: 0;
           -webkit-animation-delay: 0.8s;
           animation-delay: 0.8s;
         }
+
         .ant-spin-dot-item:nth-child(4) {
           bottom: 0;
           left: 0;
           -webkit-animation-delay: 1.2s;
           animation-delay: 1.2s;
         }
+
         .ant-spin-dot-spin {
           -webkit-transform: rotate(45deg);
           -ms-transform: rotate(45deg);
@@ -114,37 +131,44 @@
           -webkit-animation: antRotate 1.2s infinite linear;
           animation: antRotate 1.2s infinite linear;
         }
+
         .ant-spin-lg .ant-spin-dot {
           font-size: 32px;
           width: 32px;
           height: 32px;
         }
+
         .ant-spin-lg .ant-spin-dot i {
           width: 14px;
           height: 14px;
         }
+
         @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
           .ant-spin-blur {
             background: #fff;
             opacity: 0.5;
           }
         }
+
         @-webkit-keyframes antSpinMove {
           to {
             opacity: 1;
           }
         }
+
         @keyframes antSpinMove {
           to {
             opacity: 1;
           }
         }
+
         @-webkit-keyframes antRotate {
           to {
             -webkit-transform: rotate(405deg);
             transform: rotate(405deg);
           }
         }
+
         @keyframes antRotate {
           to {
             -webkit-transform: rotate(405deg);
@@ -153,9 +177,16 @@
         }
       </style>
       <div
-        style="display: flex;justify-content: center;align-items: center;flex-direction: column;min-height: 420px;height: 100%;"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          min-height: 420px;
+          height: 100%;
+        "
       >
-        <img src="https://web.vapetool.app/img/logo.svg" alt="logo" width="256" />
+        <img src="<%= context.config.publicPath +'pro_icon.svg'%>" alt="logo" width="256" />
         <div class="page-loading-warp">
           <div class="ant-spin ant-spin-lg ant-spin-spinning">
             <span class="ant-spin-dot ant-spin-dot-spin"
@@ -164,8 +195,12 @@
             ></span>
           </div>
         </div>
-        <div style="display: flex;justify-content: center;align-items: center;">
-          <img src="https://web.vapetool.app/img/logo.svg" width="32" style="margin-right: 8px;" />
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <img
+            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+            width="32"
+            style="margin-right: 8px;"
+          />
           Vape Tool
         </div>
       </div>

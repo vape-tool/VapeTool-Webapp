@@ -1,8 +1,6 @@
 import { Photo as FirebasePhoto } from '@vapetool/types';
 import {
   coilsRef,
-  DatabaseReference,
-  DataSnapshot,
   likesRef,
   linksRef,
   liquidsRef,
@@ -37,8 +35,8 @@ export async function getUserTotalLikesCount(userUid: string): Promise<number> {
 
 async function getLikesCountForContentType(
   userUid: string,
-  ref: DatabaseReference,
-  contentLikesRef: DatabaseReference,
+  ref: firebase.database.Reference,
+  contentLikesRef: firebase.database.Reference,
 ) {
   const snapshots = await ref
     .orderByChild('author/uid')
@@ -70,7 +68,7 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
       .once('value')
       .then(snapshots => {
         const firebasePhotos: FirebasePhoto[] = [];
-        snapshots.forEach((snapshot: DataSnapshot) => {
+        snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
           const firebasePhoto = snapshot.val();
           firebasePhotos.push(firebasePhoto);
         });
@@ -94,7 +92,7 @@ export async function getUserPosts(uid: string): Promise<Post[]> {
     .once('value');
 
   const firebasePosts: Post[] = [];
-  snapshots.forEach((snapshot: DataSnapshot) => {
+  snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
     const firebasePost = snapshot.val();
     firebasePosts.push(firebasePost);
   });
@@ -109,7 +107,7 @@ export async function getUserLinks(uid: string): Promise<Link[]> {
     .once('value');
 
   const firebaseLinks: Link[] = [];
-  snapshots.forEach((snapshot: DataSnapshot) => {
+  snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
     const firebaseLink = snapshot.val();
     firebaseLinks.push(firebaseLink);
   });
@@ -124,7 +122,7 @@ export async function getUserCoils(uid: string): Promise<Coil[]> {
     .once('value');
 
   const firebaseCoils: Coil[] = [];
-  snapshots.forEach((snapshot: DataSnapshot) => {
+  snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
     const firebaseCoil = snapshot.val();
     firebaseCoils.push(firebaseCoil);
   });
@@ -139,7 +137,7 @@ export async function getUserLiquids(uid: string): Promise<Liquid[]> {
     .once('value');
 
   const firebaseLiquids: Liquid[] = [];
-  snapshots.forEach((snapshot: DataSnapshot) => {
+  snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
     const firebaseLiquid = snapshot.val();
     firebaseLiquids.push(firebaseLiquid);
   });

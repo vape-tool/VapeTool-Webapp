@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tag } from 'antd';
-import { FormattedMessage } from '@umijs/preset-react';
+import { FormattedMessage } from 'umi';
 
 import styles from './styles.less';
 

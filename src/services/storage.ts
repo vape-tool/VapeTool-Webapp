@@ -2,7 +2,6 @@ import {
   batteriesStorageRef,
   coilsStorageRef,
   photosStorageRef,
-  StorageReference,
   usersStorageRef,
 } from '@/utils/firebase';
 
@@ -13,23 +12,23 @@ export enum ImageType {
   BATTERY = 'battery',
 }
 
-export function getBatteryUrl(uid: string): Promise<string> {
+export function getBatteryUrl(uid: string): Promise<string | undefined> {
   return getImageUrl(ImageType.BATTERY, uid);
 }
 
-export function getPhotoUrl(uid: string): Promise<string> {
+export function getPhotoUrl(uid: string): Promise<string | undefined> {
   return getImageUrl(ImageType.PHOTO, uid);
 }
 
-export function getAvatarUrl(uid: string): Promise<string> {
+export function getAvatarUrl(uid: string): Promise<string | undefined> {
   return getImageUrl(ImageType.USER, uid);
 }
 
-export function getCoilUrl(uid: string): Promise<string> {
+export function getCoilUrl(uid: string): Promise<string | undefined> {
   return getImageUrl(ImageType.COIL, uid);
 }
 
-export function getImageUrl(type: ImageType, uid: string): Promise<string> {
+export function getImageUrl(type: ImageType, uid: string): Promise<string | undefined> {
   switch (type) {
     case ImageType.PHOTO:
       return getDownloadUrl(photosStorageRef, uid);
@@ -44,17 +43,19 @@ export function getImageUrl(type: ImageType, uid: string): Promise<string> {
   }
 }
 
-function getDownloadUrl(storageRef: StorageReference, uid: string): Promise<string> {
-  return new Promise((resolve, reject) => {
+function getDownloadUrl(
+  storageRef: firebase.storage.Reference,
+  uid: string,
+): Promise<string | undefined> {
+  return new Promise((resolve) => {
     storageRef
       .child(`${uid}.jpg`)
       .getDownloadURL()
-      .then(url => {
+      .then((url) => {
         resolve(url);
       })
-      .catch(e => {
-        console.error(e);
-        reject(e);
+      .catch(() => {
+        resolve(undefined);
       });
   });
 }
