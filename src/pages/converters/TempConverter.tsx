@@ -1,24 +1,21 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
 import { connect, formatMessage, FormattedMessage  } from 'umi';
-import { ConverterComponentProps } from '@/pages/converters/Converters';
 import { ConnectState } from '@/models/connect';
 import { SwapOutlined } from '@ant-design/icons';
-import {
-  dispatchChangeValue,
-  SET_CELSIUS_IN_TEMPERATURE,
-  SET_FAHRENHEIT_IN_TEMPERATURE,
-  TEMPERATURE,
-} from '@/models/converter';
 
 import styles from './converters.less';
 
-const TempConverter: React.FC<ConverterComponentProps> = props => {
-  const { converter, dispatch } = props;
-  const { celsius, fahrenheit } = converter[TEMPERATURE];
+const TempConverter: React.FC = () => {
+  const { 
+    celsius,
+    setCelsius,
+    fahrenheit,
+    setFahrenheit,
+ } = useModel('temp')
 
-  const onChangeCelsius = dispatchChangeValue(dispatch, SET_CELSIUS_IN_TEMPERATURE);
-  const onChangeFahrenheit = dispatchChangeValue(dispatch, SET_FAHRENHEIT_IN_TEMPERATURE);
+  const onChangeCelsius = setCelsius
+  const onChangeFahrenheit = setFahrenheit
 
   return (
     <Card

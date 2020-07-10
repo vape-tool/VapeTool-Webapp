@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row } from 'antd';
-import { Dispatch, FormattedMessage, connect } from 'umi';
+import { Col, Row, Typography } from 'antd';
+import { FormattedMessage, useModel, useRouteMatch } from 'umi';
 import { GridContent } from '@ant-design/pro-layout';
 import { CameraOutlined, LinkOutlined, MessageOutlined } from '@ant-design/icons';
-import { RouteChildrenProps } from 'react-router';
-import { ConnectState } from '@/models/connect';
-import { CurrentUser, FETCH_CURRENT_USER, USER } from '@/models/user';
-import {
-  dispatchFetchUserProfile,
-  FETCH_USER_PROFILE,
-  USER_PROFILE,
-  UserProfile,
-} from '@/models/userProfile';
 import UserCard from '@/pages/user/profile/components/UserCard';
 import { ItemName } from '@/types';
 import UserPhotos from './components/UserItems/UserPhotos';
@@ -21,53 +12,44 @@ import UserLiquids from './components/UserItems/UserLiquids';
 import UserCoils from './components/UserItems/UserCoils';
 import styles from './styles.less';
 
-interface UserProfileProps extends RouteChildrenProps {
-  dispatch: Dispatch;
-  currentUser?: CurrentUser;
-  currentUserLoading?: boolean;
-  userProfile?: UserProfile;
-  profileLoading?: boolean;
-}
-
-const Profile: React.FC<UserProfileProps> = (props) => {
-  const {
-    dispatch,
-    currentUser,
-    currentUserLoading,
-    userProfile: profile,
-    profileLoading,
-    match,
-  } = props;
+const Profile: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  console.log({ initialState });
+  const { loadingProfile, userProfile, fetchUserProfile } = useModel('profile');
   const [tabKey, setTabKey] = useState(ItemName.PHOTO);
+  const match = useRouteMatch();
   let userId = match?.params['id'];
   const isCurrentUser: boolean =
-    currentUser !== undefined && (userId === currentUser.uid || userId === undefined);
-  const isLoading = currentUserLoading !== false || profileLoading !== false || !profile;
+    initialState?.currentUser !== undefined &&
+    (userId === initialState?.currentUser.uid || userId === undefined);
 
   if (isCurrentUser) {
-    userId = currentUser?.uid;
+    userId = initialState?.currentUser?.uid;
   }
-
   useEffect(() => {
-    dispatchFetchUserProfile(dispatch, userId);
+    fetchUserProfile(userId);
   }, [userId]);
 
-  const renderContentByTabKey = () => {
-    if (isLoading) {
-      return <div />;
-    }
+  if (!initialState) {
+    return <Typography.Paragraph>Inital state have not been loaded</Typography.Paragraph>;
+  }
+  const { currentUser } = initialState;
+  if (!initialState || !currentUser) {
+    return <Typography.Paragraph>You must be logged in to preview this page</Typography.Paragraph>;
+  }
 
+  const renderContentByTabKey = () => {
     switch (tabKey) {
       case ItemName.PHOTO:
-        return <UserPhotos dispatch={dispatch} />;
+        return <UserPhotos userId={userId} currentUser={currentUser} />;
       case ItemName.POST:
-        return <UserPosts dispatch={dispatch} />;
+        return <UserPosts userId={userId} currentUser={currentUser} />;
       case ItemName.LINK:
-        return <UserLinks dispatch={dispatch} />;
+        return <UserLinks userId={userId} currentUser={currentUser} />;
       case ItemName.COIL:
-        return <UserCoils dispatch={dispatch} />;
+        return <UserCoils userId={userId} currentUser={currentUser} />;
       case ItemName.LIQUID:
-        return <UserLiquids dispatch={dispatch} />;
+        return <UserLiquids userId={userId} currentUser={currentUser} />;
       default:
         throw new Error(`Unknown tab: ${tabKey}`);
     }
@@ -82,8 +64,8 @@ const Profile: React.FC<UserProfileProps> = (props) => {
           <UserCard
             isCurrentUser={isCurrentUser}
             currentUser={currentUser}
-            userProfile={profile}
-            isLoading={isLoading}
+            userProfile={userProfile}
+            isLoading={loadingProfile}
           />
         </Col>
       </Row>
@@ -159,9 +141,4 @@ const Profile: React.FC<UserProfileProps> = (props) => {
   );
 };
 
-export default connect(({ loading, user, userProfile }: ConnectState) => ({
-  currentUser: user.currentUser,
-  currentUserLoading: loading.effects[`${USER}/${FETCH_CURRENT_USER}`],
-  userProfile: userProfile.userProfile,
-  profileLoading: loading.effects[`${USER_PROFILE}/${FETCH_USER_PROFILE}`],
-}))(Profile);
+export default Profile;

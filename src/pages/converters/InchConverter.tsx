@@ -1,28 +1,27 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, formatMessage, FormattedMessage  } from 'umi';
-import { ConverterComponentProps } from '@/pages/converters/Converters';
+import { connect, formatMessage, FormattedMessage, useModel } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { LineOutlined, PauseOutlined, SwapOutlined } from '@ant-design/icons';
-import {
-  dispatchChangeValue,
-  INCH_TO_MM,
-  SET_DENOMINATOR_IN_INCH_TO_MM,
-  SET_INCH_IN_INCH_TO_MM,
-  SET_MM_IN_INCH_TO_MM,
-  SET_NOMINATOR_IN_INCH_TO_MM,
-} from '@/models/converter';
 
 import styles from './converters.less';
 
-const InchConverter: React.FC<ConverterComponentProps> = props => {
-  const { converter, dispatch } = props;
-  const { nominator, denominator, inch, mm } = converter[INCH_TO_MM];
+const InchConverter: React.FC = () => {
+  const {
+    mm,
+    setMm,
+    inch,
+    setInch,
+    nominator,
+    setNominator,
+    denominator,
+    setDenominator,
+  } = useModel('inchMm');
 
-  const onChangeNominator = dispatchChangeValue(dispatch, SET_NOMINATOR_IN_INCH_TO_MM);
-  const onChangeDenominator = dispatchChangeValue(dispatch, SET_DENOMINATOR_IN_INCH_TO_MM);
-  const onChangeInch = dispatchChangeValue(dispatch, SET_INCH_IN_INCH_TO_MM);
-  const onChangeMm = dispatchChangeValue(dispatch, SET_MM_IN_INCH_TO_MM);
+  const onChangeNominator = setNominator
+  const onChangeDenominator = setDenominator
+  const onChangeInch = setInch
+  const onChangeMm = setMm
 
   return (
     <Card

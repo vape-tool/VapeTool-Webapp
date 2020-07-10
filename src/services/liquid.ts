@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import { request } from 'umi';
 import { auth } from '@/utils/firebase';
 import { Liquid } from '@/types';
 
@@ -7,5 +7,5 @@ export async function calculateResults(liquid: Liquid): Promise<any> {
     throw Error('You are not logged in');
   }
   const idToken = await auth.currentUser!.getIdToken(false);
-  return request.post('/api/calculator/liquid/results', { data: { liquid, idToken } });
+  return request('/api/calculator/liquid/results', { method: 'POST', data: { liquid, idToken } });
 }

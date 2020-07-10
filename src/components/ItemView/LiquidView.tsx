@@ -1,68 +1,68 @@
 import React from 'react';
-import { connect, FormattedMessage  } from 'umi';
-import { ConnectState } from '@/models/connect';
+import { FormattedMessage, useModel } from 'umi';
 import { Card, Descriptions, Typography } from 'antd';
 import { ItemName, Liquid } from '@/types';
-
-import { ItemView, ItemViewProps, ItemViewState } from './ItemView';
+import { CurrentUser } from '@/app';
 import styles from './styles.less';
+import { Actions } from './ItemView';
 
-interface LiquidViewState extends ItemViewState {
+
+export default function LiquidView({
+  item,
+  displayCommentsLength,
+  currentUser,
+}: {
   item: Liquid;
-}
+  displayCommentsLength: number;
+  currentUser: CurrentUser;
+}) {
+  const { setSelectedItem, unselectItem } = useModel('preview');
+  const onSelectItem = () => setSelectedItem(item);
 
-class LiquidView extends ItemView<Liquid, ItemViewProps<Liquid>, LiquidViewState> {
-  what: ItemName = ItemName.LIQUID;
+  return (
+    <>
+      <Card className={styles.card} hoverable>
+        <Card.Meta
+          title={
+            <span onClick={onSelectItem}>
+              <Typography.Text>{item.name}</Typography.Text>
+            </span>
+          }
+          description={
+            <span onClick={onSelectItem}>
+              <Typography.Text>{item.description}</Typography.Text>
+            </span>
+          }
+        />
 
-  render() {
-    const { item } = this.props;
-    const { displayComments } = this.state;
-
-    return (
-      <>
-        <Card className={styles.card} hoverable>
-          <Card.Meta
-            title={
-              <span onClick={this.onSelectItem}>
-                <Typography.Text>{item.name}</Typography.Text>
-              </span>
+        <Descriptions>
+          <Descriptions.Item label={<FormattedMessage id="liquid.vg/pg" defaultMessage="VG/PG" />}>
+            {100 - item.targetRatio}/{item.targetRatio}
+          </Descriptions.Item>
+          <Descriptions.Item
+            label={
+              <FormattedMessage
+                id="liquid.nicotineStrength"
+                defaultMessage="Nicotine strength [mg/ml]"
+              />
             }
-            description={
-              <span onClick={this.onSelectItem}>
-                <Typography.Text>{item.description}</Typography.Text>
-              </span>
-            }
-          />
-
-          <Descriptions>
-            <Descriptions.Item
-              label={<FormattedMessage id="liquid.vg/pg" defaultMessage="VG/PG" />}
-            >
-              {100 - item.targetRatio}/{item.targetRatio}
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={
-                <FormattedMessage
-                  id="liquid.nicotineStrength"
-                  defaultMessage="Nicotine strength [mg/ml]"
-                />
-              }
-            >
-              {item.targetStrength}mg/ml
-            </Descriptions.Item>
-            <Descriptions.Item
-              label={<FormattedMessage id="liquid.amount" defaultMessage="Amount [ml]" />}
-            >
-              {item.amount}ml
-            </Descriptions.Item>
-          </Descriptions>
-          <this.Actions />
-          {displayComments && displayComments.length > 0 && <this.CommentsList />}
-          <this.CommentInput />
-        </Card>
-      </>
-    );
-  }
+          >
+            {item.targetStrength}mg/ml
+          </Descriptions.Item>
+          <Descriptions.Item
+            label={<FormattedMessage id="liquid.amount" defaultMessage="Amount [ml]" />}
+          >
+            {item.amount}ml
+          </Descriptions.Item>
+        </Descriptions>
+        <Actions
+          what={ItemName.LIQUID}
+          item={item}
+          user={currentUser}
+          displayCommentsLength={displayCommentsLength}
+          unselectItem={unselectItem}
+        />
+      </Card>
+    </>
+  );
 }
-
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(LiquidView);

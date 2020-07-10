@@ -1,5 +1,5 @@
 import { Properties } from '@vapetool/types';
-import request from '@/utils/request';
+import { request } from 'umi';
 import { auth } from '@/utils/firebase';
 import { Coil } from '@/types';
 
@@ -25,7 +25,8 @@ export async function sendRequest<T>(
       throw Error('You are not logged in');
     }
     const idToken = await auth.currentUser!.getIdToken(false);
-    return await request.post(`/api/calculator/coil/${calcFor}`, {
+    return await request(`/api/calculator/coil/${calcFor}`, {
+      method: 'POST',
       data: { coil, idToken, baseVoltage },
     });
   } catch (e) {

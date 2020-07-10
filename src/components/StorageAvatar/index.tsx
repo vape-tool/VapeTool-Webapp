@@ -13,11 +13,18 @@ interface FirebaseImageProps {
   alt?: string;
 }
 
-const FirebaseImage: React.FC<FirebaseImageProps> = (props: FirebaseImageProps) => {
-  const { type, style, size, shape, className, alt, id } = props;
+const FirebaseImage: React.FC<FirebaseImageProps> = ({
+  type,
+  style,
+  size,
+  shape,
+  className,
+  alt,
+  id,
+}: FirebaseImageProps) => {
   const [src, setSrc] = useState<string | undefined>(undefined);
   useEffect(() => {
-    getImageUrl(type, id).then(imageUrl => setSrc(imageUrl));
+    getImageUrl(type, id).then((imageUrl) => setSrc(imageUrl));
   }, [id, type]);
 
   return (

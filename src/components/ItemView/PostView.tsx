@@ -1,48 +1,53 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
-import { Link, connect } from 'umi';
-import FirebaseImage from '@/components/StorageAvatar';
-import { ConnectState } from '@/models/connect';
-import { Post } from '@/types';
-import { ItemName } from '@/types/Item';
+import { Link, useModel } from 'umi';
+import { CurrentUser } from '@/app';
+import { Post, ItemName } from '@/types';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { ItemView } from './ItemView';
+import { Actions } from './ItemView';
 import styles from './styles.less';
+import FirebaseImage from '../StorageAvatar';
 
-class PostView extends ItemView<Post> {
-  what: ItemName = ItemName.POST;
 
-  render() {
-    const { item } = this.props;
-    const { displayComments } = this.state;
+export default function PostView({
+  item,
+  displayCommentsLength,
+  currentUser,
+}: {
+  item: Post;
+  displayCommentsLength: number;
+  currentUser: CurrentUser;
+}) {
+  const { setSelectedItem, unselectItem } = useModel('preview');
+  const onSelectItem = () => setSelectedItem(item);
 
-    return (
-      <Card className={styles.card} hoverable>
-        <Card.Meta
-          avatar={
-            <Link to={getUserProfileUrl(item.author.uid)}>
-              <FirebaseImage type={ImageType.USER} id={item.author.uid} />
-            </Link>
-          }
-          title={
-            <span onClick={this.onSelectItem}>
-              <Typography.Text>{item.title}</Typography.Text>
-            </span>
-          }
-          description={
-            <span onClick={this.onSelectItem}>
-              <Typography.Text>{item.text}</Typography.Text>
-            </span>
-          }
-        />
-
-        <this.Actions />
-        {displayComments && displayComments.length > 0 && <this.CommentsList />}
-        <this.CommentInput />
-      </Card>
-    );
-  }
+  return (
+    <Card className={styles.card} hoverable>
+      <Card.Meta
+        avatar={
+          <Link to={getUserProfileUrl(item.author.uid)}>
+            <FirebaseImage type={ImageType.USER} id={item.author.uid} />
+          </Link>
+        }
+        title={
+          <span onClick={onSelectItem}>
+            <Typography.Text>{item.title}</Typography.Text>
+          </span>
+        }
+        description={
+          <span onClick={onSelectItem}>
+            <Typography.Text>{item.text}</Typography.Text>
+          </span>
+        }
+      />
+      <Actions
+        what={ItemName.LINK}
+        item={item}
+        user={currentUser}
+        displayCommentsLength={displayCommentsLength}
+        unselectItem={unselectItem}
+      />
+    </Card>
+  );
 }
-
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(PostView);

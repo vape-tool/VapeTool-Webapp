@@ -8,33 +8,29 @@ import {
   Liquid as FirebaseLiquid,
   Coil as FirebaseCoil,
 } from '@vapetool/types';
-import { Item, ItemName, Photo } from '@/types';
+import { Item, ItemName, Photo, Liquid, Coil, Post, Link } from '@/types';
 import {
   coilsRef,
   database,
-  DatabaseReference,
-  DataSnapshot,
   linksRef,
   liquidsRef,
   photosRef,
   postsRef,
-  Query,
   ServerValue,
 } from '@/utils/firebase';
-import { CurrentUser } from '@/models/user';
+import { CurrentUser } from '@/app';
 import { getPhotoUrl, uploadPhoto } from '@/services/storage';
-import { dispatchSetItems } from '@/models/cloud';
-import { Dispatch } from 'redux';
-import { dispatchSetUserItems } from '@/models/userProfile';
 
 type FirebaseContent = 'gear' | 'post' | 'link';
 
-export function subscribePhotos(dispatch: Dispatch, userId?: string): () => void {
-  return subscribeItems(
-    dispatch,
+export function subscribePhotos(
+  onValueChange: (items: Photo[]) => void,
+  userId?: string,
+): () => void {
+  return subscribeItems<Photo>(
     ItemName.PHOTO,
     photosRef,
-    (snap: DataSnapshot, photo: Photo) =>
+    (snap: firebase.database.DataSnapshot, photo: Photo) =>
       getPhotoUrl(snap.key || photo.uid).then((url: string) => ({
         ...photo,
         // backwards compatibility
@@ -43,46 +39,56 @@ export function subscribePhotos(dispatch: Dispatch, userId?: string): () => void
         url,
         $type: ItemName.PHOTO,
       })),
+    onValueChange,
     userId,
   );
 }
 
-export function subscribeLinks(dispatch: Dispatch, userId?: string): () => void {
-  return subscribeItems(dispatch, ItemName.LINK, linksRef, null, userId);
+export function subscribeLinks(
+  onValueChange: (items: Link[]) => void,
+  userId?: string,
+): () => void {
+  return subscribeItems<Link>(ItemName.LINK, linksRef, null, onValueChange, userId);
 }
 
-export function subscribePosts(dispatch: Dispatch, userId?: string): () => void {
-  return subscribeItems(dispatch, ItemName.POST, postsRef, null, userId);
+export function subscribePosts(
+  onValueChange: (items: Post[]) => void,
+  userId?: string,
+): () => void {
+  return subscribeItems<Post>(ItemName.POST, postsRef, null, onValueChange, userId);
 }
 
-export function subscribeCoils(dispatch: Dispatch, userId?: string): () => void {
-  return subscribeItems(dispatch, ItemName.COIL, coilsRef, null, userId);
+export function subscribeCoils(
+  onValueChange: (items: Coil[]) => void,
+  userId?: string,
+): () => void {
+  return subscribeItems<Coil>(ItemName.COIL, coilsRef, null, onValueChange, userId);
 }
 
-export function subscribeLiquids(dispatch: Dispatch, userId?: string): () => void {
-  return subscribeItems(dispatch, ItemName.LIQUID, liquidsRef, null, userId);
+export function subscribeLiquids(
+  onValueChange: (items: Liquid[]) => void,
+  userId?: string,
+): () => void {
+  return subscribeItems<Liquid>(ItemName.LIQUID, liquidsRef, null, onValueChange, userId);
 }
 
 export function subscribeItems<T extends Item>(
-  dispatch: Dispatch,
   itemsName: ItemName,
-  ref: DatabaseReference,
-  transformation: ((snap: DataSnapshot, item: any) => Promise<T>) | null,
+  ref: firebase.database.Reference,
+  transformation: ((snap: firebase.database.DataSnapshot, item: any) => Promise<T>) | null,
+  onValueChange: (items: T[]) => void,
   userId?: string,
 ): () => void {
-  let query: Query;
+  let query: firebase.database.Query;
   if (userId) {
     query = ref.orderByChild('author/uid').equalTo(userId);
   } else {
-    query = ref
-      .orderByChild('status')
-      .equalTo(OnlineStatus.ONLINE_PUBLIC)
-      .limitToLast(100);
+    query = ref.orderByChild('status').equalTo(OnlineStatus.ONLINE_PUBLIC).limitToLast(100);
   }
 
-  query.on('value', async (snapshot: DataSnapshot) => {
+  const listener = query.on('value', async (snapshot: firebase.database.DataSnapshot) => {
     const promises: Promise<T>[] = new Array<Promise<T>>();
-    snapshot.forEach(snap => {
+    snapshot.forEach((snap) => {
       const dbObject = snap.val();
       if (!dbObject || Object.entries(dbObject).length === 0 || !dbObject.author) {
         // beauty of weak typed database, strange things can show up here :D
@@ -102,16 +108,10 @@ export function subscribeItems<T extends Item>(
     });
 
     const items = await Promise.all(promises);
-    if (userId) {
-      dispatchSetUserItems(dispatch, itemsName, items);
-    } else {
-      dispatchSetItems(dispatch, itemsName, items);
-    }
+    onValueChange(items);
   });
 
-  return () => {
-    query.off();
-  };
+  return () => query.off('value', listener);
 }
 
 // TODO determine if will be used
@@ -121,9 +121,9 @@ export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
       .startAt(from)
       .endAt(to)
       .once('value')
-      .then(snapshots => {
+      .then((snapshots) => {
         const firebasePhotos = new Array<FirebasePhoto>();
-        snapshots.forEach((snapshot: DataSnapshot) => {
+        snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
           const firebasePhoto = snapshot.val();
           if (firebasePhoto && Object.entries(firebasePhoto).length !== 0) {
             firebasePhotos.push(firebasePhoto);
@@ -131,7 +131,7 @@ export function getPhotos(from: number, to: number): Promise<FirebasePhoto[]> {
         });
         resolve(firebasePhotos);
       })
-      .catch(e => {
+      .catch((e) => {
         reject(e);
       });
   });
@@ -356,7 +356,7 @@ function like(what: FirebaseContent, id: string, userId: string) {
     .ref(`${what}-likes`)
     .child(id)
     .child(userId)
-    .transaction(isLiked => {
+    .transaction((isLiked) => {
       if (isLiked) {
         return null;
       }
@@ -377,11 +377,7 @@ export function reportLink(linkId: string, userId: string): Promise<any> {
 }
 
 function report(what: FirebaseContent, id: string, userId: string): Promise<any> {
-  return database()
-    .ref(`${what}-reports`)
-    .child(id)
-    .child(userId)
-    .set(ServerValue.TIMESTAMP);
+  return database().ref(`${what}-reports`).child(id).child(userId).set(ServerValue.TIMESTAMP);
 }
 
 export function deletePhoto(postId: string): Promise<any> {
@@ -397,10 +393,7 @@ export function deleteLink(linkId: string): Promise<any> {
 }
 
 function deleteItem(what: FirebaseContent, id: string): Promise<any> {
-  return database()
-    .ref(`${what}s`)
-    .child(id)
-    .remove();
+  return database().ref(`${what}s`).child(id).remove();
 }
 
 export function commentPhoto(id: string, content: string, { uid, name }: CurrentUser) {
@@ -422,11 +415,7 @@ function commentItem(
   { uid, name }: CurrentUser,
 ) {
   const comment = new Comment(new Author(uid, name), content, ServerValue.TIMESTAMP);
-  return database()
-    .ref(`${what}-comments`)
-    .child(id)
-    .push()
-    .set(comment);
+  return database().ref(`${what}-comments`).child(id).push().set(comment);
 }
 
 export function deletePhotoComment(postId: string, commentId: string) {
@@ -442,9 +431,5 @@ export function deleteLinkComment(linkId: string, commentId: string) {
 }
 
 function deleteItemComment(what: FirebaseContent, id: string, commentId: string) {
-  return database()
-    .ref(`${what}-comments`)
-    .child(id)
-    .child(commentId)
-    .set(null);
+  return database().ref(`${what}-comments`).child(id).child(commentId).set(null);
 }

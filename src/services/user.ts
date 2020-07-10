@@ -1,30 +1,30 @@
 import { User, UserPermission } from '@vapetool/types';
 import firebase from 'firebase';
-import request from '@/utils/request';
+import { request } from 'umi';
 import { auth, usersRef } from '@/utils/firebase';
 import { uploadAvatar } from '@/services/storage';
 
-export function getUser(uid: string): Promise<User | null> {
-  return new Promise(resolve => {
+export function getUser(uid: string): Promise<User | undefined> {
+  return new Promise((resolve) => {
     usersRef
       .child(uid)
       .once('value')
-      .then(snapshot => {
+      .then((snapshot) => {
         const user = snapshot.val();
         if (user) {
           resolve(user);
         } else {
-          resolve(null);
+          resolve(undefined);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
-        resolve(null);
+        resolve(undefined);
       });
   });
 }
 
-export function initializeUser(firebaseUser: firebase.User): Promise<User | null> {
+export function initializeUser(firebaseUser: firebase.User): Promise<User | undefined> {
   const { uid, email, photoURL, displayName } = firebaseUser;
   if (photoURL) {
     initializeAvatar(photoURL, uid);
@@ -70,7 +70,7 @@ function initializeAvatar(avatarUrl: string, userId: string) {
       // If successful
       uploadAvatar(this.response, userId)
         .then(() => console.log('Successfully uploaded user cloud'))
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     } else {
       // If failed
       console.error(`Failed to fetch user avatar from
@@ -96,5 +96,5 @@ export async function logoutFirebase(): Promise<void> {
   return auth
     .signOut()
     .then(() => console.log('signed out complete'))
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }

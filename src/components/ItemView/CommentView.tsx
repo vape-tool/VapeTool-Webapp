@@ -1,23 +1,22 @@
 import { Button, Dropdown, Menu, Typography } from 'antd';
 import * as React from 'react';
-import { UserPermission } from '@vapetool/types';
-import { ConnectState } from '@/models/connect';
 import FirebaseImage from '@/components/StorageAvatar';
 import { Comment } from '@/types';
-import { CurrentUser } from '@/models/user';
+import { CurrentUser } from '@/app';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { Link, FormattedMessage, connect } from 'umi';
+import { Link, FormattedMessage } from 'umi';
 import { MoreOutlined } from '@ant-design/icons';
+import { canRemove } from '@/access';
 
 interface CommentViewProps {
-  user?: CurrentUser;
+  user: CurrentUser;
   comment: Comment;
   onReply: (comment: Comment) => void;
   onDelete: (comment: Comment) => void;
 }
 
-const CommentView: React.FC<CommentViewProps> = props => {
+export const CommentView: React.FC<CommentViewProps> = (props) => {
   const {
     comment: { content, author },
     user,
@@ -29,12 +28,11 @@ const CommentView: React.FC<CommentViewProps> = props => {
 
   const menu = (
     <Menu>
-      {user !== undefined &&
-        (user.uid === author.uid || user.permission >= UserPermission.ONLINE_MODERATOR) && (
-          <Menu.Item onClick={deleteComment} key="delete">
-            <FormattedMessage id="misc.actions.delete" defaultMessage="Delete" />
-          </Menu.Item>
-        )}
+      {canRemove(author.uid, user) && (
+        <Menu.Item onClick={deleteComment} key="delete">
+          <FormattedMessage id="misc.actions.delete" defaultMessage="Delete" />
+        </Menu.Item>
+      )}
       <Menu.Item onClick={() => onReply(props.comment)} key="reply">
         <FormattedMessage id="user.actions.reply" defaultMessage="Reply" />
       </Menu.Item>
@@ -64,5 +62,3 @@ const CommentView: React.FC<CommentViewProps> = props => {
     </div>
   );
 };
-
-export default connect(({ user }: ConnectState) => ({ user: user.currentUser }))(CommentView);

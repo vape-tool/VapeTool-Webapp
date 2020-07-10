@@ -1,25 +1,23 @@
 import UserItems from '@/pages/user/profile/components/UserItems';
 import React from 'react';
-import { connect, Dispatch  } from 'umi';
-import { ConnectState } from '@/models/connect';
-import { ItemName, Liquid } from '@/types';
+import { Liquid } from '@/types';
 import LiquidView from '@/components/ItemView/LiquidView';
-import { FETCH_ITEMS, USER_PROFILE } from '@/models/userProfile';
 import { subscribeLiquids } from '@/services/items';
+import { CurrentUser } from '@/app';
 
-@connect(({ userProfile, loading }: ConnectState) => ({
-  userLiquids: userProfile.userLiquids,
-  userProfile: userProfile.userProfile,
-  loadingItems: loading.effects[`${USER_PROFILE}/${FETCH_ITEMS}`],
-}))
-class UserLiquids extends UserItems<Liquid, { userLiquids?: Liquid[] }> {
-  what: ItemName = ItemName.LIQUID;
-
-  items = () => this.props.userLiquids || [];
-
-  renderItem = (item: Liquid) => <LiquidView item={item} />;
-
-  subscribe = (dispatch: Dispatch, userId: string) => subscribeLiquids(this.props.dispatch, userId);
+interface Props {
+  userId: string;
+  currentUser: CurrentUser;
 }
 
-export default UserLiquids;
+export default function UserLiquids({ userId, currentUser }: Props) {
+  return (
+    <UserItems<Liquid>
+      userId={userId}
+      renderItem={(item: Liquid) => (
+        <LiquidView item={item} displayCommentsLength={5} currentUser={currentUser} />
+      )}
+      subscribe={subscribeLiquids}
+    />
+  );
+}

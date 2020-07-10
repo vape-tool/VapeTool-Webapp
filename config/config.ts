@@ -1,41 +1,41 @@
-import defaultSettings from './defaultSettings'; // https://umijs.org/config/
-import routes from './routes';
+// https://umijs.org/config/
 import { defineConfig } from 'umi';
-
-// preview.pro.ant.design only do not use in your production ;
-// preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const { REACT_APP_ENV } = process.env;
+import routes from './routes'
+import defaultSettings from './defaultSettings';
 
 export default defineConfig({
+  hash: true,
   antd: {},
   dva: {
     hmr: true,
   },
+  layout: {
+    name: 'Vape Tool',
+    locale: true,
+    siderWidth: 208,
+  },
   locale: {
-    // default false
     // default zh-CN
     default: 'en-US',
     // default true, when it is true, will use `navigator.language` overwrite default
+    antd: true,
     baseNavigator: true,
   },
   dynamicImport: {
-    loading: './components/PageLoading/index',
+    loading: '@/components/PageLoading/index',
   },
-  hash: true,
   targets: {
     ie: 11,
   },
-  // umi routes: https://umijs.org/zh/guide/router.html
+  // umi routes: https://umijs.org/docs/routing
   routes,
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     // ...darkTheme,
     'primary-color': defaultSettings.primaryColor,
   },
-  define: {
-    REACT_APP_ENV: REACT_APP_ENV || false,
-  },
-
+  // @ts-ignore
+  title: false,
   ignoreMomentLocale: true,
   manifest: {
     basePath: '/',
