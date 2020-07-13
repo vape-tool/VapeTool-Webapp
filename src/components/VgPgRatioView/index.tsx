@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, InputNumber, Row, Slider, Tooltip, Typography } from 'antd';
-import { formatMessage, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage } from 'umi';
 
 const { Text } = Typography;
 
@@ -32,7 +32,12 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = (props) => {
     <Row justify="space-between">
       <Col {...responsivenessRatioVg}>
         <label>
-          <Tooltip title={formatMessage({ id: 'liquid.vg', defaultMessage: 'Vegetable Glycerin' })}>
+          <Tooltip
+            title={useIntl().formatMessage({
+              id: 'liquid.vg',
+              defaultMessage: 'Vegetable Glycerin',
+            })}
+          >
             <Text>
               <FormattedMessage id="liquid.vgShort" defaultMessage="VG" />
             </Text>
@@ -52,7 +57,9 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = (props) => {
       </Col>
       <Col {...responsivenessRatioPg}>
         <label>
-          <Tooltip title={formatMessage({ id: 'liquid.pg', defaultMessage: 'Propylene Glycol' })}>
+          <Tooltip
+            title={useIntl().formatMessage({ id: 'liquid.pg', defaultMessage: 'Propylene Glycol' })}
+          >
             <Text>
               <FormattedMessage id="liquid.pgShort" defaultMessage="PG" />
             </Text>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
-import { connect, Dispatch, formatMessage, FormattedMessage } from 'umi';
+import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
 import { LockOutlined } from '@ant-design/icons';
 import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectState } from '@/models/connect';
@@ -26,7 +26,7 @@ export interface OhmLawProps {
 }
 
 // TODO check if not needed adjust to new Form API
-const OhmLaw: React.FC<OhmLawProps> = props => {
+const OhmLaw: React.FC<OhmLawProps> = (props) => {
   const { dispatch, ohm } = props;
   const { voltage, resistance, current, power, lastEdit, latestEdit } = ohm;
   const lastEdits = [lastEdit, latestEdit];
@@ -83,7 +83,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onVoltageChange}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.volt',
                     defaultMessage: 'Volts [V]',
                   })}
@@ -104,7 +104,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onResistanceChange}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.ohm',
                     defaultMessage: 'Ohms [Ω]',
                   })}
@@ -123,7 +123,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onCurrentChange}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.amp',
                     defaultMessage: 'Amps [A]',
                   })}
@@ -142,7 +142,7 @@ const OhmLaw: React.FC<OhmLawProps> = props => {
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
                   onChange={onPowerChange}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.wat',
                     defaultMessage: 'Wats [W]',
                   })}

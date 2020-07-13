@@ -1,12 +1,11 @@
 import { Button, Col, Divider, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
-import { connect, FormattedMessage, Dispatch } from 'umi';
+import { connect, FormattedMessage, Dispatch, useModel } from 'umi';
 import { UserPermission } from '@vapetool/types';
 import useMedia from 'react-media-hook2';
 import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
-import { dispatchSelectBattery, dispatchToggleEditBattery } from '@/models/batteries';
 import { CurrentUser } from '@/app';
 
 interface BatteryPreviewDrawerProps {
@@ -24,11 +23,15 @@ const pStyle = {
   marginBottom: 16,
 };
 
-const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
-  props: BatteryPreviewDrawerProps,
-) => {
-  const { dispatch, selectedBattery, editBattery, user } = props;
-  const onClose = () => dispatchSelectBattery(dispatch, undefined);
+const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = () => {
+  const { setSelectedBattery, setEditBattery, selectedBattery, editBattery } = useModel(
+    'batteries',
+  );
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
+  const onClose = () => setSelectedBattery(undefined);
+
   const DescriptionItem = ({ title, content }: { title: any; content: any }) => (
     <div
       style={{
@@ -50,7 +53,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
       {content}
     </div>
   );
-  const toggleEditBattery = () => dispatchToggleEditBattery(dispatch);
+  const toggleEditBattery = () => setEditBattery(selectedBattery);
 
   const [collapsed, setCollapsed] = useState(false);
   useMedia({ query: { maxWidth: 500 }, onChange: setCollapsed });
@@ -200,7 +203,7 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = (
             <FormattedMessage id="battery.links" defaultMessage="Links" />
           </span>
         </Col>
-        {user && user.permission >= UserPermission.ONLINE_MODERATOR && (
+        {currentUser && currentUser.permission >= UserPermission.ONLINE_MODERATOR && (
           <Col xs={12}>
             <Button type="link" onClick={toggleEditBattery}>
               <FormattedMessage

@@ -1,21 +1,16 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, formatMessage, FormattedMessage  } from 'umi';
+import { connect, useIntl, FormattedMessage, useModel } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { SwapOutlined } from '@ant-design/icons';
 
 import styles from './converters.less';
 
 const TempConverter: React.FC = () => {
-  const { 
-    celsius,
-    setCelsius,
-    fahrenheit,
-    setFahrenheit,
- } = useModel('temp')
+  const { celsius, setCelsius, fahrenheit, setFahrenheit } = useModel('temp');
 
-  const onChangeCelsius = setCelsius
-  const onChangeFahrenheit = setFahrenheit
+  const onChangeCelsius = setCelsius;
+  const onChangeFahrenheit = setFahrenheit;
 
   return (
     <Card
@@ -38,7 +33,7 @@ const TempConverter: React.FC = () => {
               value={celsius}
               precision={2}
               onChange={onChangeCelsius}
-              placeholder={formatMessage({
+              placeholder={useIntl().formatMessage({
                 id: 'misc.units.short.celsius',
                 defaultMessage: '[°C]',
               })}
@@ -61,7 +56,7 @@ const TempConverter: React.FC = () => {
               value={fahrenheit}
               precision={1}
               onChange={onChangeFahrenheit}
-              placeholder={formatMessage({
+              placeholder={useIntl().formatMessage({
                 id: 'misc.units.short.fahrenheit',
                 defaultMessage: '[°F]',
               })}

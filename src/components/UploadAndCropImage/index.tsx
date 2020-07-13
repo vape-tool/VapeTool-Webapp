@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
-import { Button, Card, message, Upload } from 'antd';
+import { Button, Card, message, Upload, Typography } from 'antd';
 import { CaretLeftOutlined, CaretRightOutlined, InboxOutlined } from '@ant-design/icons';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/es/upload/interface';
 
 import 'react-image-crop/dist/ReactCrop.css';
-import { formatMessage, FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
 
 const { Dragger } = Upload;
 
@@ -53,7 +53,7 @@ function getBase64(file: UploadFile) {
         reject(new Error('Can not process ArrayBuffer'));
       }
     };
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
     return reader;
   });
 }
@@ -159,7 +159,7 @@ class UploadAndCropImage extends React.PureComponent<
         : crop.height * scaleX,
     );
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       canvas.toBlob(
         (blob: Blob | null) => {
           if (!blob) {
@@ -215,12 +215,12 @@ class UploadAndCropImage extends React.PureComponent<
               />
             </p>
             <p className="ant-upload-hint">
-              {uploadHintText ||
-                formatMessage({
-                  id: 'user.uploadPhoto.rules',
-                  defaultMessage:
-                    'Please upload only vape related photos. Breaking those rules will result in account suspension.',
-                })}
+              {uploadHintText || (
+                <Typography>
+                  Please upload only vape related photos. Breaking those rules will result in
+                  account suspension.
+                </Typography>
+              )}
             </p>
           </Dragger>
         )}

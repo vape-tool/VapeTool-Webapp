@@ -48,12 +48,12 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+        {useIntl().useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
       </Button>
     );
     notification.open({
-      message: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+      message: useIntl().useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      description: useIntl().useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
       btn,
       key,
       onClose: async () => {},

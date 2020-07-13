@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Input, List, Menu, Modal } from 'antd';
 import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/app';
-import { FormattedMessage, formatMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 import firebase from 'firebase';
 import { like, report, deleteItem, deleteComment, commentItem } from '@/services/operations';
 import { LikeIconText } from '@/components/LikeIconText';
@@ -41,6 +41,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const { displayComments, commentsCount } = useComments(what, item, user, displayCommentsLength);
   const inputRef = useRef<Input>(null);
   const { likedByMe, likesCount } = useLikes(what, item, user);
+  const intl = useIntl();
 
   const onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftComment(e.target.value);
@@ -69,13 +70,13 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
 
   const onDeleteClick = () => {
     Modal.confirm({
-      title: formatMessage({
+      title: intl.formatMessage({
         id: 'user.modalTitles.deletePost',
         defaultMessage: 'Are you sure to delete this post?',
       }),
-      okText: formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
+      okText: intl.formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
       okType: 'danger',
-      cancelText: formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
+      cancelText: intl.formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
       onOk() {
         deleteItem(what, item.uid);
         unselectItem();
@@ -85,13 +86,13 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
 
   const onDeleteCommentClick = (comment: Comment) => {
     Modal.confirm({
-      title: formatMessage({
+      title: intl.formatMessage({
         id: 'user.modalTitles.deleteComment',
         defaultMessage: 'Are you sure to delete this comment?',
       }),
-      okText: formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
+      okText: intl.formatMessage({ id: 'misc.actions.delete', defaultMessage: 'Delete' }),
       okType: 'danger',
-      cancelText: formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
+      cancelText: intl.formatMessage({ id: 'misc.actions.cancel', defaultMessage: 'Cancel' }),
       onOk() {
         deleteComment(what, comment.uid, item.uid);
         unselectItem();
@@ -165,7 +166,10 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
         onPressEnter={postComment}
         value={draftComment}
         onChange={onChangeCommentText}
-        placeholder={formatMessage({ id: 'user.addComment', defaultMessage: 'Add new comment...' })}
+        placeholder={intl.formatMessage({
+          id: 'user.addComment',
+          defaultMessage: 'Add new comment...',
+        })}
         suffix={
           <a onClick={submitComment}>
             <FormattedMessage id="user.actions.post" defaultMessage="Post" />

@@ -1,53 +1,32 @@
-import { Dispatch, Reducer } from 'umi';
 import { Item, ItemName, Link, Photo, Post } from '@/types';
-import { UserModelState } from '@/models/user';
+import { useState } from 'react';
 
-export const CLOUD = 'cloud';
-export const SET_ITEMS = 'setItems';
+export default () => {
+  const [photos, setPhotos] = useState<Photo[] | undefined>();
+  const [posts, setPosts] = useState<Post[] | undefined>();
+  const [links, setLinks] = useState<Link[] | undefined>();
 
-export interface CloudModelState {
-  photos: Photo[];
-  posts: Post[];
-  links: Link[];
-}
-
-export interface CloudModelType {
-  namespace: string;
-  state: CloudModelState;
-  reducers: {
-    [SET_ITEMS]: Reducer<CloudModelState>;
+  const setItems = (what: ItemName, items: Item[]) => {
+    items.sort((a: Item, b: Item) => b.creationTime - a.creationTime);
+    switch (what as ItemName) {
+      case ItemName.PHOTO:
+        setPhotos(items as Photo[]);
+        break;
+      case ItemName.POST:
+        setPosts(items as Post[]);
+        break;
+      case ItemName.LINK:
+        setLinks(items as Link[]);
+        break;
+      default:
+        throw new Error(`Illegal type ${what}`);
+    }
   };
-}
 
-export function dispatchSetItems<T extends Item>(dispatch: Dispatch, what: ItemName, items: T[]) {
-  dispatch({
-    type: `${CLOUD}/${SET_ITEMS}`,
-    what,
-    items,
-  });
-}
-
-const initialState: CloudModelState = {
-  photos: [],
-  posts: [],
-  links: [],
+  return {
+    photos,
+    posts,
+    links,
+    setItems,
+  };
 };
-
-const CloudModel: CloudModelType = {
-  namespace: CLOUD,
-  state: initialState,
-  reducers: {
-    setItems(state = initialState, { what, items }): CloudModelState {
-      items.sort((a: Post, b: Post) => b.creationTime - a.creationTime);
-      console.log({ what, setItems: items });
-      return {
-        ...(state as UserModelState),
-        photos: what === ItemName.PHOTO ? items : state?.photos,
-        posts: what === ItemName.POST ? items : state?.posts,
-        links: what === ItemName.LINK ? items : state?.links,
-      };
-    },
-  },
-};
-
-export default CloudModel;

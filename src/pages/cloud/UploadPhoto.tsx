@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Input } from 'antd';
-import { connect, formatMessage, FormattedMessage } from 'umi';
+import { connect, useIntl, FormattedMessage } from 'umi';
 import {
   CroppedImage,
   dispatchSetCroppedImage,
@@ -20,7 +20,7 @@ interface UploadPhotoProps extends ConnectProps {
   submitting?: boolean;
 }
 
-const UploadPhoto: React.FC<UploadPhotoProps> = props => {
+const UploadPhoto: React.FC<UploadPhotoProps> = (props) => {
   const { dispatch } = props;
 
   const [isCropping, setIsCropping] = useState(true);
@@ -66,7 +66,7 @@ const UploadPhoto: React.FC<UploadPhotoProps> = props => {
           fontFamily: 'Proxima Nova Bold,Helvetica Neue,Helvetica,Arial,sans-serif',
           border: 0,
         }}
-        placeholder={formatMessage({
+        placeholder={useIntl().formatMessage({
           id: 'user.uploadPhoto.saySomething',
           defaultMessage: 'Say something about this photo',
         })}

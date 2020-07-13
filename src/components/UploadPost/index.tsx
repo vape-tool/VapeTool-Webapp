@@ -11,7 +11,7 @@ import {
   SUBMIT_POST,
 } from '@/models/uploadPost';
 import { ShareAltOutlined } from '@ant-design/icons/lib';
-import { formatMessage, FormattedMessage, connect, Dispatch   } from 'umi';
+import { useIntl, FormattedMessage, connect, Dispatch } from 'umi';
 
 interface UploadPostProps {
   currentUser?: CurrentUser;
@@ -19,7 +19,7 @@ interface UploadPostProps {
   type: 'post' | 'link';
 }
 
-const UploadPost: React.FC<UploadPostProps> = props => {
+const UploadPost: React.FC<UploadPostProps> = (props) => {
   const { dispatch, type } = props;
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
 
@@ -32,13 +32,16 @@ const UploadPost: React.FC<UploadPostProps> = props => {
   return (
     <Card style={{ textAlign: 'center' }}>
       <Input
-        placeholder={formatMessage({ id: type === 'post' ? 'misc.title' : 'misc.url' })}
+        placeholder={useIntl().formatMessage({ id: type === 'post' ? 'misc.title' : 'misc.url' })}
         onChange={onTitleChange}
         style={{ marginBottom: 24 }}
       />
       <Input.TextArea
         allowClear
-        placeholder={formatMessage({ id: 'misc.optionalText', defaultMessage: 'Text (Optional)' })}
+        placeholder={useIntl().formatMessage({
+          id: 'misc.optionalText',
+          defaultMessage: 'Text (Optional)',
+        })}
         onChange={onTextChange}
       />
       <Editor editorState={editorState} onChange={setEditorState} />
