@@ -6,11 +6,11 @@ import { FormattedMessage } from 'umi';
 
 import { UpOutlined } from '@ant-design/icons';
 import { MixableType, Mixable, MixableResult } from '@vapetool/types';
+import { calculate } from '@/services/mixer';
+import { capitalize } from '@/utils/utils';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
-import { calculate } from '@/services/mixer';
 import { columns } from './tableData';
-import { capitalize } from '@/utils/utils';
 
 const Mixer: React.FC = () => {
   const [form] = Form.useForm();

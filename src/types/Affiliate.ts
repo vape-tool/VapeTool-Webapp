@@ -1,4 +1,4 @@
 export default interface Affiliate {
   name: string;
-  link: string;
+  link: string | undefined;
 }

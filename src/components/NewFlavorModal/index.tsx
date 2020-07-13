@@ -1,6 +1,6 @@
 import { Form, Input, InputNumber, Modal, message } from 'antd';
 import * as React from 'react';
-import { connect, FormattedMessage, formatMessage} from 'umi';
+import { connect, FormattedMessage, useIntl } from 'umi';
 import { Flavor } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
@@ -9,7 +9,7 @@ interface NewFlavorModalProps extends ConnectProps {
   showNewFlavorModal?: boolean;
 }
 
-const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
+const NewFlavorModal: React.FC<NewFlavorModalProps> = (props) => {
   const { showNewFlavorModal, dispatch } = props;
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
@@ -57,7 +57,9 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
         <Form.Item
           name="name"
           label={<FormattedMessage id="misc.name" defaultMessage="Name" />}
-          rules={[{ required: true, message: formatMessage({ id: 'liquid.validation.name' }) }]}
+          rules={[
+            { required: true, message: useIntl().formatMessage({ id: 'liquid.validation.name' }) },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -75,7 +77,10 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
             <FormattedMessage id="misc.units.long.percentage" defaultMessage="Percentage [%]" />
           }
           rules={[
-            { required: true, message: formatMessage({ id: 'liquid.validation.percentage' }) },
+            {
+              required: true,
+              message: useIntl().formatMessage({ id: 'liquid.validation.percentage' }),
+            },
           ]}
         >
           <InputNumber min={0} max={100} step={1} />
@@ -91,7 +96,12 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = props => {
         <Form.Item
           name="ratio"
           label={<FormattedMessage id="liquid.pgRatioPerc" defaultMessage="PG Ratio [%]" />}
-          rules={[{ required: true, message: formatMessage({ id: 'liquid.validation.pgRatio' }) }]}
+          rules={[
+            {
+              required: true,
+              message: useIntl().formatMessage({ id: 'liquid.validation.pgRatio' }),
+            },
+          ]}
         >
           <InputNumber min={0} max={100} step={10} />
         </Form.Item>

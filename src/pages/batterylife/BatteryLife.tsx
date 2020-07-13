@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row, Typography } from 'antd';
-import { connect, formatMessage, FormattedMessage  } from 'umi';
+import { connect, useIntl, FormattedMessage } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 
 const BatteryLife: React.FC = () => {
@@ -53,7 +53,7 @@ const BatteryLife: React.FC = () => {
       setPuffSeconds,
       setAmountOfPuffs,
       setTotalRuntime,
-    ].forEach(state => {
+    ].forEach((state) => {
       state(undefined);
     });
   };
@@ -99,11 +99,11 @@ const BatteryLife: React.FC = () => {
                   min={0.01}
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCapacityMah(e === undefined ? undefined : Number(e));
                     setLastChangedMah(true);
                   }}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.batteryLife',
                     defaultMessage: 'Capacity [mAh]',
                   })}
@@ -122,11 +122,11 @@ const BatteryLife: React.FC = () => {
                   min={0.01}
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCapacityWh(e === undefined ? undefined : Number(e));
                     setLastChangedMah(false);
                   }}
-                  placeholder={formatMessage({
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.batteryLife',
                     defaultMessage: 'Capacity [Wh]',
                   })}
@@ -143,8 +143,8 @@ const BatteryLife: React.FC = () => {
                   min={0.01}
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
-                  onChange={e => setPower(e === undefined ? undefined : Number(e))}
-                  placeholder={formatMessage({
+                  onChange={(e) => setPower(e === undefined ? undefined : Number(e))}
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.wat',
                     defaultMessage: 'Wattage [W]',
                   })}
@@ -166,8 +166,8 @@ const BatteryLife: React.FC = () => {
                   min={0.01}
                   precision={2}
                   style={{ width: '100%', maxWidth: 200 }}
-                  onChange={e => setPuffSeconds(e === undefined ? undefined : Number(e))}
-                  placeholder={formatMessage({
+                  onChange={(e) => setPuffSeconds(e === undefined ? undefined : Number(e))}
+                  placeholder={useIntl().formatMessage({
                     id: 'misc.units.long.puffTime',
                     defaultMessage: 'Average puff time [s]',
                   })}

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message, Popconfirm, Table } from 'antd';
-import { connect, FormattedMessage  } from 'umi';
+import { connect, FormattedMessage, useModel } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { Battery, Affiliate } from '@/types';
 import NewAffiliateModal from '@/components/AffiliateEditTable/NewAffiliateModal';
-import { dispatchSetAffiliate } from '@/models/batteries';
 import {
   PlusOutlined,
   CheckOutlined,
@@ -27,7 +26,7 @@ interface EditableCellProps {
   children: React.ReactNode;
 }
 
-const EditableCell: React.FC<EditableCellProps> = props => {
+const EditableCell: React.FC<EditableCellProps> = (props) => {
   const { editing, dataIndex, title, affiliate, index, children, ...restProps } = props;
   return (
     <td {...restProps}>
@@ -50,7 +49,8 @@ interface EditableTableProps extends ConnectProps {
   selectedBattery?: Battery;
 }
 
-const EditableTable: React.FC<EditableTableProps> = props => {
+const EditableTable: React.FC<EditableTableProps> = (props) => {
+  const { setAffiliate } = useModel('batteries');
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState<string>('');
   const isEditing = (affiliate: Affiliate) => affiliate.name === editingKey;
@@ -60,7 +60,10 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   };
 
   const remove = (name: string) => {
-    dispatchSetAffiliate(props.dispatch, { name, link: null });
+    setAffiliate({
+      name,
+      link: undefined,
+    });
   };
 
   const showNewAffiliateModal = () => {
@@ -77,7 +80,8 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   const save = async () => {
     try {
       const row = await form.validateFields();
-      dispatchSetAffiliate(props.dispatch, { ...row } as { name: string; link: string | null });
+
+      await setAffiliate({ ...row } as Affiliate);
       cancel();
     } catch (e) {
       message.error(e.message);
@@ -150,7 +154,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       },
     },
   ];
-  const mergedColumns = columnsSchema.map(col => {
+  const mergedColumns = columnsSchema.map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -179,7 +183,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
             }),
           )}
           columns={mergedColumns}
-          rowKey={affiliate => affiliate.name}
+          rowKey={(affiliate) => affiliate.name}
           rowClassName={() => 'editable-row'}
           pagination={false}
         />

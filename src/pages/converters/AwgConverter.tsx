@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, formatMessage, FormattedMessage, useModel } from 'umi';
+import { connect, FormattedMessage, useModel, useIntl } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { SwapOutlined } from '@ant-design/icons';
 import styles from './converters.less';
@@ -8,8 +8,8 @@ import styles from './converters.less';
 const AwgConverter: React.FC = () => {
   const { awg, setAwg, mm, setMm } = useModel('awgMm');
 
-  const onChangeAwg = setAwg
-  const onChangeMm = setMm
+  const onChangeAwg = setAwg;
+  const onChangeMm = setMm;
 
   return (
     <Card title={<FormattedMessage id="converters.titles.awgToMm" defaultMessage="AWG to mm" />}>
@@ -25,7 +25,7 @@ const AwgConverter: React.FC = () => {
               value={awg}
               precision={0}
               onChange={onChangeAwg}
-              placeholder={formatMessage({ id: 'misc.units.awg', defaultMessage: 'AWG' })}
+              placeholder={useIntl().formatMessage({ id: 'misc.units.awg', defaultMessage: 'AWG' })}
               className={styles.input}
             />
           </label>
@@ -49,7 +49,7 @@ const AwgConverter: React.FC = () => {
               value={mm}
               precision={3}
               onChange={onChangeMm}
-              placeholder={formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
+              placeholder={useIntl().formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
               className={styles.input}
             />
           </label>

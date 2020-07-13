@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { connect } from 'umi';
+import React from 'react';
+import { connect, useModel } from 'umi';
 import { List } from 'antd';
 import { id } from '@vapetool/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -7,19 +7,15 @@ import BatteryView from '@/components/BatteryView';
 import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
 import styles from '@/components/ItemView/styles.less';
 import { Battery } from '@/types';
-import { subscribeBatteries } from '@/services/batteries';
-import { dispatchSelectBattery } from '@/models/batteries';
 
 interface BatteriesComponentProps extends ConnectProps {
   batteries: Battery[];
 }
 
-const Batteries: React.FC<BatteriesComponentProps> = (props: BatteriesComponentProps) => {
-  const { batteries, dispatch } = props;
+const Batteries: React.FC<BatteriesComponentProps> = () => {
+  const { setSelectedBattery, batteries } = useModel('batteries');
 
-  const onBatteryClick = (battery: Battery) => dispatchSelectBattery(dispatch, battery);
-
-  useEffect(() => subscribeBatteries(dispatch), []);
+  const onBatteryClick = (battery: Battery) => setSelectedBattery(battery);
 
   return (
     <div>
@@ -27,7 +23,7 @@ const Batteries: React.FC<BatteriesComponentProps> = (props: BatteriesComponentP
         className={styles.coverCardList}
         grid={{ gutter: 24, xxl: 4, xl: 3, lg: 2, md: 2, sm: 2, xs: 1 }}
         dataSource={batteries || []}
-        renderItem={battery => (
+        renderItem={(battery) => (
           <BatteryView
             key={id(battery)}
             battery={battery}

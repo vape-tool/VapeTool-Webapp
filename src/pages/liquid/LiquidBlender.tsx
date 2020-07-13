@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
-import { connect, Dispatch, formatMessage, FormattedMessage  } from 'umi';
+import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
 import { ConnectState } from '@/models/connect';
 import {
   dispatchCalculateResults,
@@ -18,11 +18,11 @@ import NewFlavorModal from '@/components/NewFlavorModal';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import { Author } from '@vapetool/types';
-import styles from './LiquidBlender.less';
-import LiquidResultsChart from './LiquidResultsChart';
 import { CurrentUser } from '@/models/user';
 import SaveModal from '@/components/SaveModal';
 import { saveLiquid } from '@/services/items';
+import styles from './LiquidBlender.less';
+import LiquidResultsChart from './LiquidResultsChart';
 
 const { Title } = Typography;
 
@@ -255,24 +255,18 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             }
           >
             <Table
-              rowKey={result => result.name}
+              rowKey={(result) => result.name}
               columns={resultColumns}
               pagination={false}
               dataSource={
                 results
-                  ? results.map(result => ({
+                  ? results.map((result) => ({
                       name: result.name,
                       percentage: `${result.percentage.toFixed(1)}%`,
                       ml: `${result.ml.toFixed(1)} ml`,
                       drips: result.drips.toFixed(0),
-                      price: `${result.price.toFixed(2)}${formatMessage({
-                        id: 'app.currency',
-                        defaultMessage: '$',
-                      })}`,
-                      weight: `${result.weight.toFixed(3)} ${formatMessage({
-                        id: 'misc.units.gram',
-                        defaultMessage: 'g',
-                      })}`,
+                      price: `${result.price.toFixed(2)}${(<Typography>$</Typography>)}`,
+                      weight: `${result.weight.toFixed(3)} ${(<Typography>g</Typography>)}`,
                     }))
                   : []
               }

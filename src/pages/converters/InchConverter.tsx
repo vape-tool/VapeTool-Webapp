@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, formatMessage, FormattedMessage, useModel } from 'umi';
+import { connect, useIntl, FormattedMessage, useModel } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { LineOutlined, PauseOutlined, SwapOutlined } from '@ant-design/icons';
 
@@ -18,10 +18,10 @@ const InchConverter: React.FC = () => {
     setDenominator,
   } = useModel('inchMm');
 
-  const onChangeNominator = setNominator
-  const onChangeDenominator = setDenominator
-  const onChangeInch = setInch
-  const onChangeMm = setMm
+  const onChangeNominator = setNominator;
+  const onChangeDenominator = setDenominator;
+  const onChangeInch = setInch;
+  const onChangeMm = setMm;
 
   return (
     <Card
@@ -76,7 +76,10 @@ const InchConverter: React.FC = () => {
               value={inch}
               precision={4}
               onChange={onChangeInch}
-              placeholder={formatMessage({ id: 'misc.units.inch', defaultMessage: 'inch' })}
+              placeholder={useIntl().formatMessage({
+                id: 'misc.units.inch',
+                defaultMessage: 'inch',
+              })}
               className={styles.input}
             />
           </label>
@@ -100,7 +103,7 @@ const InchConverter: React.FC = () => {
               value={mm}
               precision={3}
               onChange={onChangeMm}
-              placeholder={formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
+              placeholder={useIntl().formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
               className={styles.input}
             />
           </label>
