@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Affix, Button, List } from 'antd';
-import { connect } from 'umi';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { useModel } from 'umi';
+import { ConnectProps } from '@/models/connect';
 import styles from '@/components/ItemView/styles.less';
 import { PhotoView } from '@/components/ItemView';
 import PhotoPreviewModal from '@/components/PreviewModal';
@@ -19,14 +19,13 @@ interface AuthComponentProps extends ConnectProps {
   links: Array<Link>;
 }
 
-const Cloud: React.FC<AuthComponentProps> = props => {
+const Cloud: React.FC<AuthComponentProps> = (props) => {
   const onUploadPhotoClicked = () => redirectToWithFootprint(props.dispatch, '/cloud/upload');
+  const { setLinks, setPhotos, setPosts, posts, links, photos } = useModel('cloud');
 
-  useEffect(() => subscribeLinks(props.dispatch!), []);
-  useEffect(() => subscribePosts(props.dispatch!), []);
-  useEffect(() => subscribePhotos(props.dispatch!), []);
-
-  const { photos, posts, links } = props;
+  useEffect(() => subscribeLinks(setLinks), []);
+  useEffect(() => subscribePhotos(setPhotos), []);
+  useEffect(() => subscribePosts(setPosts), []);
 
   if (photos === undefined || posts === undefined || links === undefined) {
     return <PageLoading />;
@@ -42,7 +41,7 @@ const Cloud: React.FC<AuthComponentProps> = props => {
         rowKey="uid"
         itemLayout="vertical"
         dataSource={items}
-        renderItem={item => {
+        renderItem={(item) => {
           if (item.$type === 'photo') {
             return <PhotoView displayCommentsLength={3} item={item} />;
           }
@@ -69,8 +68,4 @@ const Cloud: React.FC<AuthComponentProps> = props => {
   );
 };
 
-export default connect(({ cloud }: ConnectState) => ({
-  photos: cloud.photos,
-  posts: cloud.posts,
-  links: cloud.links,
-}))(Cloud);
+export default Cloud;
