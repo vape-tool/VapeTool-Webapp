@@ -3,14 +3,12 @@ import { Photo } from '@/types';
 import React from 'react';
 import PhotoView from '@/components/ItemView/PhotoView';
 import { subscribePhotos } from '@/services/items';
-import { CurrentUser } from '@/app';
 
 interface Props {
   userId: string;
-  currentUser: CurrentUser;
 }
 
-export default function UserPhotos({ userId, currentUser }: Props) {
+export default function UserPhotos({ userId }: Props) {
   return (
     <UserItems<Photo>
       userId={userId}

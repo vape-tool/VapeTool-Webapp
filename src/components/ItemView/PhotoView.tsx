@@ -6,7 +6,6 @@ import FirebaseImage from '@/components/StorageAvatar';
 import { ItemName } from '@/types/Item';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { CurrentUser } from '@/app';
 import styles from './styles.less';
 import { Actions } from './ItemView';
 
@@ -19,9 +18,6 @@ export default function PhotoView({
 }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
-
-  const { initialState } = useModel('@@initialState');
-  const user = initialState?.currentUser as CurrentUser;
 
   return (
     <Card
@@ -50,7 +46,6 @@ export default function PhotoView({
       <Actions
         what={ItemName.PHOTO}
         item={item}
-        user={user}
         displayCommentsLength={displayCommentsLength}
         unselectItem={unselectItem}
       />

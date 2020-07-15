@@ -2,19 +2,15 @@ import React from 'react';
 import { FormattedMessage, useModel } from 'umi';
 import { Card, Descriptions, Typography } from 'antd';
 import { ItemName, Liquid } from '@/types';
-import { CurrentUser } from '@/app';
 import styles from './styles.less';
 import { Actions } from './ItemView';
-
 
 export default function LiquidView({
   item,
   displayCommentsLength,
-  currentUser,
 }: {
   item: Liquid;
   displayCommentsLength: number;
-  currentUser: CurrentUser;
 }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
@@ -58,7 +54,6 @@ export default function LiquidView({
         <Actions
           what={ItemName.LIQUID}
           item={item}
-          user={currentUser}
           displayCommentsLength={displayCommentsLength}
           unselectItem={unselectItem}
         />

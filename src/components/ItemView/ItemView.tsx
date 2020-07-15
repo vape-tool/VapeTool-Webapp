@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Input, List, Menu, Modal } from 'antd';
 import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/app';
-import { FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 import firebase from 'firebase';
 import { like, report, deleteItem, deleteComment, commentItem } from '@/services/operations';
 import { LikeIconText } from '@/components/LikeIconText';
@@ -17,7 +17,6 @@ import { CommentView } from './CommentView';
 export interface ItemViewProps<T> {
   item: T;
   displayCommentsLength: number;
-  user: CurrentUser;
   what: ItemName;
   unselectItem: () => void;
 }
@@ -33,10 +32,12 @@ export interface ItemViewState {
 export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   what,
   item,
-  user,
   displayCommentsLength,
   unselectItem,
 }: ItemViewProps<T>) {
+  const { initialState } = useModel('@@initialState');
+  const user = initialState?.currentUser as CurrentUser;
+
   const [draftComment, setDraftComment] = useState<string>('');
   const { displayComments, commentsCount } = useComments(what, item, user, displayCommentsLength);
   const inputRef = useRef<Input>(null);

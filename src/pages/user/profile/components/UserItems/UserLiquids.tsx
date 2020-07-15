@@ -4,13 +4,15 @@ import { Liquid } from '@/types';
 import LiquidView from '@/components/ItemView/LiquidView';
 import { subscribeLiquids } from '@/services/items';
 import { CurrentUser } from '@/app';
+import { useModel } from 'umi';
 
 interface Props {
   userId: string;
-  currentUser: CurrentUser;
 }
 
-export default function UserLiquids({ userId, currentUser }: Props) {
+export default function UserLiquids({ userId }: Props) {
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser as CurrentUser;
   return (
     <UserItems<Liquid>
       userId={userId}
