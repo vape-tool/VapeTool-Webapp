@@ -14,7 +14,6 @@ import styles from './styles.less';
 
 const Profile: React.FC = () => {
   const { initialState } = useModel('@@initialState');
-  console.log({ initialState });
   const { loadingProfile, userProfile, fetchUserProfile } = useModel('profile');
   const [tabKey, setTabKey] = useState(ItemName.PHOTO);
   const match = useRouteMatch();
@@ -41,15 +40,15 @@ const Profile: React.FC = () => {
   const renderContentByTabKey = () => {
     switch (tabKey) {
       case ItemName.PHOTO:
-        return <UserPhotos userId={userId} currentUser={currentUser} />;
+        return <UserPhotos userId={userId} />;
       case ItemName.POST:
-        return <UserPosts userId={userId} currentUser={currentUser} />;
+        return <UserPosts userId={userId} />;
       case ItemName.LINK:
-        return <UserLinks userId={userId} currentUser={currentUser} />;
+        return <UserLinks userId={userId} />;
       case ItemName.COIL:
-        return <UserCoils userId={userId} currentUser={currentUser} />;
+        return <UserCoils userId={userId} />;
       case ItemName.LIQUID:
-        return <UserLiquids userId={userId} currentUser={currentUser} />;
+        return <UserLiquids userId={userId} />;
       default:
         throw new Error(`Unknown tab: ${tabKey}`);
     }

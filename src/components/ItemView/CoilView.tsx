@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useModel } from 'umi';
 import { Card, Typography, Descriptions } from 'antd';
-import { CurrentUser } from '@/app';
 import { ItemName, Coil } from '@/types';
 import { getCoilUrl } from '@/services/storage';
 import { WireType } from '@vapetool/types/dist/wire';
@@ -34,11 +33,9 @@ function useCoilImage(itemUid: string) {
 export default function CoilView({
   item,
   displayCommentsLength,
-  currentUser,
 }: {
   item: Coil;
   displayCommentsLength: number;
-  currentUser: CurrentUser;
 }) {
   const coilImageUrl = useCoilImage(item.uid);
   const { setSelectedItem, unselectItem } = useModel('preview');
@@ -100,7 +97,6 @@ export default function CoilView({
       <Actions
         what={ItemName.COIL}
         item={item}
-        user={currentUser}
         displayCommentsLength={displayCommentsLength}
         unselectItem={unselectItem}
       />

@@ -1,7 +1,6 @@
 import { Card, Typography } from 'antd';
 import React from 'react';
 import { Link, useModel } from 'umi';
-import { CurrentUser } from '@/app';
 // @ts-ignore
 import Microlink from '@microlink/react';
 import FirebaseImage from '@/components/StorageAvatar';
@@ -14,11 +13,9 @@ import styles from './styles.less';
 export default function LinkView({
   item,
   displayCommentsLength,
-  currentUser,
 }: {
   item: LinkType;
   displayCommentsLength: number;
-  currentUser: CurrentUser;
 }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
@@ -47,7 +44,6 @@ export default function LinkView({
       <Actions
         what={ItemName.LINK}
         item={item}
-        user={currentUser}
         displayCommentsLength={displayCommentsLength}
         unselectItem={unselectItem}
       />

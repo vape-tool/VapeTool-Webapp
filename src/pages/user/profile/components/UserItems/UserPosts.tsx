@@ -3,20 +3,16 @@ import { Post } from '@/types';
 import React from 'react';
 import PostView from '@/components/ItemView/PostView';
 import { subscribePosts } from '@/services/items';
-import { CurrentUser } from '@/app';
 
 interface Props {
   userId: string;
-  currentUser: CurrentUser;
 }
 
-export default function UserPosts({ userId, currentUser }: Props) {
+export default function UserPosts({ userId }: Props) {
   return (
     <UserItems<Post>
       userId={userId}
-      renderItem={(item: Post) => (
-        <PostView item={item} displayCommentsLength={5} currentUser={currentUser} />
-      )}
+      renderItem={(item: Post) => <PostView item={item} displayCommentsLength={5} />}
       subscribe={subscribePosts}
     />
   );

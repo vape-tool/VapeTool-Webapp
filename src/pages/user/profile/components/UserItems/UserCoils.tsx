@@ -4,13 +4,15 @@ import { Coil } from '@/types';
 import CoilView from '@/components/ItemView/CoilView';
 import { subscribeCoils } from '@/services/items';
 import { CurrentUser } from '@/app';
+import { useModel } from 'umi';
 
 interface UserCoilsProps {
   userId: string;
-  currentUser: CurrentUser;
 }
 
-export default function UserCoils({ userId, currentUser }: UserCoilsProps) {
+export default function UserCoils({ userId }: UserCoilsProps) {
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser as CurrentUser;
   return (
     <UserItems<Coil>
       userId={userId}
