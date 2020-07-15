@@ -18,11 +18,7 @@ const ItemPreviewModal: React.FC = () => {
   let content;
   if (selectedItem.$type === ItemName.PHOTO) {
     content = (
-      <PhotoView
-        item={selectedItem as Photo}
-        currentUser={currentUser}
-        displayCommentsLength={Number.MAX_SAFE_INTEGER}
-      />
+      <PhotoView item={selectedItem as Photo} displayCommentsLength={Number.MAX_SAFE_INTEGER} />
     );
   } else if (selectedItem.$type === 'post') {
     content = (

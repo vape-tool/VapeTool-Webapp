@@ -14,9 +14,7 @@ export default function UserPhotos({ userId, currentUser }: Props) {
   return (
     <UserItems<Photo>
       userId={userId}
-      renderItem={(item: Photo) => (
-        <PhotoView item={item} displayCommentsLength={5} currentUser={currentUser} />
-      )}
+      renderItem={(item: Photo) => <PhotoView item={item} displayCommentsLength={5} />}
       subscribe={subscribePhotos}
     />
   );

@@ -23,10 +23,10 @@ export async function like(what: ItemName, itemId: string, userId: string) {
   try {
     switch (what as ItemName) {
       case ItemName.PHOTO:
-        await likePhoto( itemId, userId);
+        await likePhoto(itemId, userId);
         break;
       case ItemName.LINK:
-        await likeLink( itemId, userId);
+        await likeLink(itemId, userId);
         break;
       case ItemName.POST:
         await likePost(itemId, userId);
@@ -60,7 +60,7 @@ export async function deleteItem(what: ItemName, itemId: string) {
   }
 }
 
-export async function report(what :ItemName, itemId: string, userId: string) {
+export async function report(what: ItemName, itemId: string, userId: string) {
   try {
     switch (what as ItemName) {
       case ItemName.PHOTO:
@@ -96,6 +96,7 @@ export async function commentItem(what: ItemName, body: string, itemId: string, 
         throw Error('unsupported operation');
     }
   } catch (e) {
+    console.log('Errors occurs here', e);
     notification.error({ message: e.message });
   }
 }
@@ -120,4 +121,3 @@ export async function deleteComment(what: ItemName, itemId: string, commentId: s
     notification.error({ message: e.message });
   }
 }
-
