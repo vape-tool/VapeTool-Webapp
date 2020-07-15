@@ -28,5 +28,8 @@ export default () => {
     posts,
     links,
     setItems,
+    setPhotos,
+    setPosts,
+    setLinks,
   };
 };

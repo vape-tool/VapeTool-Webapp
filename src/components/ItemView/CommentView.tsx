@@ -5,7 +5,7 @@ import { Comment } from '@/types';
 import { CurrentUser } from '@/app';
 import { ImageType } from '@/services/storage';
 import { getUserProfileUrl } from '@/places/user.places';
-import { Link, FormattedMessage } from 'umi';
+import { Link, FormattedMessage, useModel } from 'umi';
 import { MoreOutlined } from '@ant-design/icons';
 import { canRemove } from '@/access';
 
@@ -19,10 +19,12 @@ interface CommentViewProps {
 export const CommentView: React.FC<CommentViewProps> = (props) => {
   const {
     comment: { content, author },
-    user,
     onReply,
     onDelete,
   } = props;
+
+  const { initialState } = useModel('@@initialState');
+  const user = initialState?.currentUser as CurrentUser;
 
   const deleteComment = () => onDelete(props.comment);
 
