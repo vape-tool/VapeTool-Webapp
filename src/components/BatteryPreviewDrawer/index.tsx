@@ -1,9 +1,8 @@
 import { Button, Col, Divider, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
-import { connect, FormattedMessage, Dispatch, useModel } from 'umi';
+import { FormattedMessage, Dispatch, useModel } from 'umi';
 import { UserPermission } from '@vapetool/types';
 import useMedia from 'react-media-hook2';
-import { ConnectState } from '@/models/connect';
 import { Battery } from '@/types';
 import AffiliateEditTable from '@/components/AffiliateEditTable';
 import { CurrentUser } from '@/app';
@@ -23,7 +22,7 @@ const pStyle = {
   marginBottom: 16,
 };
 
-const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = () => {
+const BatteryPreviewDrawer = () => {
   const { setSelectedBattery, setEditBattery, selectedBattery, editBattery } = useModel(
     'batteries',
   );
@@ -263,8 +262,4 @@ const BatteryPreviewDrawer: React.FC<BatteryPreviewDrawerProps> = () => {
   );
 };
 
-export default connect(({ batteries, user }: ConnectState) => ({
-  selectedBattery: batteries.selectedBattery,
-  editBattery: batteries.editBattery,
-  user: user.currentUser,
-}))(BatteryPreviewDrawer);
+export default BatteryPreviewDrawer;

@@ -1,6 +1,6 @@
 import { Battery, Affiliate } from '@/types';
-import { useState } from 'react';
-import { saveAffiliate } from '@/services/batteries';
+import { useState, useEffect } from 'react';
+import { saveAffiliate, subscribeBatteries } from '@/services/batteries';
 
 export interface BatteriesModelState {
   batteries: Battery[];
@@ -14,6 +14,9 @@ export default () => {
   const [selectedBattery, setSelectedBattery] = useState<Battery | undefined>(undefined);
   const [editBattery, setEditBattery] = useState<Battery | undefined>(undefined);
   const [showNewAffiliateModal, setShowNewAffiliateModal] = useState(undefined);
+  useEffect(() => {
+    subscribeBatteries(setBatteries);
+  }, []);
   return {
     setSelectedBattery,
     setEditBattery,
