@@ -1,26 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
-import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
-import { ConnectState } from '@/models/connect';
-import {
-  dispatchCalculateResults,
-  dispatchSetAmount,
-  dispatchSetBaseRatio,
-  dispatchSetBaseStrength,
-  dispatchSetTargetRatio,
-  dispatchSetTargetStrength,
-  dispatchSetThinner,
-  dispatchShowNewFlavorModal,
-  LiquidModelState,
-} from '@/models/liquid';
+import { Dispatch, FormattedMessage, useModel } from 'umi';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
 import VgPgRatioView from '@/components/VgPgRatioView';
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons';
 import { Author } from '@vapetool/types';
-import { CurrentUser } from '@/models/user';
 import SaveModal from '@/components/SaveModal';
 import { saveLiquid } from '@/services/items';
+import { LiquidModelState } from '@/models/liquid';
+import { CurrentUser } from '@/app';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
 
@@ -59,32 +48,42 @@ const resultColumns = [
   },
 ];
 
-const LiquidBlender: React.FC<LiquidBlenderProps> = ({
-  dispatch,
-  liquid: { currentLiquid, results },
-  user,
-}) => {
-  const [saveModalVisible, setSaveModalVisible] = useState(false);
+const LiquidBlender = () => {
+  const {
+    currentLiquid,
+    setBaseStrength,
+    setBaseRatio,
+    setThinner,
+    setAmount,
+    setTargetStrength,
+    setTargetRatio,
+    showFlavorModal,
+    resultsState,
+    calculateResult,
+    saveModalVisible,
+    setSaveModalVisible,
+  } = useModel('liquid');
 
-  const onBaseStrengthChange = (value: number | undefined) =>
-    dispatchSetBaseStrength(dispatch, value);
+  const { initialState } = useModel('@@initialState');
+  const user = initialState?.currentUser as CurrentUser;
+
+  const onBaseStrengthChange = (value: number) => setBaseStrength(value);
 
   const onBaseRatioChange = (value: any) =>
-    value && typeof value === 'number' && dispatchSetBaseRatio(dispatch, 100 - value);
+    value && typeof value === 'number' && setBaseRatio(100 - value);
 
-  const onThinnerChange = (value: number | undefined) => dispatchSetThinner(dispatch, value);
+  const onThinnerChange = (value: number) => setThinner(value);
 
-  const onAmountChange = (value: number | undefined) => dispatchSetAmount(dispatch, value);
+  const onAmountChange = (value: number) => setAmount(value);
 
-  const onTargetStrengthChange = (value: number | undefined) =>
-    dispatchSetTargetStrength(dispatch, value);
+  const onTargetStrengthChange = (value: number) => setTargetStrength(value);
 
   const onTargetRatioChange = (value: any) =>
-    value && typeof value === 'number' && dispatchSetTargetRatio(dispatch!, 100 - value);
+    value && typeof value === 'number' && setTargetRatio(100 - value);
 
-  const showNewFlavorModal = () => dispatchShowNewFlavorModal(dispatch);
+  const showNewFlavorModal = () => showFlavorModal();
 
-  const onCalculateClick = () => dispatchCalculateResults(dispatch);
+  const onCalculateClick = () => calculateResult();
 
   const responsivenessProps = { xs: 24, xl: 8 };
   const responsivenessCollections = { xs: 24, xl: 16 };
@@ -124,6 +123,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                     step={1}
                     precision={0}
                     value={currentLiquid.baseStrength}
+                    // @ts-ignore
                     onChange={onBaseStrengthChange}
                   />
                 </label>
@@ -142,6 +142,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                 step={1}
                 precision={1}
                 value={currentLiquid.thinner}
+                // @ts-ignore
                 onChange={onThinnerChange}
               />
             </label>
@@ -158,7 +159,6 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
             }
           >
             <FlavorTable />
-
             <Button
               type="dashed"
               icon={<PlusOutlined />}
@@ -189,6 +189,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                     step={1}
                     precision={0}
                     value={currentLiquid.amount}
+                    // @ts-ignore
                     onChange={onAmountChange}
                   />
                 </label>
@@ -205,6 +206,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                     step={1}
                     precision={0}
                     value={currentLiquid.targetStrength}
+                    // @ts-ignore
                     onChange={onTargetStrengthChange}
                   />
                 </label>
@@ -239,7 +241,7 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
                     <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                   </Button>
                 </Affix>
-                {results && (
+                {resultsState && (
                   <Affix offsetBottom={50}>
                     <Button
                       icon={<CalculatorOutlined />}
@@ -259,21 +261,21 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
               columns={resultColumns}
               pagination={false}
               dataSource={
-                results
-                  ? results.map((result) => ({
+                resultsState
+                  ? resultsState.map((result) => ({
                       name: result.name,
                       percentage: `${result.percentage.toFixed(1)}%`,
                       ml: `${result.ml.toFixed(1)} ml`,
                       drips: result.drips.toFixed(0),
-                      price: `${result.price.toFixed(2)}${(<Typography>$</Typography>)}`,
-                      weight: `${result.weight.toFixed(3)} ${(<Typography>g</Typography>)}`,
+                      price: `${result.price.toFixed(2)}$`,
+                      weight: `${result.weight.toFixed(3)}g`,
                     }))
                   : []
               }
             />
 
             <div className={styles.chartPanel}>
-              {results && <LiquidResultsChart results={results} />}
+              {resultsState && <LiquidResultsChart results={resultsState} />}
             </div>
           </Card>
         </Col>
@@ -283,7 +285,4 @@ const LiquidBlender: React.FC<LiquidBlenderProps> = ({
   );
 };
 
-export default connect(({ liquid, user }: ConnectState) => ({
-  liquid,
-  user: user.currentUser,
-}))(LiquidBlender);
+export default LiquidBlender;

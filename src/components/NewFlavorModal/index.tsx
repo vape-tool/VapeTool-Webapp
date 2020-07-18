@@ -1,29 +1,23 @@
 import { Form, Input, InputNumber, Modal, message } from 'antd';
 import * as React from 'react';
-import { connect, FormattedMessage, useIntl } from 'umi';
+import { FormattedMessage, useIntl, useModel } from 'umi';
 import { Flavor } from '@vapetool/types';
-import { ConnectProps, ConnectState } from '@/models/connect';
-import { dispatchAddFlavor, dispatchHideNewFlavorModal } from '@/models/liquid';
 
-interface NewFlavorModalProps extends ConnectProps {
-  showNewFlavorModal?: boolean;
-}
-
-const NewFlavorModal: React.FC<NewFlavorModalProps> = (props) => {
-  const { showNewFlavorModal, dispatch } = props;
+const NewFlavorModal = () => {
+  const { addFlavor, hideFlavorModal, showNewFlavorModal } = useModel('liquid');
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
     const { name, manufacturer, percentage, price, ratio } = values;
     form.resetFields();
-    dispatchAddFlavor(dispatch, new Flavor({ name, manufacturer, percentage, price, ratio }));
-    dispatchHideNewFlavorModal(dispatch);
+    addFlavor([new Flavor({ name, manufacturer, percentage, price, ratio })]);
+    hideFlavorModal();
   };
 
   const onFinishFailed = (e: any) => {
     message.error(e.message);
   };
 
-  const onCancel = () => dispatchHideNewFlavorModal(dispatch);
+  const onCancel = () => hideFlavorModal();
 
   const formItemLayout = {
     labelCol: {
@@ -110,6 +104,4 @@ const NewFlavorModal: React.FC<NewFlavorModalProps> = (props) => {
   );
 };
 
-export default connect(({ liquid: { showNewFlavorModal } }: ConnectState) => ({
-  showNewFlavorModal,
-}))(NewFlavorModal);
+export default NewFlavorModal;
