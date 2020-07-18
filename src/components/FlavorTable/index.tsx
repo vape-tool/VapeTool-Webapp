@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, InputNumber, message, Popconfirm, Table } from 'antd';
 import { Flavor } from '@vapetool/types';
-import { connect, FormattedMessage } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectProps, ConnectState } from '@/models/connect';
-import { LiquidModelState, dispatchSetFlavor } from '@/models/liquid';
 import { DeleteOutlined, EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 type Column = 'name' | 'manufacturer' | 'percentage' | 'price' | 'ratio';
@@ -18,7 +16,7 @@ interface EditableCellProps {
   children: React.ReactNode;
 }
 
-const EditableCell: React.FC<EditableCellProps> = props => {
+const EditableCell: React.FC<EditableCellProps> = (props) => {
   const getInput = (initialValue?: any) => {
     switch (props.dataIndex) {
       case 'price':
@@ -57,12 +55,8 @@ const EditableCell: React.FC<EditableCellProps> = props => {
   );
 };
 
-interface EditableTableProps extends ConnectProps {
-  liquid: LiquidModelState;
-}
-
-const EditableTable: React.FC<EditableTableProps> = props => {
-  const { liquid, dispatch } = props;
+const EditableTable = () => {
+  const { setFlavor, removeFlavor, currentLiquid } = useModel('liquid');
   const [form] = Form.useForm();
   const [editingFlavor, setEditingFlavor] = useState('');
   const isEditing = (flavor: Flavor) => flavor.uid === editingFlavor;
@@ -78,16 +72,13 @@ const EditableTable: React.FC<EditableTableProps> = props => {
     if (editingFlavor === uid) {
       cancel();
     }
-    dispatch({
-      type: 'liquid/removeFlavor',
-      payload: uid,
-    });
+    removeFlavor(uid);
   };
 
   const save = async (uid: string) => {
     try {
       const row = await form.validateFields();
-      dispatchSetFlavor(dispatch, uid, row);
+      setFlavor(uid, row);
       cancel();
     } catch (e) {
       message.error(e.message);
@@ -161,7 +152,7 @@ const EditableTable: React.FC<EditableTableProps> = props => {
     },
   ];
 
-  const mergedColumns = columns.map(col => {
+  const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -181,9 +172,9 @@ const EditableTable: React.FC<EditableTableProps> = props => {
       <Table
         components={components}
         bordered
-        dataSource={liquid.currentLiquid.flavors}
+        dataSource={currentLiquid.flavors}
         columns={mergedColumns}
-        rowKey={flavor => flavor.uid}
+        rowKey={(flavor) => flavor.uid}
         rowClassName="editable-row"
         pagination={false}
       />
@@ -191,6 +182,4 @@ const EditableTable: React.FC<EditableTableProps> = props => {
   );
 };
 
-export default connect(({ liquid }: ConnectState) => ({
-  liquid,
-}))(EditableTable);
+export default EditableTable;
