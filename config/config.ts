@@ -1,10 +1,12 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
-import routes from './routes'
+import routes from './routes';
 import defaultSettings from './defaultSettings';
 
 export default defineConfig({
   hash: true,
+  base: '/',
+  publicPath: '/',
   antd: {},
   dva: {
     hmr: true,
