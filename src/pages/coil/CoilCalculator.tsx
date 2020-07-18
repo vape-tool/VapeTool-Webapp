@@ -1,27 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, message } from 'antd';
-import { connect, FormattedMessage } from 'umi';
+import { connect, FormattedMessage, useModel } from 'umi';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { Coil as CoilType } from '@/types';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
-import {
-  CALCULATE_FOR_RESISTANCE,
-  CALCULATE_FOR_WRAPS,
-  COIL,
-  dispatchAddWire,
-  dispatchDeleteWire,
-  dispatchSetCoilType,
-  dispatchSetWire,
-  Path,
-  SET_INNER_DIAMETER,
-  SET_LEGS_LENGTH,
-  SET_RESISTANCE,
-  SET_SETUP,
-  SET_VOLTAGE,
-  SET_WRAPS,
-} from '@/models/coil';
 import {
   CalculatorOutlined,
   LockFilled,
@@ -35,6 +19,7 @@ import { CurrentUser } from '@/app';
 import { saveCoil } from '@/services/items';
 import SaveModal from '@/components/SaveModal';
 import { sendRequest } from '@/services/coil';
+import { Path } from '@/models/coil';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -57,41 +42,53 @@ enum Field {
   VOLTAGE = 'VOLTAGE',
 }
 
-const FIELD_TO_METHOD_MAP = {
-  [Field.SETUP]: SET_SETUP,
-  [Field.INNER_DIAMETER]: SET_INNER_DIAMETER,
-  [Field.LEGS_LENGTH]: SET_LEGS_LENGTH,
-  [Field.RESISTANCE]: SET_RESISTANCE,
-  [Field.WRAPS]: SET_WRAPS,
-  [Field.VOLTAGE]: SET_VOLTAGE,
-};
+const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  const isPro = isProUser(currentUser?.subscription);
 
-const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
-  const { dispatch, coil, properties, baseVoltage, isPro, user } = props;
+  const {
+    currentCoil,
+    properties,
+    baseVoltage,
+    setCoilType,
+    setBaseVoltage,
+    setSetup,
+    setInnerDiameter,
+    setLegsLength,
+    setResistance,
+    setWraps,
+    calculateForResistance,
+    calculateForWraps,
+    addWire,
+    deleteWire,
+    setWire,
+  } = useModel('coil');
 
   const [lastEdit, setLastEdit] = useState('resistance');
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
-  if (!dispatch) {
-    return <div />;
-  }
-
-  const onValueChanged = (field: Field) => (value?: number) => {
+  const onValueChanged = (field: Field) => (value?: number | string) => {
     if (field === Field.WRAPS || field === Field.RESISTANCE) {
       setLastEdit(field);
     }
 
     if (value !== undefined && !Number.isNaN(value)) {
-      dispatch({
-        type: `${COIL}/${FIELD_TO_METHOD_MAP[field]}`,
-        payload: value,
-      });
+      const FIELD_TO_METHOD_MAP = {
+        [Field.SETUP]: setSetup,
+        [Field.INNER_DIAMETER]: setInnerDiameter,
+        [Field.LEGS_LENGTH]: setLegsLength,
+        [Field.RESISTANCE]: setResistance,
+        [Field.WRAPS]: setWraps,
+        [Field.VOLTAGE]: setBaseVoltage,
+      };
+      FIELD_TO_METHOD_MAP[field](Number(value));
     }
   };
 
-  const onSetupChange = ({ key }: { key: string }) => onValueChanged(Field.SETUP)(Number(key));
+  const onSetupChange = ({ key }: { key: string }) => onValueChanged(Field.SETUP)(key);
   const onInnerDiameterChange = onValueChanged(Field.INNER_DIAMETER);
   const onLegsLengthChange = onValueChanged(Field.LEGS_LENGTH);
   const onResistanceChange = onValueChanged(Field.RESISTANCE);
@@ -99,21 +96,15 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
 
   const calculate = (): void => {
     if (lastEdit === Field.WRAPS) {
-      dispatch({
-        type: `${COIL}/${CALCULATE_FOR_RESISTANCE}`,
-        coil,
-      });
+      calculateForResistance();
     } else {
       // default
-      dispatch({
-        type: `${COIL}/${CALCULATE_FOR_WRAPS}`,
-        coil,
-      });
+      calculateForWraps();
     }
   };
 
-  const onBaseVoltageChange = (value?: number) => {
-    onValueChanged(Field.VOLTAGE)(value);
+  const onBaseVoltageChange = (value?: number | string) => {
+    onValueChanged(Field.VOLTAGE)(Number(value));
     calculate();
   };
 
@@ -121,23 +112,22 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
     setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
   };
 
-  const handleWireTypeChange = (type: number, path: Path[]): void =>
-    dispatchSetCoilType(dispatch, type, path);
-  const handleAddWire = (path: Path[], wire: Wire) => dispatchAddWire(dispatch, path, wire);
-  const handleSetWire = (path: Path[], wire: Wire) => dispatchSetWire(dispatch, path, wire);
-  const handleDeleteWire = (path: Path[]) => dispatchDeleteWire(dispatch, path);
+  const handleWireTypeChange = (type: number, path: Path[]): void => setCoilType(type, path);
+  const handleAddWire = (path: Path[], wire: Wire) => addWire(wire, path);
+  const handleSetWire = (path: Path[], wire: Wire) => setWire(wire, path);
+  const handleDeleteWire = (path: Path[]) => deleteWire(path);
 
   const validateAndSaveCoil = async (name: string, description?: string) => {
     const res = await sendRequest(
       lastEdit === 'resistance' ? 'wraps' : 'resistance',
-      coil as CoilType,
+      currentCoil as CoilType,
     );
     if (res instanceof Response && !res.ok) {
       message.error("Couldn't save coil");
       return;
     }
-    if (user && user.uid && user.name) {
-      saveCoil(coil, new Author(user.uid, user.name), name, description || '');
+    if (currentUser && currentUser.uid && currentUser.name) {
+      saveCoil(currentCoil, new Author(currentUser.uid, currentUser.name), name, description || '');
     } else {
       throw new Error('Can not save with undefined user ');
     }
@@ -186,7 +176,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
         <Col xs={24}>
           <label>
             <FormattedMessage id="coilCalculator.inputs.setup" />
-            <Select defaultValue={`${coil.setup}`} onChange={onSetupChange}>
+            <Select defaultValue={`${currentCoil.setup}`} onChange={onSetupChange}>
               <Option value="1">Single Coil (1)</Option>
               <Option value="2">Dual Coil (2)</Option>
               <Option value="3">Triple Coil (3)</Option>
@@ -206,8 +196,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
               min={0.0}
               step={0.1}
               precision={1}
-              defaultValue={coil.innerDiameter}
-              value={coil.innerDiameter}
+              defaultValue={currentCoil.innerDiameter}
+              value={currentCoil.innerDiameter}
               onChange={onInnerDiameterChange}
             />
           </label>
@@ -220,7 +210,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
               min={0.0}
               step={1}
               precision={0}
-              value={coil.legsLength}
+              value={currentCoil.legsLength}
               onChange={onLegsLengthChange}
             />
           </label>
@@ -235,7 +225,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
                   min={0.0}
                   step={0.05}
                   precision={3}
-                  value={coil.resistance}
+                  value={currentCoil.resistance}
                   onChange={onResistanceChange}
                 />
               </label>
@@ -250,7 +240,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
                   min={0}
                   step={1}
                   precision={0}
-                  value={coil.wraps}
+                  value={currentCoil.wraps}
                   onChange={onWrapsChange}
                 />
               </label>
@@ -281,7 +271,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
   const coilSchema = (
     <Card title={<Title level={4}>Type</Title>} style={{ height: '100%' }}>
       <ComplexWire
-        complexWire={coil}
+        complexWire={currentCoil}
         path={[]}
         isPro={isPro}
         onSetWireType={handleWireTypeChange}
@@ -313,10 +303,4 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = (props) => {
   );
 };
 
-export default connect(({ coil, user }: ConnectState) => ({
-  coil: coil.currentCoil,
-  properties: coil.properties,
-  baseVoltage: coil.baseVoltage,
-  isPro: isProUser(user.currentUser),
-  user: user.currentUser,
-}))(CoilCalculator);
+export default CoilCalculator;

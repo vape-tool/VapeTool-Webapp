@@ -1,7 +1,6 @@
-import { Properties } from '@vapetool/types';
+import { Properties, Coil } from '@vapetool/types';
 import { request } from 'umi';
 import { auth } from '@/utils/firebase';
-import { Coil } from '@/types';
 
 export function calculateForWraps(coil: Coil): Promise<Coil> {
   return sendRequest('wraps', coil);
