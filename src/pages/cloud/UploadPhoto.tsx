@@ -1,31 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Card, Input } from 'antd';
-import { connect, useIntl, FormattedMessage } from 'umi';
-import {
-  CroppedImage,
-  dispatchSetCroppedImage,
-  dispatchSetDescription,
-  SUBMIT,
-  submitPhoto,
-  UPLOAD_PHOTO,
-  UploadPhotoState,
-} from '@/models/uploadPhoto';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import UploadAndCropImage from '@/components/UploadAndCropImage';
 import { CaretLeftOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CurrentUser } from '@/app';
 
-interface UploadPhotoProps extends ConnectProps {
-  uploadPhoto: UploadPhotoState;
-  showPhotoChooser: boolean;
-  submitting?: boolean;
-}
-
-const UploadPhoto: React.FC<UploadPhotoProps> = (props) => {
-  const { dispatch } = props;
-
+const UploadPhoto: React.FC = () => {
+  const { description, setDescription, submitPhoto, croppedImage, setCroppedImage } = useModel(
+    'uploadPhoto',
+  );
   const [isCropping, setIsCropping] = useState(true);
-  const [croppedImage, setCroppedImage] = useState<CroppedImage>({});
-  const [description, setDescription] = useState('');
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser as CurrentUser;
 
   const onResizeImage = (
     imageUrl: string,
@@ -42,9 +28,7 @@ const UploadPhoto: React.FC<UploadPhotoProps> = (props) => {
   };
 
   const postPhoto = () => {
-    dispatchSetCroppedImage(dispatch, croppedImage);
-    dispatchSetDescription(dispatch, description);
-    submitPhoto(dispatch);
+    submitPhoto(currentUser);
   };
 
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +94,4 @@ const UploadPhoto: React.FC<UploadPhotoProps> = (props) => {
   );
 };
 
-export default connect(({ uploadPhoto, loading }: ConnectState) => ({
-  uploadPhoto,
-  submitting: loading.effects[`${UPLOAD_PHOTO}/${SUBMIT}`],
-}))(UploadPhoto);
+export default UploadPhoto;

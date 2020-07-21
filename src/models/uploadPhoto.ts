@@ -1,9 +1,10 @@
-import { Effect, Dispatch, Reducer, history } from 'umi';
+import { history } from 'umi';
 import ReactCrop from 'react-image-crop';
 import { Author } from '@vapetool/types';
 import { message } from 'antd';
-import { ConnectState } from '@/models/connect';
 import { createPhoto } from '@/services/items';
+import { useState } from 'react';
+import { CurrentUser } from '@/app';
 
 export const UPLOAD_PHOTO = 'uploadPhoto';
 export const SET_SRC = 'setSrc';
@@ -22,28 +23,6 @@ export interface CroppedImage {
   height?: number;
 }
 
-export function dispatchSetCroppedImage(
-  dispatch: Dispatch,
-  { imageUrl, imageBlob, width, height }: CroppedImage,
-) {
-  dispatch({
-    type: `${UPLOAD_PHOTO}/${SET_CROPPED_IMAGE}`,
-    url: imageUrl,
-    blob: imageBlob,
-    width,
-    height,
-  });
-}
-
-export function dispatchSetDescription(dispatch: Dispatch, description: string) {
-  dispatch({
-    type: `${UPLOAD_PHOTO}/${SET_DESCRIPTION}`,
-    description,
-  });
-}
-
-export const submitPhoto = (dispatch: Dispatch) => dispatch({ type: `${UPLOAD_PHOTO}/${SUBMIT}` });
-
 export interface UploadPhotoState {
   src?: string;
   crop?: ReactCrop.Crop;
@@ -56,121 +35,74 @@ export interface UploadPhotoState {
   cancelled?: boolean;
 }
 
-export interface ModelType {
-  namespace: string;
-  state: UploadPhotoState;
-  effects: {
-    submit: Effect;
+export default function UploadPhotoModel() {
+  const [src, setSrc] = useState<string | undefined>(undefined);
+  const [crop, setCrop] = useState<ReactCrop.Crop | undefined>(undefined);
+  const [croppedImage, setCroppedImage] = useState<CroppedImage>({});
+  const [croppedImageUrl, setCroppedImageUrl] = useState<string | undefined>(undefined);
+  const [croppedImageBlob, setCroppedImageBlob] = useState<Blob | File | undefined>(undefined);
+  const [description, setDescription] = useState<string>('');
+  const [width, setWidth] = useState<number | undefined>(undefined);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const [showPhotoChooser, setShowPhotoChooser] = useState<boolean>(false);
+  const [cancelled, setCancelled] = useState<boolean>(false);
+
+  const reset = () => {
+    setSrc(undefined);
+    setCrop(undefined);
+    setCroppedImageUrl(undefined);
+    setCroppedImageBlob(undefined);
+    setDescription('');
+    setWidth(undefined);
+    setHeight(undefined);
   };
-  reducers: {
-    [SET_SRC]: Reducer<UploadPhotoState>;
-    [SET_CROP]: Reducer<UploadPhotoState>;
-    [SET_CROPPED_IMAGE]: Reducer<UploadPhotoState>;
-    [RESET]: Reducer<UploadPhotoState>;
-    [SET_DESCRIPTION]: Reducer<UploadPhotoState>;
-    [SHOW_PHOTO_CHOOSER]: Reducer<UploadPhotoState>;
-    [HIDE_PHOTO_CHOOSER]: Reducer<UploadPhotoState>;
+
+  const submitPhoto = async (currentUser: CurrentUser) => {
+    Object.create({
+      croppedImageBlob,
+      description,
+      width,
+      height,
+    });
+    try {
+      const author = new Author(currentUser.uid, currentUser.display_name);
+      await createPhoto(
+        croppedImage.imageBlob,
+        description,
+        author,
+        croppedImage.height,
+        croppedImage.width,
+      );
+      message.success('Successfully published cloud');
+      reset();
+      history.replace({ pathname: '/cloud' });
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  return {
+    src,
+    setSrc,
+    crop,
+    setCrop,
+    croppedImage,
+    setCroppedImage,
+    croppedImageUrl,
+    setCroppedImageUrl,
+    croppedImageBlob,
+    setCroppedImageBlob,
+    description,
+    setDescription,
+    width,
+    setWidth,
+    height,
+    setHeight,
+    showPhotoChooser,
+    setShowPhotoChooser,
+    cancelled,
+    setCancelled,
+    reset,
+    submitPhoto,
   };
 }
-
-// TODO consider merging with uploadPost
-const Model: ModelType = {
-  namespace: UPLOAD_PHOTO,
-
-  state: {
-    src: undefined,
-    crop: undefined,
-    croppedImageUrl: undefined,
-    croppedImageBlob: undefined,
-    description: undefined,
-    width: undefined,
-    height: undefined,
-  },
-
-  effects: {
-    *submit(_, { put, call, select }) {
-      const { uid, name } = yield select((state: ConnectState) => state.user.currentUser);
-
-      const { croppedImageBlob, description, width, height } = yield select((state: ConnectState) =>
-        Object.create({
-          croppedImageBlob: state.uploadPhoto.croppedImageBlob,
-          description: state.uploadPhoto.description,
-          width: state.uploadPhoto.width,
-          height: state.uploadPhoto.height,
-        }),
-      );
-
-      try {
-        yield call(
-          createPhoto,
-          croppedImageBlob,
-          description,
-          new Author(uid, name),
-          width,
-          height,
-        );
-        message.success('Successfully published cloud');
-        yield put({ type: 'reset' });
-        yield put(history.replace({ pathname: '/cloud' }));
-      } catch (e) {
-        message.error('Failed upload cloud to cloud');
-      }
-    },
-  },
-
-  reducers: {
-    setSrc(state, { src }) {
-      return {
-        ...state,
-        src,
-      };
-    },
-    setCrop(state, { crop }) {
-      return {
-        ...state,
-        crop,
-      };
-    },
-    setCroppedImage(state, { url, blob, width, height }) {
-      return {
-        ...state,
-        croppedImageUrl: url,
-        croppedImageBlob: blob,
-        width,
-        height,
-        showPhotoChooser: false,
-      };
-    },
-    setDescription(state, { description }) {
-      return {
-        ...state,
-        description,
-      };
-    },
-    reset() {
-      return {
-        src: undefined,
-        croppedImageUrl: undefined,
-        croppedImageBlob: undefined,
-        crop: undefined,
-        height: undefined,
-        width: undefined,
-      };
-    },
-    showPhotoChooser(state) {
-      return {
-        ...state,
-        showPhotoChooser: true,
-      };
-    },
-    hidePhotoChooser(state) {
-      return {
-        ...state,
-        showPhotoChooser: false,
-        cancelled: true,
-      };
-    },
-  },
-};
-
-export default Model;

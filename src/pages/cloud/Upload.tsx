@@ -1,20 +1,14 @@
 import { Col, Row, Tabs } from 'antd';
 import React from 'react';
-import { connect, Dispatch, FormattedMessage } from 'umi';
-import { ConnectState } from '@/models/connect';
+import { FormattedMessage, useModel } from 'umi';
 import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
-import { Tab, changeTab } from '@/models/upload';
+import { Tab } from '@/models/upload';
 import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
 
-interface UploadProps {
-  currentTab: string;
-  dispatch: Dispatch;
-}
-
-const Upload: React.FC<UploadProps> = props => {
-  const { dispatch, currentTab } = props;
-  const onTabChange = changeTab(dispatch);
+const Upload: React.FC = () => {
+  const { currentTab } = useModel('upload');
+  const onTabChange = (key: string) => console.log(key);
 
   return (
     <Row>
@@ -61,4 +55,4 @@ const Upload: React.FC<UploadProps> = props => {
   );
 };
 
-export default connect(({ upload }: ConnectState) => ({ currentTab: upload.currentTab }))(Upload);
+export default Upload;
