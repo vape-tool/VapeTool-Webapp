@@ -3,22 +3,28 @@ import AwgConverter from '@/pages/converters/AwgConverter';
 import InchConverter from '@/pages/converters/InchConverter';
 import TempConverter from '@/pages/converters/TempConverter';
 import { Col, Row } from 'antd';
-
+import { PageContainer } from '@ant-design/pro-layout';
 
 const Converters: React.FC = () => (
-  <Row gutter={[16, 16]}>
-    <Col xs={24} md={24} lg={8}>
-      <AwgConverter />
-    </Col>
+  <PageContainer>
+    <Row justify="center" gutter={32}>
+      <Col xs={24} sm={20} md={22}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={24} lg={8}>
+            <AwgConverter />
+          </Col>
 
-    <Col xs={24} md={24} lg={8}>
-      <InchConverter />
-    </Col>
+          <Col xs={24} md={24} lg={8}>
+            <InchConverter />
+          </Col>
 
-    <Col xs={24} md={24} lg={8}>
-      <TempConverter />
-    </Col>
-  </Row>
+          <Col xs={24} md={24} lg={8}>
+            <TempConverter />
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  </PageContainer>
 );
 
 export default Converters;
