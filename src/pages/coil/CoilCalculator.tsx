@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, message } from 'antd';
-import { connect, FormattedMessage, useModel } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { Coil as CoilType } from '@/types';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectProps } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
 import {
@@ -20,6 +20,7 @@ import { saveCoil } from '@/services/items';
 import SaveModal from '@/components/SaveModal';
 import { sendRequest } from '@/services/coil';
 import { Path } from '@/models/coil';
+import { PageContainer } from '@ant-design/pro-layout';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -284,22 +285,26 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
   );
 
   return (
-    <div>
-      <CoilHelper
-        setSlider={setSlider}
-        helpModalVisible={helpModalVisibile}
-        setHelpModalVisible={setHelpModalVisible}
-        slider={slider}
-      />
-      <Row style={{}} justify="center">
-        <Col xs={{ span: 24, order: 2 }} xl={{ span: 8, order: 1 }}>
-          {coilSetup}
-        </Col>
-        <Col xs={{ span: 24, order: 1 }} xl={{ span: 16, order: 2 }}>
-          {coilSchema}
+    <PageContainer>
+      <Row justify="center" gutter={32}>
+        <Col xs={24} sm={20} md={20}>
+          <CoilHelper
+            setSlider={setSlider}
+            helpModalVisible={helpModalVisibile}
+            setHelpModalVisible={setHelpModalVisible}
+            slider={slider}
+          />
+          <Row style={{}} justify="center">
+            <Col xs={{ span: 24, order: 2 }} xl={{ span: 8, order: 1 }}>
+              {coilSetup}
+            </Col>
+            <Col xs={{ span: 24, order: 1 }} xl={{ span: 16, order: 2 }}>
+              {coilSchema}
+            </Col>
+          </Row>
         </Col>
       </Row>
-    </div>
+    </PageContainer>
   );
 };
 

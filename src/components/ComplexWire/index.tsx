@@ -45,10 +45,10 @@ const ComplexWire: React.FC<WireComponentProps> = ({
       <Select
         size="large"
         value={WireType[complexWire.type]}
-        style={{ width: 400 }}
+        style={{ width: '100%', maxWidth: 400 }}
         onChange={handleTypeChange}
       >
-        {types.map(type => (
+        {types.map((type) => (
           <Option
             key={type.name}
             value={type.name}
