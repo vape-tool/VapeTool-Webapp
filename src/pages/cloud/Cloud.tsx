@@ -12,6 +12,7 @@ import LinkView from '@/components/ItemView/LinkView';
 import { subscribeLinks, subscribePhotos, subscribePosts } from '@/services/items';
 import { redirectToWithFootprint } from '@/models/global';
 import { PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
 
 interface AuthComponentProps extends ConnectProps {
   photos: Array<Photo>;
@@ -34,7 +35,7 @@ const Cloud: React.FC<AuthComponentProps> = (props) => {
     (a, b) => Number(b.creationTime) - Number(a.creationTime),
   );
   return (
-    <div>
+    <PageContainer>
       <List<Photo | Post | Link>
         className={styles.coverCardList}
         style={{ maxWidth: 614, margin: '0 auto' }}
@@ -64,7 +65,7 @@ const Cloud: React.FC<AuthComponentProps> = (props) => {
           onClick={onUploadPhotoClicked}
         />
       </Affix>
-    </div>
+    </PageContainer>
   );
 };
 
