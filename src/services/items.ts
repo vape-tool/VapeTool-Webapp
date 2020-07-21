@@ -201,11 +201,12 @@ export async function createLink(title: string, url: string, author: Author): Pr
 }
 
 export async function createPhoto(
-  imageBlob: Blob | File,
+  // every argument shouldn't be undefined, but i prefer handling exceptions there
+  imageBlob: Blob | File | undefined,
   description: string,
   author: Author,
-  width: number,
-  height: number,
+  width: number | undefined,
+  height: number | undefined,
 ): Promise<string> {
   if (!author || !author.uid || !author.displayName) {
     throw new Error('Author can not be null');

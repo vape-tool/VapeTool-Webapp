@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Affix, Button, List } from 'antd';
-import { useModel } from 'umi';
-import { ConnectProps } from '@/models/connect';
+import { useModel, history } from 'umi';
 import styles from '@/components/ItemView/styles.less';
 import { PhotoView } from '@/components/ItemView';
 import PhotoPreviewModal from '@/components/PreviewModal';
@@ -10,18 +9,12 @@ import { Link, Photo, Post } from '@/types';
 import PageLoading from '@/components/PageLoading';
 import LinkView from '@/components/ItemView/LinkView';
 import { subscribeLinks, subscribePhotos, subscribePosts } from '@/services/items';
-import { redirectToWithFootprint } from '@/models/global';
+
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 
-interface AuthComponentProps extends ConnectProps {
-  photos: Array<Photo>;
-  posts: Array<Post>;
-  links: Array<Link>;
-}
-
-const Cloud: React.FC<AuthComponentProps> = (props) => {
-  const onUploadPhotoClicked = () => redirectToWithFootprint(props.dispatch, '/cloud/upload');
+const Cloud: React.FC = () => {
+  const onUploadPhotoClicked = () => history.push('/cloud/upload');
   const { setLinks, setPhotos, setPosts, posts, links, photos } = useModel('cloud');
 
   useEffect(() => subscribeLinks(setLinks), []);
