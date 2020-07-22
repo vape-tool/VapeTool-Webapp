@@ -5,22 +5,22 @@ import { ShareAltOutlined } from '@ant-design/icons/lib';
 import { useIntl, FormattedMessage, useModel } from 'umi';
 import { CurrentUser } from '@/app';
 
-const UploadPost: React.FC = () => {
+const UploadLink: React.FC = () => {
   const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
-  const { setTitle, setText, submitPost } = useModel('uploadPost');
+  const { setUrl, setText, submitLink } = useModel('uploadLink');
 
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser as CurrentUser;
 
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+  const onUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value);
   const onTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value);
-  const onPostClick = () => submitPost(currentUser);
+  const onPostClick = () => submitLink(currentUser);
 
   return (
     <Card style={{ textAlign: 'center' }}>
       <Input
-        placeholder={useIntl().formatMessage({ id: 'misc.title' })}
-        onChange={onTitleChange}
+        placeholder={useIntl().formatMessage({ id: 'misc.url' })}
+        onChange={onUrlChange}
         style={{ marginBottom: 24 }}
       />
       <Input.TextArea
@@ -33,11 +33,11 @@ const UploadPost: React.FC = () => {
       />
       <Editor editorState={editorState} onChange={setEditorState} />
       <Button type="primary" onClick={onPostClick}>
-        <FormattedMessage id="user.actions.publishPost" defaultMessage="Publish post" />{' '}
+        <FormattedMessage id="user.actions.publishLink" defaultMessage="Publish link" />{' '}
         <ShareAltOutlined />
       </Button>
     </Card>
   );
 };
 
-export default UploadPost;
+export default UploadLink;

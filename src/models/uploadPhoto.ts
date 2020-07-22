@@ -73,7 +73,7 @@ export default function UploadPhotoModel() {
         croppedImage.height,
         croppedImage.width,
       );
-      message.success('Successfully published cloud');
+      message.success('Successfully published photo');
       reset();
       history.replace({ pathname: '/cloud' });
     } catch (e) {
