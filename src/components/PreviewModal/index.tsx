@@ -22,19 +22,11 @@ const ItemPreviewModal: React.FC = () => {
     );
   } else if (selectedItem.$type === 'post') {
     content = (
-      <PostView
-        item={selectedItem as Post}
-        currentUser={currentUser}
-        displayCommentsLength={Number.MAX_SAFE_INTEGER}
-      />
+      <PostView item={selectedItem as Post} displayCommentsLength={Number.MAX_SAFE_INTEGER} />
     );
   } else {
     content = (
-      <LinkView
-        item={selectedItem as Link}
-        currentUser={currentUser}
-        displayCommentsLength={Number.MAX_SAFE_INTEGER}
-      />
+      <LinkView item={selectedItem as Link} displayCommentsLength={Number.MAX_SAFE_INTEGER} />
     );
   }
   return (

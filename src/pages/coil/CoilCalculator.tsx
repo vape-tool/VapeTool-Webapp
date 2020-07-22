@@ -3,7 +3,6 @@ import { Button, Card, Col, InputNumber, Row, Select, Typography, Carousel, mess
 import { FormattedMessage, useModel } from 'umi';
 import { Coil, Properties, Wire, Author } from '@vapetool/types';
 import { Coil as CoilType } from '@/types';
-import { ConnectProps } from '@/models/connect';
 import ComplexWire from '@/components/ComplexWire';
 import PropertyItem from '@/components/PropertyItem';
 import {
@@ -26,7 +25,7 @@ import styles from './styles.less';
 const { Option } = Select;
 const { Title } = Typography;
 
-export interface CoilCalculatorProps extends ConnectProps {
+export interface CoilCalculatorProps {
   coil: Coil;
   properties?: Properties;
   baseVoltage: number;
@@ -89,7 +88,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
     }
   };
 
-  const onSetupChange = ({ key }: { key: string }) => onValueChanged(Field.SETUP)(key);
+  const onSetupChange = (value: string) => onValueChanged(Field.SETUP)(value);
   const onInnerDiameterChange = onValueChanged(Field.INNER_DIAMETER);
   const onLegsLengthChange = onValueChanged(Field.LEGS_LENGTH);
   const onResistanceChange = onValueChanged(Field.RESISTANCE);

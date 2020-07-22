@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, FormattedMessage, useModel, useIntl } from 'umi';
-import { ConnectState } from '@/models/connect';
+import { FormattedMessage, useModel, useIntl } from 'umi';
 import { SwapOutlined } from '@ant-design/icons';
 import styles from './converters.less';
 
@@ -59,6 +58,4 @@ const AwgConverter: React.FC = () => {
   );
 };
 
-export default connect(({ converter }: ConnectState) => ({
-  converter,
-}))(AwgConverter);
+export default AwgConverter;

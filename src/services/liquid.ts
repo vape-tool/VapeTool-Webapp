@@ -1,6 +1,6 @@
 import { request } from 'umi';
 import { auth } from '@/utils/firebase';
-import { Liquid } from '@/types';
+import { Liquid } from '@vapetool/types';
 
 export async function calculateResults(liquid: Liquid): Promise<any> {
   if (!auth.currentUser) {

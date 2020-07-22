@@ -1,5 +1,6 @@
 import { identity, nanToUndefined, safeConvert } from '@/utils/utils';
 import { useState } from 'react';
+import { message } from 'antd';
 
 const INCHES_TO_MM_FACTOR = 0.03937;
 
@@ -9,7 +10,11 @@ export default () => {
   const [nominator, setNominator] = useState<number | undefined>(undefined);
   const [denominator, setDenominator] = useState<number | undefined>(undefined);
 
-  const reduceNominator = (nominatorStr: string) => {
+  const reduceNominator = (nominatorStr: string | number | undefined) => {
+    if (!nominatorStr) {
+      message.error('Nominator is not defined');
+      return;
+    }
     const newNominator = nanToUndefined(nominatorStr);
     const newDenominator = denominator ? Number(denominator) : undefined;
     const newInch = newNominator && newDenominator ? newNominator / newDenominator : undefined;
@@ -20,7 +25,11 @@ export default () => {
     setMm(safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [newInch], 3));
   };
 
-  const reduceDenominator = (denominatorStr: string) => {
+  const reduceDenominator = (denominatorStr: string | number | undefined) => {
+    if (!denominatorStr) {
+      message.error('Denominator is not defined');
+      return;
+    }
     const newDenominator = nanToUndefined(denominatorStr);
     const newNominator = nominator ? Number(nominator) : undefined;
     const newInch = newNominator && newDenominator ? newNominator / newDenominator : undefined;
@@ -31,7 +40,11 @@ export default () => {
     setMm(safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [newInch], 3));
   };
 
-  const reduceInch = (inchStr: string) => {
+  const reduceInch = (inchStr: string | number | undefined) => {
+    if (!inchStr) {
+      message.error('Inch is not defined');
+      return;
+    }
     const newInch = nanToUndefined(inchStr);
     setInch(newInch);
     setNominator(undefined);
@@ -39,7 +52,11 @@ export default () => {
     setMm(safeConvert(([_inch]) => _inch / INCHES_TO_MM_FACTOR, [newInch], 3));
   };
 
-  const reduceMm = (mmStr: string) => {
+  const reduceMm = (mmStr: string | number | undefined) => {
+    if (!mmStr) {
+      message.error('"mm" is not defined');
+      return;
+    }
     const newMm = nanToUndefined(mmStr);
     setNominator(undefined);
     setDenominator(undefined);
