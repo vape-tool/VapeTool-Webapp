@@ -22,7 +22,8 @@ const LoginSuccess: React.FC = () => {
           // Save user to database
           if (!user) {
             // failed to save to database redirect to /oops
-            return history.push('/oops');
+            history.push('/oops');
+            return;
           }
           // redirect to user wizzard
           history.replace({ pathname: getCurrentUserEditProfileUrl() });

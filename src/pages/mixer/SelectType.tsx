@@ -4,10 +4,10 @@ import { MixableType } from '@vapetool/types';
 
 const { Option } = Select;
 
-export default function(props: any) {
+export default function SelectType(props: any) {
   return (
     <Select
-      onChange={type => {
+      onChange={(type) => {
         props.onChange({
           ...props.mixable,
           type,
