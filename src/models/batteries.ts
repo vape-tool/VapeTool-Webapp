@@ -17,6 +17,7 @@ export default () => {
   useEffect(() => {
     subscribeBatteries(setBatteries);
   }, []);
+
   return {
     setSelectedBattery,
     setEditBattery,

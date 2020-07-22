@@ -1,18 +1,7 @@
-import { Button, Col, Divider, Drawer, Row } from 'antd';
+import { Col, Divider, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
-import { FormattedMessage, Dispatch, useModel } from 'umi';
-import { UserPermission } from '@vapetool/types';
+import { FormattedMessage, useModel } from 'umi';
 import useMedia from 'react-media-hook2';
-import { Battery } from '@/types';
-import AffiliateEditTable from '@/components/AffiliateEditTable';
-import { CurrentUser } from '@/app';
-
-interface BatteryPreviewDrawerProps {
-  dispatch: Dispatch;
-  selectedBattery?: Battery;
-  editBattery?: boolean;
-  user?: CurrentUser;
-}
 
 const pStyle = {
   fontSize: 16,
@@ -23,11 +12,7 @@ const pStyle = {
 };
 
 const BatteryPreviewDrawer = () => {
-  const { setSelectedBattery, setEditBattery, selectedBattery, editBattery } = useModel(
-    'batteries',
-  );
-  const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState || {};
+  const { setSelectedBattery, selectedBattery, editBattery } = useModel('batteries');
 
   const onClose = () => setSelectedBattery(undefined);
 
@@ -52,8 +37,6 @@ const BatteryPreviewDrawer = () => {
       {content}
     </div>
   );
-  const toggleEditBattery = () => setEditBattery(selectedBattery);
-
   const [collapsed, setCollapsed] = useState(false);
   useMedia({ query: { maxWidth: 500 }, onChange: setCollapsed });
 
@@ -202,7 +185,7 @@ const BatteryPreviewDrawer = () => {
             <FormattedMessage id="battery.links" defaultMessage="Links" />
           </span>
         </Col>
-        {currentUser && currentUser.permission >= UserPermission.ONLINE_MODERATOR && (
+        {/* {currentUser && currentUser.permission >= UserPermission.ONLINE_MODERATOR && (
           <Col xs={12}>
             <Button type="link" onClick={toggleEditBattery}>
               <FormattedMessage
@@ -211,7 +194,7 @@ const BatteryPreviewDrawer = () => {
               />
             </Button>
           </Col>
-        )}
+        )} */}
       </Row>
 
       <Row gutter={32}>
@@ -257,7 +240,6 @@ const BatteryPreviewDrawer = () => {
             </Col>
           ))}
       </Row>
-      {editBattery && <AffiliateEditTable />}
     </Drawer>
   );
 };
