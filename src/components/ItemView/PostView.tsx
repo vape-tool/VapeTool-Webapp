@@ -38,7 +38,7 @@ export default function PostView({
         }
       />
       <Actions
-        what={ItemName.LINK}
+        what={ItemName.POST}
         item={item}
         displayCommentsLength={displayCommentsLength}
         unselectItem={unselectItem}
