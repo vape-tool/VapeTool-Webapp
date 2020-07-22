@@ -5,10 +5,11 @@ import UploadPost from '@/components/UploadPost';
 import UploadPhoto from '@/pages/cloud/UploadPhoto';
 import { Tab } from '@/models/upload';
 import { PictureOutlined, LinkOutlined, FormOutlined } from '@ant-design/icons';
+import UploadLink from '@/components/UploadLink';
 
 const Upload: React.FC = () => {
-  const { currentTab } = useModel('upload');
-  const onTabChange = (key: string) => console.log(key);
+  const { currentTab, setTab } = useModel('upload');
+  const onTabChange = (key: string) => setTab(Tab[key]);
 
   return (
     <Row>
@@ -35,7 +36,7 @@ const Upload: React.FC = () => {
             }
             key={Tab.POST}
           >
-            <UploadPost type="post" />
+            <UploadPost />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
@@ -46,7 +47,7 @@ const Upload: React.FC = () => {
             }
             key={Tab.LINK}
           >
-            <UploadPost type="link" />
+            <UploadLink />
           </Tabs.TabPane>
         </Tabs>
       </Col>
