@@ -2,7 +2,7 @@ import { Typography } from 'antd';
 
 import React from 'react';
 
-export default function () {
+export default function Oops() {
   return (
     <div>
       <Typography.Title>Oops</Typography.Title>
