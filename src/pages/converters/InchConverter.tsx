@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Col, InputNumber, Row } from 'antd';
-import { connect, useIntl, FormattedMessage, useModel } from 'umi';
-import { ConnectState } from '@/models/connect';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import { LineOutlined, PauseOutlined, SwapOutlined } from '@ant-design/icons';
 
 import styles from './converters.less';
@@ -18,11 +17,6 @@ const InchConverter: React.FC = () => {
     setDenominator,
   } = useModel('inchMm');
 
-  const onChangeNominator = setNominator;
-  const onChangeDenominator = setDenominator;
-  const onChangeInch = setInch;
-  const onChangeMm = setMm;
-
   return (
     <Card
       title={<FormattedMessage id="converters.titles.inchToMm" defaultMessage="Inches to mm" />}
@@ -38,7 +32,7 @@ const InchConverter: React.FC = () => {
               step={1}
               precision={0}
               value={nominator}
-              onChange={onChangeNominator}
+              onChange={setNominator}
               className={styles.nominator}
             />
 
@@ -52,7 +46,7 @@ const InchConverter: React.FC = () => {
               step={1}
               precision={0}
               value={denominator}
-              onChange={onChangeDenominator}
+              onChange={setDenominator}
               className={styles.denominator}
             />
           </div>
@@ -75,7 +69,7 @@ const InchConverter: React.FC = () => {
               step={0.01}
               value={inch}
               precision={4}
-              onChange={onChangeInch}
+              onChange={setInch}
               placeholder={useIntl().formatMessage({
                 id: 'misc.units.inch',
                 defaultMessage: 'inch',
@@ -102,7 +96,7 @@ const InchConverter: React.FC = () => {
               step={0.01}
               value={mm}
               precision={3}
-              onChange={onChangeMm}
+              onChange={setMm}
               placeholder={useIntl().formatMessage({ id: 'misc.units.mm', defaultMessage: 'mm' })}
               className={styles.input}
             />
@@ -113,6 +107,4 @@ const InchConverter: React.FC = () => {
   );
 };
 
-export default connect(({ converter }: ConnectState) => ({
-  converter,
-}))(InchConverter);
+export default InchConverter;

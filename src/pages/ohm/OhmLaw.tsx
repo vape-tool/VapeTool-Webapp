@@ -1,10 +1,9 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
-import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
+import { Dispatch, useIntl, FormattedMessage } from 'umi';
 import { LockOutlined } from '@ant-design/icons';
 import ButtonGroup from 'antd/es/button/button-group';
-import { ConnectState } from '@/models/connect';
 import {
   clear,
   OhmModelState,
@@ -178,6 +177,4 @@ const OhmLaw: React.FC<OhmLawProps> = (props) => {
   );
 };
 
-export default connect(({ ohm }: ConnectState) => ({
-  ohm,
-}))(OhmLaw);
+export default OhmLaw;

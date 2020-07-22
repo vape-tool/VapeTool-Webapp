@@ -37,13 +37,13 @@ const Cloud: React.FC = () => {
         dataSource={items}
         renderItem={(item) => {
           if (item.$type === 'photo') {
-            return <PhotoView displayCommentsLength={3} item={item} />;
+            return <PhotoView displayCommentsLength={3} item={item as Photo} />;
           }
           if (item.$type === 'post') {
-            return <PostView displayCommentsLength={3} item={item} />;
+            return <PostView displayCommentsLength={3} item={item as Post} />;
           }
           if (item.$type === 'link') {
-            return <LinkView displayCommentsLength={3} item={item} />;
+            return <LinkView displayCommentsLength={3} item={item as Link} />;
           }
           return <div />;
         }}
