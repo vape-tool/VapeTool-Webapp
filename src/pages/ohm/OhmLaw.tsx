@@ -1,45 +1,37 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row } from 'antd';
-import { Dispatch, useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import { LockOutlined } from '@ant-design/icons';
 import ButtonGroup from 'antd/es/button/button-group';
-import {
-  clear,
-  OhmModelState,
-  onChange,
-  SET_CURRENT,
-  SET_POWER,
-  SET_RESISTANCE,
-  SET_VOLTAGE,
-  calculate,
-} from '@/models/ohm';
 import ImageWebp from '@/components/ImageWebp';
 
 const ohmLawWebp = require('@/assets/ohm_law.webp');
 const ohmLawPng = require('@/assets/ohm_law.png');
 
-export interface OhmLawProps {
-  ohm: OhmModelState;
-  dispatch: Dispatch;
-}
-
 // TODO check if not needed adjust to new Form API
-const OhmLaw: React.FC<OhmLawProps> = (props) => {
-  const { dispatch, ohm } = props;
-  const { voltage, resistance, current, power, lastEdit, latestEdit } = ohm;
+const OhmLaw: React.FC = () => {
+  const {
+    onVoltageChange,
+    onResistanceChange,
+    onCurrentChange,
+    onPowerChange,
+    clear,
+    calculate,
+    lastEdit,
+    latestEdit,
+    voltage,
+    current,
+    power,
+    resistance,
+  } = useModel('ohm');
   const lastEdits = [lastEdit, latestEdit];
 
-  const onVoltageChange = onChange(dispatch, SET_VOLTAGE);
-  const onResistanceChange = onChange(dispatch, SET_RESISTANCE);
-  const onCurrentChange = onChange(dispatch, SET_CURRENT);
-  const onPowerChange = onChange(dispatch, SET_POWER);
-
-  const handleClear = () => clear(dispatch);
+  const handleClear = () => clear();
 
   const handleCalculate = (e: any) => {
     e.preventDefault();
-    calculate(dispatch);
+    calculate();
   };
 
   const formItemLayout = {
@@ -72,7 +64,9 @@ const OhmLaw: React.FC<OhmLawProps> = (props) => {
           <Col xs={24} sm={20} md={14}>
             <Form {...formItemLayout} onSubmitCapture={handleCalculate}>
               <Form.Item
-                label={<FormattedMessage id="misc.properties.voltage" defaultMessage="Voltage" />}
+                label={
+                  <FormattedMessage id="misc.properties.voltage" defaultMessage="Voltage [V]" />
+                }
               >
                 <InputNumber
                   value={voltage}
@@ -92,7 +86,10 @@ const OhmLaw: React.FC<OhmLawProps> = (props) => {
 
               <Form.Item
                 label={
-                  <FormattedMessage id="misc.properties.resistance" defaultMessage="Resistance" />
+                  <FormattedMessage
+                    id="misc.properties.resistance"
+                    defaultMessage="Resistance [Ω]"
+                  />
                 }
               >
                 <InputNumber
@@ -112,7 +109,9 @@ const OhmLaw: React.FC<OhmLawProps> = (props) => {
               </Form.Item>
 
               <Form.Item
-                label={<FormattedMessage id="misc.properties.current" defaultMessage="Current" />}
+                label={
+                  <FormattedMessage id="misc.properties.current" defaultMessage="Current [A]" />
+                }
               >
                 <InputNumber
                   value={current}
@@ -131,7 +130,7 @@ const OhmLaw: React.FC<OhmLawProps> = (props) => {
               </Form.Item>
 
               <Form.Item
-                label={<FormattedMessage id="misc.properties.power" defaultMessage="Power" />}
+                label={<FormattedMessage id="misc.properties.power" defaultMessage="Power [W]" />}
               >
                 <InputNumber
                   value={power}

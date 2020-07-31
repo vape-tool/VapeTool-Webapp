@@ -43,10 +43,10 @@ export default {
   'misc.units.short.wat': 'W',
   'misc.units.long.wat': 'Wats [W]',
 
-  'misc.properties.voltage': 'Voltage',
-  'misc.properties.resistance': 'Resistance',
-  'misc.properties.current': 'Current',
-  'misc.properties.power': 'Power',
+  'misc.properties.voltage': 'Voltage [V]',
+  'misc.properties.resistance': 'Resistance [Ω] ',
+  'misc.properties.current': 'Current [A]',
+  'misc.properties.power': 'Power [W]',
   'misc.properties.weight': 'Weight',
   'misc.properties.price': 'Price',
 
