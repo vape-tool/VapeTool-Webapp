@@ -1,35 +1,36 @@
 import { Button, Card, Col, Input, Row, Spin } from 'antd';
 import React from 'react';
-import { connect, Dispatch, FormattedMessage    } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import styles from '@/pages/user/profile/styles.less';
-import { ConnectState } from '@/models/connect';
-import { CurrentUser } from '@/app';
 import FirebaseImage from '@/components/StorageAvatar';
 import ImageChooser from '@/components/ImageChoser';
-import {
-  dispatchNewAvatar,
-  dispatchNewDisplayName,
-  dispatchUpdateUser,
-  hideNewAvatarChooser,
-  showNewAvatarChooser,
-} from '@/models/userWizard';
-import { redirectBack } from '@/models/global';
 import { ImageType } from '@/services/storage';
 import { SaveOutlined } from '@ant-design/icons';
 
-const UserWizard: React.FC<{
-  currentUser?: CurrentUser;
-  displayName?: string;
-  newAvatarUrl?: string;
-  showAvatarChooser?: boolean;
-  dispatch: Dispatch;
-}> = props => {
-  const { displayName, currentUser, dispatch, newAvatarUrl, showAvatarChooser } = props;
+const UserWizard: React.FC = () => {
+  const {
+    displayName,
+    newAvatarUrl,
+    showAvatarChooser,
+    setDisplayName,
+    setNewAvatarBlob,
+    setNewAvatarUrl,
+    setShowAvatarChooser,
+    redirectBack,
+    updateUser,
+  } = useModel('userWizard');
+
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
   const onDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    dispatchNewDisplayName(dispatch, e.target.value);
-  const onNewAvatarChoose = (imageUrl: string, imageBlob: Blob | File) =>
-    dispatchNewAvatar(dispatch, imageUrl, imageBlob);
+    setDisplayName(e.target.value);
+  const onNewAvatarChoose = (imageUrl: string, imageBlob: Blob | File) => {
+    setNewAvatarBlob(imageBlob);
+    setNewAvatarUrl(imageUrl);
+    setShowAvatarChooser(false);
+  };
 
   if (!currentUser) {
     return <Spin />;
@@ -44,7 +45,7 @@ const UserWizard: React.FC<{
             title={<FormattedMessage id="user.setupUser" defaultMessage="Setup user" />}
           >
             <div className={styles.avatarHolder}>
-              <div onClick={() => showNewAvatarChooser(dispatch)}>
+              <div onClick={() => setShowAvatarChooser(true)}>
                 <div style={{ textAlign: 'center' }}>
                   {newAvatarUrl && <img alt="avatar" src={newAvatarUrl} width={200} />}
                   {!newAvatarUrl && (
@@ -80,14 +81,14 @@ const UserWizard: React.FC<{
             </div>
             <div style={{ textAlign: 'right' }}>
               <ButtonGroup>
-                <Button onClick={() => redirectBack(dispatch)}>
+                <Button onClick={() => redirectBack()}>
                   <FormattedMessage id="misc.actions.cancel" defaultMessage="Cancel" />
                 </Button>
 
                 <Button
                   icon={<SaveOutlined />}
                   type="primary"
-                  onClick={() => dispatchUpdateUser(dispatch)}
+                  onClick={() => updateUser(currentUser)}
                 >
                   <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
                 </Button>
@@ -100,7 +101,7 @@ const UserWizard: React.FC<{
       <ImageChooser
         uploadHintText="Upload avatar photo. Make sure that the photo doesn't brake the rules."
         visible={showAvatarChooser || false}
-        onCancel={() => hideNewAvatarChooser(dispatch)}
+        onCancel={() => setShowAvatarChooser(false)}
         onImageChoose={onNewAvatarChoose}
         maxSize={256}
       />
@@ -108,9 +109,4 @@ const UserWizard: React.FC<{
   );
 };
 
-export default connect(({ user, userWizard }: ConnectState) => ({
-  currentUser: user.currentUser,
-  displayName: userWizard.displayName,
-  newAvatarUrl: userWizard.newAvatarUrl,
-  showAvatarChooser: userWizard.showNewAvatarChooser,
-}))(UserWizard);
+export default UserWizard;
