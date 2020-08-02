@@ -17,7 +17,6 @@ jobs:
       - run: npm install
       - run: yarn run tsc
       - run: yarn run build
-      - run: yarn run test:all
       - run: yarn run lint
         env:
           CI: true
