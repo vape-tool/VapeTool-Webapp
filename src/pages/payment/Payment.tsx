@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
-import { ConnectState } from '@/models/connect';
-import { connect } from 'umi';
 import { stripePromise } from '@/utils/stripe';
 import styles from './payment.less';
 
@@ -219,6 +217,4 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
   );
 };
 
-export default connect(({ user }: ConnectState) => ({ userEmail: user.currentUser?.email }))(
-  Payment,
-);
+export default Payment;

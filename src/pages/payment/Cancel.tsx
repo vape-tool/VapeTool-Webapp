@@ -1,11 +1,9 @@
 import React from 'react';
 import { Button, Result } from 'antd';
-import { connect } from 'umi';
-import { ConnectProps } from '@/models/connect';
 import { redirectTo } from '@/models/global';
 import { getPaymentUrl } from '@/places/user.places';
 
-const CancelPayment: React.FC<ConnectProps> = () => {
+const CancelPayment: React.FC = () => {
   const onBuyAgainClick = () => redirectTo(getPaymentUrl());
 
   return (
@@ -21,4 +19,4 @@ const CancelPayment: React.FC<ConnectProps> = () => {
   );
 };
 
-export default connect()(CancelPayment);
+export default CancelPayment;

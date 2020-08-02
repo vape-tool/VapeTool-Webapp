@@ -12,13 +12,12 @@ import {
   getPaymentUrl,
 } from '@/places/user.places';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
-import { redirectTo, redirectToWithFootprint } from '@/models/global';
-import { ConnectProps } from '@/models/connect';
-import { connect, FormattedMessage } from 'umi';
+import { redirectTo } from '@/models/global';
+import { FormattedMessage } from 'umi';
 import { isProUser } from '@/utils/utils';
 import styles from './styles.less';
 
-interface UserCardProps extends ConnectProps {
+interface UserCardProps {
   isCurrentUser: boolean;
   currentUser?: CurrentUser;
   userProfile?: UserProfile;
@@ -30,7 +29,6 @@ const UserCard: React.FC<UserCardProps> = ({
   isLoading,
   isCurrentUser,
   currentUser,
-  dispatch,
 }) => {
   const [userContentCount, setUserContentCount] = useState<number | undefined>(undefined);
   const [userLikesCount, setUserLikesCount] = useState<number | undefined>(undefined);
@@ -107,7 +105,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 shape="round"
                 size="small"
                 block
-                onClick={() => redirectToWithFootprint(dispatch, getCurrentUserEditProfileUrl())}
+                onClick={() => redirectTo(getCurrentUserEditProfileUrl())}
               >
                 <EditOutlined />
                 <FormattedMessage id="user.actions.editProfile" defaultMessage="Edit profile" />
@@ -147,4 +145,4 @@ const UserCard: React.FC<UserCardProps> = ({
   );
 };
 
-export default connect()(UserCard);
+export default UserCard;
