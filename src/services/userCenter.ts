@@ -1,21 +1,11 @@
 import { Photo as FirebasePhoto } from '@vapetool/types';
-import {
-  coilsRef,
-  likesRef,
-  linksRef,
-  liquidsRef,
-  photosRef,
-  postsRef,
-} from '@/utils/firebase';
+import { coilsRef, likesRef, linksRef, liquidsRef, photosRef, postsRef } from '@/utils/firebase';
 import { getImageUrl, ImageType } from '@/services/storage';
 import { Coil, ItemName, Link, Liquid, Photo, Post } from '@/types';
 
 export async function getUserTotalContentCount(userId: string): Promise<number> {
-  const promises = [linksRef, postsRef, photosRef].map(async ref => {
-    const snapshots = await ref
-      .orderByChild('author/uid')
-      .equalTo(userId)
-      .once('value');
+  const promises = [linksRef, postsRef, photosRef].map(async (ref) => {
+    const snapshots = await ref.orderByChild('author/uid').equalTo(userId).once('value');
     return snapshots.numChildren();
   });
   const counts = await Promise.all(promises);
@@ -38,13 +28,10 @@ async function getLikesCountForContentType(
   ref: firebase.database.Reference,
   contentLikesRef: firebase.database.Reference,
 ) {
-  const snapshots = await ref
-    .orderByChild('author/uid')
-    .equalTo(userUid)
-    .once('value');
+  const snapshots = await ref.orderByChild('author/uid').equalTo(userUid).once('value');
 
   const promises = Array<Promise<number>>();
-  snapshots.forEach(snapshot => {
+  snapshots.forEach((snapshot) => {
     const uid = snapshot.key;
     if (!uid) {
       return;
@@ -52,7 +39,7 @@ async function getLikesCountForContentType(
     const photoLikesPromise = contentLikesRef
       .child(uid)
       .once('value')
-      .then(snaps => snaps.numChildren());
+      .then((snaps) => snaps.numChildren());
     promises.push(photoLikesPromise);
   });
 
@@ -66,19 +53,19 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
       .orderByChild('author/uid')
       .equalTo(uid)
       .once('value')
-      .then(snapshots => {
+      .then((snapshots) => {
         const firebasePhotos: FirebasePhoto[] = [];
         snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
           const firebasePhoto = snapshot.val();
           firebasePhotos.push(firebasePhoto);
         });
-        const photosPromise = firebasePhotos.map(photo =>
-          getImageUrl(ImageType.PHOTO, photo.uid).then(url => ({ ...photo, url } as Photo)),
+        const photosPromise = firebasePhotos.map((photo) =>
+          getImageUrl(ImageType.PHOTO, photo.uid).then((url) => ({ ...photo, url } as Photo)),
         );
 
-        return Promise.all(photosPromise).then(photos => resolve(photos));
+        return Promise.all(photosPromise).then((photos) => resolve(photos));
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
         reject(e);
       });
@@ -86,10 +73,7 @@ export function getUserPhotos(uid: string): Promise<Photo[]> {
 }
 
 export async function getUserPosts(uid: string): Promise<Post[]> {
-  const snapshots = await postsRef
-    .orderByChild('author/uid')
-    .equalTo(uid)
-    .once('value');
+  const snapshots = await postsRef.orderByChild('author/uid').equalTo(uid).once('value');
 
   const firebasePosts: Post[] = [];
   snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
@@ -101,10 +85,7 @@ export async function getUserPosts(uid: string): Promise<Post[]> {
 }
 
 export async function getUserLinks(uid: string): Promise<Link[]> {
-  const snapshots = await linksRef
-    .orderByChild('author/uid')
-    .equalTo(uid)
-    .once('value');
+  const snapshots = await linksRef.orderByChild('author/uid').equalTo(uid).once('value');
 
   const firebaseLinks: Link[] = [];
   snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
@@ -116,10 +97,7 @@ export async function getUserLinks(uid: string): Promise<Link[]> {
 }
 
 export async function getUserCoils(uid: string): Promise<Coil[]> {
-  const snapshots = await coilsRef
-    .orderByChild('author/uid')
-    .equalTo(uid)
-    .once('value');
+  const snapshots = await coilsRef.orderByChild('author/uid').equalTo(uid).once('value');
 
   const firebaseCoils: Coil[] = [];
   snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {
@@ -131,10 +109,7 @@ export async function getUserCoils(uid: string): Promise<Coil[]> {
 }
 
 export async function getUserLiquids(uid: string): Promise<Liquid[]> {
-  const snapshots = await liquidsRef
-    .orderByChild('author/uid')
-    .equalTo(uid)
-    .once('value');
+  const snapshots = await liquidsRef.orderByChild('author/uid').equalTo(uid).once('value');
 
   const firebaseLiquids: Liquid[] = [];
   snapshots.forEach((snapshot: firebase.database.DataSnapshot) => {

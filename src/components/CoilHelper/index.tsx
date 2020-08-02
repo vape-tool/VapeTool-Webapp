@@ -49,7 +49,7 @@ export default function CoilHelper(props: any) {
         draggable
         swipeToSlide
         touchMove
-        ref={c => props.setSlider(c)}
+        ref={(c) => props.setSlider(c)}
       >
         <div>
           <div style={{ height: '14em' }}>
