@@ -3,10 +3,13 @@ package.json
 .umi
 .umi-production
 /dist
+/img
 .dockerignore
 .DS_Store
 .eslintignore
 *.png
+*.webp
+*.jpg
 *.toml
 docker
 .editorconfig
