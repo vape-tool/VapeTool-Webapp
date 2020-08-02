@@ -10,23 +10,26 @@ export default () => {
   const [latestEdit, setLatestEdit] = useState<Inputs | undefined>(undefined);
   const [lastEdit, setLastEdit] = useState<Inputs | undefined>(undefined);
 
-  const onVoltageChange = (volts: number) => {
-    setVoltage(volts);
+  const onVoltageChange = (volts: number | string | undefined) => {
+    if (!volts) throw new Error('Voltage is not defined');
+    setVoltage(Number(volts));
     setLatestEdit(lastEdit !== 'voltage' ? lastEdit : latestEdit);
     setLastEdit('voltage');
   };
-  const onResistanceChange = (ohms: number) => {
-    setResistance(ohms);
+  const onResistanceChange = (ohms: number | string | undefined) => {
+    if (!ohms) throw new Error('Resistance is not defined');
+    setResistance(Number(ohms));
     setLatestEdit(lastEdit !== 'resistance' ? lastEdit : latestEdit);
     setLastEdit('resistance');
   };
-  const onCurrentChange = (amps: number) => {
-    setCurrent(amps);
+  const onCurrentChange = (amps: number | string | undefined) => {
+    setCurrent(Number(amps));
     setLatestEdit(lastEdit !== 'current' ? lastEdit : latestEdit);
     setLastEdit('current');
   };
-  const onPowerChange = (watts: number) => {
-    setPower(watts);
+  const onPowerChange = (watts: number | string | undefined) => {
+    if (!watts) throw new Error('Power is not defined');
+    setPower(Number(watts));
     setLatestEdit(lastEdit !== 'power' ? lastEdit : latestEdit);
     setLastEdit('power');
   };

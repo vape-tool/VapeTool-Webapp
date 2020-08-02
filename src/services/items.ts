@@ -31,14 +31,17 @@ export function subscribePhotos(
     ItemName.PHOTO,
     photosRef,
     (snap: firebase.database.DataSnapshot, photo: Photo) =>
-      getPhotoUrl(snap.key || photo.uid).then((url: string) => ({
-        ...photo,
-        // backwards compatibility
-        creationTime: photo.creationTime || photo.timestamp,
-        lastTimeModified: photo.lastTimeModified || photo.timestamp,
-        url,
-        $type: ItemName.PHOTO,
-      })),
+      getPhotoUrl(snap.key || photo.uid).then((url) => {
+        if (!url) throw new Error('Url is not defined');
+        return {
+          ...photo,
+          // backwards compatibility
+          creationTime: photo.creationTime || photo.timestamp,
+          lastTimeModified: photo.lastTimeModified || photo.timestamp,
+          url,
+          $type: ItemName.PHOTO,
+        };
+      }),
     onValueChange,
     userId,
   );
