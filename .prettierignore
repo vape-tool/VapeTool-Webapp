@@ -1,12 +1,13 @@
-**/*.svg
 package.json
 .umi
 .umi-production
+.umi-test
 /dist
 /img
 .dockerignore
 .DS_Store
 .eslintignore
+*.svg
 *.png
 *.webp
 *.jpg

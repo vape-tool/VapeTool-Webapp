@@ -13,7 +13,7 @@ const UserTags: React.FC<UserCardProps> = ({ userTags }) => (
     <span className={styles.tagsTitle}>
       <FormattedMessage id="user.labels" defaultMessage="Labels" />:
     </span>
-    {userTags.map(item => (
+    {userTags.map((item) => (
       <Tag key={item.key}>{item.label}</Tag>
     ))}
   </div>

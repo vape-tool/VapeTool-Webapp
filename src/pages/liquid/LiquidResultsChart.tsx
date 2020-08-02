@@ -9,7 +9,7 @@ export interface LiquidResultsChartProps {
 
 const LiquidResultsChart: React.FC<LiquidResultsChartProps> = ({ results }) => {
   const options = {
-    labels: results.map(r => r.name),
+    labels: results.map((r) => r.name),
     responsive: [
       {
         breakpoint: 480,
@@ -25,7 +25,7 @@ const LiquidResultsChart: React.FC<LiquidResultsChartProps> = ({ results }) => {
     ],
   };
 
-  const series = results.map(r => roundWithPrecision(r.percentage, 2));
+  const series = results.map((r) => roundWithPrecision(r.percentage, 2));
 
   return <Chart options={options} series={series} type="donut" width={380} />;
 };

@@ -3,6 +3,6 @@ import { FormattedMessage } from 'umi';
 
 export const i18nValidationRequired = (name: ReactNode): ReactElement => (
   <FormattedMessage id="misc.validation.required" defaultMessage="Please input this field!">
-    {txt => `${txt} ${name}!`}
+    {(txt) => `${txt} ${name}!`}
   </FormattedMessage>
 );

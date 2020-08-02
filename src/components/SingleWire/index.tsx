@@ -52,7 +52,7 @@ const materials: Material[] = [
   Materials.ALUCHROME,
 ].sort((a, b) => Number(a.id) - Number(b.id));
 
-const SingleWire: React.FC<WireComponentProps> = props => {
+const SingleWire: React.FC<WireComponentProps> = (props) => {
   const { wire, path, onSetWire, onDeleteWire } = props;
 
   const handleMaterialChange = (materialId: string): void => {
@@ -99,7 +99,7 @@ const SingleWire: React.FC<WireComponentProps> = props => {
         style={{ width: '100%', maxWidth: 220 }}
         onChange={handleMaterialChange}
       >
-        {materials.map(material => (
+        {materials.map((material) => (
           <Option key={material.name} value={material.id}>
             {material.name}
           </Option>

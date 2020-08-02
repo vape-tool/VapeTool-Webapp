@@ -87,7 +87,6 @@ export const photosStorageRef = storage().ref('gears').child('images');
 
 export const { ServerValue } = firebase.database;
 
-
 let userLoaded: boolean = false;
 
 export function getCurrentUser(): Promise<FirebaseUser | undefined> {
