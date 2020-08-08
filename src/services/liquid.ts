@@ -1,11 +1,14 @@
-import { request } from 'umi';
-import { auth } from '@/utils/firebase';
-import { Liquid } from '@vapetool/types';
+import { auth, callFirebaseFunction } from '@/utils/firebase';
+import { Liquid, Result } from '@vapetool/types';
 
-export async function calculateResults(liquid: Liquid): Promise<any> {
+export async function calculateResults(liquid: Liquid): Promise<Result[]> {
   if (!auth.currentUser) {
     throw Error('You are not logged in');
   }
-  const idToken = await auth.currentUser!.getIdToken(false);
-  return request('/api/calculator/liquid/results', { method: 'POST', data: { liquid, idToken } });
+  try {
+    return await callFirebaseFunction<Result[]>('calculateForMix', { liquid });
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
