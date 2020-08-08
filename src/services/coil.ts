@@ -1,17 +1,17 @@
 import { Properties, Coil } from '@vapetool/types';
 import { request } from 'umi';
-import { auth } from '@/utils/firebase';
+import { auth, callFirebaseFunction } from '@/utils/firebase';
 
-export function calculateForWraps(coil: Coil): Promise<Coil> {
-  return sendRequest('wraps', coil);
+export async function calculateForWraps(coil: Coil): Promise<Coil> {
+  return callFirebaseFunction<Coil>('calculateForWraps', { coil });
 }
 
 export function calculateForResistance(coil: Coil): Promise<Coil> {
-  return sendRequest('resistance', coil);
+  return callFirebaseFunction<Coil>('calculateForResistance', { coil });
 }
 
 export function calculateProperties(coil: Coil, baseVoltage: number): Promise<Properties> {
-  return sendRequest('properties', coil, baseVoltage);
+  return callFirebaseFunction<Properties>('calculateForResistance', { coil, baseVoltage });
 }
 
 export async function sendRequest<T>(
