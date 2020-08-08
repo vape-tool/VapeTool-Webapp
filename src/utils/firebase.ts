@@ -120,5 +120,6 @@ export async function callFirebaseFunction<T extends MixResult | Result[] | Coil
     | { liquid: Liquid },
 ): Promise<T> {
   const res = await functions.httpsCallable(name)({ ...data });
+  console.log(res.data);
   return res.data as Promise<T>;
 }

@@ -99,12 +99,8 @@ export default () => {
   };
   const calculateResult = async () => {
     try {
-      const response = calculateResults(currentLiquid);
-      if ((await response) instanceof Response) {
-        message.error("Couldn't retreive data");
-      } else if ((await response) instanceof Array) {
-        setResults(await response);
-      }
+      const res = await calculateResults(currentLiquid);
+      setResults(res);
     } catch (e) {
       message.error(e.message);
     }
