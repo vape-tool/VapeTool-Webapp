@@ -11,7 +11,7 @@ export function calculateForResistance(coil: Coil): Promise<Coil> {
 }
 
 export function calculateProperties(coil: Coil, baseVoltage: number): Promise<Properties> {
-  return callFirebaseFunction<Properties>('calculateForResistance', { coil, baseVoltage });
+  return callFirebaseFunction<Properties>('calculateForProperties', { coil, baseVoltage });
 }
 
 export async function sendRequest<T>(

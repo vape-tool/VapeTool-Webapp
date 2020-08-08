@@ -69,11 +69,8 @@ export default () => {
   const calculateProperties = async (coil: Coil) => {
     try {
       const response = await server.calculateProperties(coil, baseVoltage);
-      if (response instanceof Response) {
-        throw new Error(response.statusText);
-      } else if (response instanceof Object) {
-        setProperties(response);
-      }
+      console.log(response);
+      setProperties(response);
     } catch (e) {
       message.error(e.message);
     }
