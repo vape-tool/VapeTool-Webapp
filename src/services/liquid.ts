@@ -6,7 +6,8 @@ export async function calculateResults(liquid: Liquid): Promise<Result[]> {
     throw Error('You are not logged in');
   }
   try {
-    return await callFirebaseFunction<Result[]>('calculateForMix', { liquid });
+    const res = await callFirebaseFunction<Result[]>('calculateResults', { liquid });
+    return res;
   } catch (e) {
     console.error(e);
     throw e;
