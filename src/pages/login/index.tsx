@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, Button, message } from 'antd';
 import React from 'react';
 import { FormattedMessage, history } from 'umi';
 import { FirebaseAuth } from 'react-firebaseui';
@@ -45,6 +45,16 @@ const Login: React.FC = () => {
       const idToken = res.getAuthResponse().id_token;
       const credentials = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
       auth.signInWithCredential(credentials).then(signInSuccessWithAuthResult);
+    }
+  };
+
+  const onLoginAnonymous = async () => {
+    try {
+      await auth.signInAnonymously();
+      signInSuccessWithAuthResult();
+    } catch (e) {
+      console.error(e);
+      message.error(e.message);
     }
   };
 
@@ -128,6 +138,14 @@ const Login: React.FC = () => {
           />
         )}
       />
+      <Button
+        block
+        size="large"
+        style={{ marginBottom: 10, marginTop: 5 }}
+        onClick={onLoginAnonymous}
+      >
+        Log in as anonymous
+      </Button>
       <FirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       <CookieConsent
         location="bottom"
