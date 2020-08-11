@@ -100,6 +100,11 @@ export async function logoutFirebase(): Promise<void> {
     .catch((err) => console.error(err));
 }
 
+export async function logoutFirebaseWithRedirect() {
+  await logoutFirebase();
+  history.replace('/login');
+}
+
 export function notifyToLogIn() {
   notification.open({
     message: 'Only for logged users!',
@@ -107,9 +112,6 @@ export function notifyToLogIn() {
     style: {
       cursor: 'pointer',
     },
-    onClick: () => {
-      logoutFirebase();
-      history.replace('/login');
-    },
+    onClick: logoutFirebaseWithRedirect,
   });
 }

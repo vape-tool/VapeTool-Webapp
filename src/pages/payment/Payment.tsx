@@ -4,6 +4,7 @@ import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { stripePromise } from '@/utils/stripe';
 import styles from './payment.less';
+import { verifyCurrentUserWithRedirect } from '@/services';
 
 const stripeLogo = require('@/assets/stripe.png');
 const paypalLogo = require('@/assets/paypal.png');
@@ -42,6 +43,10 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
   const [type, setType] = React.useState(SubscriptionPlan.ANNUALLY);
   const [step, setStep] = React.useState(0);
   const [processingPayment, setProcessingPayment] = React.useState(false);
+
+  React.useEffect(() => {
+    verifyCurrentUserWithRedirect();
+  });
 
   const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || SubscriptionPlan.ANNUALLY);
 
