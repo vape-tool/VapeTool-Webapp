@@ -2,12 +2,14 @@ import * as math from '@/utils/math';
 import { useState } from 'react';
 import { nanToUndefined, safeConvert } from '@/utils/utils';
 import { message } from 'antd';
+import { verifyCurrentUser } from '@/services';
 
 export default () => {
   const [celsius, setCelsius] = useState<number | undefined>(undefined);
   const [fahrenheit, setFahrenheit] = useState<number | undefined>(undefined);
 
   function reduceCelsius(celsiusStr: string | number | undefined) {
+    if (!verifyCurrentUser()) return;
     if (!celsiusStr) {
       message.error('Celsius is not defined');
       return;
@@ -18,6 +20,7 @@ export default () => {
   }
 
   function reduceFahrenheit(fahrenheitStr: string | number | undefined) {
+    if (!verifyCurrentUser()) return;
     if (!fahrenheitStr) {
       message.error('Fahrenheit is not defined');
       return;

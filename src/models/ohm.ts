@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { verifyCurrentUser } from '@/services';
 
 type Inputs = 'voltage' | 'resistance' | 'current' | 'power';
 
@@ -41,6 +42,7 @@ export default () => {
     setPower(undefined);
   };
   const calculate = () => {
+    if (!verifyCurrentUser()) return;
     const last = lastEdit;
     const latest = latestEdit;
     const factors = [last, latest];
