@@ -2,6 +2,7 @@ import * as math from '@/utils/math';
 import { useState } from 'react';
 import { nanToUndefined, safeConvert } from '@/utils/utils';
 import { message } from 'antd';
+import { verifyCurrentUser } from '@/services';
 
 const precision = 3;
 
@@ -10,6 +11,7 @@ export default () => {
   const [mm, setMm] = useState<number | undefined>(undefined);
 
   const reduceAwg = (awgStr: string | number | undefined) => {
+    if (!verifyCurrentUser()) return;
     if (!awgStr) {
       message.error('"awg" is not defined');
       return;
@@ -20,6 +22,7 @@ export default () => {
   };
 
   const reduceMm = (mmStr: string | number | undefined) => {
+    if (!verifyCurrentUser()) return;
     if (!mmStr) {
       message.error('"mm" is not defined');
       return;

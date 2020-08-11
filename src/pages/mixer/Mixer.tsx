@@ -11,6 +11,7 @@ import { capitalize } from '@/utils/utils';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
 import { columns } from './tableData';
+import { verifyCurrentUser } from '@/services';
 
 const Mixer: React.FC = () => {
   const [form] = Form.useForm();
@@ -53,6 +54,7 @@ const Mixer: React.FC = () => {
   };
 
   const handleCalculate = async () => {
+    if (!verifyCurrentUser()) return;
     const result = await calculate(
       {
         ...(mixable1 as Mixable),

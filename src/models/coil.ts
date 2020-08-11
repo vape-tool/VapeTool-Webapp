@@ -2,6 +2,7 @@ import { Coil, Properties, Wire, wireGenerator, WireStyle } from '@vapetool/type
 import { message } from 'antd';
 import * as server from '@/services/coil';
 import { useState } from 'react';
+import { verifyCurrentUser } from '@/services';
 
 export interface Path {
   style: WireStyle;
@@ -67,6 +68,7 @@ export default () => {
   };
 
   const calculateProperties = async (coil: Coil) => {
+    if (!verifyCurrentUser()) return;
     try {
       const response = await server.calculateProperties(coil, baseVoltage);
       console.log(response);
@@ -77,6 +79,7 @@ export default () => {
   };
 
   const calculateEffect = async (method: (coil: Coil) => Promise<Coil | Response>, coil: Coil) => {
+    if (!verifyCurrentUser()) return;
     try {
       const response = await method(coil);
       if (response instanceof Response) {

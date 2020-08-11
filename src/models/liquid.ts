@@ -2,6 +2,7 @@ import { Flavor, Liquid, Result } from '@vapetool/types';
 import { message } from 'antd';
 import { calculateResults } from '@/services/liquid';
 import { useState } from 'react';
+import { verifyCurrentUser } from '@/services';
 
 export interface LiquidModelState {
   currentLiquid: Liquid;
@@ -98,6 +99,7 @@ export default () => {
     });
   };
   const calculateResult = async () => {
+    if (!verifyCurrentUser()) return;
     try {
       const res = await calculateResults(currentLiquid);
       setResults(res);

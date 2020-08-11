@@ -3,6 +3,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row, Typography } from 'antd';
 import { connect, useIntl, FormattedMessage } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
+import { verifyCurrentUser } from '@/services';
 
 const BatteryLife: React.FC = () => {
   const [capacityMah, setCapacityMah] = useState<number | undefined>();
@@ -35,6 +36,7 @@ const BatteryLife: React.FC = () => {
   }
 
   const handleCalculate = (e: any) => {
+    if (!verifyCurrentUser()) return;
     e.preventDefault();
     if (mahLastChanged && capacityMah) {
       setCapacityWh(convertToWh(capacityMah));

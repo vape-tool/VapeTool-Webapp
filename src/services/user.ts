@@ -1,8 +1,9 @@
 import { User, UserPermission } from '@vapetool/types';
 import firebase from 'firebase';
-import { request } from 'umi';
+import { request, history } from 'umi';
 import { auth, usersRef } from '@/utils/firebase';
 import { uploadAvatar } from '@/services/storage';
+import { notification } from 'antd';
 
 export function getUser(uid: string): Promise<User | undefined> {
   return new Promise((resolve) => {
@@ -97,4 +98,18 @@ export async function logoutFirebase(): Promise<void> {
     .signOut()
     .then(() => console.log('signed out complete'))
     .catch((err) => console.error(err));
+}
+
+export function notifyToLogIn() {
+  notification.open({
+    message: 'Only for logged users!',
+    description: 'Click on the notification to redirect to login page',
+    style: {
+      cursor: 'pointer',
+    },
+    onClick: () => {
+      logoutFirebase();
+      history.replace('/login');
+    },
+  });
 }
