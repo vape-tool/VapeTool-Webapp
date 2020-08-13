@@ -6,11 +6,7 @@ import { ImageType } from '@/services/storage';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
-import {
-  getCancelSubscriptionUrl,
-  getCurrentUserEditProfileUrl,
-  getPaymentUrl,
-} from '@/places/user.places';
+import { getCancelSubscriptionUrl, getUserWizard, getPaymentUrl } from '@/places/user.places';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
 import { redirectTo } from '@/models/global';
 import { FormattedMessage } from 'umi';
@@ -105,7 +101,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 shape="round"
                 size="small"
                 block
-                onClick={() => redirectTo(getCurrentUserEditProfileUrl())}
+                onClick={() => redirectTo(getUserWizard())}
               >
                 <EditOutlined />
                 <FormattedMessage id="user.actions.editProfile" defaultMessage="Edit profile" />

@@ -62,7 +62,7 @@ const GlobalHeaderRight: React.FC<{}> = () => {
           <QuestionCircleOutlined />
         </span>
       </Tooltip>
-      <Avatar />
+      {!initialState.firebaseUser?.isAnonymous && <Avatar />}
       {REACT_APP_ENV && REACT_APP_ENV !== 'prod' && (
         <span>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>

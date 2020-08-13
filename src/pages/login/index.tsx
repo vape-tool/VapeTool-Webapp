@@ -50,6 +50,7 @@ const Login: React.FC = () => {
 
   const onLoginAnonymous = async () => {
     try {
+      // auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
       await auth.signInAnonymously();
       signInSuccessWithAuthResult();
     } catch (e) {
@@ -144,7 +145,7 @@ const Login: React.FC = () => {
         style={{ marginBottom: 10, marginTop: 5 }}
         onClick={onLoginAnonymous}
       >
-        Log in as anonymous
+        Skip
       </Button>
       <FirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       <CookieConsent

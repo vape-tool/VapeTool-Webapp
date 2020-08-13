@@ -10,7 +10,7 @@ import defaultSettings from '../config/defaultSettings';
 import { getCurrentUser } from './utils/firebase';
 import { getUser, initializeUser } from './services/user';
 import { isProUser, userPermissionToAuthority } from './utils/utils';
-import { getCurrentUserEditProfileUrl } from './places/user.places';
+import { getUserWizard } from './places/user.places';
 import { UserAuthorities } from './types/UserAuthorities';
 
 export interface CurrentUser extends User {
@@ -38,9 +38,19 @@ export async function getInitialState(): Promise<{
     try {
       const firebaseUser = await getCurrentUser();
       if (!firebaseUser) throw new Error('redirect to login page');
+      console.log({ userIsAnonymous: firebaseUser.isAnonymous });
+      if (firebaseUser.isAnonymous) {
+        history.replace({ pathname: '/welcome' });
+        console.log('logged in as anonymous');
+        return {
+          firebaseUser,
+          settings: defaultSettings,
+        };
+      }
 
       let user: User | undefined = await getUser(firebaseUser.uid);
       if (!user) {
+        console.log('Logged in as current user');
         // User is first time logged in
         user = await initializeUser(firebaseUser);
         // Save user to database
@@ -53,7 +63,7 @@ export async function getInitialState(): Promise<{
           };
         }
         // Redirect to user wizzard
-        history.replace({ pathname: getCurrentUserEditProfileUrl() });
+        history.replace({ pathname: getUserWizard() });
       }
       const tags = [];
       if (isProUser(user.subscription)) {
@@ -83,8 +93,9 @@ export async function getInitialState(): Promise<{
 export const layout = ({
   initialState,
 }: {
-  initialState: { settings?: LayoutSettings };
+  initialState: { settings?: LayoutSettings; currentUser: any; firebaseUser: any };
 }): BasicLayoutProps => {
+  console.log({ currentUser: initialState.currentUser, firebaseUser: initialState.firebaseUser });
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,

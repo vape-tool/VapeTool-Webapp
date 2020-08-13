@@ -1,6 +1,6 @@
 export const getCurrentUserProfileUrl = (): string => `/user/profile`;
 export const getPaymentUrl = (): string => `/payment`;
-export const getCurrentUserEditProfileUrl = (): string => `/user/wizard`;
+export const getUserWizard = (): string => `/user/wizard`;
 export const getUserProfileUrl = (userId: string): string => `/user/profile/${userId}`;
 export const getUserLoginUrl = (): string => `/login`;
 
