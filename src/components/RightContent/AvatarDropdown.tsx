@@ -8,7 +8,6 @@ import { stringify } from 'querystring';
 import { ImageType } from '@/services/storage';
 import { getCurrentUserProfileUrl, getPaymentUrl, getUserLoginUrl } from '@/places/user.places';
 import { logoutFirebase } from '@/services/user';
-import { verifyCurrentUserWithRedirect } from '@/services';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import FirebaseImage from '../StorageAvatar';
@@ -41,7 +40,6 @@ const AvatarDropdown: React.FC = () => {
       return;
     }
     if (key === 'profile') {
-      if (!verifyCurrentUserWithRedirect()) return;
       history.replace({
         pathname: getCurrentUserProfileUrl(),
         search: stringify({
@@ -51,7 +49,6 @@ const AvatarDropdown: React.FC = () => {
       return;
     }
     if (key === 'unlockPro') {
-      if (!verifyCurrentUserWithRedirect()) return;
       history.replace({
         pathname: getPaymentUrl(),
         search: stringify({

@@ -6,14 +6,20 @@ import { getPageFragment, isProUser, userPermissionToAuthority } from '@/utils/u
 import { auth } from '@/utils/firebase';
 import { useModel, history } from 'umi';
 import { getUser, initializeUser } from '@/services/user';
-import { getCurrentUserEditProfileUrl } from '@/places/user.places';
+import { getUserWizard } from '@/places/user.places';
 import { User } from '@vapetool/types';
 
 const LoginSuccess: React.FC = () => {
   const { firebaseUser } = useModel('user');
   const { initialState, setInitialState } = useModel('@@initialState');
   useEffect(() => {
-    if (firebaseUser) {
+    if (firebaseUser && firebaseUser.isAnonymous) {
+      setInitialState({
+        ...initialState,
+        firebaseUser,
+      });
+      history.replace({ pathname: '/welcome' });
+    } else if (firebaseUser && !firebaseUser.isAnonymous) {
       getUser(firebaseUser.uid).then(async (user: User | undefined) => {
         if (!user) {
           // User is first time logged in
@@ -26,7 +32,7 @@ const LoginSuccess: React.FC = () => {
             return;
           }
           // redirect to user wizzard
-          history.replace({ pathname: getCurrentUserEditProfileUrl() });
+          history.replace({ pathname: getUserWizard() });
         }
         const tags = [];
         if (isProUser(user.subscription)) {
