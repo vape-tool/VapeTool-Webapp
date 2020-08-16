@@ -13,6 +13,6 @@ export default function access(initialState: {
   const { currentUser, firebaseUser } = initialState || {};
   return {
     canAdmin: currentUser && currentUser.permission === UserPermission.ONLINE_ADMIN,
-    isNotAnonymous: firebaseUser && !firebaseUser.isAnonymous,
+    isNotAnonymous: firebaseUser ? !firebaseUser.isAnonymous : false,
   };
 }
