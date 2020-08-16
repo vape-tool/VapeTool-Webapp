@@ -107,8 +107,8 @@ export async function logoutFirebaseWithRedirect() {
 
 export function notifyToLogIn() {
   notification.open({
-    message: 'Only for logged users!',
-    description: 'Click on the notification to redirect to login page',
+    message: 'You need to be logged in!',
+    description: 'Click to log in',
     style: {
       cursor: 'pointer',
     },
