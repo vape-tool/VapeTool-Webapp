@@ -13,6 +13,7 @@ import { CurrentUser } from '@/app';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
+import Banner from '@/components/Banner';
 
 const { Title } = Typography;
 
@@ -92,6 +93,9 @@ const LiquidBlender = () => {
   return (
     <PageContainer>
       <Row justify="center" gutter={32}>
+        <div style={{ marginBottom: '2%' }}>
+          <Banner providerName="liquid_blender_top_ad_provider" />
+        </div>
         <Col xs={24} sm={20} md={20}>
           <SaveModal
             visible={saveModalVisible}
@@ -288,6 +292,9 @@ const LiquidBlender = () => {
           </Row>
           <NewFlavorModal />
         </Col>
+        <div style={{ marginTop: '2%' }}>
+          <Banner providerName="liquid_blender_bottom_ad_provider" />
+        </div>
       </Row>
     </PageContainer>
   );

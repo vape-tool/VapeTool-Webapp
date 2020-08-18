@@ -5,6 +5,7 @@ import { useIntl, FormattedMessage, useModel } from 'umi';
 import { LockOutlined } from '@ant-design/icons';
 import ButtonGroup from 'antd/es/button/button-group';
 import ImageWebp from '@/components/ImageWebp';
+import Banner from '@/components/Banner';
 
 const ohmLawWebp = require('@/assets/ohm_law.webp');
 const ohmLawPng = require('@/assets/ohm_law.png');
@@ -170,6 +171,9 @@ const OhmLaw: React.FC = () => {
               alt="Ohm Law formulas"
             />
           </Col>
+          <div style={{ marginBottom: '2%' }}>
+            <Banner providerName="ohm_law_ad_provider" />
+          </div>
         </Row>
       </Card>
     </PageHeaderWrapper>

@@ -7,6 +7,7 @@ import BatteryPreviewDrawer from '@/components/BatteryPreviewDrawer';
 import styles from '@/components/ItemView/styles.less';
 import { Battery } from '@/types';
 import { PageContainer } from '@ant-design/pro-layout';
+import Banner from '@/components/Banner';
 
 const Batteries = () => {
   const { setSelectedBattery, batteries } = useModel('batteries');
@@ -16,6 +17,9 @@ const Batteries = () => {
   return (
     <PageContainer>
       <Row justify="center" gutter={32}>
+        <div style={{ marginBottom: '2%' }}>
+          <Banner providerName="batteries_database_ad_provider" />
+        </div>
         <Col xs={24} sm={20} md={16}>
           <List<Battery>
             className={styles.coverCardList}
