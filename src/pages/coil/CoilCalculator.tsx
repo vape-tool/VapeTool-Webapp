@@ -287,8 +287,10 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
   return (
     <PageContainer>
       <Row justify="center" gutter={32}>
-        <Col xs={24} sm={20} md={20}>
+        <div style={{ marginBottom: '2%' }}>
           <Banner providerName="coil_calculator_ad_provider" />
+        </div>
+        <Col xs={24} sm={20} md={20}>
           <CoilHelper
             setSlider={setSlider}
             helpModalVisible={helpModalVisibile}
