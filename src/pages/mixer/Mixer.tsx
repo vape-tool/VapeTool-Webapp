@@ -8,10 +8,11 @@ import { UpOutlined } from '@ant-design/icons';
 import { MixableType, Mixable, MixableResult } from '@vapetool/types';
 import { calculate } from '@/services/mixer';
 import { capitalize } from '@/utils/utils';
+import Banner from '@/components/Banner';
+import { verifyCurrentUser } from '@/services';
 import InputElements from './inputElements';
 import SelectType from './SelectType';
 import { columns } from './tableData';
-import { verifyCurrentUser } from '@/services';
 
 const Mixer: React.FC = () => {
   const [form] = Form.useForm();
@@ -102,6 +103,9 @@ const Mixer: React.FC = () => {
     <PageHeaderWrapper>
       <Card>
         <Row justify="center" gutter={32}>
+          <div style={{ marginBottom: '2%' }}>
+            <Banner providerName="mixer_ad_provider" />
+          </div>
           <Col xs={24} sm={20} md={20}>
             <Form
               form={form}

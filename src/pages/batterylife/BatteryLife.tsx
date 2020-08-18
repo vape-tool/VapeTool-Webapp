@@ -4,6 +4,7 @@ import { Button, Card, Col, Form, InputNumber, Row, Typography } from 'antd';
 import { connect, useIntl, FormattedMessage } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import { verifyCurrentUser } from '@/services';
+import Banner from '@/components/Banner';
 
 const BatteryLife: React.FC = () => {
   const [capacityMah, setCapacityMah] = useState<number | undefined>();
@@ -87,6 +88,9 @@ const BatteryLife: React.FC = () => {
     <PageHeaderWrapper>
       <Card>
         <Row justify="center" gutter={32}>
+          <div style={{ marginBottom: '2%' }}>
+            <Banner providerName="batteries_life_ad_provider" />
+          </div>
           <Col xs={24} sm={20} md={14}>
             <Form {...formItemLayout} onSubmitCapture={handleCalculate}>
               <Form.Item
