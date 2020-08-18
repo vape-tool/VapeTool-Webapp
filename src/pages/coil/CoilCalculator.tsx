@@ -20,6 +20,7 @@ import SaveModal from '@/components/SaveModal';
 import { sendRequest } from '@/services/coil';
 import { Path } from '@/models/coil';
 import { PageContainer } from '@ant-design/pro-layout';
+import Banner from '@/components/Banner';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -287,6 +288,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
     <PageContainer>
       <Row justify="center" gutter={32}>
         <Col xs={24} sm={20} md={20}>
+          <Banner providerName="coil_calculator_ad_provider" />
           <CoilHelper
             setSlider={setSlider}
             helpModalVisible={helpModalVisibile}

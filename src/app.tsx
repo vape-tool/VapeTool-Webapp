@@ -12,6 +12,7 @@ import { getUser, initializeUser } from './services/user';
 import { isProUser, userPermissionToAuthority } from './utils/utils';
 import { getUserWizard } from './places/user.places';
 import { UserAuthorities } from './types/UserAuthorities';
+import { remoteConfig } from 'firebase';
 
 export interface CurrentUser extends User {
   name: string;
@@ -53,6 +54,7 @@ export async function getInitialState(): Promise<{
         console.log('Logged in as current user');
         // User is first time logged in
         user = await initializeUser(firebaseUser);
+        remoteConfig().fetchAndActivate();
         // Save user to database
         if (!user) {
           // Failed to save to database redirect to /Oops
@@ -65,6 +67,7 @@ export async function getInitialState(): Promise<{
         // Redirect to user wizzard
         history.replace({ pathname: getUserWizard() });
       }
+      remoteConfig().fetchAndActivate();
       const tags = [];
       if (isProUser(user.subscription)) {
         tags.push({ key: 'pro', label: 'Pro' });
