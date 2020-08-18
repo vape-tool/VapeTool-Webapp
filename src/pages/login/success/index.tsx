@@ -18,7 +18,7 @@ const LoginSuccess: React.FC = () => {
         ...initialState,
         firebaseUser,
       });
-      history.replace({ pathname: '/welcome' });
+      history.replace({ pathname: '/' });
     } else if (firebaseUser && !firebaseUser.isAnonymous) {
       getUser(firebaseUser.uid).then(async (user: User | undefined) => {
         if (!user) {
