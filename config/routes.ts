@@ -114,7 +114,16 @@ const routes = [
     name: 'center',
     icon: 'user',
     path: '/user/profile',
+    exact: true,
+    access: 'isNotAnonymous',
     component: './user/profile',
+  },
+  {
+    name: 'center',
+    icon: 'user',
+    path: '/user/profile/:id',
+    hideInMenu: true,
+    component: './user/profile/[id]',
   },
   // {
   //   hideInMenu: true,
