@@ -125,13 +125,6 @@ const routes = [
     hideInMenu: true,
     component: './user/profile/[id]',
   },
-  // {
-  //   hideInMenu: true,
-  //   name: 'profile',
-  //   icon: 'user',
-  //   path: '/user/profile/:id',
-  //   component: './user/profile',
-  // },
   {
     hideInMenu: true,
     path: '/oops',
