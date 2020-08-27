@@ -87,7 +87,6 @@ export const batteriesStorageRef = prodStorage.ref('batteries').child('images');
 export const usersStorageRef = storage().ref('users').child('images');
 export const coilsStorageRef = storage().ref('coils').child('images');
 export const photosStorageRef = storage().ref('gears').child('images');
-export const bannersStorageRef = storage().ref('banners');
 
 export const { ServerValue } = firebase.database;
 

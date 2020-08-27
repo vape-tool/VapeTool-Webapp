@@ -14,14 +14,14 @@ export default (props: { providerName: string }) => {
   }
 
   useEffect(() => {
-    getAdImageProperties(props.providerName).then((_adProperties) => {
-      console.log({ _adProperties });
-      getBannerUrl(_adProperties).then((_bannerSrc) => {
-        setBannerSrc(_bannerSrc);
-        setBannerProperties(_adProperties);
+    getAdImageProperties(props.providerName).then((adProperties) => {
+      console.log({ adProperties });
+      getBannerUrl(adProperties).then((newBannerSrc) => {
+        setBannerSrc(newBannerSrc);
+        setBannerProperties(adProperties);
       });
     });
-  }, []);
+  }, [props.providerName]);
 
   return (
     <>
