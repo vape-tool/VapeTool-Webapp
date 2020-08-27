@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import moment from 'moment';
-import { Input, List, Menu, Modal } from 'antd';
+import { Input, List, Menu, Modal, message } from 'antd';
 import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/app';
 import { FormattedMessage, useIntl, useModel } from 'umi';
-import firebase from 'firebase';
+import firebase, { User } from 'firebase';
 import { like, report, deleteItem, deleteComment, commentItem } from '@/services/operations';
 import { LikeIconText } from '@/components/LikeIconText';
 import { CommentIconText } from '@/components/CommentIconText';
@@ -37,6 +37,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
 }: ItemViewProps<T>) {
   const { initialState } = useModel('@@initialState');
   const user = initialState?.currentUser as CurrentUser;
+  const currentUser = initialState?.firebaseUser as User;
 
   const [draftComment, setDraftComment] = useState<string>('');
   const { displayComments, commentsCount } = useComments(what, item, user, displayCommentsLength);
@@ -47,9 +48,27 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftComment(e.target.value);
   };
-  const onLikeClick = () => like(what, item.uid, user.uid);
-  const onReportClick = () => report(what, item.uid, user.uid);
-  const submitComment = () => commentItem(what, draftComment, item.uid, user);
+  const onLikeClick = () => {
+    if (currentUser.isAnonymous) {
+      message.error('You need to be logged in');
+      return;
+    }
+    like(what, item.uid, user.uid);
+  };
+  const onReportClick = () => {
+    if (currentUser.isAnonymous) {
+      message.error('You need to be logged in');
+      return;
+    }
+    report(what, item.uid, user.uid);
+  };
+  const submitComment = () => {
+    if (currentUser.isAnonymous) {
+      message.error('You need to be logged in');
+      return;
+    }
+    commentItem(what, draftComment, item.uid, user);
+  };
 
   const onReplyComment = (replyingComment: Comment) => {
     if (draftComment.trim().length === 0) {
