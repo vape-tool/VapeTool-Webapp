@@ -17,6 +17,9 @@ const Cloud: React.FC = () => {
   const onUploadPhotoClicked = () => history.push('/cloud/upload');
   const { setLinks, setPhotos, setPosts, posts, links, photos } = useModel('cloud');
 
+  const { initialState } = useModel('@@initialState');
+  const { firebaseUser } = initialState || {};
+
   useEffect(() => subscribeLinks(setLinks), []);
   useEffect(() => subscribePhotos(setPhotos), []);
   useEffect(() => subscribePosts(setPosts), []);
@@ -49,15 +52,17 @@ const Cloud: React.FC = () => {
         }}
       />
       <PhotoPreviewModal />
-      <Affix offsetBottom={30}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          shape="circle"
-          size="large"
-          onClick={onUploadPhotoClicked}
-        />
-      </Affix>
+      {firebaseUser && !firebaseUser.isAnonymous && (
+        <Affix offsetBottom={30}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            shape="circle"
+            size="large"
+            onClick={onUploadPhotoClicked}
+          />
+        </Affix>
+      )}
     </PageContainer>
   );
 };
