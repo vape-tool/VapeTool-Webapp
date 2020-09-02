@@ -40,7 +40,7 @@ export async function getInitialState(): Promise<{
       if (!firebaseUser) throw new Error('redirect to login page');
       console.log({ userIsAnonymous: firebaseUser.isAnonymous });
       if (firebaseUser.isAnonymous) {
-        history.replace({ pathname: '/welcome' });
+        history.replace({ pathname: '/' });
         console.log('logged in as anonymous');
         return {
           firebaseUser,
