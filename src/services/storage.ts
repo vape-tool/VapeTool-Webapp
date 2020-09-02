@@ -97,14 +97,6 @@ export interface BannerProperties {
   imageGs: string;
 }
 
-const defaultBannerProperties: BannerProperties = {
-  name: 'admob',
-  linkUrl: '',
-  imageGs: '',
-};
-
 export async function getAdImageProperties(parameterKey: string): Promise<BannerProperties> {
-  return JSON.parse(
-    remoteConfig().getValue(parameterKey).asString() || JSON.stringify(defaultBannerProperties),
-  ) as BannerProperties;
+  return JSON.parse(remoteConfig().getValue(parameterKey).asString()) as BannerProperties;
 }

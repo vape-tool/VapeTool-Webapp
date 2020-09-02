@@ -14,13 +14,22 @@ export default (props: { providerName: string }) => {
   }
 
   useEffect(() => {
-    getAdImageProperties(props.providerName).then((adProperties) => {
-      console.log({ adProperties });
-      getBannerUrl(adProperties).then((newBannerSrc) => {
-        setBannerSrc(newBannerSrc);
-        setBannerProperties(adProperties);
+    getAdImageProperties(props.providerName)
+      .then((adProperties) => {
+        console.log({ adProperties });
+        getBannerUrl(adProperties).then((newBannerSrc) => {
+          setBannerSrc(newBannerSrc);
+          setBannerProperties(adProperties);
+        });
+      })
+      .catch(() => {
+        const defaultBannerProperties: BannerProperties = {
+          name: 'admob',
+          linkUrl: '',
+          imageGs: '',
+        };
+        setBannerProperties(defaultBannerProperties);
       });
-    });
   }, [props.providerName]);
 
   return (
