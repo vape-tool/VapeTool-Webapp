@@ -1,10 +1,11 @@
-import { Tooltip, Tag, Space } from 'antd';
+import { Tooltip, Tag, Space, Typography } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+import { logoutFirebaseWithRedirect } from '@/services/user';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -62,7 +63,13 @@ const GlobalHeaderRight: React.FC<{}> = () => {
           <QuestionCircleOutlined />
         </span>
       </Tooltip>
-      {!initialState.firebaseUser?.isAnonymous && <Avatar />}
+      {!initialState.firebaseUser?.isAnonymous ? (
+        <Avatar />
+      ) : (
+        <a onClick={() => logoutFirebaseWithRedirect()}>
+          <Typography style={{ color: 'white' }}>Log in</Typography>
+        </a>
+      )}
       {REACT_APP_ENV && REACT_APP_ENV !== 'prod' && (
         <span>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
