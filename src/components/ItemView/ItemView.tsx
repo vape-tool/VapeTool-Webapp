@@ -4,7 +4,7 @@ import { Input, List, Menu, Modal, message } from 'antd';
 import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/app';
 import { FormattedMessage, useIntl, useModel } from 'umi';
-import firebase, { User } from 'firebase';
+import firebase from 'firebase';
 import { like, report, deleteItem, deleteComment, commentItem } from '@/services/operations';
 import { LikeIconText } from '@/components/LikeIconText';
 import { CommentIconText } from '@/components/CommentIconText';
@@ -36,13 +36,18 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   unselectItem,
 }: ItemViewProps<T>) {
   const { initialState } = useModel('@@initialState');
-  const user = initialState?.currentUser as CurrentUser;
-  const currentUser = initialState?.firebaseUser as User;
+  const currentUser = initialState?.currentUser as CurrentUser;
+  const firebaseUser = initialState?.firebaseUser as firebase.User;
 
   const [draftComment, setDraftComment] = useState<string>('');
-  const { displayComments, commentsCount } = useComments(what, item, user, displayCommentsLength);
+  const { displayComments, commentsCount } = useComments(
+    what,
+    item,
+    currentUser,
+    displayCommentsLength,
+  );
   const inputRef = useRef<Input>(null);
-  const { likedByMe, likesCount } = useLikes(what, item, user);
+  const { likedByMe, likesCount } = useLikes(what, item, currentUser);
   const intl = useIntl();
 
   const onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,15 +55,15 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   };
 
   const usersOnly = function <RightFunc>(fn: RightFunc): RightFunc | (() => void) {
-    if (currentUser.isAnonymous) {
+    if (firebaseUser.isAnonymous) {
       return () => message.error('You need to be logged in');
     }
     return fn;
   };
 
-  const onLikeClick = usersOnly(() => like(what, item.uid, user.uid));
-  const onReportClick = usersOnly(() => report(what, item.uid, user.uid));
-  const submitComment = usersOnly(() => commentItem(what, draftComment, item.uid, user));
+  const onLikeClick = usersOnly(() => like(what, item.uid, currentUser.uid));
+  const onReportClick = usersOnly(() => report(what, item.uid, currentUser.uid));
+  const submitComment = usersOnly(() => commentItem(what, draftComment, item.uid, currentUser));
 
   const onReplyComment = (replyingComment: Comment) => {
     if (draftComment.trim().length === 0) {
@@ -74,7 +79,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const onCommentClick = () => inputRef.current?.focus();
 
   const postComment = () => {
-    commentItem(what, draftComment, item.uid, user);
+    commentItem(what, draftComment, item.uid, currentUser);
     setDraftComment('');
   };
 
@@ -115,7 +120,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
       <Menu.Item
         key="report"
         onClick={onReportClick}
-        disabled={!user || user.uid === item.author.uid}
+        disabled={!currentUser || currentUser.uid === item.author.uid}
       >
         <FlagOutlined />
         <FormattedMessage id="user.actions.report" defaultMessage="Report" />
@@ -125,8 +130,9 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
         key="delete"
         onClick={onDeleteClick}
         disabled={
-          !user ||
-          (user.uid !== item.author.uid && user.permission < UserPermission.ONLINE_MODERATOR)
+          !currentUser ||
+          (currentUser.uid !== item.author.uid &&
+            currentUser.permission < UserPermission.ONLINE_MODERATOR)
         }
       >
         <DeleteOutlined />
@@ -163,7 +169,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
           dataSource={displayComments}
           renderItem={(comment) => (
             <CommentView
-              user={user}
+              user={currentUser}
               comment={comment}
               onReply={onReplyComment}
               onDelete={onDeleteCommentClick}
