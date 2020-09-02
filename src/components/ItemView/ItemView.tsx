@@ -48,27 +48,17 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftComment(e.target.value);
   };
-  const onLikeClick = () => {
+
+  const usersOnly = function <RightFunc>(fn: RightFunc): RightFunc | (() => void) {
     if (currentUser.isAnonymous) {
-      message.error('You need to be logged in');
-      return;
+      return () => message.error('You need to be logged in');
     }
-    like(what, item.uid, user.uid);
+    return fn;
   };
-  const onReportClick = () => {
-    if (currentUser.isAnonymous) {
-      message.error('You need to be logged in');
-      return;
-    }
-    report(what, item.uid, user.uid);
-  };
-  const submitComment = () => {
-    if (currentUser.isAnonymous) {
-      message.error('You need to be logged in');
-      return;
-    }
-    commentItem(what, draftComment, item.uid, user);
-  };
+
+  const onLikeClick = usersOnly(() => like(what, item.uid, user.uid));
+  const onReportClick = usersOnly(() => report(what, item.uid, user.uid));
+  const submitComment = usersOnly(() => commentItem(what, draftComment, item.uid, user));
 
   const onReplyComment = (replyingComment: Comment) => {
     if (draftComment.trim().length === 0) {
