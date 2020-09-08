@@ -3,7 +3,6 @@ import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons'
 import { Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { history, useModel, FormattedMessage } from 'umi';
-import { getPageQuery } from '@/utils/utils';
 import { stringify } from 'querystring';
 import { ImageType } from '@/services/storage';
 import { getCurrentUserProfileUrl, getPaymentUrl, getUserLoginUrl } from '@/places/user.places';
@@ -15,11 +14,8 @@ import FirebaseImage from '../StorageAvatar';
 /**
  * 退出登录，并且将当前的 url 保存
  */
-const loginOut = async () => {
-  await logoutFirebase();
-  const { redirect } = getPageQuery();
-  // Note: There may be security issues, please note
-  if (window.location.pathname !== getUserLoginUrl() && !redirect) {
+const loginOut = () => {
+  if (window.location.pathname !== getUserLoginUrl()) {
     history.replace({
       pathname: getUserLoginUrl(),
       search: stringify({
@@ -32,10 +28,11 @@ const loginOut = async () => {
 const AvatarDropdown: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  const onMenuClick = useCallback((event: ClickParam) => {
+  const onMenuClick = useCallback(async (event: ClickParam) => {
     const { key } = event;
     if (key === 'logout') {
-      setInitialState({ ...initialState, currentUser: undefined });
+      await logoutFirebase();
+      setInitialState({ ...initialState, currentUser: undefined, firebaseUser: undefined });
       loginOut();
       return;
     }
