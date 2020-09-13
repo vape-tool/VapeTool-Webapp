@@ -64,7 +64,7 @@ const BatteryPreviewDrawer = () => {
 
   return (
     <Drawer
-      width={collapsed ? 400 : 500}
+      width={collapsed ? 500 : 600}
       title={`${brand} ${model}`}
       placement="right"
       closable
@@ -130,39 +130,11 @@ const BatteryPreviewDrawer = () => {
           <DescriptionItem
             title={
               <FormattedMessage
-                id="battery.properties.minStableResistance"
-                defaultMessage="Min. stable resistance"
-              />
-            }
-            content={
-              isPro ? (voltage / stableCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
-            }
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <DescriptionItem
-            title={
-              <FormattedMessage
                 id="battery.properties.maxVapingCurrent"
                 defaultMessage="Max. Vaping current"
               />
             }
             content={isPro ? maxVapingCurrent : <Tag color="blue">Pro only</Tag>}
-          />
-        </Col>
-        <Col span={12}>
-          <DescriptionItem
-            title={
-              <FormattedMessage
-                id="battery.properties.minVapingResistance"
-                defaultMessage="Min. Vaping resistance"
-              />
-            }
-            content={
-              isPro ? (voltage / maxVapingCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
-            }
           />
         </Col>
       </Row>
@@ -180,8 +152,36 @@ const BatteryPreviewDrawer = () => {
         </Col>
         <Col span={12}>
           <DescriptionItem
+            title={
+              <FormattedMessage
+                id="battery.properties.minStableResistance"
+                defaultMessage="Min. stable resistance"
+              />
+            }
+            content={
+              isPro ? (voltage / stableCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
+            }
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <DescriptionItem
             title={<FormattedMessage id="battery.properties.cutOff" defaultMessage="Cut-off" />}
             content={cutOff}
+          />
+        </Col>
+        <Col span={12}>
+          <DescriptionItem
+            title={
+              <FormattedMessage
+                id="battery.properties.minVapingResistance"
+                defaultMessage="Min. Vaping resistance"
+              />
+            }
+            content={
+              isPro ? (voltage / maxVapingCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
+            }
           />
         </Col>
       </Row>
