@@ -15,7 +15,6 @@ export default defineConfig({
     name: 'Vape Tool',
     locale: true,
     siderWidth: 208,
-    logo: '',
   },
   locale: {
     // default zh-CN
