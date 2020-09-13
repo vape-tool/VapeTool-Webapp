@@ -1,7 +1,8 @@
-import { Col, Divider, Drawer, Row } from 'antd';
+import { Col, Divider, Drawer, Row, Tag } from 'antd';
 import React, { useState } from 'react';
 import { FormattedMessage, useModel } from 'umi';
 import useMedia from 'react-media-hook2';
+import { UserAuthorities } from '@/types/UserAuthorities';
 
 const pStyle = {
   fontSize: 16,
@@ -13,6 +14,9 @@ const pStyle = {
 
 const BatteryPreviewDrawer = () => {
   const { setSelectedBattery, selectedBattery, editBattery } = useModel('batteries');
+
+  const { initialState } = useModel('@@initialState');
+  const isPro = initialState?.currentUser?.authorities?.includes(UserAuthorities.PRO);
 
   const onClose = () => setSelectedBattery(undefined);
 
@@ -130,7 +134,9 @@ const BatteryPreviewDrawer = () => {
                 defaultMessage="Min. stable resistance"
               />
             }
-            content={(voltage / stableCurrent).toFixed(3)}
+            content={
+              isPro ? (voltage / stableCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
+            }
           />
         </Col>
       </Row>
@@ -143,7 +149,7 @@ const BatteryPreviewDrawer = () => {
                 defaultMessage="Max. Vaping current"
               />
             }
-            content={maxVapingCurrent}
+            content={isPro ? maxVapingCurrent : <Tag color="blue">Pro only</Tag>}
           />
         </Col>
         <Col span={12}>
@@ -154,7 +160,9 @@ const BatteryPreviewDrawer = () => {
                 defaultMessage="Min. Vaping resistance"
               />
             }
-            content={(voltage / maxVapingCurrent).toFixed(3)}
+            content={
+              isPro ? (voltage / maxVapingCurrent).toFixed(3) : <Tag color="blue">Pro only</Tag>
+            }
           />
         </Col>
       </Row>
