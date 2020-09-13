@@ -37,7 +37,7 @@ export default (props: { providerName: string }) => {
       {bannerProperties && (
         <>
           {bannerProperties.linkUrl && (
-            <a href={bannerProperties.linkUrl}>
+            <a href={bannerProperties.linkUrl} target="__blank">
               <img src={bannerSrc} alt={bannerProperties.name} />
             </a>
           )}
