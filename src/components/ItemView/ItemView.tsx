@@ -63,7 +63,9 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
 
   const onLikeClick = usersOnly(() => like(what, item.uid, currentUser.uid));
   const onReportClick = usersOnly(() => report(what, item.uid, currentUser.uid));
-  const submitComment = usersOnly(() => commentItem(what, draftComment, item.uid, currentUser));
+  const submitComment = usersOnly(() => {
+    commentItem(what, draftComment, item.uid, currentUser).then(() => setDraftComment(''));
+  });
 
   const onReplyComment = (replyingComment: Comment) => {
     if (draftComment.trim().length === 0) {
