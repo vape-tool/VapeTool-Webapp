@@ -64,33 +64,33 @@ const WireDiameter: React.FC<WireComponentProps> = (props) => {
       <InputNumber min={0.0} step={0.1} value={wire.mm} precision={1} onChange={onMmChange} />
     </Row>
   ) : (
-    <Row justify="start" align="bottom">
-      <div>
-        <label>
-          Width [mm]
+      <Row justify="start" align="bottom">
+        <div>
+          <label>
+            Width [mm]
           <InputNumber
-            min={0.0}
-            step={0.1}
-            value={wire.width}
-            precision={1}
-            onChange={onWidthChange}
-          />
-        </label>
-      </div>
-      <Typography.Text style={{ margin: 8 }}>x</Typography.Text>
-      <div>
-        <label>
-          Height [mm]
+              min={0.0}
+              step={0.1}
+              value={wire.width}
+              precision={1}
+              onChange={onWidthChange}
+            />
+          </label>
+        </div>
+        <Typography.Text style={{ margin: 8 }}>x</Typography.Text>
+        <div>
+          <label>
+            Height [mm]
           <InputNumber
-            min={0.0}
-            step={0.1}
-            value={wire.height}
-            precision={1}
-            onChange={onHeightChange}
-          />
-        </label>
-      </div>
-    </Row>
-  );
+              min={0.0}
+              step={0.1}
+              value={wire.height}
+              precision={1}
+              onChange={onHeightChange}
+            />
+          </label>
+        </div>
+      </Row>
+    );
 };
 export default WireDiameter;
