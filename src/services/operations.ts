@@ -82,7 +82,7 @@ export async function report(what: ItemName, itemId: string, userId: string) {
 }
 export async function commentItem(what: ItemName, body: string, itemId: string, user: CurrentUser) {
   try {
-    if (!body) throw new Error('Comment cannot be empty');
+    if (!body) throw new Error('Comment can not be empty');
     switch (what) {
       case ItemName.PHOTO:
         await commentPhoto(itemId, body, user);
