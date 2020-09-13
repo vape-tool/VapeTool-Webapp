@@ -107,8 +107,9 @@ const Profile: React.FC = () => {
                   >
                     <i className={styles.icon}>
                       <img
-                        src="https://web.vapetool.app/img/menu_icons/menu_coil_calculator.svg"
+                        src="https://web.vapetool.app/menu_icons/menu_coil_calculator.svg"
                         alt="coils"
+                        style={{ filter: 'invert(1)' }}
                       />
                     </i>
                     <span className={styles.label}>
@@ -121,8 +122,9 @@ const Profile: React.FC = () => {
                   >
                     <i className={styles.icon}>
                       <img
-                        src="https://web.vapetool.app/img/menu_icons/menu_liquid_blender.svg"
+                        src="https://web.vapetool.app/menu_icons/menu_liquid_blender.svg"
                         alt="liquids"
+                        style={{ filter: 'invert(1)' }}
                       />
                     </i>
                     <span className={styles.label}>
