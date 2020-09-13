@@ -54,6 +54,7 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
     setDraftComment(e.target.value);
   };
 
+  // eslint-disable-next-line func-names
   const usersOnly = function <RightFunc>(fn: RightFunc): RightFunc | (() => void) {
     if (firebaseUser.isAnonymous) {
       return () => message.error('You need to be logged in');
