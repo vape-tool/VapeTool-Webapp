@@ -6,13 +6,14 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
 import { User } from '@vapetool/types';
+import { remoteConfig } from 'firebase';
 import defaultSettings from '../config/defaultSettings';
 import { getCurrentUser } from './utils/firebase';
 import { getUser, initializeUser } from './services/user';
 import { isProUser, userPermissionToAuthority } from './utils/utils';
 import { getUserWizard } from './places/user.places';
 import { UserAuthorities } from './types/UserAuthorities';
-import { remoteConfig } from 'firebase';
+import logo from './assets/logo.svg';
 
 export interface CurrentUser extends User {
   name: string;
@@ -104,6 +105,7 @@ export const layout = ({
     disableContentMargin: false,
     footerRender: () => <Footer />,
     menuHeaderRender: undefined,
+    logo,
     ...initialState?.settings,
   };
 };
