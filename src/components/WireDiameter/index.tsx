@@ -60,7 +60,7 @@ const WireDiameter: React.FC<WireComponentProps> = (props) => {
         <Typography.Text style={{ margin: 4 }}>AWG</Typography.Text>
       </div>
       <Button onClick={onAwgPlusClick}>+</Button>
-      =
+      <Typography.Text style={{ marginLeft: '0.5em', marginRight: '0.5em' }}>=</Typography.Text>
       <InputNumber min={0.0} step={0.1} value={wire.mm} precision={1} onChange={onMmChange} />
     </Row>
   ) : (
