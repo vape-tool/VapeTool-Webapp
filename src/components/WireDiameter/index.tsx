@@ -51,7 +51,7 @@ const WireDiameter: React.FC<WireComponentProps> = (props) => {
   };
 
   return wire.kind === WireKind.ROUND ? (
-    <Row align="middle">
+    <Row align="middle" style={{ justifyContent: 'space-evenly' }}>
       <Button onClick={onAwgMinusClick}>-</Button>
       <div style={{ textAlign: 'center' }}>
         <div style={{ margin: 'auto' }}>
@@ -60,7 +60,9 @@ const WireDiameter: React.FC<WireComponentProps> = (props) => {
         <Typography.Text style={{ margin: 4 }}>AWG</Typography.Text>
       </div>
       <Button onClick={onAwgPlusClick}>+</Button>
-      <Typography.Text style={{ marginLeft: '0.5em', marginRight: '0.5em' }}>=</Typography.Text>
+      <Typography.Text style={{ marginLeft: '0.5em', marginRight: '0.5em', fontSize: 32 }}>
+        =
+      </Typography.Text>
       <InputNumber min={0.0} step={0.1} value={wire.mm} precision={1} onChange={onMmChange} />
     </Row>
   ) : (
