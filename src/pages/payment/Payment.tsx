@@ -3,8 +3,8 @@ import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'a
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { stripePromise } from '@/utils/stripe';
-import styles from './payment.less';
 import { verifyCurrentUserWithRedirect } from '@/services';
+import styles from './payment.less';
 
 const stripeLogo = require('@/assets/stripe.png');
 const paypalLogo = require('@/assets/paypal.png');

@@ -11,9 +11,9 @@ import { saveLiquid } from '@/services/items';
 import { LiquidModelState } from '@/models/liquid';
 import { CurrentUser } from '@/app';
 import { PageContainer } from '@ant-design/pro-layout';
+import Banner from '@/components/Banner';
 import styles from './LiquidBlender.less';
 import LiquidResultsChart from './LiquidResultsChart';
-import Banner from '@/components/Banner';
 
 const { Title } = Typography;
 
