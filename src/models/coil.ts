@@ -78,15 +78,15 @@ export default () => {
     }
   };
 
-  const calculateEffect = async (method: (coil: Coil) => Promise<Coil | Response>, coil: Coil) => {
+  const calculateEffect = async (method: (coil: Coil) => Promise<Coil | Response>) => {
     if (!verifyCurrentUser()) return;
     try {
-      const response = await method(coil);
+      const response = await method(currentCoil);
       if (response instanceof Response) {
         throw new Error(response.statusText);
       } else if (response instanceof Object) {
         setCoil(response);
-        await calculateProperties(coil);
+        await calculateProperties(response);
       }
     } catch (e) {
       message.error(e.message);
@@ -94,10 +94,10 @@ export default () => {
   };
 
   const calculateForResistance = () => {
-    return calculateEffect(server.calculateForResistance, currentCoil);
+    return calculateEffect(server.calculateForResistance);
   };
   const calculateForWraps = () => {
-    return calculateEffect(server.calculateForWraps, currentCoil);
+    return calculateEffect(server.calculateForWraps);
   };
 
   return {
