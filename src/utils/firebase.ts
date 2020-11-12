@@ -6,6 +6,7 @@ import 'firebase/functions';
 import { User as FirebaseUser } from 'firebase';
 import { ItemName } from '@/types';
 import { Mixable, Coil, MixResult, Liquid, Result, Properties } from '@vapetool/types';
+import { IS_PRODUCTION } from './utils';
 
 const firebaseProdConfig = require('@/firebase-config.json');
 
@@ -15,19 +16,21 @@ const firebaseDevConfig = require('@/firebase-config-dev.json');
 const devApp = firebase.initializeApp(firebaseDevConfig);
 const devDb = devApp.database();
 const devStorage = devApp.storage();
-const functions = firebase.functions();
 export const auth: firebase.auth.Auth = devApp.auth();
 
 const prodApp = firebase.initializeApp(firebaseProdConfig, 'prod');
 const prodDb = prodApp.database();
 const prodStorage = prodApp.storage();
 
+function functions() {
+  return IS_PRODUCTION ? prodApp.functions() : devApp.functions();
+}
 export function database(): firebase.database.Database {
-  return REACT_APP_ENV === 'prod' ? prodDb : devDb;
+  return IS_PRODUCTION ? prodDb : devDb;
 }
 
 export function storage(): firebase.storage.Storage {
-  return REACT_APP_ENV === 'prod' ? prodStorage : devStorage;
+  return IS_PRODUCTION ? prodStorage : devStorage;
 }
 
 export const batteriesRef = prodDb.ref('batteries');
@@ -119,6 +122,6 @@ export async function callFirebaseFunction<T extends MixResult | Result[] | Coil
     | { coil: Coil; power: number; heatFlux: number }
     | { liquid: Liquid },
 ): Promise<T> {
-  const res = await functions.httpsCallable(name)(data);
+  const res = await functions().httpsCallable(name)(data);
   return res.data as Promise<T>;
 }

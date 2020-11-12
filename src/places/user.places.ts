@@ -1,3 +1,5 @@
+import { IS_NOT_PRODUCTION } from '@/utils/utils';
+
 export const getCurrentUserProfileUrl = (): string => `/user/profile`;
 export const getPaymentUrl = (): string => `/payment`;
 export const getUserWizard = (): string => `/user/wizard`;
@@ -6,7 +8,7 @@ export const getUserLoginUrl = (): string => `/login`;
 
 export const getCancelSubscriptionUrl = (): string =>
   `https://www.${
-    REACT_APP_ENV !== 'prod' ? 'sandbox.' : ''
+    IS_NOT_PRODUCTION ? 'sandbox.' : ''
   }paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=${
-    REACT_APP_ENV !== 'prod' ? '62E6JFJB7ENUC' : 'ETUSF9JPSL3E8'
+    IS_NOT_PRODUCTION ? '62E6JFJB7ENUC' : 'ETUSF9JPSL3E8'
   }`;

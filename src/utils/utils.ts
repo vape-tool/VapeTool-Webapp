@@ -13,6 +13,9 @@ export const isAntDesignPro = (): boolean => {
   return window.location.hostname === 'web.vapetool.app';
 };
 
+export const IS_NOT_PRODUCTION = REACT_APP_ENV !== 'prod';
+export const IS_PRODUCTION = REACT_APP_ENV === 'prod';
+
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性
 export const isAntDesignProOrDev = (): boolean => {
   const { NODE_ENV } = process.env;

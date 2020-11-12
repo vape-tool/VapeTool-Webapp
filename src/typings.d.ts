@@ -32,4 +32,4 @@ interface Window {
 
 declare let ga: Function;
 
-declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | 'prod' | false;
+declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | 'prod';

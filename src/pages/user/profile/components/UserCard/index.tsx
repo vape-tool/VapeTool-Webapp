@@ -60,6 +60,10 @@ const UserCard: React.FC<UserCardProps> = ({
               <div className={styles.detail}>
                 <p>
                   <i className={styles.title} />
+                  {currentUser ? currentUser.email : ''}
+                </p>
+                <p>
+                  <i className={styles.title} />
                   {currentUser ? currentUser.title : ''}
                 </p>
                 <p>

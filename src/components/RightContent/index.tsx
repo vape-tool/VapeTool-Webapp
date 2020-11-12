@@ -3,6 +3,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useModel, SelectLang } from 'umi';
 import { logoutFirebaseWithRedirect } from '@/services/user';
+import { IS_NOT_PRODUCTION } from '@/utils/utils';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
@@ -70,7 +71,7 @@ const GlobalHeaderRight: React.FC<{}> = () => {
           <Typography style={{ color: 'white' }}>Log in</Typography>
         </a>
       )}
-      {REACT_APP_ENV && REACT_APP_ENV !== 'prod' && (
+      {IS_NOT_PRODUCTION && (
         <span>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
         </span>
