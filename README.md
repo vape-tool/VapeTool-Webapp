@@ -1,6 +1,6 @@
 # Vape Tool Webapp
 
-![Demo](img/cloud.jpg) This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+![Demo](docs/cloud.jpg) This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
 ## Environment Prepare
 
