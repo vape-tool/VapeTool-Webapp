@@ -2,7 +2,7 @@ import React from 'react';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig } from 'umi';
-import { remoteConfig } from 'firebase';
+import firebase from 'firebase';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
@@ -33,61 +33,64 @@ export async function getInitialState(): Promise<{
   currentUser?: CurrentUser;
   settings?: LayoutSettings;
 }> {
-  // 如果是登录页面，不执行
   console.log('getInitalState', history.location.pathname);
-  if (history.location.pathname !== '/login' && history.location.pathname !== '/login/success') {
-    console.log('startsWith');
-    try {
-      const firebaseUser = await getCurrentUser();
-      if (!firebaseUser) throw new Error('redirect to login page');
-      console.log({ userIsAnonymous: firebaseUser.isAnonymous });
-      if (firebaseUser.isAnonymous) {
-        history.replace({ pathname: '/' });
-        console.log('logged in as anonymous');
+  if (history.location.pathname === '/login' || history.location.pathname === '/login/success') {
+    return {
+      settings: defaultSettings,
+    };
+  }
+  try {
+    const firebaseUser = await getCurrentUser();
+    console.log({ firebaseUser });
+    if (!firebaseUser) throw new Error('User not logged in');
+
+    firebase.remoteConfig().fetchAndActivate();
+
+    console.log({ userIsAnonymous: firebaseUser.isAnonymous });
+    if (firebaseUser.isAnonymous) {
+      history.replace({ pathname: '/' });
+      console.log('logged in as anonymous');
+      return {
+        firebaseUser,
+        settings: defaultSettings,
+      };
+    }
+
+    let user: User | undefined = await getUser(firebaseUser.uid);
+    if (!user) {
+      console.log('Logged in as current user');
+      // User is first time logged in
+      user = await initializeUser(firebaseUser);
+      // Save user to database
+      if (!user) {
+        // Failed to save to database redirect to /Oops
+        history.push('/oops');
         return {
           firebaseUser,
           settings: defaultSettings,
         };
       }
-
-      let user: User | undefined = await getUser(firebaseUser.uid);
-      if (!user) {
-        console.log('Logged in as current user');
-        // User is first time logged in
-        user = await initializeUser(firebaseUser);
-        remoteConfig().fetchAndActivate();
-        // Save user to database
-        if (!user) {
-          // Failed to save to database redirect to /Oops
-          history.push('/oops');
-          return {
-            firebaseUser,
-            settings: defaultSettings,
-          };
-        }
-        // Redirect to user wizzard
-        history.replace({ pathname: getUserWizard() });
-      }
-      remoteConfig().fetchAndActivate();
-      const tags = [];
-      if (isProUser(user.subscription)) {
-        tags.push({ key: 'pro', label: 'Pro' });
-      }
-      const authorities = userPermissionToAuthority(user.permission, isProUser(user.subscription));
-      return {
-        firebaseUser,
-        currentUser: {
-          ...user,
-          name: user.display_name,
-          tags,
-          authorities,
-        },
-        settings: defaultSettings,
-      };
-    } catch (error) {
-      console.error(error);
-      history.push('/login');
+      // Redirect to user wizzard
+      history.push(getUserWizard());
     }
+    const tags = [];
+    if (isProUser(user.subscription)) {
+      tags.push({ key: 'pro', label: 'Pro' });
+    }
+    const authorities = userPermissionToAuthority(user.permission, isProUser(user.subscription));
+    return {
+      firebaseUser,
+      currentUser: {
+        ...user,
+        name: user.display_name,
+        tags,
+        authorities,
+      },
+      settings: defaultSettings,
+    };
+  } catch (error) {
+    console.error('redirecting to /login', error);
+    history.push('/login');
   }
   return {
     settings: defaultSettings,
