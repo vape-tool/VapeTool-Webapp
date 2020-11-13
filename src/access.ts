@@ -1,4 +1,5 @@
 import { UserPermission } from '@vapetool/types';
+import firebase from 'firebase';
 import { CurrentUser } from './app';
 
 export const canRemove = (authorId: string, currentUser?: CurrentUser) =>

@@ -4,8 +4,8 @@ import {
   photosStorageRef,
   usersStorageRef,
   storage,
+  remoteConfig,
 } from '@/utils/firebase';
-import { remoteConfig } from 'firebase';
 
 export enum ImageType {
   USER = 'user',

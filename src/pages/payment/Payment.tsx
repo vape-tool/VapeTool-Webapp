@@ -1,9 +1,12 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { stripePromise } from '@/utils/stripe';
+import { createStripeManageLink, createStripePayment } from '@/utils/firebase';
 import { verifyCurrentUserWithRedirect } from '@/services';
+import { useModel } from 'umi';
+import { IS_PRODUCTION, IS_NOT_PRODUCTION } from '@/utils/utils';
 import styles from './payment.less';
 
 const stripeLogo = require('@/assets/stripe.png');
@@ -31,28 +34,30 @@ const coinbaseCodes = {
   [SubscriptionPlan.LIFETIME]: '5e8d6403-71dc-4988-8b06-f21d8d296cb3',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stripeCodes = {
   // first PRODUCTION, second DEVELOPMENT
-
-  [SubscriptionPlan.MONTHLY]: ['', 'plan_Ha1E7UzNidhC9Q'],
-  [SubscriptionPlan.ANNUALLY]: ['', 'plan_Ha1E0tVa0Be7Zx'],
-  [SubscriptionPlan.LIFETIME]: ['', 'sku_Ha1EpVv51gdqrb'],
+  [SubscriptionPlan.MONTHLY]: ['plan_Ha1E7UzNidhC9Q', 'plan_GzHJlYB6AmQMJu'],
+  [SubscriptionPlan.ANNUALLY]: ['plan_Ha1E0tVa0Be7Zx', 'plan_GzHrBem88w5v0n'],
+  [SubscriptionPlan.LIFETIME]: ['sku_Ha1EpVv51gdqrb', 'price_1Hmm69BXl6CSFDJe9ghbla4c'],
 };
 
-const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
-  const [type, setType] = React.useState(SubscriptionPlan.ANNUALLY);
-  const [step, setStep] = React.useState(0);
-  const [processingPayment, setProcessingPayment] = React.useState(false);
+const Payment: React.FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  const [type, setType] = useState(SubscriptionPlan.ANNUALLY);
+  const [step, setStep] = useState(0);
+  const [processingPayment, setProcessingPayment] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     verifyCurrentUserWithRedirect();
   });
 
   const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || SubscriptionPlan.ANNUALLY);
 
   const getPaypalHref = () => {
-    const code = paypalCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1];
-    const sandBoxStr = REACT_APP_ENV === 'dev' ? 'sandbox.' : '';
+    const code = paypalCodes[type][IS_PRODUCTION ? 0 : 1];
+    const sandBoxStr = IS_NOT_PRODUCTION ? 'sandbox.' : '';
 
     return `https://www.${sandBoxStr}paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=${code}`;
   };
@@ -64,34 +69,32 @@ const Payment: React.FC<{ userEmail?: string }> = ({ userEmail }) => {
 
   const handleStripeClick = async () => {
     const stripe = await stripePromise;
-    if (!userEmail) {
+    if (!currentUser?.email) {
       console.error('userEmail is undefined');
       message.error('You need to be logged in');
     } else if (stripe) {
       setProcessingPayment(true);
 
-      let item;
-      if (type === SubscriptionPlan.LIFETIME) {
-        item = {
-          sku: stripeCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1],
-          quantity: 1,
-        };
-      } else {
-        item = {
-          plan: stripeCodes[type][REACT_APP_ENV === 'prod' ? 0 : 1],
-          quantity: 1,
-        };
+      try {
+        if (type === SubscriptionPlan.LIFETIME) {
+          const id = await createStripePayment(
+            stripeCodes[type][IS_PRODUCTION ? 0 : 1],
+            `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+            `${window.location.origin}/payment/cancel`,
+          );
+          await stripe.redirectToCheckout({
+            sessionId: id,
+          });
+        } else {
+          const link = await createStripeManageLink(`${window.location.origin}/user/profile`);
+          window.location.href = link;
+        }
+      } catch (err) {
+        console.error(err);
+        message.error(err.error.message);
       }
-      const err = await stripe.redirectToCheckout({
-        items: [item],
-        customerEmail: userEmail,
-        successUrl: `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/payment/cancel`,
-      });
 
       setProcessingPayment(false);
-      console.error(err);
-      message.error(err.error.message);
     }
   };
 

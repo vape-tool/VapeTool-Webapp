@@ -3,7 +3,6 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import 'firebase/functions';
-import { User as FirebaseUser } from 'firebase';
 import { ItemName } from '@/types';
 import { Mixable, Coil, MixResult, Liquid, Result, Properties } from '@vapetool/types';
 import { IS_PRODUCTION } from './utils';
@@ -22,9 +21,14 @@ const prodApp = firebase.initializeApp(firebaseProdConfig, 'prod');
 const prodDb = prodApp.database();
 const prodStorage = prodApp.storage();
 
-function functions() {
+export function functions() {
   return IS_PRODUCTION ? prodApp.functions() : devApp.functions();
 }
+
+export function remoteConfig(): firebase.remoteConfig.RemoteConfig {
+  return IS_PRODUCTION ? prodApp.remoteConfig() : devApp.remoteConfig();
+}
+
 export function database(): firebase.database.Database {
   return IS_PRODUCTION ? prodDb : devDb;
 }
@@ -95,8 +99,8 @@ export const { ServerValue } = firebase.database;
 
 let userLoaded: boolean = false;
 
-export function getCurrentUser(): Promise<FirebaseUser | undefined> {
-  return new Promise<FirebaseUser | undefined>((resolve, reject) => {
+export function getCurrentUser(): Promise<firebase.User | undefined> {
+  return new Promise<firebase.User | undefined>((resolve, reject) => {
     if (userLoaded) {
       resolve(auth.currentUser ?? undefined);
     }
@@ -124,4 +128,22 @@ export async function callFirebaseFunction<T extends MixResult | Result[] | Coil
 ): Promise<T> {
   const res = await functions().httpsCallable(name)(data);
   return res.data as Promise<T>;
+}
+
+export async function createStripeManageLink(returnUrl: string): Promise<string> {
+  const res = await functions().httpsCallable('createStripeManageLink')({ returnUrl });
+  return res.data as string;
+}
+
+export async function createStripePayment(
+  item: string,
+  successUrl: string,
+  cancelUrl: string,
+): Promise<string> {
+  const res = await functions().httpsCallable('createCheckoutSession')({
+    item,
+    successUrl,
+    cancelUrl,
+  });
+  return res.data as string;
 }
