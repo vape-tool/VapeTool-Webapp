@@ -72,7 +72,6 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.8.6",
     "react-facebook-login": "^4.1.1",
-    "react-firebaseui": "^4.1.0",
     "react-google-login": "^5.1.20",
     "react-helmet-async": "^1.0.4",
     "react-image-crop": "^8.6.4",
