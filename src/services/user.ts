@@ -5,6 +5,8 @@ import { auth, usersRef } from '@/utils/firebase';
 import { uploadAvatar } from '@/services/storage';
 import { notification } from 'antd';
 
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
 export function getUser(uid: string): Promise<User | undefined> {
   return new Promise((resolve) => {
     usersRef
@@ -104,6 +106,37 @@ export async function logoutFirebaseWithRedirect() {
   await logoutFirebase();
   history.replace('/login');
 }
+
+export const signInWithCredentials = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<firebase.auth.UserCredential> => {
+  await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return auth.signInWithEmailAndPassword(email, password);
+};
+
+export const registerWithCredentials = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<firebase.auth.UserCredential> => {
+  await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return auth.createUserWithEmailAndPassword(email, password);
+};
+
+export const signInViaGoogle = async (): Promise<firebase.auth.UserCredential> => {
+  await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return auth.signInWithPopup(googleProvider);
+};
+
+export const sendPasswordResetEmail = (email: string) => {
+  return auth.sendPasswordResetEmail(email);
+};
 
 export function notifyToLogIn() {
   notification.open({

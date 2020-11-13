@@ -1,18 +1,19 @@
-const routes = [
+import { IRoute } from 'umi';
+
+const routes: IRoute[] = [
   {
     path: '/login',
+    hideInMenu: true,
     layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/login',
-        component: './login',
-      },
-      {
-        path: '/login/success',
-        component: './login/success',
-      },
-    ],
+    name: 'login',
+    component: './login',
+  },
+  {
+    path: '/register',
+    hideInMenu: true,
+    layout: false,
+    name: 'register',
+    component: './register',
   },
   {
     hideInMenu: true,
