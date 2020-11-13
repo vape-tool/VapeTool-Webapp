@@ -8,8 +8,7 @@ import { EditOutlined } from '@ant-design/icons';
 import UserTags from '@/pages/user/profile/components/UserCard/UserTags';
 import { getCancelSubscriptionUrl, getUserWizard, getPaymentUrl } from '@/places/user.places';
 import { getUserTotalContentCount, getUserTotalLikesCount } from '@/services/userCenter';
-import { redirectTo } from '@/models/global';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, history } from 'umi';
 import { isProUser } from '@/utils/utils';
 import styles from './styles.less';
 
@@ -105,7 +104,7 @@ const UserCard: React.FC<UserCardProps> = ({
                 shape="round"
                 size="small"
                 block
-                onClick={() => redirectTo(getUserWizard())}
+                onClick={() => history.push(getUserWizard())}
               >
                 <EditOutlined />
                 <FormattedMessage id="user.actions.editProfile" defaultMessage="Edit profile" />
@@ -132,7 +131,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   shape="round"
                   size="small"
                   block
-                  onClick={() => redirectTo(getPaymentUrl())}
+                  onClick={() => history.push(getPaymentUrl())}
                 >
                   Unlock Pro
                 </Button>

@@ -1,15 +1,15 @@
 import { User as FirebaseUser } from 'firebase/app';
 import { logoutFirebase } from '@/services/user';
 import { auth } from '@/utils/firebase';
-import { redirectReplace } from '@/models/global';
 import { useState, useEffect } from 'react';
+import { history } from 'umi';
 
 export default function useUserModel() {
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | undefined>(undefined);
 
   const logout = async () => {
     await logoutFirebase();
-    redirectReplace('/login');
+    history.replace('/login');
   };
 
   useEffect(() => {

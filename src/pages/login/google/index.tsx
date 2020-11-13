@@ -11,7 +11,7 @@ export default function LoginGoogle({ register }: { register?: boolean }) {
       const credentials = await signInViaGoogle();
       if (!credentials.user) throw new Error('Current user not defined');
       message.info('User logged in');
-      history.replace('/welcome');
+      history.replace('/');
       initialState.refresh();
     } catch (e) {
       message.error(e.message);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Col, Form, InputNumber, Row, Typography } from 'antd';
-import { connect, useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage } from 'umi';
 import ButtonGroup from 'antd/es/button/button-group';
 import { verifyCurrentUser } from '@/services';
 import Banner from '@/components/Banner';
@@ -204,4 +204,4 @@ const BatteryLife: React.FC = () => {
   );
 };
 
-export default connect()(BatteryLife);
+export default BatteryLife;
