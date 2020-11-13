@@ -6,6 +6,7 @@ import { uploadAvatar } from '@/services/storage';
 import { notification } from 'antd';
 
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 export function getUser(uid: string): Promise<User | undefined> {
   return new Promise((resolve) => {
@@ -132,6 +133,11 @@ export const registerWithCredentials = async ({
 export const signInViaGoogle = async (): Promise<firebase.auth.UserCredential> => {
   await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   return auth.signInWithPopup(googleProvider);
+};
+
+export const signInViaFacebook = async (): Promise<firebase.auth.UserCredential> => {
+  await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  return auth.signInWithPopup(facebookProvider);
 };
 
 export const sendPasswordResetEmail = (email: string) => {
