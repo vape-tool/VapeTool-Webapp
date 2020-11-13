@@ -15,6 +15,7 @@ export default defineConfig({
     name: 'Vape Tool',
     locale: true,
     siderWidth: 208,
+    ...defaultSettings,
   },
   locale: {
     // default zh-CN
@@ -42,6 +43,8 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
+  esbuild: {},
+  exportStatic: {},
   proxy: {
     '/api/': {
       target: 'http://localhost:8001',
