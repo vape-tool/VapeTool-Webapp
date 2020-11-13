@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Menu, Spin } from 'antd';
-import { ClickParam } from 'antd/es/menu';
 import { history, useModel, FormattedMessage } from 'umi';
 import { stringify } from 'querystring';
 import { ImageType } from '@/services/storage';
@@ -28,7 +27,7 @@ const loginOut = () => {
 const AvatarDropdown: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  const onMenuClick = useCallback(async (event: ClickParam) => {
+  const onMenuClick = useCallback(async (event: any) => {
     const { key } = event;
     if (key === 'logout') {
       await logoutFirebase();
