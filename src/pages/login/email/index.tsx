@@ -48,7 +48,7 @@ export default function LoginEmail({ register }: { register?: boolean }) {
       const credentials = await submitFunc(values);
       if (!credentials) throw new Error('Credentials are not defined');
       message.info('User logged in');
-      history.replace('/welcome');
+      history.replace('/');
       initialState.refresh();
     } catch (e) {
       setButtonLoading(false);

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, Result } from 'antd';
 import { getPageQuery } from '@/utils/utils';
-import { redirectTo } from '@/models/global';
 import { getCurrentUserProfileUrl } from '@/places/user.places';
+import { history } from 'umi';
 
 const SuccessPayment: React.FC = () => {
-  const goBack = () => redirectTo(getCurrentUserProfileUrl());
+  const goBack = () => history.replace(getCurrentUserProfileUrl());
   // TODO this is stripe way, handle also paypal, and maybe coinbase, not sure
   const params = getPageQuery();
   const sessionId = params.session_id;

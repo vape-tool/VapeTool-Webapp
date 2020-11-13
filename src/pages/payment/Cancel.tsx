@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, Result } from 'antd';
-import { redirectTo } from '@/models/global';
 import { getPaymentUrl } from '@/places/user.places';
+import { history } from 'umi';
 
 const CancelPayment: React.FC = () => {
-  const onBuyAgainClick = () => redirectTo(getPaymentUrl());
+  const onBuyAgainClick = () => history.replace(getPaymentUrl());
 
   return (
     <Result
