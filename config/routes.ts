@@ -2,6 +2,12 @@ import { IRoute } from 'umi';
 
 const routes: IRoute[] = [
   {
+    name: 'welcome',
+    path: '/welcome',
+    icon: 'menu_icons/welcome.svg',
+    component: './Welcome',
+  },
+  {
     path: '/login',
     hideInMenu: true,
     layout: false,
@@ -52,12 +58,15 @@ const routes: IRoute[] = [
     component: './user/wizard',
   },
   {
+<<<<<<< Updated upstream
     path: '/',
     name: 'welcome',
     icon: 'https://web.vapetool.app/menu_icons/welcome.svg',
     component: './Welcome',
   },
   {
+=======
+>>>>>>> Stashed changes
     path: '/cloud',
     name: 'cloud',
     icon: 'https://web.vapetool.app/menu_icons/cloud.svg',
