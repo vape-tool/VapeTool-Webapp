@@ -1,6 +1,6 @@
 import React from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
-import { Dispatch, FormattedMessage, useModel } from 'umi';
+import { FormattedMessage, useModel } from 'umi';
 import FlavorTable from '@/components/FlavorTable';
 import NewFlavorModal from '@/components/NewFlavorModal';
 import VgPgRatioView from '@/components/VgPgRatioView';
@@ -20,7 +20,6 @@ const { Title } = Typography;
 export interface LiquidBlenderProps {
   liquid: LiquidModelState;
   user?: CurrentUser;
-  dispatch: Dispatch;
 }
 
 const resultColumns = [
