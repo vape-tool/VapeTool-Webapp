@@ -144,6 +144,11 @@ export const sendPasswordResetEmail = (email: string) => {
   return auth.sendPasswordResetEmail(email);
 };
 
+export const signInAnonymously = async () => {
+  await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
+  return auth.signInAnonymously();
+};
+
 export function notifyToLogIn() {
   notification.open({
     message: 'You need to be logged in!',
