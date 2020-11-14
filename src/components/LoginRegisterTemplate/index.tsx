@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from '@/components/Footer';
 import CookieConsent from 'react-cookie-consent';
+import { Typography } from 'antd';
 import styles from './style.less';
 
 const LoginRegisterTemplate: React.FC<{}> = (props) => {
@@ -8,6 +9,16 @@ const LoginRegisterTemplate: React.FC<{}> = (props) => {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.main}>{props.children}</div>
+        <div style={{ textAlign: 'center' }}>
+          <Typography>
+            By logging in You accept our{' '}
+            {/* To be added here!!!!!!
+        <a href="">Terms of Service</a> */}
+            <a target="__blank" href="https://vapetool.app/privacy_policy">
+              Privacy Policy
+            </a>
+          </Typography>
+        </div>
       </div>
       <CookieConsent
         location="bottom"
