@@ -2,9 +2,13 @@ import { IRoute } from 'umi';
 
 const routes: IRoute[] = [
   {
+    path: '/',
+    redirect: '/welcome',
+  },
+  {
     name: 'welcome',
     path: '/welcome',
-    icon: 'menu_icons/welcome.svg',
+    icon: 'https://web.vapetool.app/menu_icons/welcome.svg',
     component: './Welcome',
   },
   {
