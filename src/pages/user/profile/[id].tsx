@@ -16,8 +16,8 @@ const Profile: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { loadingProfile, userProfile, fetchUserProfile } = useModel('profile');
   const [tabKey, setTabKey] = useState(ItemName.PHOTO);
-  const match = useRouteMatch();
-  let userId = match?.params['id'];
+  const match: any = useRouteMatch();
+  let userId = match?.params.id;
   console.log({ userId });
   const isCurrentUser: boolean =
     initialState?.currentUser !== undefined &&
