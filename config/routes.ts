@@ -58,15 +58,6 @@ const routes: IRoute[] = [
     component: './user/wizard',
   },
   {
-<<<<<<< Updated upstream
-    path: '/',
-    name: 'welcome',
-    icon: 'https://web.vapetool.app/menu_icons/welcome.svg',
-    component: './Welcome',
-  },
-  {
-=======
->>>>>>> Stashed changes
     path: '/cloud',
     name: 'cloud',
     icon: 'https://web.vapetool.app/menu_icons/cloud.svg',
