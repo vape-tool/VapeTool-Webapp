@@ -258,10 +258,11 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
             onClick={calculate}
             loading={calculateBtnLoading}
           >
+            {' '}
             <FormattedMessage id="coilCalculator.inputs.calculate" />
-          </Button>
-          &nbsp;
+          </Button>{' '}
           <Button icon={<SaveOutlined />} size="large" onClick={() => setSaveModalVisible(true)}>
+            {' '}
             <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
           </Button>
         </Col>

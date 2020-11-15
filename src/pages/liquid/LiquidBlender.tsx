@@ -252,6 +252,7 @@ const LiquidBlender = () => {
                         loading={calculateBtnLoading}
                         onClick={() => onCalculateClick()}
                       >
+                        {' '}
                         <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                       </Button>
                     </Affix>
@@ -263,6 +264,7 @@ const LiquidBlender = () => {
                           size="large"
                           onClick={() => setSaveModalVisible(true)}
                         >
+                          {' '}
                           <FormattedMessage id="misc.actions.save" defaultMessage="Save" />
                         </Button>
                       </Affix>
