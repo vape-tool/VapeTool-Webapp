@@ -70,6 +70,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [calculateBtnLoading, setCalculateBtnLoading] = useState(false);
 
   const onValueChanged = (field: Field) => (value?: number | string) => {
     if (field === Field.WRAPS || field === Field.RESISTANCE) {
@@ -96,12 +97,9 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
   const onWrapsChange = onValueChanged(Field.WRAPS);
 
   const calculate = (): void => {
-    if (lastEdit === Field.WRAPS) {
-      calculateForResistance();
-    } else {
-      // default
-      calculateForWraps();
-    }
+    const calculationFn = lastEdit === Field.WRAPS ? calculateForResistance : calculateForWraps;
+    setCalculateBtnLoading(true);
+    calculationFn().finally(() => setCalculateBtnLoading(false));
   };
 
   const onBaseVoltageChange = (value?: number | string) => {
@@ -253,7 +251,13 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
         </Col>
 
         <Col xs={24} style={{ marginTop: 20 }}>
-          <Button type="primary" icon={<CalculatorOutlined />} size="large" onClick={calculate}>
+          <Button
+            type="primary"
+            icon={<CalculatorOutlined />}
+            size="large"
+            onClick={calculate}
+            loading={calculateBtnLoading}
+          >
             <FormattedMessage id="coilCalculator.inputs.calculate" />
           </Button>
           &nbsp;
