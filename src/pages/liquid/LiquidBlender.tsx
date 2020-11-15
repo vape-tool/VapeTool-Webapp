@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Affix, Button, Card, Col, InputNumber, Row, Table, Typography } from 'antd';
 import { FormattedMessage, useModel } from 'umi';
 import FlavorTable from '@/components/FlavorTable';
@@ -66,6 +66,7 @@ const LiquidBlender = () => {
   } = useModel('liquid');
 
   const { initialState } = useModel('@@initialState');
+  const [calculateBtnLoading, setCalculateBtnLoading] = useState(false);
   const user = initialState?.currentUser as CurrentUser;
 
   const onBaseStrengthChange = (value: number) => setBaseStrength(value);
@@ -84,7 +85,10 @@ const LiquidBlender = () => {
 
   const showNewFlavorModal = () => showFlavorModal();
 
-  const onCalculateClick = () => calculateResult();
+  const onCalculateClick = () => {
+    setCalculateBtnLoading(true);
+    calculateResult().finally(() => setCalculateBtnLoading(false));
+  };
 
   const responsivenessProps = { xs: 24, xl: 8 };
   const responsivenessCollections = { xs: 24, xl: 16 };
@@ -245,7 +249,8 @@ const LiquidBlender = () => {
                         icon={<CalculatorOutlined />}
                         shape="round"
                         size="large"
-                        onClick={onCalculateClick}
+                        loading={calculateBtnLoading}
+                        onClick={() => onCalculateClick()}
                       >
                         <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                       </Button>
