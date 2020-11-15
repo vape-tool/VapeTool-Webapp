@@ -5,13 +5,7 @@ import { ItemName, Liquid } from '@/types';
 import styles from './styles.less';
 import { Actions } from './ItemView';
 
-export default function LiquidView({
-  item,
-  displayCommentsLength,
-}: {
-  item: Liquid;
-  displayCommentsLength: number;
-}) {
+export default function LiquidView({ item }: { item: Liquid }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
 

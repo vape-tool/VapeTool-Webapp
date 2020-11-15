@@ -8,13 +8,7 @@ import { Actions } from './ItemView';
 import styles from './styles.less';
 import FirebaseImage from '../StorageAvatar';
 
-export default function PostView({
-  item,
-  displayCommentsLength,
-}: {
-  item: Post;
-  displayCommentsLength: number;
-}) {
+export default function PostView({ item }: { item: Post }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
 
@@ -37,12 +31,7 @@ export default function PostView({
           </span>
         }
       />
-      <Actions
-        what={ItemName.POST}
-        item={item}
-        displayCommentsLength={displayCommentsLength}
-        unselectItem={unselectItem}
-      />
+      <Actions what={ItemName.POST} item={item} unselectItem={unselectItem} />
     </Card>
   );
 }

@@ -10,13 +10,7 @@ import { getUserProfileUrl } from '@/places/user.places';
 import { Actions } from './ItemView';
 import styles from './styles.less';
 
-export default function LinkView({
-  item,
-  displayCommentsLength,
-}: {
-  item: LinkType;
-  displayCommentsLength: number;
-}) {
+export default function LinkView({ item }: { item: LinkType }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
 
@@ -41,12 +35,7 @@ export default function LinkView({
       />
       <br />
       <Microlink url={item.url} lazy />
-      <Actions
-        what={ItemName.LINK}
-        item={item}
-        displayCommentsLength={displayCommentsLength}
-        unselectItem={unselectItem}
-      />
+      <Actions what={ItemName.LINK} item={item} unselectItem={unselectItem} />
     </Card>
   );
 }

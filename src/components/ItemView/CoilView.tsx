@@ -30,13 +30,7 @@ function useCoilImage(itemUid: string) {
   return coilImageCoil;
 }
 
-export default function CoilView({
-  item,
-  displayCommentsLength,
-}: {
-  item: Coil;
-  displayCommentsLength: number;
-}) {
+export default function CoilView({ item }: { item: Coil }) {
   const coilImageUrl = useCoilImage(item.uid);
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
@@ -94,12 +88,7 @@ export default function CoilView({
           {Math.round(item.resistance * 1000) / 1000}
         </Descriptions.Item>
       </Descriptions>
-      <Actions
-        what={ItemName.COIL}
-        item={item}
-        displayCommentsLength={displayCommentsLength}
-        unselectItem={unselectItem}
-      />
+      <Actions what={ItemName.COIL} item={item} unselectItem={unselectItem} />
     </Card>
   );
 }

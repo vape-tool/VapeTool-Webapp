@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import moment from 'moment';
-import { Input, List, Menu, Modal, message } from 'antd';
+import { Input, List, Menu, Modal, message, Typography, Col, Row } from 'antd';
 import { likesRef, commentsRef } from '@/utils/firebase';
 import { CurrentUser } from '@/app';
 import { FormattedMessage, useIntl, useModel } from 'umi';
@@ -16,7 +16,6 @@ import { CommentView } from './CommentView';
 
 export interface ItemViewProps<T> {
   item: T;
-  displayCommentsLength: number;
   what: ItemName;
   unselectItem: () => void;
 }
@@ -32,7 +31,6 @@ export interface ItemViewState {
 export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   what,
   item,
-  displayCommentsLength,
   unselectItem,
 }: ItemViewProps<T>) {
   const { initialState } = useModel('@@initialState');
@@ -40,12 +38,8 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const firebaseUser = initialState?.firebaseUser as firebase.User;
 
   const [draftComment, setDraftComment] = useState<string>('');
-  const { displayComments, commentsCount } = useComments(
-    what,
-    item,
-    currentUser,
-    displayCommentsLength,
-  );
+  const { displayComments, commentsCount } = useComments(what, item, currentUser);
+  const [visibleCommentsLength, setVisibleCommentsLength] = useState(3);
   const inputRef = useRef<Input>(null);
   const { likedByMe, likesCount } = useLikes(what, item, currentUser);
   const intl = useIntl();
@@ -164,11 +158,20 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
           </Dropdown>,
         ]}
       />
+      {commentsCount !== undefined && commentsCount - visibleCommentsLength > 0 && (
+        <Col style={{ textAlign: 'center' }}>
+          <Typography.Link onClick={() => setVisibleCommentsLength(visibleCommentsLength + 3)}>
+            Show more
+          </Typography.Link>
+        </Col>
+      )}
       {displayComments && displayComments.length > 0 && (
         <List<Comment>
           size="small"
           rowKey={(comment) => comment.uid}
-          dataSource={displayComments}
+          dataSource={displayComments.slice(
+            Math.max(displayComments.length - visibleCommentsLength, 0),
+          )}
           renderItem={(comment) => (
             <CommentView
               user={currentUser}
@@ -218,12 +221,7 @@ function useLikes(what: ItemName, item: Photo | Post | Link | Coil | Liquid, use
   return { likedByMe, likesCount };
 }
 
-function useComments(
-  what: ItemName,
-  item: Photo | Post | Link | Coil | Liquid,
-  user: CurrentUser,
-  displayCommentsLength: number,
-) {
+function useComments(what: ItemName, item: Photo | Post | Link | Coil | Liquid, user: CurrentUser) {
   const [commentsCount, setCommentsCount] = useState<number | undefined>();
   const [displayComments, setDisplayComments] = useState<Comment[]>([]);
 
@@ -235,7 +233,7 @@ function useComments(
       snapshot.forEach((snap) => {
         comments.push({ ...snap.val(), uid: snap.key });
       });
-      setDisplayComments(comments.slice(Math.max(comments.length - displayCommentsLength, 0)));
+      setDisplayComments(comments);
     });
     return () => ref.off('value', listener);
   }, [item.uid]);
