@@ -7,6 +7,7 @@ import { createStripeManageLink, createStripePayment } from '@/utils/firebase';
 import { verifyCurrentUserWithRedirect } from '@/services';
 import { useModel } from 'umi';
 import { IS_PRODUCTION, IS_NOT_PRODUCTION } from '@/utils/utils';
+import { PayPalButton } from 'react-paypal-button-v2';
 import styles from './payment.less';
 
 const stripeLogo = require('@/assets/stripe.png');
@@ -23,8 +24,8 @@ export enum SubscriptionPlan {
 
 const paypalCodes = {
   // first PRODUCTION, second DEVELOPMENT
-  [SubscriptionPlan.MONTHLY]: ['PAJTMA62ZSBRW', 'WABX9M3L32NJS'],
-  [SubscriptionPlan.ANNUALLY]: ['PVFRG3TU5V5CJ', 'LSCXT5VQJGLE8'],
+  [SubscriptionPlan.MONTHLY]: ['PAJTMA62ZSBRW', 'P-66E24374ED850034WL6Y3CFQ'],
+  [SubscriptionPlan.ANNUALLY]: ['PVFRG3TU5V5CJ', 'P-1S563899N0360234PL6Y2FEY'],
   [SubscriptionPlan.LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
 };
 
@@ -187,6 +188,34 @@ const Payment: React.FC = () => {
                   </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
+                  <PayPalButton
+                    options={{
+                      vault: true,
+                      clientId:
+                        'AUEDO1Gov00KdUqSIP9KEkoFhizpHA4oZWKXbGewXBUQ0YY4ZbgKIqstqWgVdQLNNYNG2bX7g824WSXb',
+                    }}
+                    createSubscription={(data: any, actions: any) => {
+                      return actions.subscription.create({
+                        plan_id: paypalCodes[type][IS_PRODUCTION ? 0 : 1],
+                      });
+                    }}
+                    onApprove={(data: any, actions: any) => {
+                      // Capture the funds from the transaction
+                      return actions.subscription.get().then((details: any) => {
+                        // Show a success message to your buyer
+                        console.log(details);
+
+                        // OPTIONAL: Call your server to save the subscription
+                        return fetch('/paypal-subscription-complete', {
+                          method: 'post',
+                          body: JSON.stringify({
+                            orderID: data.orderID,
+                            subscriptionID: data.subscriptionID,
+                          }),
+                        });
+                      });
+                    }}
+                  />
                   <a target="_blank" rel="noreferrer noopener" href={getPaypalHref()}>
                     <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
                       <img
