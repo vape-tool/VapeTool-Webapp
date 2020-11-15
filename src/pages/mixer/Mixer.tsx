@@ -16,6 +16,7 @@ import { columns } from './tableData';
 
 const Mixer: React.FC = () => {
   const [form] = Form.useForm();
+  const [calculateBtnLoading, setCalculateBtnLoading] = useState(false);
 
   const mixDataPattern: Partial<Mixable> = {
     amount: undefined,
@@ -55,6 +56,7 @@ const Mixer: React.FC = () => {
   };
 
   const handleCalculate = async () => {
+    setCalculateBtnLoading(true);
     if (!verifyCurrentUser()) return;
     const result = await calculate(
       {
@@ -87,6 +89,8 @@ const Mixer: React.FC = () => {
     };
     newData.push(total);
     setData(newData);
+
+    setCalculateBtnLoading(false);
   };
 
   const formItemLayout = {
@@ -140,7 +144,7 @@ const Mixer: React.FC = () => {
               <Col>
                 <Form.Item style={{ marginTop: 20, display: 'flex', marginLeft: 'auto' }}>
                   <ButtonGroup>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={calculateBtnLoading}>
                       <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                     </Button>
 
