@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, Row, Table, Typography } from 'antd';
 import ButtonGroup from 'antd/es/button/button-group';
 import { FormattedMessage } from 'umi';
 
-import { UpOutlined } from '@ant-design/icons';
+import { CalculatorOutlined, DeleteOutlined, UpOutlined } from '@ant-design/icons';
 import { MixableType, Mixable, MixableResult } from '@vapetool/types';
 import { calculate } from '@/services/mixer';
 import { capitalize } from '@/utils/utils';
@@ -144,11 +144,23 @@ const Mixer: React.FC = () => {
               <Col>
                 <Form.Item style={{ marginTop: 20, display: 'flex', marginLeft: 'auto' }}>
                   <ButtonGroup>
-                    <Button type="primary" htmlType="submit" loading={calculateBtnLoading}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={calculateBtnLoading}
+                      size="large"
+                      icon={<CalculatorOutlined />}
+                    >
+                      {' '}
                       <FormattedMessage id="misc.actions.calculate" defaultMessage="Calculate" />
                     </Button>
-
-                    <Button type="default" onClick={handleClear}>
+                    <Button
+                      type="default"
+                      onClick={handleClear}
+                      size="large"
+                      icon={<DeleteOutlined />}
+                    >
+                      {' '}
                       <FormattedMessage id="misc.actions.clear" defaultMessage="Reset" />
                     </Button>
                   </ButtonGroup>
