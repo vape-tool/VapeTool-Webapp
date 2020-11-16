@@ -43,7 +43,9 @@ export function Actions<T extends Photo | Post | Link | Coil | Liquid>({
   const inputRef = useRef<Input>(null);
   const { likedByMe, likesCount } = useLikes(what, item, currentUser);
   const intl = useIntl();
-  moment.locale(intl.locale);
+  useEffect(() => {
+    moment.locale(intl.locale);
+  }, []);
 
   const onChangeCommentText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftComment(e.target.value);
