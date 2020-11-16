@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Menu, message, Spin } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
-import { stringify } from 'querystring';
 import { ImageType } from '@/services/storage';
 import { getPaymentUrl, getUserLoginUrl, getUserProfileUrl } from '@/places/user.places';
 import { logoutFirebase } from '@/services/user';
@@ -15,12 +14,7 @@ import FirebaseImage from '../StorageAvatar';
  */
 const loginOut = () => {
   if (window.location.pathname !== getUserLoginUrl()) {
-    history.replace({
-      pathname: getUserLoginUrl(),
-      search: stringify({
-        redirect: window.location.href,
-      }),
-    });
+    history.replace(getUserLoginUrl());
   }
 };
 
@@ -52,18 +46,11 @@ const AvatarDropdown: React.FC = () => {
         message.error("Couldn't retreive current user");
         return;
       }
-      history.push({
-        pathname: getUserProfileUrl(initialState.firebaseUser.uid),
-      });
+      history.push(getUserProfileUrl(initialState.firebaseUser.uid));
       return;
     }
     if (key === 'unlockPro') {
-      history.replace({
-        pathname: getPaymentUrl(),
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      });
+      history.replace(getPaymentUrl());
     }
   }, []);
 
