@@ -66,7 +66,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
     setWire,
   } = useModel('coil');
 
-  const [lastEdit, setLastEdit] = useState('resistance');
+  const [lastEdit, setLastEdit] = useState<Field>(Field.WRAPS);
   const [helpModalVisibile, setHelpModalVisible] = useState(false);
   const [slider, setSlider] = useState<Carousel>();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
@@ -114,7 +114,7 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
 
   const validateAndSaveCoil = async (name: string, description?: string) => {
     const res = await sendRequest(
-      lastEdit === 'resistance' ? 'wraps' : 'resistance',
+      lastEdit === Field.RESISTANCE ? 'wraps' : 'resistance',
       currentCoil as CoilType,
     );
     if (res instanceof Response && !res.ok) {
