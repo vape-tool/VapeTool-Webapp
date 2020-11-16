@@ -12,7 +12,7 @@ export default function UserLiquids({ userId }: Props) {
   return (
     <UserItems<Liquid>
       userId={userId}
-      renderItem={(item: Liquid) => <LiquidView item={item} displayCommentsLength={5} />}
+      renderItem={(item: Liquid) => <LiquidView item={item} />}
       subscribe={subscribeLiquids}
     />
   );
