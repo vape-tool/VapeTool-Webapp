@@ -107,10 +107,6 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
     calculate();
   };
 
-  const toggleLock = () => {
-    setLastEdit(lastEdit === 'resistance' ? 'wraps' : 'resistance');
-  };
-
   const handleWireTypeChange = (type: number, path: Path[]): void => setCoilType(type, path);
   const handleAddWire = (path: Path[], wire: Wire) => addWire(wire, path);
   const handleSetWire = (path: Path[], wire: Wire) => setWire(wire, path);
@@ -228,8 +224,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
                   onChange={onResistanceChange}
                 />
               </label>
-              <span className={styles.lockIcon} onClick={toggleLock}>
-                {lastEdit === 'resistance' ? <LockFilled /> : <UnlockOutlined />}
+              <span className={styles.lockIcon} onClick={() => setLastEdit(Field.RESISTANCE)}>
+                {lastEdit === Field.RESISTANCE ? <LockFilled /> : <UnlockOutlined />}
               </span>
             </div>
             <div>
@@ -243,8 +239,8 @@ const CoilCalculator: React.FC<CoilCalculatorProps> = () => {
                   onChange={onWrapsChange}
                 />
               </label>
-              <span className={styles.lockIcon} onClick={toggleLock}>
-                {lastEdit === 'wraps' ? <LockFilled /> : <UnlockOutlined />}
+              <span className={styles.lockIcon} onClick={() => setLastEdit(Field.WRAPS)}>
+                {lastEdit === Field.WRAPS ? <LockFilled /> : <UnlockOutlined />}
               </span>
             </div>
           </Row>
