@@ -3,15 +3,18 @@ import { Button, Card, Col, message, Radio, Row, Spin, Tag, Typography } from 'a
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { stripePromise } from '@/utils/stripe';
-import { createStripeManageLink, createStripePayment } from '@/utils/firebase';
+import {
+  createStripeManageLink,
+  createStripePayment,
+  createSubscriptionForUser,
+} from '@/utils/firebase';
 import { verifyCurrentUserWithRedirect } from '@/services';
 import { useModel } from 'umi';
-import { IS_PRODUCTION, IS_NOT_PRODUCTION } from '@/utils/utils';
+import { IS_PRODUCTION } from '@/utils/utils';
 import { PayPalButton } from 'react-paypal-button-v2';
 import styles from './payment.less';
 
 const stripeLogo = require('@/assets/stripe.png');
-const paypalLogo = require('@/assets/paypal.png');
 const coinbaseLogo = require('@/assets/coinbase.png');
 
 export enum SubscriptionPlan {
@@ -21,13 +24,6 @@ export enum SubscriptionPlan {
 }
 
 // TODO: Move all the codes to some config (preferably provided from server or added in CI step)
-
-const paypalCodes = {
-  // first PRODUCTION, second DEVELOPMENT
-  [SubscriptionPlan.MONTHLY]: ['PAJTMA62ZSBRW', 'P-66E24374ED850034WL6Y3CFQ'],
-  [SubscriptionPlan.ANNUALLY]: ['PVFRG3TU5V5CJ', 'P-1S563899N0360234PL6Y2FEY'],
-  [SubscriptionPlan.LIFETIME]: ['UBCLCJ384D2D4', '3FAV75HYMXJ5N'],
-};
 
 const coinbaseCodes = {
   [SubscriptionPlan.MONTHLY]: '896d1477-7851-42e6-8ce3-0e141e6057ef',
@@ -44,7 +40,7 @@ const stripeCodes = {
 };
 
 const Payment: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
+  const { initialState, refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const [type, setType] = useState(SubscriptionPlan.ANNUALLY);
   const [step, setStep] = useState(0);
@@ -55,13 +51,6 @@ const Payment: React.FC = () => {
   });
 
   const onChange = (e: RadioChangeEvent) => setType(e?.target?.value || SubscriptionPlan.ANNUALLY);
-
-  const getPaypalHref = () => {
-    const code = paypalCodes[type][IS_PRODUCTION ? 0 : 1];
-    const sandBoxStr = IS_NOT_PRODUCTION ? 'sandbox.' : '';
-
-    return `https://www.${sandBoxStr}paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=${code}`;
-  };
 
   const getCoinbaseHref = () => {
     const code = coinbaseCodes[type];
@@ -188,45 +177,23 @@ const Payment: React.FC = () => {
                   </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
-                  <PayPalButton
-                    options={{
-                      vault: true,
-                      clientId:
-                        'AUEDO1Gov00KdUqSIP9KEkoFhizpHA4oZWKXbGewXBUQ0YY4ZbgKIqstqWgVdQLNNYNG2bX7g824WSXb',
-                    }}
-                    createSubscription={(data: any, actions: any) => {
-                      return actions.subscription.create({
-                        plan_id: paypalCodes[type][IS_PRODUCTION ? 0 : 1],
-                      });
-                    }}
-                    onApprove={(data: any, actions: any) => {
-                      // Capture the funds from the transaction
-                      return actions.subscription.get().then((details: any) => {
-                        // Show a success message to your buyer
-                        console.log(details);
-
-                        // OPTIONAL: Call your server to save the subscription
-                        return fetch('/paypal-subscription-complete', {
-                          method: 'post',
-                          body: JSON.stringify({
-                            orderID: data.orderID,
-                            subscriptionID: data.subscriptionID,
-                          }),
-                        });
-                      });
-                    }}
-                  />
-                  <a target="_blank" rel="noreferrer noopener" href={getPaypalHref()}>
-                    <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
-                      <img
-                        src={paypalLogo}
-                        className={styles.paypalLogo}
-                        title="Pay with PayPal"
-                        alt="PayPal"
-                      />
-                      <span className={styles.methodName}>checkout</span>
-                    </div>
-                  </a>
+                  <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
+                    <PayPalButton
+                      options={{
+                        vault: true,
+                        clientId:
+                          'AUEDO1Gov00KdUqSIP9KEkoFhizpHA4oZWKXbGewXBUQ0YY4ZbgKIqstqWgVdQLNNYNG2bX7g824WSXb',
+                      }}
+                      createSubscription={() => {
+                        console.log('createSubscription');
+                        // @ts-ignore
+                        return createSubscriptionForUser(type.toLowerCase());
+                      }}
+                      onApprove={() => {
+                        refresh();
+                      }}
+                    />
+                  </div>
                 </Col>
                 <Col xs={24} lg={8} style={{ minWidth: 150 }}>
                   <a target="_blank" rel="noreferrer noopener" href={getCoinbaseHref()}>
