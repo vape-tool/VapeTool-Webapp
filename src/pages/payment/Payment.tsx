@@ -169,14 +169,14 @@ const Payment: React.FC = () => {
                 Choose you payment method:
               </Typography.Title>
               <Row justify="center" gutter={[12, 12]} style={{ marginBottom: 24 }}>
-                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
+                <Col xs={24} lg={8} style={{ minWidth: 250 }}>
                   <div className={styles.paymentMethod} onClick={handleStripeClick}>
                     <span className={styles.methodName}>Credit Card</span>
                     <span className={styles.poweredBy}>powered by</span>
                     <img src={stripeLogo} alt="Stripe" />
                   </div>
                 </Col>
-                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
+                <Col xs={24} lg={8} style={{ minWidth: 250 }}>
                   <div className={`${styles.paymentMethod} ${styles.paypalMethod}`}>
                     <PayPalButton
                       options={{
@@ -195,7 +195,7 @@ const Payment: React.FC = () => {
                     />
                   </div>
                 </Col>
-                <Col xs={24} lg={8} style={{ minWidth: 150 }}>
+                <Col xs={24} lg={8} style={{ minWidth: 250 }}>
                   <a target="_blank" rel="noreferrer noopener" href={getCoinbaseHref()}>
                     <div className={styles.paymentMethod}>
                       <span className={styles.methodName}>Cryptocurrencies</span>
