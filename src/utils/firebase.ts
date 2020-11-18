@@ -147,3 +147,15 @@ export async function createStripePayment(
   });
   return res.data as string;
 }
+
+/**
+ * @param interval - how often the subscription should be billed
+ * @returns subscriptionId
+ */
+export async function createSubscriptionForUser(interval: 'monthly' | 'annually'): Promise<string> {
+  const res = await functions().httpsCallable('createSubscriptionForUser')({
+    interval,
+  });
+  const subscriptionId = res.data as string;
+  return subscriptionId;
+}
