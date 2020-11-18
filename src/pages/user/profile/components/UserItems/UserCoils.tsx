@@ -12,7 +12,7 @@ export default function UserCoils({ userId }: UserCoilsProps) {
   return (
     <UserItems<Coil>
       userId={userId}
-      renderItem={(item: Coil) => <CoilView item={item} displayCommentsLength={5} />}
+      renderItem={(item: Coil) => <CoilView item={item} />}
       subscribe={subscribeCoils}
     />
   );

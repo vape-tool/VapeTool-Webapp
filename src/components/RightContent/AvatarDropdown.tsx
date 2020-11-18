@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, UserOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Menu, Spin } from 'antd';
+import { Menu, message, Spin } from 'antd';
 import { history, useModel, FormattedMessage } from 'umi';
-import { stringify } from 'querystring';
 import { ImageType } from '@/services/storage';
-import { getCurrentUserProfileUrl, getPaymentUrl, getUserLoginUrl } from '@/places/user.places';
+import { getPaymentUrl, getUserLoginUrl, getUserProfileUrl } from '@/places/user.places';
 import { logoutFirebase } from '@/services/user';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -15,14 +14,21 @@ import FirebaseImage from '../StorageAvatar';
  */
 const loginOut = () => {
   if (window.location.pathname !== getUserLoginUrl()) {
-    history.replace({
-      pathname: getUserLoginUrl(),
-      search: stringify({
-        redirect: window.location.href,
-      }),
-    });
+    history.replace(getUserLoginUrl());
   }
 };
+
+const loading = (
+  <span className={`${styles.action} ${styles.account}`}>
+    <Spin
+      size="small"
+      style={{
+        marginLeft: 8,
+        marginRight: 8,
+      }}
+    />
+  </span>
+);
 
 const AvatarDropdown: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -36,35 +42,17 @@ const AvatarDropdown: React.FC = () => {
       return;
     }
     if (key === 'profile') {
-      history.replace({
-        pathname: getCurrentUserProfileUrl(),
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      });
+      if (!initialState?.firebaseUser?.uid) {
+        message.error("Couldn't retreive current user");
+        return;
+      }
+      history.push(getUserProfileUrl(initialState.firebaseUser.uid));
       return;
     }
     if (key === 'unlockPro') {
-      history.replace({
-        pathname: getPaymentUrl(),
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      });
+      history.replace(getPaymentUrl());
     }
   }, []);
-
-  const loading = (
-    <span className={`${styles.action} ${styles.account}`}>
-      <Spin
-        size="small"
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    </span>
-  );
 
   if (!initialState) {
     return loading;

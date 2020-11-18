@@ -42,6 +42,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = (props) => {
               <FormattedMessage id="liquid.vgShort" defaultMessage="VG" />
             </Text>
           </Tooltip>
+          &nbsp;
           <InputNumber
             min={0}
             max={100}
@@ -64,6 +65,7 @@ const VgPgRatioView: React.FC<VgPgRatioProps> = (props) => {
               <FormattedMessage id="liquid.pgShort" defaultMessage="PG" />
             </Text>
           </Tooltip>
+          &nbsp;
           <InputNumber
             min={0}
             max={100}

@@ -9,13 +9,7 @@ import { getUserProfileUrl } from '@/places/user.places';
 import styles from './styles.less';
 import { Actions } from './ItemView';
 
-export default function PhotoView({
-  item,
-  displayCommentsLength,
-}: {
-  item: Photo;
-  displayCommentsLength: number;
-}) {
+export default function PhotoView({ item }: { item: Photo }) {
   const { setSelectedItem, unselectItem } = useModel('preview');
   const onSelectItem = () => setSelectedItem(item);
 
@@ -43,12 +37,7 @@ export default function PhotoView({
         }
         description={<Typography.Text>{item.description}</Typography.Text>}
       />
-      <Actions
-        what={ItemName.PHOTO}
-        item={item}
-        displayCommentsLength={displayCommentsLength}
-        unselectItem={unselectItem}
-      />
+      <Actions what={ItemName.PHOTO} item={item} unselectItem={unselectItem} />
     </Card>
   );
 }

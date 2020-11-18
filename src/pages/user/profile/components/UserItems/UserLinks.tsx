@@ -12,7 +12,7 @@ export default function UserLinks({ userId }: Props) {
   return (
     <UserItems<Link>
       userId={userId}
-      renderItem={(item: Link) => <LinkView item={item} displayCommentsLength={5} />}
+      renderItem={(item: Link) => <LinkView item={item} />}
       subscribe={subscribeLinks}
     />
   );
